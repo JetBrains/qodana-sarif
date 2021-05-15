@@ -1,0 +1,24 @@
+name: Qodana - Clone Finder
+on:
+  workflow_dispatch:
+jobs:
+  qodana:
+    runs-on: ubuntu-latest
+    steps:
+      # clone your project to ./project/
+      - uses: actions/checkout@v2
+        with:
+          path: ./project/
+      # clone the repositories to ./versus/
+      - uses: actions/checkout@v2
+        with:
+          repository: JetBrains-Research/buckwheat
+          path: ./versus/buckwheat
+      # run qodana-clone-finder
+      - name: Qodana - Clone Finder
+        uses: JetBrains/qodana-clone-finder-action@v2.0-eap
+        with:
+          languages: "-l Python"
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ${{ github.workspace }}/qodana
