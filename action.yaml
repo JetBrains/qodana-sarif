@@ -1,5 +1,33 @@
 name: "Qodana - Clone Finder"
-description: "Qodana Clone Finder is aimed to prevent problems rather than face them and, supporting integration into CI pipelines, allows to make finding clones a routine check and detect borrowed code as early as possible."
+description: "Qodana Clone Finder searches selected repositories for duplicates and provides HTML and JSON reports."
+author: "JetBrains"
+branding:
+  icon: "copy"
+  color: "green"
+inputs:
+  project-dir:
+    description: "Project folder to inspect"
+    required: false
+    default: "${{ github.workspace }}/project"
+  versus-dir:
+    description: "Folder with projects to search clones from"
+    required: false
+    default: "${{ github.workspace }}/versus"
+  results-dir:
+    description: "Save results to folder"
+    required: false
+    default: "${{ github.workspace }}/qodana"
+  languages:
+    description: "Programming languages to search clones from"
+    required: false
+    default: "-l PHP -l Go -l JavaScript -l TypeScript -l Java -l Kotlin -l Python"
+runs:
+  using: "composite"
+  steps:
+    - run: mkdir -p "${{inputs.results-dir}}"
+      shell: bash
+    - run: docker run -v ${{inputs.project-dir}}:/data/project -v ${{inputs.versus-dir}}:/data/versus -v ${{inputs.results-dir}}:/data/results jetbrains/qodana-clone-finder:2021.1-eap ${{inputs.languages}} --save-report
+      shell: bash
 author: "JetBrains"
 branding:
   icon: "copy"
