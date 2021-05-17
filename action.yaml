@@ -1,7 +1,9 @@
 name: "Qodana - Clone Finder"
 description: "Qodana Clone Finder is aimed to prevent problems rather than face them and, supporting integration into CI pipelines, allows to make finding clones a routine check and detect borrowed code as early as possible."
 author: "JetBrains"
-
+branding:
+  icon: "copy"
+  color: "green"
 inputs:
   project-dir:
     description: "Project folder to inspect"
