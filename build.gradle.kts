@@ -26,12 +26,12 @@ publishing {
     repositories {
         maven {
             url = uri("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
-            val username: String by project
-            val password: String by project
+            val deployUsername: String by project
+            val deployPassword: String by project
 
             credentials {
-                this.username = username
-                this.password = password
+                this.username = deployUsername
+                this.password = deployPassword
             }
         }
     }
