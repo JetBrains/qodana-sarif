@@ -29,7 +29,7 @@ public class SarifUtil {
         }
     }
 
-    public static void writeReport(Writer writer, SarifReport report) throws IOException {
+    public static void writeReport(Writer writer, SarifReport report) {
         Gson gson = createGson();
         gson.toJson(report, writer);
     }
@@ -53,7 +53,7 @@ public class SarifUtil {
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .registerTypeAdapter(resultsType, new IterableTypeAdapter().nullSafe())
-                .registerTypeAdapter(PropertyBag.class, new PropertyBag.PropertyBagTypeAdapter())
+                .registerTypeAdapter(PropertyBag.class, new PropertyBag.PropertyBagTypeAdapter().nullSafe())
                 .create();
     }
 }
