@@ -1,0 +1,14 @@
+{
+  "properties": {
+    "someProp": "someValue",
+    "someArray": [
+      "1",
+      "2",
+      "3"
+    ],
+    "tags": [
+      "someProp",
+      "someArray"
+    ]
+  }
+}

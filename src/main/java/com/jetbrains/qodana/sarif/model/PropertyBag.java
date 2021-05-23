@@ -1,82 +1,131 @@
 
 package com.jetbrains.qodana.sarif.model;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
-import javax.annotation.processing.Generated;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 
 
 /**
  * Key/value pairs that provide additional information about the object.
- * 
+ * Additional tags  - tags provided by parent run object.
  */
-@Generated("jsonschema2pojo")
-public class PropertyBag {
+public class PropertyBag implements Map<String, Object> {
+    private final Map<String, Object> properties = new HashMap<>();
 
-    /**
-     * A set of distinct strings that provide additional information.
-     * 
-     */
-    @SerializedName("tags")
-    @Expose
-    private Set<String> tags = null;
+    private final Set<String> additionalTags = new LinkedHashSet<>();
 
-    /**
-     * A set of distinct strings that provide additional information.
-     * 
-     */
     public Set<String> getTags() {
-        return tags;
+        HashSet<String> result = new HashSet<>(properties.keySet());
+        result.addAll(additionalTags);
+        return result;
     }
 
-    /**
-     * A set of distinct strings that provide additional information.
-     * 
-     */
-    public void setTags(Set<String> tags) {
-        this.tags = tags;
-    }
-
-    public PropertyBag withTags(Set<String> tags) {
-        this.tags = tags;
-        return this;
+    public Set<String> getAdditionalTags() {
+        return additionalTags;
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(PropertyBag.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
-        sb.append("tags");
-        sb.append('=');
-        sb.append(((this.tags == null)?"<null>":this.tags));
-        sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
-        } else {
-            sb.append(']');
-        }
-        return sb.toString();
+    public int size() {
+        return properties.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return properties.isEmpty();
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+        return properties.containsKey(key);
+    }
+
+    @Override
+    public boolean containsValue(Object value) {
+        return properties.containsValue(value);
+    }
+
+    @Override
+    public Object get(Object key) {
+        return properties.get(key);
+    }
+
+    @Override
+    public Object put(String key, Object value) {
+        return properties.put(key, value);
+    }
+
+    @Override
+    public Object remove(Object key) {
+        return properties.remove(key);
+    }
+
+    @Override
+    public void putAll(Map<? extends String, ?> m) {
+        properties.putAll(m);
+    }
+
+    @Override
+    public void clear() {
+        properties.clear();
+    }
+
+    @Override
+    public Set<String> keySet() {
+        return properties.keySet();
+    }
+
+    @Override
+    public Collection<Object> values() {
+        return properties.values();
+    }
+
+    @Override
+    public Set<Entry<String, Object>> entrySet() {
+        return properties.entrySet();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PropertyBag that = (PropertyBag) o;
+        return Objects.equals(properties, that.properties) && Objects.equals(additionalTags, that.additionalTags);
     }
 
     @Override
     public int hashCode() {
-        int result = 1;
-        result = ((result* 31)+((this.tags == null)? 0 :this.tags.hashCode()));
-        return result;
+        return Objects.hash(properties, additionalTags);
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if ((other instanceof PropertyBag) == false) {
-            return false;
-        }
-        PropertyBag rhs = ((PropertyBag) other);
-        return ((this.tags == rhs.tags)||((this.tags!= null)&&this.tags.equals(rhs.tags)));
-    }
 
+    public static class PropertyBagTypeAdapter extends TypeAdapter<PropertyBag> {
+        private static final Gson embedded = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+
+        public void write(JsonWriter out, PropertyBag bag) throws IOException {
+            HashMap<String, Object> toSerialize = new HashMap<>(bag);
+            toSerialize.put("tags", bag.getTags());
+            embedded.toJson(toSerialize, Map.class, out);
+        }
+
+        public PropertyBag read(JsonReader reader) throws IOException {
+            PropertyBag result = new PropertyBag();
+            Map<String, Object> map = embedded.fromJson(reader, Map.class);
+            Object tags = map.remove("tags");
+            result.putAll(map);
+            if (tags instanceof String[]) {
+                for (String tag: (String[])tags) {
+                    if (!map.containsKey(tag)) {
+                        result.additionalTags.add(tag);
+                    }
+                }
+            }
+            return result;
+        }
+    }
 }
