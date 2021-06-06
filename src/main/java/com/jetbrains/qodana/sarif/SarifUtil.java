@@ -2,9 +2,8 @@ package com.jetbrains.qodana.sarif;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.jetbrains.qodana.sarif.model.PropertyBag;
-import com.jetbrains.qodana.sarif.model.Run;
-import com.jetbrains.qodana.sarif.model.SarifReport;
+import com.google.gson.reflect.TypeToken;
+import com.jetbrains.qodana.sarif.model.*;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -41,19 +40,19 @@ public class SarifUtil {
     }
 
     public static Gson createGson() {
-        Field declaredField;
         try {
-            declaredField = Run.class.getDeclaredField("results");
-        } catch (NoSuchFieldException e) {
-            throw new IllegalStateException(e);
-        }
-        Type resultsType = declaredField.getGenericType();
+            Type resultsType = Run.class.getDeclaredField("results").getGenericType();
+            Type fingerprintsType = Result.class.getDeclaredField("fingerprints").getGenericType();
 
-        return new GsonBuilder()
-                .setPrettyPrinting()
-                .disableHtmlEscaping()
-                .registerTypeAdapter(resultsType, new IterableTypeAdapter().nullSafe())
-                .registerTypeAdapter(PropertyBag.class, new PropertyBag.PropertyBagTypeAdapter().nullSafe())
-                .create();
+            return new GsonBuilder()
+                    .setPrettyPrinting()
+                    .disableHtmlEscaping()
+                    .registerTypeAdapter(resultsType, new IterableTypeAdapter().nullSafe())
+                    .registerTypeAdapter(PropertyBag.class, new PropertyBag.PropertyBagTypeAdapter().nullSafe())
+                    .registerTypeAdapter(new TypeToken<VersionedMap<String>>() {}.getType(), new VersionedMap.VersionedMapTypeAdapter<String>().nullSafe())
+                    .create();
+        } catch (NoSuchFieldException e) {
+         throw new IllegalStateException(e);
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.jetbrains.qodana.sarif;
 
 import com.jetbrains.qodana.sarif.model.PropertyBag;
 import com.jetbrains.qodana.sarif.model.SarifReport;
+import com.jetbrains.qodana.sarif.model.VersionedMap;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
 
 public class DeserializeTest {
     @Test
@@ -23,8 +26,19 @@ public class DeserializeTest {
         doTest(target, report);
     }
 
+    @Test
+    public void testFingerprints() throws IOException {
+        Path target = Paths.get("src/test/resources/testData/serializeTest/partialFingerprint.json");
+        VersionedMap<String> fingerprints = new VersionedMap<>();
+        fingerprints.put("idea", 1, "value");
+
+        assertEquals(fingerprints,
+                SarifUtil.readReport(target).getRuns().get(0).getResults().iterator().next().getPartialFingerprints());
+    }
+
+
     private void doTest(Path targetJsonPath, SarifReport expected) throws IOException {
         SarifReport sarifReport = SarifUtil.readReport(targetJsonPath);
-        Assert.assertEquals(expected, sarifReport);
+        assertEquals(expected, sarifReport);
     }
 }

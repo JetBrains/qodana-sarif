@@ -1,0 +1,20 @@
+{
+  "runs": [
+    {
+      "language": "en-US",
+      "results": [
+        {
+          "kind": "fail",
+          "level": "warning",
+          "partialFingerprints": {
+            "idea/v1": "value"
+          }
+        }
+      ],
+      "newlineSequences": [
+        "\r\n",
+        "\n"
+      ]
+    }
+  ]
+}

@@ -2,6 +2,7 @@
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import javax.annotation.processing.Generated;
@@ -101,16 +102,18 @@ public class Result {
      * A set of strings that contribute to the stable, unique identity of the result.
      *
      */
+    @JsonAdapter(VersionedMap.VersionedMapTypeAdapter.class)
     @SerializedName("partialFingerprints")
     @Expose
-    private PartialFingerprints partialFingerprints;
+    private VersionedMap<String> partialFingerprints;
     /**
      * A set of strings each of which individually defines a stable, unique identity for the result.
      *
      */
+    @JsonAdapter(VersionedMap.VersionedMapTypeAdapter.class)
     @SerializedName("fingerprints")
     @Expose
-    private Fingerprints fingerprints;
+    private VersionedMap<String> fingerprints;
     /**
      * An array of 'stack' objects relevant to the result.
      *
@@ -484,7 +487,7 @@ public class Result {
      * A set of strings that contribute to the stable, unique identity of the result.
      *
      */
-    public PartialFingerprints getPartialFingerprints() {
+    public VersionedMap<String> getPartialFingerprints() {
         return partialFingerprints;
     }
 
@@ -492,11 +495,11 @@ public class Result {
      * A set of strings that contribute to the stable, unique identity of the result.
      *
      */
-    public void setPartialFingerprints(PartialFingerprints partialFingerprints) {
+    public void setPartialFingerprints(VersionedMap<String> partialFingerprints) {
         this.partialFingerprints = partialFingerprints;
     }
 
-    public Result withPartialFingerprints(PartialFingerprints partialFingerprints) {
+    public Result withPartialFingerprints(VersionedMap<String> partialFingerprints) {
         this.partialFingerprints = partialFingerprints;
         return this;
     }
@@ -505,7 +508,7 @@ public class Result {
      * A set of strings each of which individually defines a stable, unique identity for the result.
      *
      */
-    public Fingerprints getFingerprints() {
+    public VersionedMap<String> getFingerprints() {
         return fingerprints;
     }
 
@@ -513,11 +516,11 @@ public class Result {
      * A set of strings each of which individually defines a stable, unique identity for the result.
      *
      */
-    public void setFingerprints(Fingerprints fingerprints) {
+    public void setFingerprints(VersionedMap<String> fingerprints) {
         this.fingerprints = fingerprints;
     }
 
-    public Result withFingerprints(Fingerprints fingerprints) {
+    public Result withFingerprints(VersionedMap<String> fingerprints) {
         this.fingerprints = fingerprints;
         return this;
     }
