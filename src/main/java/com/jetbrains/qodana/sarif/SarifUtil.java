@@ -40,19 +40,16 @@ public class SarifUtil {
     }
 
     public static Gson createGson() {
-        try {
-            Type resultsType = Run.class.getDeclaredField("results").getGenericType();
-            Type fingerprintsType = Result.class.getDeclaredField("fingerprints").getGenericType();
-
+       // try {
             return new GsonBuilder()
                     .setPrettyPrinting()
                     .disableHtmlEscaping()
-                    .registerTypeAdapter(resultsType, new IterableTypeAdapter().nullSafe())
+            //        .registerTypeAdapter(resultsType, new IterableTypeAdapter().nullSafe())
                     .registerTypeAdapter(PropertyBag.class, new PropertyBag.PropertyBagTypeAdapter().nullSafe())
-                    .registerTypeAdapter(new TypeToken<VersionedMap<String>>() {}.getType(), new VersionedMap.VersionedMapTypeAdapter<String>().nullSafe())
+             //       .registerTypeAdapter(new TypeToken<VersionedMap<String>>() {}.getType(), new VersionedMap.VersionedMapTypeAdapter<String>().nullSafe())
                     .create();
-        } catch (NoSuchFieldException e) {
-         throw new IllegalStateException(e);
-        }
+//        } catch (NoSuchFieldException e) {
+//         throw new IllegalStateException(e);
+//        }
     }
 }

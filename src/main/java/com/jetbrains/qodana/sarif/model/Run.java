@@ -85,7 +85,7 @@ public class Run {
      */
     @SerializedName("results")
     @Expose
-    private Iterable<Result> results = null;
+    private List<Result> results = null;
     /**
      * Information that describes a run's identity and role within an engineering system process.
      * 
@@ -424,7 +424,7 @@ public class Run {
      * The set of results contained in an SARIF log. The results array can be omitted when a run is solely exporting rules metadata. It must be present (but may be empty) if a log file represents an actual scan.
      * 
      */
-    public Iterable<Result> getResults() {
+    public List<Result> getResults() {
         return results;
     }
 
@@ -432,11 +432,11 @@ public class Run {
      * The set of results contained in an SARIF log. The results array can be omitted when a run is solely exporting rules metadata. It must be present (but may be empty) if a log file represents an actual scan.
      * 
      */
-    public void setResults(Iterable<Result> results) {
+    public void setResults(List<Result> results) {
         this.results = results;
     }
 
-    public Run withResults(Iterable<Result> results) {
+    public Run withResults(List<Result> results) {
         this.results = results;
         return this;
     }
