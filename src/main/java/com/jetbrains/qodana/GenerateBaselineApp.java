@@ -19,7 +19,14 @@ public class GenerateBaselineApp {
         Path baselinePath = Paths.get(args[1]);
         String outFilename = args[2];
         SarifReport report = SarifUtil.readReport(reportPath);
+        if (report == null) {
+            System.out.println("Cant read sarif report from :" + reportPath.toAbsolutePath());
+        }
         SarifReport baseline = SarifUtil.readReport(baselinePath);
+        if (report == null) {
+            System.out.println("Cant read sarif baseline report from :" + baselinePath.toAbsolutePath());
+        }
+
         System.out.println("Starting baseline calculation. Report: " + reportPath.toAbsolutePath() + "; Baseline: " + baselinePath.toAbsolutePath());
         BaselineCalculation calculation = BaselineCalculation.compare(report, baseline);
         System.out.printf(
