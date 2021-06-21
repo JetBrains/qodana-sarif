@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.jetbrains.qodana.sarif.baseline.BaselineCalculation.Options.DEFAULT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -40,8 +41,18 @@ public class BaselineTest {
         Result newResult = new Result(new Message().withText("new result"));
         baseline.getRuns().get(0).getResults().add(newResult);
 
-        doTest(report, baseline, problemsCount(report), 1, 0);
+        doTest(report, baseline, problemsCount(report), 1, 0, new BaselineCalculation.Options(true));
         assertEquals(Result.BaselineState.ABSENT, newResult.getBaselineState());
+    }
+
+    @Test
+    public void testCompareWithOneIgnoredAbsent() throws IOException {
+        SarifReport report = readReport();
+        SarifReport baseline = readReport();
+        Result newResult = new Result(new Message().withText("new result"));
+        baseline.getRuns().get(0).getResults().add(newResult);
+
+        doTest(report, baseline, problemsCount(report), 0, 0);
     }
 
     @Test
@@ -59,14 +70,23 @@ public class BaselineTest {
                         SarifReport baseline,
                         int expectedUnchanged,
                         int expectedAbsent,
-                        int expectedNew
+                        int expectedNew,
+                        BaselineCalculation.Options options
     ) {
-        BaselineCalculation calculation = BaselineCalculation.compare(report, baseline);
+        BaselineCalculation calculation = BaselineCalculation.compare(report, baseline, options);
         assertEquals("Unchanged:", expectedUnchanged, calculation.getUnchangedResults());
         assertEquals("Absent:", expectedAbsent, calculation.getAbsentResults());
         assertEquals("New", expectedNew, calculation.getNewResults());
     }
 
+    private void doTest(SarifReport report,
+                        SarifReport baseline,
+                        int expectedUnchanged,
+                        int expectedAbsent,
+                        int expectedNew
+    ) {
+        doTest(report, baseline, expectedUnchanged, expectedAbsent, expectedNew, DEFAULT);
+    }
     private static int problemsCount(SarifReport report) {
         return report.getRuns().stream().mapToInt(it -> it.getResults().size()).sum();
     }

@@ -15,14 +15,20 @@ public class BaselineCalculation {
     private int newResults = 0;
     private int absentResults = 0;
     private int unchangedResults = 0;
+    private Options options;
 
-    private BaselineCalculation() {
+    private BaselineCalculation(Options options) {
+        this.options = options;
+    }
+
+    public static BaselineCalculation compare(SarifReport report, SarifReport baseline, Options options) {
+        BaselineCalculation result = new BaselineCalculation(options);
+        result.fillBaselineState(report, baseline);
+        return result;
     }
 
     public static BaselineCalculation compare(SarifReport report, SarifReport baseline) {
-        BaselineCalculation result = new BaselineCalculation();
-        result.fillBaselineState(report, baseline);
-        return result;
+        return compare(report, baseline, Options.DEFAULT);
     }
 
     public int getNewResults() {
@@ -65,6 +71,20 @@ public class BaselineCalculation {
         ToolComponent driver = tool.getDriver();
         if (driver == null) return null;
         return driver.getName();
+    }
+
+    public static class Options {
+        public static final Options DEFAULT = new Options();
+
+        private final boolean includeAbsent;
+
+        public Options() {
+            includeAbsent = false;
+        }
+
+        public Options(boolean includeAbsent) {
+            this.includeAbsent = includeAbsent;
+        }
     }
 
     private class RunResultGroup {
@@ -131,11 +151,13 @@ public class BaselineCalculation {
                 }
             });
 
-            diffBaseline.entrySet().stream().flatMap((it) -> it.getValue().stream()).forEach(result -> {
-                result.setBaselineState(ABSENT);
-                absentResults++;
-                report.getResults().add(result);
-            });
+            if (options.includeAbsent) {
+                diffBaseline.entrySet().stream().flatMap((it) -> it.getValue().stream()).forEach(result -> {
+                    result.setBaselineState(ABSENT);
+                    absentResults++;
+                    report.getResults().add(result);
+                });
+            }
         }
     }
 }
