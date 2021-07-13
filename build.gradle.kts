@@ -1,38 +1,54 @@
 plugins {
     `java-library`
     `maven-publish`
-
+    kotlin("jvm") version "1.5.21"
 }
 
-repositories {
-    jcenter()
-}
+val spaceUser: String by project
+val spacePasswordToken: String by project
 
-dependencies {
-    testImplementation("junit:junit:4.12")
-    implementation("com.google.code.gson:gson:2.8.6")
-}
+val kotlinVersion by extra("1.5.21")
+val spaceLogin by extra(projectSettingsValue("spaceLogin", spaceUser))
+val spacePassword by extra(projectSettingsValue("spacePassword", spacePasswordToken))
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = "com.jetbrains.qodana"
-            artifactId = "qodana-sarif"
-            val minorVersion: String by project
-            version = "0.1.$minorVersion"
-            from(components["java"])
-        }
-    }
+
+allprojects {
+    apply(plugin = "kotlin")
+    apply(plugin = "maven-publish")
+
+    group = "com.jetbrains.qodana"
+
     repositories {
-        maven {
-            url = uri("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
-            val deployUsername: String by project
-            val deployPassword: String by project
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
 
-            credentials {
-                this.username = deployUsername
-                this.password = deployPassword
+    kotlin {
+        this.sourceSets {
+            main {
+                kotlin.srcDirs("src/main/java")
+                kotlin.srcDirs("src/main/kotlin")
+                resources.srcDirs("src/main/resources")
+            }
+
+            test {
+                kotlin.srcDirs("src/test/java")
+                kotlin.srcDirs("src/test/kotlin")
+                resources.srcDirs("src/test/resources")
             }
         }
+
+        version = kotlinVersion
     }
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+
+fun projectSettingsValue(extraParameter: String, propertiesParameter: String): String {
+    return project.findProperty(extraParameter)?.toString()?.ifBlank { null } ?: propertiesParameter
 }
