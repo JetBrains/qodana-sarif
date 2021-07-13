@@ -25,6 +25,45 @@ tasks.register<Jar>("sarifConverter-fatJar") {
 }
 
 
+publishing {
+    publications {
+        create<MavenPublication>("sarifConverter") {
+            val minorVersion: String by project
+
+            groupId = project.group.toString()
+            artifactId = project.name
+            version = "0.1.$minorVersion"
+
+            artifact(tasks.getByName("sarifConverter-fatJar"))
+
+            pom {
+                developers {
+                    developer {
+                        id.set("nikitaKochetkov")
+                        name.set("Nikita Kochetkov")
+                        email.set("Nikita.Kochetkov@jetbrains.com")
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "Space"
+            val spaceLogin: String by rootProject.extra
+            val spacePassword: String by rootProject.extra
+            val spaceArtifactoryUrl: String by project
+
+            url = uri(spaceArtifactoryUrl)
+            credentials {
+                username = spaceLogin
+                password = spacePassword
+            }
+        }
+
+    }
+}
+
 fun projectSettingsValue(extraParameter: String, propertiesParameter: String): String {
     return project.findProperty(extraParameter)?.toString()?.ifBlank { null } ?: propertiesParameter
 }

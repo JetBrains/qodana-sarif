@@ -17,11 +17,6 @@ publishing {
             pom {
                 developers {
                     developer {
-                        id.set("nikitaKochetkov")
-                        name.set("Nikita Kochetkov")
-                        email.set("Nikita.Kochetkov@jetbrains.com")
-                    }
-                    developer {
                         id.set("alexeyAfanasiev")
                         name.set("Alexey Afanasiev")
                         email.set("Alexey.Afanasiev@jetbrains.com")
