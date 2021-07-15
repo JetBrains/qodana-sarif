@@ -131,21 +131,21 @@ public class ToolComponent {
      */
     @SerializedName("notifications")
     @Expose
-    private Set<ReportingDescriptor> notifications = null;
+    private List<ReportingDescriptor> notifications = null;
     /**
      * An array of reportingDescriptor objects relevant to the analysis performed by the tool component.
      * 
      */
     @SerializedName("rules")
     @Expose
-    private Set<ReportingDescriptor> rules = null;
+    private List<ReportingDescriptor> rules = null;
     /**
      * An array of reportingDescriptor objects relevant to the definitions of both standalone and tool-defined taxonomies.
      * 
      */
     @SerializedName("taxa")
     @Expose
-    private Set<ReportingDescriptor> taxa = null;
+    private List<ReportingDescriptor> taxa = null;
     /**
      * An array of the artifactLocation objects associated with the tool component.
      * 
@@ -554,7 +554,7 @@ public class ToolComponent {
      * An array of reportingDescriptor objects relevant to the notifications related to the configuration and runtime execution of the tool component.
      * 
      */
-    public Set<ReportingDescriptor> getNotifications() {
+    public List<ReportingDescriptor> getNotifications() {
         return notifications;
     }
 
@@ -562,11 +562,11 @@ public class ToolComponent {
      * An array of reportingDescriptor objects relevant to the notifications related to the configuration and runtime execution of the tool component.
      * 
      */
-    public void setNotifications(Set<ReportingDescriptor> notifications) {
+    public void setNotifications(List<ReportingDescriptor> notifications) {
         this.notifications = notifications;
     }
 
-    public ToolComponent withNotifications(Set<ReportingDescriptor> notifications) {
+    public ToolComponent withNotifications(List<ReportingDescriptor> notifications) {
         this.notifications = notifications;
         return this;
     }
@@ -575,7 +575,7 @@ public class ToolComponent {
      * An array of reportingDescriptor objects relevant to the analysis performed by the tool component.
      * 
      */
-    public Set<ReportingDescriptor> getRules() {
+    public List<ReportingDescriptor> getRules() {
         return rules;
     }
 
@@ -583,11 +583,11 @@ public class ToolComponent {
      * An array of reportingDescriptor objects relevant to the analysis performed by the tool component.
      * 
      */
-    public void setRules(Set<ReportingDescriptor> rules) {
+    public void setRules(List<ReportingDescriptor> rules) {
         this.rules = rules;
     }
 
-    public ToolComponent withRules(Set<ReportingDescriptor> rules) {
+    public ToolComponent withRules(List<ReportingDescriptor> rules) {
         this.rules = rules;
         return this;
     }
@@ -596,7 +596,7 @@ public class ToolComponent {
      * An array of reportingDescriptor objects relevant to the definitions of both standalone and tool-defined taxonomies.
      * 
      */
-    public Set<ReportingDescriptor> getTaxa() {
+    public List<ReportingDescriptor> getTaxa() {
         return taxa;
     }
 
@@ -604,11 +604,11 @@ public class ToolComponent {
      * An array of reportingDescriptor objects relevant to the definitions of both standalone and tool-defined taxonomies.
      * 
      */
-    public void setTaxa(Set<ReportingDescriptor> taxa) {
+    public void setTaxa(List<ReportingDescriptor> taxa) {
         this.taxa = taxa;
     }
 
-    public ToolComponent withTaxa(Set<ReportingDescriptor> taxa) {
+    public ToolComponent withTaxa(List<ReportingDescriptor> taxa) {
         this.taxa = taxa;
         return this;
     }
