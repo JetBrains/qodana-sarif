@@ -1,4 +1,4 @@
-package com.jetbrains.qodana.sarif.converter
+package com.jetbrains.qodana.sarif.app
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

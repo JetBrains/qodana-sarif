@@ -1,4 +1,4 @@
-package com.jetbrains.qodana.sarif.converter
+package com.jetbrains.qodana.sarif.app
 
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.ParseException

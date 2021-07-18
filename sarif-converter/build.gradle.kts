@@ -8,6 +8,7 @@ dependencies {
     implementation("commons-cli", "commons-cli", "1.4")
     implementation("org.apache.logging.log4j:log4j-core:2.14.0")
     implementation("org.apache.logging.log4j:log4j-api:2.14.0")
+    implementation("org.jetbrains.teamcity.qodana:teamcity-common:0.10.57")
     implementation(project(":sarif"))
 
     implementation(kotlin("stdlib", kotlinVersion))
@@ -24,7 +25,7 @@ tasks.register<Jar>("sarifConverter-fatJar") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     manifest {
-        attributes("Main-Class" to "com.jetbrains.qodana.sarif.converter.Main", "Multi-Release" to "true")
+        attributes("Main-Class" to "com.jetbrains.qodana.sarif.app.Main", "Multi-Release" to "true")
     }
 
     val sourcesMain = sourceSets.main.get()
