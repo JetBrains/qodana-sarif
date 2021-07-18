@@ -1,10 +1,17 @@
 val archiveJarName: String by project
 
 val jarArchiveName by extra(projectSettingsValue("archiveJarName", archiveJarName))
+val kotlinVersion = project.rootProject.ext.properties["kotlinVersion"] as String
 
 dependencies {
     implementation("com.google.code.gson:gson:2.8.6")
+    implementation("commons-cli", "commons-cli", "1.4")
+    implementation("org.apache.logging.log4j:log4j-core:2.14.0")
+    implementation("org.apache.logging.log4j:log4j-api:2.14.0")
     implementation(project(":sarif"))
+
+    implementation(kotlin("stdlib", kotlinVersion))
+
     testImplementation("junit:junit:4.12")
 }
 

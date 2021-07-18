@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<Configuration name="CodeInspectionConfiguration">
+    <Properties>
+        <Property name="pattern">[%d] %6p - %30.30c:%L - %m%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%m%n"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.jetbrains.qodana" level="INFO">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Root level="ALL">
+        </Root>
+    </Loggers>
+</Configuration>

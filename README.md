@@ -1,31 +1,52 @@
-# sa/qodana-sarif
+###Run Configurations
 
+#Docker Image for Qodana IntelliJ Linter SARIF converter
 
-
-## Getting Started
-
-Download links:
-
-SSH clone URL: ssh://git@git.jetbrains.team/sa/qodana-sarif.git
-
-HTTPS clone URL: https://git.jetbrains.team/sa/qodana-sarif.git
-
-
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
-
-## Prerequisites
-
-What things you need to install the software and how to install them.
+### Options
 
 ```
-Examples
+Available options are:
+ -o,--output <arg>        Output directory for report files
+ -sp,--sarif-path <arg>   Path to SARIF file
+ -vb,--verbose            Enable verbose logging
 ```
 
-## Deployment
+###Examples
 
-Add additional notes about how to deploy this on a production system.
+```shell script
+docker run -v <sarif-path>:/data/sarif.json -v <output>:/data/output docker-registry.labs.intellij.net/sarif-converter
+```
 
-## Resources
+```shell script
+docker run -v <sarif-path>:/data/sarif.json\
+              <output>:/data/output\
+              docker-registry.labs.intellij.net/jetbrains-analytics-converter
+              -sp /data/sarif.json
+              -o /data/output
+              -vb
+``` 
 
-Add links to external resources for this project, such as CI server, bug tracker, etc.
+#Qodana IntelliJ Linter SARIF converter (Jar archive)
+
+* for UNIX/Mac OS use `gradlew`
+* for Windows use `gradlew.bat`
+
+
+```shell script
+./gradlew :sarif-converter:fatJar
+```
+
+The built jar will lie: `sarif-converter/build/libs/sarifConverter.jar`
+
+Help:
+```
+usage: java -jar jarName [-help] [-o <arg>] -sp <arg> [-vb]
+Standard commands:
+ -help,--help             Print program options
+ -o,--output <arg>        Output directory for report files
+ -sp,--sarif-path <arg>   Path to SARIF file
+ -vb,--verbose            Enable verbose logging
+Please report issues at https://youtrack.jetbrains.com/issues/QD
+```
+
+P.S. `-o` default current path 
