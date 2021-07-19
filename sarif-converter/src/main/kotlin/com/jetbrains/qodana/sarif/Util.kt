@@ -21,8 +21,6 @@ class Util {
             endObject()
         }
 
-
-
         inline fun JsonReader.objectArray(withObjectBoundaries: Boolean = false, block: JsonReader.() -> Unit) {
             beginArray()
             while (peek() == JsonToken.BEGIN_OBJECT) {
