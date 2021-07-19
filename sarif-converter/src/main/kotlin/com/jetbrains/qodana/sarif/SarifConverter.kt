@@ -30,6 +30,7 @@ class SarifConverter(private val sarifFile: File) {
 
         val problems = mutableListOf<SimpleProblem>()
         val metaInformation = MetaInformation()
+        var lostProblems = 0
 
 
         sarif.runs.firstOrNull()?.run {
@@ -51,6 +52,7 @@ class SarifConverter(private val sarifFile: File) {
                         sources = result.sources()
                     })
                 } catch (exception: Exception) {
+                    lostProblems++
                     log.error(exception.message)
                     exception.stackTrace.forEach { log.error(it.toString()) }
                 }
@@ -70,18 +72,18 @@ class SarifConverter(private val sarifFile: File) {
 
         } ?: throw UnexpectedException("sarif have to be contain no less one runs object")
 
-        log.info("Amount handle problems: ${problems.size}")
-        log.info("Writing result-allProblems.json...")
+        log.info("Amount problems: ${problems.size}")
+        if (lostProblems != 0) run { log.info("Unhandled problems: $lostProblems") }
+        log.info("Writing result-allProblems.json")
         Files.newBufferedWriter(output.resolve("result-allProblems.json"), StandardCharsets.UTF_8).use { writer ->
             gson.toJson(mapOf("version" to "3", "listProblem" to problems), writer)
         }
 
 
-        log.info("Writing metaInformation.json...")
+        log.info("Writing metaInformation.json")
         Files.newBufferedWriter(output.resolve("metaInformation.json"), StandardCharsets.UTF_8).use { writer ->
             gson.toJson(metaInformation, writer)
         }
-
     }
 
 

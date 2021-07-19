@@ -11,7 +11,7 @@ class Main {
         @JvmStatic
         fun main(args: Array<String>) {
             val applicationRunningParameters = ApplicationArgumentsHandler.handle(args) ?: return
-            log.info("Starting exporting sarif...")
+            log.info("Starting exporting sarif")
 
             runCatching {
                 applicationRunningParameters.run {
