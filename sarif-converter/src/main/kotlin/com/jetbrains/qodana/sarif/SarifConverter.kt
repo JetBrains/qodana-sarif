@@ -2,7 +2,8 @@ package com.jetbrains.qodana.sarif
 
 import com.google.common.hash.Hasher
 import com.google.common.hash.Hashing
-import com.jetbrains.qodana.sarif.app.CLIProducer.gson
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.jetbrains.qodana.sarif.model.Level.*
 import com.jetbrains.qodana.sarif.model.ReportingDescriptor
 import com.jetbrains.qodana.sarif.model.Result
@@ -16,7 +17,7 @@ import java.io.File
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.*
+import java.rmi.UnexpectedException
 
 @Suppress("UnstableApiUsage")
 class SarifConverter(private val sarifFile: File) {
@@ -28,9 +29,11 @@ class SarifConverter(private val sarifFile: File) {
         log.info("sarif file version: ${sarif.version}")
 
         val problems = mutableListOf<SimpleProblem>()
+        val metaInformation = MetaInformation()
+
+
         sarif.runs.firstOrNull()?.run {
             val toolName = tool.driver.fullName
-
 
             results.forEach { result ->
                 try {
@@ -52,64 +55,35 @@ class SarifConverter(private val sarifFile: File) {
                     exception.stackTrace.forEach { log.error(it.toString()) }
                 }
             }
-        }
+
+            metaInformation.run {
+                versionControlProvenance.firstOrNull()?.run {
+                    attributes = mutableMapOf(
+                        "repositoryUri" to repositoryUri,
+                        "revisionId" to revisionId,
+                        "branch" to branch
+                    )
+                }
+                totalProblem = problems.size
+                toolsInspection = mapOf(toolName to problems.size)
+            }
+
+        } ?: throw UnexpectedException("sarif have to be contain no less one runs object")
 
         log.info("Amount handle problems: ${problems.size}")
         log.info("Writing result-allProblems.json...")
         Files.newBufferedWriter(output.resolve("result-allProblems.json"), StandardCharsets.UTF_8).use { writer ->
             gson.toJson(mapOf("version" to "3", "listProblem" to problems), writer)
         }
-    }
 
 
-
-
-    private fun Result.attributes(): MutableMap<String, String> {
-        return mutableMapOf<String, String>().apply {
-            put("inspectionName", ruleId)
-            put("module", locations.first().logicalLocations.first().fullyQualifiedName)
+        log.info("Writing metaInformation.json...")
+        Files.newBufferedWriter(output.resolve("metaInformation.json"), StandardCharsets.UTF_8).use { writer ->
+            gson.toJson(metaInformation, writer)
         }
+
     }
 
-
-    private fun Result.severity(): Severity {
-        return properties["ideaSeverity"]?.run {
-            when (this) {
-                "ERROR" -> Severity.ERROR
-                "WARNING" -> Severity.WARNING
-                "WEAK WARNING" -> Severity.WEAK_WARNING
-                "TYPO" -> Severity.TYPO
-                "INFORMATION" -> Severity.INFORMATION
-                else -> throw SarifQodanaException("Unexpected severity type: $this")
-            }
-        } ?: run {
-            when (level) {
-                NONE -> Severity.INFORMATION
-                NOTE -> Severity.INFORMATION
-                WARNING -> Severity.WARNING
-                ERROR -> Severity.ERROR
-                else -> throw SarifQodanaException("Can't handle level of problem: $level")
-            }
-        }
-    }
-
-
-    private fun Tool.findRuleById(ruleId: String): ReportingDescriptor {
-        return extensions.first { toolComponent ->
-            toolComponent.rules.any { reportingDescriptor ->
-                reportingDescriptor.id == ruleId
-            }
-        }.run {
-            rules.first { it.id == ruleId }
-        }
-    }
-
-    private fun Result.hash(): Long {
-        val (key, index) = "equalIndicator" to 1
-        return hasher.putUnencodedChars(partialFingerprints.get(key, index)).hash().asLong()
-    }
-
-    private fun emptySimpleProblem() = SimpleProblem("", "", "", null, Severity.TYPO, "", "", mutableListOf(), null, 0)
 
     private fun Result.sources(): MutableList<Source> {
         return mutableListOf<Source>().apply {
@@ -133,12 +107,58 @@ class SarifConverter(private val sarifFile: File) {
         }
     }
 
+    private fun Result.attributes(): MutableMap<String, String> {
+        return mutableMapOf<String, String>().apply {
+            put("inspectionName", ruleId)
+            put("module", locations.first().logicalLocations.first().fullyQualifiedName)
+        }
+    }
+
+
+    private fun Result.severity(): Severity {
+        return properties["ideaSeverity"]?.run {
+            when (this) {
+                "ERROR" -> Severity.ERROR
+                "WARNING" -> Severity.WARNING
+                "WEAK WARNING" -> Severity.WEAK_WARNING
+                "TYPO" -> Severity.TYPO
+                "INFORMATION" -> Severity.INFORMATION
+                else -> throw InvalidSarifException("Unexpected severity type: $this")
+            }
+        } ?: run {
+            when (level) {
+                NONE -> Severity.INFORMATION
+                NOTE -> Severity.INFORMATION
+                WARNING -> Severity.WARNING
+                ERROR -> Severity.ERROR
+                else -> throw InvalidSarifException("Can't handle level of problem: $level")
+            }
+        }
+    }
+
+
+    private fun Tool.findRuleById(ruleId: String): ReportingDescriptor {
+        return extensions.first { toolComponent ->
+            toolComponent.rules.any { reportingDescriptor ->
+                reportingDescriptor.id == ruleId
+            }
+        }.run {
+            rules.first { it.id == ruleId }
+        }
+    }
+
+    private fun Result.hash(): Long {
+        val (key, index) = "equalIndicator" to 1
+        return hasher.putUnencodedChars(partialFingerprints.get(key, index)).hash().asLong()
+    }
+
+    private fun emptySimpleProblem() = SimpleProblem("", "", "", null, Severity.TYPO, "", "", mutableListOf(), null, 0)
+
     companion object {
+        private val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
         private val log = LogManager.getLogger(SarifConverter::class.java)!!
     }
 }
-
-class SarifQodanaException(message: String) : InvalidPropertiesFormatException(message)
 
 /*
 need results-allProblems.json and metaInformation.json

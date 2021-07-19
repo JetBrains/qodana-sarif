@@ -1,14 +1,11 @@
 package com.jetbrains.qodana.sarif.app
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import org.apache.commons.cli.DefaultParser
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 
 internal object CLIProducer {
-    val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
     val options = createOptions()
     val parser = DefaultParser()
     private val helper = HelpFormatter()
