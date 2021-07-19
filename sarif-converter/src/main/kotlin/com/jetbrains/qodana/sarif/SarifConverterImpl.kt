@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder
 import com.jetbrains.qodana.sarif.model.Level.*
 import com.jetbrains.qodana.sarif.model.ReportingDescriptor
 import com.jetbrains.qodana.sarif.model.Result
+import com.jetbrains.qodana.sarif.model.SarifReport
 import com.jetbrains.qodana.sarif.model.Tool
 import org.apache.logging.log4j.LogManager
 import org.jetbrains.teamcity.qodana.json.Severity
@@ -20,20 +21,18 @@ import java.nio.file.Path
 import java.rmi.UnexpectedException
 
 @Suppress("UnstableApiUsage")
-class SarifConverter(private val sarifFile: File) {
+class SarifConverterImpl : SarifConverter {
     private val hasher: Hasher
         get() = Hashing.sha256().newHasher()
 
-    fun convert(output: Path) {
-        val sarif = SarifUtil.readReport(sarifFile.toPath())
-        log.info("sarif file version: ${sarif.version}")
+    override fun convert(sarifReport: SarifReport, output: Path) {
+        log.info("sarif file version: ${sarifReport.version}")
 
         val problems = mutableListOf<SimpleProblem>()
         val metaInformation = MetaInformation()
         var lostProblems = 0
 
-
-        sarif.runs.firstOrNull()?.run {
+        sarifReport.runs.firstOrNull()?.run {
             val toolName = tool.driver.fullName
 
             results.forEach { result ->
@@ -60,10 +59,14 @@ class SarifConverter(private val sarifFile: File) {
 
             metaInformation.run {
                 versionControlProvenance.firstOrNull()?.run {
-                    attributes = mutableMapOf(
-                        "repositoryUri" to repositoryUri,
-                        "revisionId" to revisionId,
-                        "branch" to branch
+                    attributes = mapOf(
+                        "vcs" to mapOf(
+                            "sarifIdea" to mapOf(
+                                "repositoryUri" to repositoryUri,
+                                "revisionId" to revisionId,
+                                "branch" to branch
+                            )
+                        )
                     )
                 }
                 totalProblem = problems.size
@@ -86,25 +89,32 @@ class SarifConverter(private val sarifFile: File) {
         }
     }
 
+    override fun convert(sarifFile: File, output: Path) {
+        val sarifReport = SarifUtil.readReport(sarifFile.toPath())
+        convert(sarifReport, output)
+    }
+
 
     private fun Result.sources(): MutableList<Source> {
         return mutableListOf<Source>().apply {
             locations.forEach { location ->
-                add(Source(
-                    "none",
-                    location.physicalLocation.artifactLocation.uri,
-                    location.physicalLocation.region.sourceLanguage,
-                    location.physicalLocation.region.startLine,
-                    location.physicalLocation.region.startColumn,
-                    location.physicalLocation.region.charLength,
-                    Code(
-                        location.physicalLocation.contextRegion.startLine,
-                        location.physicalLocation.contextRegion.charLength,
-                        location.physicalLocation.contextRegion.charOffset,
-                        location.physicalLocation.contextRegion.snippet.text
-                    ),
-                    null
-                ))
+                add(
+                    Source(
+                        "none",
+                        location.physicalLocation.artifactLocation.uri,
+                        location.physicalLocation.region.sourceLanguage,
+                        location.physicalLocation.region.startLine,
+                        location.physicalLocation.region.startColumn,
+                        location.physicalLocation.region.charLength,
+                        Code(
+                            location.physicalLocation.contextRegion.startLine,
+                            location.physicalLocation.contextRegion.charLength,
+                            location.physicalLocation.contextRegion.charOffset,
+                            location.physicalLocation.contextRegion.snippet.text
+                        ),
+                        null
+                    )
+                )
             }
         }
     }
@@ -158,7 +168,7 @@ class SarifConverter(private val sarifFile: File) {
 
     companion object {
         private val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
-        private val log = LogManager.getLogger(SarifConverter::class.java)!!
+        private val log = LogManager.getLogger(SarifConverterImpl::class.java)!!
     }
 }
 

@@ -1,6 +1,6 @@
 package com.jetbrains.qodana.sarif.app
 
-import com.jetbrains.qodana.sarif.SarifConverter
+import com.jetbrains.qodana.sarif.SarifConverterImpl
 import org.apache.logging.log4j.LogManager
 
 
@@ -15,7 +15,7 @@ class Main {
 
             runCatching {
                 applicationRunningParameters.run {
-                    SarifConverter(sarifFile).convert(output)
+                    SarifConverterImpl().convert(sarifFile, output)
                 }
                 log.info("Done")
             }.onFailure { e ->
