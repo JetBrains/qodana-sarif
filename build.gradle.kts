@@ -1,9 +1,6 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     `java-library`
     `maven-publish`
-    kotlin("jvm") version "1.5.21"
 
 }
 
@@ -14,7 +11,6 @@ repositories {
 dependencies {
     testImplementation("junit:junit:4.12")
     implementation("com.google.code.gson:gson:2.8.6")
-    implementation(kotlin("stdlib-jdk8"))
 }
 
 publishing {
@@ -39,12 +35,4 @@ publishing {
             }
         }
     }
-}
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    jvmTarget = "1.8"
-}
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "1.8"
 }
