@@ -15,7 +15,7 @@ public class BaselineCalculation {
     private int newResults = 0;
     private int absentResults = 0;
     private int unchangedResults = 0;
-    private Options options;
+    private final Options options;
 
     private BaselineCalculation(Options options) {
         this.options = options;
@@ -97,12 +97,17 @@ public class BaselineCalculation {
         public RunResultGroup(Run report, Run baseline) {
             this.report = report;
             buildMap(baseline, baselineHashes, diffBaseline);
+            removeAbsentResults(report);
             buildMap(report, reportHashes, diffReport);
+        }
 
+        private void removeAbsentResults(Run report) {
+            report.getResults().removeIf(result -> result.getBaselineState() == ABSENT);
         }
 
         private void buildMap(Run run, Map<String, Result> map, Map<ResultKey, List<Result>> diffSet) {
             for (Result result : run.getResults()) {
+                if (result.getBaselineState() == ABSENT) continue;
                 VersionedMap<String> fingerprints = result.getPartialFingerprints();
                 String equalIndicator = fingerprints != null ? fingerprints.getLastValue(EQUAL_INDICATOR) : null;
                 if (equalIndicator != null) {
