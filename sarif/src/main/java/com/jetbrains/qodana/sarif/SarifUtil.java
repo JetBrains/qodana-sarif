@@ -2,8 +2,7 @@ package com.jetbrains.qodana.sarif;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.jetbrains.qodana.sarif.model.PropertyBag;
-import com.jetbrains.qodana.sarif.model.SarifReport;
+import com.jetbrains.qodana.sarif.model.*;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -11,6 +10,8 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SarifUtil {
     private SarifUtil() {
@@ -25,6 +26,11 @@ public class SarifUtil {
         try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             return readReport(reader);
         }
+    }
+
+    public static SarifReport emptyReport(String toolName) {
+        Run run = new Run(new Tool(new ToolComponent(toolName))).withResults(new ArrayList<>());
+        return new SarifReport().withRuns(List.of(run));
     }
 
     public static void writeReport(Writer writer, SarifReport report) {
