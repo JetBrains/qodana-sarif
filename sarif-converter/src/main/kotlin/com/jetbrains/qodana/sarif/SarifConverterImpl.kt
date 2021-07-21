@@ -9,11 +9,16 @@ import com.jetbrains.qodana.sarif.model.ReportingDescriptor
 import com.jetbrains.qodana.sarif.model.Result
 import com.jetbrains.qodana.sarif.model.SarifReport
 import com.jetbrains.qodana.sarif.model.Tool
+import org.apache.commons.lang3.StringEscapeUtils
 import org.apache.logging.log4j.LogManager
 import org.jetbrains.teamcity.qodana.json.Severity
 import org.jetbrains.teamcity.qodana.json.version3.Code
 import org.jetbrains.teamcity.qodana.json.version3.SimpleProblem
 import org.jetbrains.teamcity.qodana.json.version3.Source
+import org.jsoup.Jsoup
+import org.jsoup.safety.Whitelist
+import org.owasp.html.HtmlPolicyBuilder
+import org.owasp.html.PolicyFactory
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
@@ -38,14 +43,17 @@ class SarifConverterImpl : SarifConverter {
             results.forEach { result ->
                 try {
                     val rule = tool.findRuleById(result.ruleId)
+                    val driver = tool.driver
 
                     problems.add(emptySimpleProblem().apply {
                         tool = toolName
-                        comment = result.message.text
+                        comment = cleanText(result.message.text)
                         hash = result.hash()
                         type = rule.shortDescription.text
                         detailsInfo = rule.fullDescription.text
-                        category = rule.relationships.first().target.id
+                        category = rule.relationships.first().target.id.let { id ->
+                            driver.taxa.first { it.id == id }.name
+                        }
                         severity = result.severity()
                         attributes = result.attributes()
                         sources = result.sources()
@@ -75,6 +83,8 @@ class SarifConverterImpl : SarifConverter {
 
         } ?: throw UnexpectedException("sarif have to be contain no less one runs object")
 
+        if (lostProblems > 0 && problems.size == 0) throw InvalidSarifException("all sarif problems have invalid data")
+
         log.info("Amount problems: ${problems.size}")
         if (lostProblems != 0) run { log.info("Unhandled problems: $lostProblems") }
         log.info("Writing result-allProblems.json")
@@ -94,6 +104,26 @@ class SarifConverterImpl : SarifConverter {
         convert(sarifReport, output)
     }
 
+    private fun cleanText(text: String): String {
+        var result = ""
+        try {
+            result = StringEscapeUtils.unescapeHtml4(
+                Jsoup.clean(
+                    policy.sanitize(
+                        StringEscapeUtils.unescapeJson(
+                            Jsoup.parse(
+                                StringEscapeUtils.unescapeJson(text)
+                            ).text()
+                        )
+                    ),
+                    Whitelist.none()
+                )
+            )
+        } catch (e: Exception) {
+            println("Can't clean text \"$text\" cause: ${e.message}")
+        }
+        return result
+    }
 
     private fun Result.sources(): MutableList<Source> {
         return mutableListOf<Source>().apply {
@@ -121,8 +151,8 @@ class SarifConverterImpl : SarifConverter {
 
     private fun Result.attributes(): MutableMap<String, String> {
         return mutableMapOf<String, String>().apply {
-            put("inspectionName", ruleId)
             put("module", locations.first().logicalLocations.first().fullyQualifiedName)
+            put("inspectionName", ruleId)
         }
     }
 
@@ -168,6 +198,7 @@ class SarifConverterImpl : SarifConverter {
 
     companion object {
         private val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
+        private val policy: PolicyFactory = HtmlPolicyBuilder().toFactory()
         private val log = LogManager.getLogger(SarifConverterImpl::class.java)!!
     }
 }

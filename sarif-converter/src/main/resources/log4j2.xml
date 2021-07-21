@@ -2,7 +2,7 @@
 
 <Configuration name="CodeInspectionConfiguration">
     <Properties>
-        <Property name="pattern">[%d] %6p - %30.30c:%L - %m%n</Property>
+        <Property name="pattern">[%d] %6p - %31.31c:%L - %m%n</Property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
