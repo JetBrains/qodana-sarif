@@ -4,35 +4,65 @@ import com.google.common.hash.Hasher
 import com.google.common.hash.Hashing
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.jetbrains.qodana.sarif.TextUtil.Companion.sanitizeText
+import com.jetbrains.qodana.sarif.model.*
 import com.jetbrains.qodana.sarif.model.Level.*
-import com.jetbrains.qodana.sarif.model.ReportingDescriptor
-import com.jetbrains.qodana.sarif.model.Result
-import com.jetbrains.qodana.sarif.model.SarifReport
-import com.jetbrains.qodana.sarif.model.Tool
-import org.apache.commons.lang3.StringEscapeUtils
+import com.jetbrains.qodana.sarif.model.ResultAllProblems.Companion.emptySimpleProblem
 import org.apache.logging.log4j.LogManager
 import org.jetbrains.teamcity.qodana.json.Severity
 import org.jetbrains.teamcity.qodana.json.version3.Code
 import org.jetbrains.teamcity.qodana.json.version3.SimpleProblem
 import org.jetbrains.teamcity.qodana.json.version3.Source
-import org.jsoup.Jsoup
-import org.jsoup.safety.Whitelist
-import org.owasp.html.HtmlPolicyBuilder
-import org.owasp.html.PolicyFactory
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.rmi.UnexpectedException
+import kotlin.Exception
 
 @Suppress("UnstableApiUsage")
 class SarifConverterImpl : SarifConverter {
+    companion object {
+        private val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
+        private val log = LogManager.getLogger(SarifConverterImpl::class.java)!!
+    }
+
     private val hasher: Hasher
         get() = Hashing.sha256().newHasher()
+
+    override fun convert(sarifFile: File, output: Path) {
+        val sarifReport = SarifUtil.readReport(sarifFile.toPath())
+        convert(sarifReport, output)
+    }
+
+    override fun convert(sarifFile: File): Pair<MetaInformation, ResultAllProblems> {
+        val sarifReport = SarifUtil.readReport(sarifFile.toPath())
+        return convert(sarifReport)
+    }
 
     override fun convert(sarifReport: SarifReport, output: Path) {
         log.info("sarif file version: ${sarifReport.version}")
 
+        val (metaInformation, resultAllProblems) = convert(sarifReport)
+
+        log.info("Amount problems: ${resultAllProblems.listProblem.size}")
+        if (sarifReport.runs.firstOrNull()?.results?.size != resultAllProblems.listProblem.size) {
+            val lostProblems = sarifReport.runs.firstOrNull()?.results?.size?.minus(resultAllProblems.listProblem.size)
+            log.info("Unhandled problems: $lostProblems")
+        }
+
+        log.info("Writing result-allProblems.json")
+        Files.newBufferedWriter(output.resolve("result-allProblems.json"), StandardCharsets.UTF_8).use { writer ->
+            gson.toJson(resultAllProblems, writer)
+        }
+
+        log.info("Writing metaInformation.json")
+        Files.newBufferedWriter(output.resolve("metaInformation.json"), StandardCharsets.UTF_8).use { writer ->
+            gson.toJson(metaInformation, writer)
+        }
+    }
+
+    override fun convert(sarifReport: SarifReport): Pair<MetaInformation, ResultAllProblems> {
         val problems = mutableListOf<SimpleProblem>()
         val metaInformation = MetaInformation()
         var lostProblems = 0
@@ -47,7 +77,7 @@ class SarifConverterImpl : SarifConverter {
 
                     problems.add(emptySimpleProblem().apply {
                         tool = toolName
-                        comment = cleanText(result.message.text)
+                        comment = sanitizeText(result.message.text)
                         hash = result.hash()
                         type = rule.shortDescription.text
                         detailsInfo = rule.fullDescription.text
@@ -85,45 +115,9 @@ class SarifConverterImpl : SarifConverter {
 
         if (lostProblems > 0 && problems.size == 0) throw InvalidSarifException("all sarif problems have invalid data")
 
-        log.info("Amount problems: ${problems.size}")
-        if (lostProblems != 0) run { log.info("Unhandled problems: $lostProblems") }
-        log.info("Writing result-allProblems.json")
-        Files.newBufferedWriter(output.resolve("result-allProblems.json"), StandardCharsets.UTF_8).use { writer ->
-            gson.toJson(mapOf("version" to "3", "listProblem" to problems), writer)
-        }
-
-
-        log.info("Writing metaInformation.json")
-        Files.newBufferedWriter(output.resolve("metaInformation.json"), StandardCharsets.UTF_8).use { writer ->
-            gson.toJson(metaInformation, writer)
-        }
+        return metaInformation to ResultAllProblems(listProblem = problems)
     }
 
-    override fun convert(sarifFile: File, output: Path) {
-        val sarifReport = SarifUtil.readReport(sarifFile.toPath())
-        convert(sarifReport, output)
-    }
-
-    private fun cleanText(text: String): String {
-        var result = ""
-        try {
-            result = StringEscapeUtils.unescapeHtml4(
-                Jsoup.clean(
-                    policy.sanitize(
-                        StringEscapeUtils.unescapeJson(
-                            Jsoup.parse(
-                                StringEscapeUtils.unescapeJson(text)
-                            ).text()
-                        )
-                    ),
-                    Whitelist.none()
-                )
-            )
-        } catch (e: Exception) {
-            println("Can't clean text \"$text\" cause: ${e.message}")
-        }
-        return result
-    }
 
     private fun Result.sources(): MutableList<Source> {
         return mutableListOf<Source>().apply {
@@ -192,13 +186,5 @@ class SarifConverterImpl : SarifConverter {
     private fun Result.hash(): Long {
         val (key, index) = "equalIndicator" to 1
         return hasher.putUnencodedChars(partialFingerprints.get(key, index)).hash().asLong()
-    }
-
-    private fun emptySimpleProblem() = SimpleProblem("", "", "", null, Severity.TYPO, "", "", mutableListOf(), null, 0)
-
-    companion object {
-        private val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
-        private val policy: PolicyFactory = HtmlPolicyBuilder().toFactory()
-        private val log = LogManager.getLogger(SarifConverterImpl::class.java)!!
     }
 }

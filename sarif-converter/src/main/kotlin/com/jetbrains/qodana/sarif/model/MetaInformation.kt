@@ -1,4 +1,4 @@
-package com.jetbrains.qodana.sarif
+package com.jetbrains.qodana.sarif.model
 
 import com.google.gson.annotations.SerializedName
 
