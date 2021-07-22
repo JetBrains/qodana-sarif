@@ -18,7 +18,7 @@ internal class SarifConverterImplTest {
             Assert.assertEquals(expectedMetaInformation.readText(), tempDirectory.resolve("metaInformation.json").toUri().toURL().readText())
             Assert.assertEquals(expectedResultsAllProblems.readText(), tempDirectory.resolve("result-allProblems.json").toUri().toURL().readText())
         } finally {
-//            tempDirectory.toFile().deleteRecursively()
+            tempDirectory.toFile().deleteRecursively()
         }
     }
 }
