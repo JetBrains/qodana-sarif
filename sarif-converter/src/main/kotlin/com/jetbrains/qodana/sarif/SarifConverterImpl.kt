@@ -18,7 +18,6 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.rmi.UnexpectedException
-import kotlin.Exception
 
 @Suppress("UnstableApiUsage")
 class SarifConverterImpl : SarifConverter {
@@ -120,26 +119,51 @@ class SarifConverterImpl : SarifConverter {
 
 
     private fun Result.sources(): MutableList<Source> {
+        fun type(location: Location): String {
+            return location.physicalLocation?.artifactLocation?.uri?.let {
+                "file"
+            } ?: let {
+                location.logicalLocations?.firstOrNull()?.let {
+                    "module"
+                } ?: let {
+                    "no specific module"
+                }
+            }
+        }
+
         return mutableListOf<Source>().apply {
             locations.forEach { location ->
                 add(
                     Source(
-                        "none",
-                        location.physicalLocation.artifactLocation.uri,
+                        type(location),
+                        location.physicalLocation.artifactLocation?.uri ?: "",
                         location.physicalLocation.region.sourceLanguage,
                         location.physicalLocation.region.startLine,
                         location.physicalLocation.region.startColumn,
                         location.physicalLocation.region.charLength,
-                        Code(
-                            location.physicalLocation.contextRegion.startLine,
-                            location.physicalLocation.contextRegion.charLength,
-                            location.physicalLocation.contextRegion.charOffset,
-                            location.physicalLocation.contextRegion.snippet.text
-                        ),
+                        location.physicalLocation.code(),
                         null
                     )
                 )
             }
+        }
+    }
+
+    private fun PhysicalLocation.code(): Code {
+        return Code(0,0,0,"").apply {
+            val lines = contextRegion.snippet.text.split("\n")
+            var offsetNew = 0
+            val skipLines = region.startLine - contextRegion.startLine
+            lines.forEachIndexed { index, s ->
+                if (index < skipLines) {
+                    offsetNew += s.length + 1
+                }
+            }
+
+            startLine = contextRegion.startLine
+            length = region.charLength
+            offset = offsetNew + region.startColumn
+            surroundingCode = contextRegion.snippet.text
         }
     }
 
