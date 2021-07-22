@@ -20,8 +20,20 @@ allprojects {
 
     repositories {
         mavenLocal()
-        mavenCentral()
         jcenter()
+        mavenCentral()
+        maven(url = "https://repo.labs.intellij.net/thirdparty")
+
+        maven {
+            name = "Space"
+            val spaceArtifactoryUrl: String by project
+            url = uri(spaceArtifactoryUrl)
+
+            credentials {
+                username = spaceLogin
+                password = spacePassword
+            }
+        }
     }
 
     kotlin {
