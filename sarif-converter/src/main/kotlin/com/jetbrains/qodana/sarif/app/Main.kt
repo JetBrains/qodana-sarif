@@ -18,9 +18,9 @@ class Main {
                     SarifConverterImpl().convert(sarifFile, output)
                 }
                 log.info("Done")
-            }.onFailure { e ->
+            }.onFailure { ex ->
                 log.error("Problems occurred while trying covert sarif file")
-                log.error(e.message)
+                log.error(ex)
             }
         }
     }

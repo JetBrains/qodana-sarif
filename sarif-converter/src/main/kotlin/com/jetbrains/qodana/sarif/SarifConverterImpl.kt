@@ -90,7 +90,7 @@ class SarifConverterImpl : SarifConverter {
                     })
                 } catch (exception: Exception) {
                     lostProblems++
-                    log.error(exception.message)
+                    log.error(exception)
                     exception.stackTrace.forEach { log.error(it.toString()) }
                 }
             }
