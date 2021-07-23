@@ -142,7 +142,12 @@ class SarifConverterImpl : SarifConverter {
                         location.physicalLocation.region.startLine,
                         location.physicalLocation.region.startColumn,
                         location.physicalLocation.region.charLength,
-                        location.physicalLocation.code(),
+                        Code(
+                            location.physicalLocation.contextRegion.startLine,
+                            location.physicalLocation.region.charLength,
+                            location.physicalLocation.contextRegion.charOffset,
+                            location.physicalLocation.contextRegion.snippet.text
+                        ),
                         null
                     )
                 )
@@ -150,20 +155,6 @@ class SarifConverterImpl : SarifConverter {
         }
     }
 
-    private fun PhysicalLocation.code(): Code {
-        return Code(0, 0, 0, "").apply {
-            val newOffset = contextRegion.snippet.text
-                .split("\n")
-                .take(region.startLine - contextRegion.startLine)
-                .sumBy { it.length + 1 }
-
-
-            offset = newOffset + region.startColumn
-            startLine = contextRegion.startLine
-            length = region.charLength
-            surroundingCode = contextRegion.snippet.text
-        }
-    }
 
     private fun Result.attributes(): MutableMap<String, String> {
         return mutableMapOf<String, String>().apply {

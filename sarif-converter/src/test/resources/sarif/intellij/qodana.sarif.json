@@ -204,7 +204,7 @@
                 "contextRegion": {
                   "startLine": 216,
                   "startColumn": 1,
-                  "charOffset": 8447,
+                  "charOffset": 51,
                   "charLength": 138,
                   "snippet": {
                     "text": "      throw new IllegalStateException();\n    }\n    if(true) {}\n    state = State.RETURN;\n    CheckSignatureAdapter checkSignatureAdapter ="
@@ -256,7 +256,7 @@
                 "contextRegion": {
                   "startLine": 216,
                   "startColumn": 1,
-                  "charOffset": 8447,
+                  "charOffset": 54,
                   "charLength": 138,
                   "snippet": {
                     "text": "      throw new IllegalStateException();\n    }\n    if(true) {}\n    state = State.RETURN;\n    CheckSignatureAdapter checkSignatureAdapter ="
@@ -308,7 +308,7 @@
                 "contextRegion": {
                   "startLine": 257,
                   "startColumn": 1,
-                  "charOffset": 9764,
+                  "charOffset": 27,
                   "charLength": 152,
                   "snippet": {
                     "text": "\n  @Override\n  public void visitTypeVariable(final String name) {\n    visitTypeVariable(name);\n    if (type != TYPE_SIGNATURE || state != State.EMPTY) {"
