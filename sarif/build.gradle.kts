@@ -9,7 +9,7 @@ publishing {
             val minorVersion: String by project
 
             groupId = project.group.toString()
-            artifactId = project.name
+            artifactId = "qodana-sarif"
             version = "0.1.$minorVersion"
 
             from(components["java"])
