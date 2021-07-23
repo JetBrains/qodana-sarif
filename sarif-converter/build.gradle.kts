@@ -46,6 +46,7 @@ publishing {
             version = "0.1.$minorVersion"
 
             artifact(tasks.getByName("sarifConverter-fatJar"))
+            from(components["java"])
 
             pom {
                 developers {
