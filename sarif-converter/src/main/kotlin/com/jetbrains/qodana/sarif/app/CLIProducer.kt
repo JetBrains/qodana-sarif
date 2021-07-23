@@ -22,9 +22,9 @@ internal object CLIProducer {
     }
 
     private fun createOptions(): Options {
-        val sarifPath = Option("sp", "sarif-path", true, "Path to SARIF file").apply { isRequired = true }
+        val sarifPath = Option("s", "sarif-path", true, "Path to SARIF file").apply { isRequired = true }
         val output = Option("o", "output", true, "Output directory for report files")
-        val verbose = Option("vb", "verbose", false, "Enable verbose logging")
+        val verbose = Option("v", "verbose", false, "Enable verbose logging")
         val help = Option("help","help", false, "Print program options")
 
         return Options().addOption(sarifPath).addOption(output).addOption(verbose).addOption(help)

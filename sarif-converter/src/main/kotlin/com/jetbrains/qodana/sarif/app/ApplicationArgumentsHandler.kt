@@ -46,14 +46,14 @@ internal class ApplicationArgumentsHandler {
         }
 
         private fun CommandLine.validateArguments(): Boolean {
-            if (hasOption("sp")) {
-                val sarifFile = getOptionValue("sp")
+            if (hasOption("s")) {
+                val sarifFile = getOptionValue("s")
                 if (!File(sarifFile).exists()) {
                     log.error("Sarif file \"$sarifFile\" does not exist")
                     return false
                 }
             } else {
-                log.fatal("\"-sp\" parameters have to be specified, see --help")
+                log.fatal("\"-s\" parameters have to be specified, see --help")
                 return false
             }
 

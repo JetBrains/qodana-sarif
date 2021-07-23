@@ -7,8 +7,8 @@
 ```
 Available options are:
  -o,--output <arg>        Output directory for report files
- -sp,--sarif-path <arg>   Path to SARIF file
- -vb,--verbose            Enable verbose logging
+ -s,--sarif-path <arg>   Path to SARIF file
+ -v,--verbose            Enable verbose logging
 ```
 
 ###Examples
@@ -21,9 +21,9 @@ docker run -v <sarif-path>:/data/sarif.json -v <output>:/data/output docker-regi
 docker run -v <sarif-path>:/data/sarif.json\
               <output>:/data/output\
               docker-registry.labs.intellij.net/jetbrains-analytics-converter
-              -sp /data/sarif.json
+              -s /data/sarif.json
               -o /data/output
-              -vb
+              -v
 ``` 
 Would be generated both file: `result-allProblems.json` and `metaInformation.json`
 
@@ -41,12 +41,12 @@ The built jar will lie: `sarif-converter/build/libs/sarifConverter.jar`
 
 Help:
 ```
-usage: java -jar jarName [-help] [-o <arg>] -sp <arg> [-vb]
+usage: java -jar jarName [-help] [-o <arg>] -s <arg> [-v]
 Standard commands:
  -help,--help             Print program options
  -o,--output <arg>        Output directory for report files
- -sp,--sarif-path <arg>   Path to SARIF file
- -vb,--verbose            Enable verbose logging
+ -s,--sarif-path <arg>   Path to SARIF file
+ -v,--verbose            Enable verbose logging
 Please report issues at https://youtrack.jetbrains.com/issues/QD
 ```
 

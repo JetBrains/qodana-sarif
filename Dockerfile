@@ -7,4 +7,4 @@ ADD "sarif-converter/build/libs/sarifConverter.jar" "/bin/sarifConverter.jar"
 WORKDIR "/data"
 
 ENTRYPOINT ["java", "-Xmx4g", "-jar", "/bin/sarifConverter.jar"]
-CMD ["-sf", "/data/sarif.json", "-o", "/data/output"]
+CMD ["-s", "/data/sarif.json", "-o", "/data/output"]
