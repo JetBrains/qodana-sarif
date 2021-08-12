@@ -7,8 +7,8 @@ import java.io.File
 import java.nio.file.Path
 
 interface SarifConverter {
-    fun convert(sarifFile: File, output: Path)
-    fun convert(sarifReport: SarifReport, output: Path)
+    fun convert(sarifFile: File, output: Path): List<File>
+    fun convert(sarifReport: SarifReport, output: Path): List<File>
     fun convert(sarifFile: File): Pair<MetaInformation, ResultAllProblems>
     fun convert(sarifReport: SarifReport): Pair<MetaInformation, ResultAllProblems>
 }

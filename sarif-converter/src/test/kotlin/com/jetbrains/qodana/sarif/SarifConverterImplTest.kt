@@ -1,14 +1,14 @@
 package com.jetbrains.qodana.sarif
 
 import com.google.gson.GsonBuilder
+import com.google.gson.annotations.SerializedName
 import com.jetbrains.qodana.sarif.Util.Companion.getResourceFile
-import com.jetbrains.qodana.sarif.model.MetaInformation
-import org.jetbrains.teamcity.qodana.json.version3.Problem
 import org.jetbrains.teamcity.qodana.json.version3.SimpleProblem
 import org.junit.Assert
 import org.junit.Test
-import java.nio.file.Path
 import java.nio.file.Paths
+import kotlin.io.path.readText
+
 
 internal class SarifConverterImplTest {
     @Test
@@ -30,48 +30,35 @@ internal class SarifConverterImplTest {
         val gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
     }
 
-    private inline fun <reified T> readResourceClass(path: String): T {
-        return gson.fromJson(getResourceFile(path).readText(), T::class.java)
+    internal data class ResultAllProblems(val version: String = "3", @SerializedName("listProblem") val problems: List<SimpleProblem> = emptyList()) {
+        fun mergeHashes(src: ResultAllProblems): ResultAllProblems {
+            Assert.assertEquals(src.problems.size, problems.size)
+            return copy(problems = src.problems.zip(problems).map { (srcProblem, dstProblem) -> dstProblem.copy(hash = srcProblem.hash) })
+        }
     }
 
-    private inline fun <reified T> readPathClass(path: Path): T {
-        return gson.fromJson(path.toUri().toURL().readText(), T::class.java)
+    private fun assertResultsEqualExceptHash(actual: String, expected: String) {
+        val srcObj = gson.fromJson(actual, ResultAllProblems::class.java)
+        val dstObj = gson.fromJson(expected, ResultAllProblems::class.java).mergeHashes(srcObj)
+        Assert.assertEquals(gson.toJson(srcObj), gson.toJson(dstObj))
     }
 
-    internal data class ResultAllProblems(val version: String = "3", val problems: List<SimpleProblem> = emptyList())
 
     private fun assertConverterWorksOn(dirPath: String) {
         val sarifFile = getResourceFile("$dirPath/qodana.sarif.json")
-        val expectedMetaInformation = readResourceClass<MetaInformation>("$dirPath/expected/metaInformation.json")
-        val expectedResultsAllProblems = readResourceClass<ResultAllProblems>("$dirPath/expected/result-allProblems.json")
+        val expectedMetaInformation = getResourceFile("$dirPath/expected/metaInformation.json").readText()
+        val expectedResultsAllProblems = getResourceFile("$dirPath/expected/result-allProblems.json").readText()
         val tempDirectory = Paths.get("tempTestDirectory_1").apply { toFile().mkdirs() }
 
         try {
             SarifConverterImpl().convert(sarifFile, tempDirectory)
-            val actualResultsAllProblems = readPathClass<ResultAllProblems>(tempDirectory.resolve("result-allProblems.json"))
-            val actualMetaInformation = readPathClass<MetaInformation>(tempDirectory.resolve("metaInformation.json"))
-            Assert.assertEquals(expectedResultsAllProblems, actualResultsAllProblems)
+            val actualResultsAllProblems = tempDirectory.resolve("result-allProblems.json").readText()
+            val actualMetaInformation = tempDirectory.resolve("metaInformation.json").readText()
+            assertResultsEqualExceptHash(actualResultsAllProblems, expectedResultsAllProblems)
             Assert.assertEquals(expectedMetaInformation, actualMetaInformation)
         } finally {
             tempDirectory.toFile().deleteRecursively()
         }
     }
 
-    fun SimpleProblem.equals(other: Any?): Boolean {
-        // Don't use hash for comparison, because some sarifs won't have it
-        return when (other) {
-            is Problem -> {
-                return (this.attributes == other.attributes) &&
-                        (this.category == other.category) &&
-                        (this.comment == other.comment) &&
-                        (this.detailsInfo == other.detailsInfo) &&
-                        (this.severity == other.severity) &&
-                        (this.sources == other.sources) &&
-                        (this.tags == other.tags) &&
-                        (this.tool == other.tool) &&
-                        (this.type == other.type)
-            }
-            else -> super.equals(other)
-        }
-    }
 }

@@ -30,9 +30,9 @@ class SarifConverterImpl : SarifConverter {
     private val hasher: NullableHasher
         get() = NullableHasher(Hashing.sha256().newHasher())
 
-    override fun convert(sarifFile: File, output: Path) {
+    override fun convert(sarifFile: File, output: Path): List<File> {
         val sarifReport = SarifUtil.readReport(sarifFile.toPath())
-        convert(sarifReport, output)
+        return convert(sarifReport, output)
     }
 
     override fun convert(sarifFile: File): Pair<MetaInformation, ResultAllProblems> {
@@ -40,10 +40,15 @@ class SarifConverterImpl : SarifConverter {
         return convert(sarifReport)
     }
 
-    override fun convert(sarifReport: SarifReport, output: Path) {
+    private fun File.writeResult(src: Any) {
+        bufferedWriter(StandardCharsets.UTF_8).use { gson.toJson(src, it) }
+    }
+
+    override fun convert(sarifReport: SarifReport, output: Path): List<File> {
         log.info("sarif file version: ${sarifReport.version}")
 
         val (metaInformation, resultAllProblems) = convert(sarifReport)
+        val writtenFiles = mutableListOf<File>()
 
         log.info("Amount problems: ${resultAllProblems.listProblem.size}")
         if (sarifReport.runs.firstOrNull()?.results?.size != resultAllProblems.listProblem.size) {
@@ -52,14 +57,18 @@ class SarifConverterImpl : SarifConverter {
         }
 
         log.info("Writing result-allProblems.json")
-        Files.newBufferedWriter(output.resolve("result-allProblems.json"), StandardCharsets.UTF_8).use { writer ->
-            gson.toJson(resultAllProblems, writer)
+        output.resolve("result-allProblems.json").toFile().let {
+            it.writeResult(resultAllProblems)
+            writtenFiles.add(it)
         }
 
         log.info("Writing metaInformation.json")
-        Files.newBufferedWriter(output.resolve("metaInformation.json"), StandardCharsets.UTF_8).use { writer ->
-            gson.toJson(metaInformation, writer)
+        output.resolve("metaInformation.json").toFile().let {
+            it.writeResult(metaInformation)
+            writtenFiles.add(it)
         }
+
+        return writtenFiles
     }
 
     override fun convert(sarifReport: SarifReport): Pair<MetaInformation, ResultAllProblems> {
