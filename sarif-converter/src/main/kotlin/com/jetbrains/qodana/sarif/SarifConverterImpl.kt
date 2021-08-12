@@ -1,6 +1,5 @@
 package com.jetbrains.qodana.sarif
 
-import com.google.common.hash.Hasher
 import com.google.common.hash.Hashing
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -19,6 +18,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.rmi.UnexpectedException
 import kotlin.Exception
+import kotlin.random.Random
 
 @Suppress("UnstableApiUsage")
 class SarifConverterImpl : SarifConverter {
@@ -27,8 +27,8 @@ class SarifConverterImpl : SarifConverter {
         private val log = LogManager.getLogger(SarifConverterImpl::class.java)!!
     }
 
-    private val hasher: Hasher
-        get() = Hashing.sha256().newHasher()
+    private val hasher: NullableHasher
+        get() = NullableHasher(Hashing.sha256().newHasher())
 
     override fun convert(sarifFile: File, output: Path) {
         val sarifReport = SarifUtil.readReport(sarifFile.toPath())
@@ -68,7 +68,7 @@ class SarifConverterImpl : SarifConverter {
         var lostProblems = 0
 
         sarifReport.runs.firstOrNull()?.run {
-            val toolName = tool.driver.fullName
+            val toolName = tool.driver.fullName ?: tool.driver.name
 
             results.forEach { result ->
                 try {
@@ -77,13 +77,13 @@ class SarifConverterImpl : SarifConverter {
 
                     problems.add(emptySimpleProblem().apply {
                         tool = toolName
-                        comment = sanitizeText(result.message.text)
-                        hash = result.hash()
-                        type = rule.shortDescription.text
-                        detailsInfo = rule.fullDescription.text
-                        category = rule.relationships.first().target.id.let { id ->
-                            driver.taxa.first { it.id == id }.name
-                        }
+                        comment = sanitizeText(result.message?.text ?: "")
+                        hash = result?.hash() ?: Random.nextLong()
+                        type = rule.shortDescription?.text ?: ""
+                        detailsInfo = rule.fullDescription?.text ?: ""
+                        category = rule.relationships?.first()?.target?.id
+                                ?.let { id -> driver.taxa.first { it.id == id }.name }
+                                ?: ""
                         severity = result.severity()
                         attributes = result.attributes()
                         sources = result.sources()
@@ -96,7 +96,7 @@ class SarifConverterImpl : SarifConverter {
             }
 
             metaInformation.run {
-                versionControlProvenance.firstOrNull()?.run {
+                versionControlProvenance?.firstOrNull()?.run {
                     attributes = mapOf(
                         "vcs" to mapOf(
                             "sarifIdea" to mapOf(
@@ -134,19 +134,23 @@ class SarifConverterImpl : SarifConverter {
 
         return mutableListOf<Source>().apply {
             locations.forEach { location ->
+                val physicalLocation = location.physicalLocation
+                val contextRegion = physicalLocation?.contextRegion
+                val region = physicalLocation?.region
+
                 add(
                     Source(
                         type(location),
-                        location.physicalLocation.artifactLocation?.uri ?: "",
-                        location.physicalLocation.region.sourceLanguage,
-                        location.physicalLocation.region.startLine,
-                        location.physicalLocation.region.startColumn,
-                        location.physicalLocation.region.charLength,
+                        physicalLocation?.artifactLocation?.uri ?: "",
+                        contextRegion?.sourceLanguage ?: region?.sourceLanguage ?: "",
+                        contextRegion?.startLine ?: region?.startLine ?: 0,
+                        contextRegion?.startColumn ?: region?.startColumn ?: 0,
+                        contextRegion?.charLength ?: region?.charLength ?: 0,
                         Code(
-                            location.physicalLocation.contextRegion.startLine,
-                            location.physicalLocation.region.charLength,
-                            location.physicalLocation.contextRegion.charOffset,
-                            location.physicalLocation.contextRegion.snippet.text
+                            contextRegion?.startLine ?: region?.startLine ?: 0,
+                            contextRegion?.charLength ?: region?.charLength ?: 0,
+                            contextRegion?.charOffset ?: region?.charOffset ?: 0,
+                            contextRegion?.snippet?.text ?: region?.snippet?.text ?: "",
                         ),
                         null
                     )
@@ -158,14 +162,14 @@ class SarifConverterImpl : SarifConverter {
 
     private fun Result.attributes(): MutableMap<String, String> {
         return mutableMapOf<String, String>().apply {
-            put("module", locations.first().logicalLocations.first().fullyQualifiedName)
+            put("module", locations?.firstOrNull()?.logicalLocations?.first()?.fullyQualifiedName ?: "")
             put("inspectionName", ruleId)
         }
     }
 
 
     private fun Result.severity(): Severity {
-        return properties["ideaSeverity"]?.run {
+        return properties?.get("ideaSeverity")?.run {
             when (this) {
                 "ERROR" -> Severity.ERROR
                 "WARNING" -> Severity.WARNING
@@ -185,19 +189,24 @@ class SarifConverterImpl : SarifConverter {
         }
     }
 
-
     private fun Tool.findRuleById(ruleId: String): ReportingDescriptor {
-        return extensions.first { toolComponent ->
-            toolComponent.rules.any { reportingDescriptor ->
-                reportingDescriptor.id == ruleId
-            }
-        }.run {
-            rules.first { it.id == ruleId }
+        val driverRules = driver.rules?.asSequence() ?: emptySequence()
+        val extensionRules = extensions?.asSequence()?.flatMap { it?.rules ?: emptyList() } ?: emptySequence()
+        try {
+            return driverRules.firstOrNull { it.id == ruleId } ?: extensionRules.first { it.id == ruleId }
+        } catch (e: NoSuchElementException) {
+            log.error("rules sections (driver rules or extension rules) doesn't contain rule with id $ruleId")
+            throw e
         }
     }
 
-    private fun Result.hash(): Long {
-        val (key, index) = "equalIndicator" to 1
-        return hasher.putUnencodedChars(partialFingerprints.get(key, index)).hash().asLong()
+    private fun Result.hash(): Long? {
+        val (key, version) = "equalIndicator" to 1
+        val fingerprint = fingerprints?.get(key, version)
+        val partialFingerprint = partialFingerprints?.get(key, version)
+        val h = hasher
+        fingerprint?.let { h.putUnencodedChars(it) }
+        partialFingerprint?.let { h.putUnencodedChars(it) }
+        return h.hash()?.asLong()
     }
 }

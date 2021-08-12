@@ -13,12 +13,12 @@
           "type": "file",
           "path": "asm-util/src/main/java/org/objectweb/asm/util/CheckSignatureAdapter.java",
           "language": "JAVA",
-          "line": 218,
-          "offset": 4,
-          "length": 2,
+          "line": 216,
+          "offset": 1,
+          "length": 138,
           "code": {
             "startLine": 216,
-            "length": 2,
+            "length": 138,
             "offset": 51,
             "surroundingCode": "      throw new IllegalStateException();\n    }\n    if(true) {}\n    state = State.RETURN;\n    CheckSignatureAdapter checkSignatureAdapter ="
           }
@@ -42,12 +42,12 @@
           "type": "file",
           "path": "asm-util/src/main/java/org/objectweb/asm/util/CheckSignatureAdapter.java",
           "language": "JAVA",
-          "line": 218,
-          "offset": 7,
-          "length": 4,
+          "line": 216,
+          "offset": 1,
+          "length": 138,
           "code": {
             "startLine": 216,
-            "length": 4,
+            "length": 138,
             "offset": 54,
             "surroundingCode": "      throw new IllegalStateException();\n    }\n    if(true) {}\n    state = State.RETURN;\n    CheckSignatureAdapter checkSignatureAdapter ="
           }
@@ -71,12 +71,12 @@
           "type": "file",
           "path": "asm-util/src/main/java/org/objectweb/asm/util/CheckSignatureAdapter.java",
           "language": "JAVA",
-          "line": 259,
-          "offset": 14,
-          "length": 17,
+          "line": 257,
+          "offset": 1,
+          "length": 152,
           "code": {
             "startLine": 257,
-            "length": 17,
+            "length": 152,
             "offset": 27,
             "surroundingCode": "\n  @Override\n  public void visitTypeVariable(final String name) {\n    visitTypeVariable(name);\n    if (type != TYPE_SIGNATURE || state != State.EMPTY) {"
           }

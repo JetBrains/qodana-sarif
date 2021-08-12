@@ -1,0 +1,15 @@
+{
+  "total": 127,
+  "tools inspection": {
+    "checkov": 127
+  },
+  "attributes": {
+    "vcs": {
+      "sarifIdea": {
+        "repositoryUri": "https://jetbrains.team/p/sa/repositories/jetbrains-static-analysis/",
+        "revisionId": "ef86e290592fd532944dd1edb5ad7c357f3ca8f0",
+        "branch": "master"
+      }
+    }
+  }
+}

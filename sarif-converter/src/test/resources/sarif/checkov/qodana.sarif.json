@@ -1,0 +1,4726 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "checkov",
+          "version": "2.0.338",
+          "informationUri": "https://github.com/bridgecrewio/checkov/",
+          "rules": [
+            {
+              "id": "CKV_AWS_158",
+              "name": "Ensure that CloudWatch Log Group is encrypted by KMS",
+              "shortDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "fullDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "help": {
+                "text": "\"Ensure that CloudWatch Log Group is encrypted by KMS\nResource: aws_cloudwatch_log_group.apigateway\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_158",
+              "name": "Ensure that CloudWatch Log Group is encrypted by KMS",
+              "shortDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "fullDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "help": {
+                "text": "\"Ensure that CloudWatch Log Group is encrypted by KMS\nResource: aws_cloudwatch_log_group.api\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_120",
+              "name": "Ensure API Gateway caching is enabled",
+              "shortDescription": {
+                "text": "Ensure API Gateway caching is enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure API Gateway caching is enabled"
+              },
+              "help": {
+                "text": "\"Ensure API Gateway caching is enabled\nResource: aws_api_gateway_stage.default\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_73",
+              "name": "Ensure API Gateway has X-Ray Tracing enabled",
+              "shortDescription": {
+                "text": "Ensure API Gateway has X-Ray Tracing enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure API Gateway has X-Ray Tracing enabled"
+              },
+              "help": {
+                "text": "\"Ensure API Gateway has X-Ray Tracing enabled\nResource: aws_api_gateway_stage.default\nGuideline: https://docs.bridgecrew.io/docs/logging_15\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_50",
+              "name": "X-ray tracing is enabled for Lambda",
+              "shortDescription": {
+                "text": "X-ray tracing is enabled for Lambda"
+              },
+              "fullDescription": {
+                "text": "X-ray tracing is enabled for Lambda"
+              },
+              "help": {
+                "text": "\"X-ray tracing is enabled for Lambda\nResource: aws_lambda_function.web-oauth\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_serverless_4\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_116",
+              "name": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)\nResource: aws_lambda_function.web-oauth\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-for-a-dead-letter-queue-dlq\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_115",
+              "name": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured for function-level concurrent execution limit\nResource: aws_lambda_function.web-oauth\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-for-function-level-concurrent-execution-limit\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_158",
+              "name": "Ensure that CloudWatch Log Group is encrypted by KMS",
+              "shortDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "fullDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "help": {
+                "text": "\"Ensure that CloudWatch Log Group is encrypted by KMS\nResource: aws_cloudwatch_log_group.web-oauth\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_59",
+              "name": "Ensure there is no open access to back-end resources through API",
+              "shortDescription": {
+                "text": "Ensure there is no open access to back-end resources through API"
+              },
+              "fullDescription": {
+                "text": "Ensure there is no open access to back-end resources through API"
+              },
+              "help": {
+                "text": "\"Ensure there is no open access to back-end resources through API\nResource: aws_api_gateway_method.oauth_apigw_v1_callback_get\nGuideline: https://docs.bridgecrew.io/docs/public_6-api-gateway-authorizer-set\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_158",
+              "name": "Ensure that CloudWatch Log Group is encrypted by KMS",
+              "shortDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "fullDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "help": {
+                "text": "\"Ensure that CloudWatch Log Group is encrypted by KMS\nResource: module.app.aws_cloudwatch_log_group.app\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_158",
+              "name": "Ensure that CloudWatch Log Group is encrypted by KMS",
+              "shortDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "fullDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "help": {
+                "text": "\"Ensure that CloudWatch Log Group is encrypted by KMS\nResource: module.cloud.aws_cloudwatch_log_group.cloud\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_150",
+              "name": "Ensure that Load Balancer has deletion protection enabled",
+              "shortDescription": {
+                "text": "Ensure that Load Balancer has deletion protection enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure that Load Balancer has deletion protection enabled"
+              },
+              "help": {
+                "text": "\"Ensure that Load Balancer has deletion protection enabled\nResource: module.infra.aws_alb.ecs\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_91",
+              "name": "Ensure the ELBv2 (Application/Network) has access logging enabled",
+              "shortDescription": {
+                "text": "Ensure the ELBv2 (Application/Network) has access logging enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure the ELBv2 (Application/Network) has access logging enabled"
+              },
+              "help": {
+                "text": "\"Ensure the ELBv2 (Application/Network) has access logging enabled\nResource: module.infra.aws_alb.ecs\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_logging_22\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_131",
+              "name": "Ensure that ALB drops HTTP headers",
+              "shortDescription": {
+                "text": "Ensure that ALB drops HTTP headers"
+              },
+              "fullDescription": {
+                "text": "Ensure that ALB drops HTTP headers"
+              },
+              "help": {
+                "text": "\"Ensure that ALB drops HTTP headers\nResource: module.infra.aws_alb.ecs\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-alb-drops-http-headers\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_68",
+              "name": "CloudFront Distribution should have WAF enabled",
+              "shortDescription": {
+                "text": "CloudFront Distribution should have WAF enabled"
+              },
+              "fullDescription": {
+                "text": "CloudFront Distribution should have WAF enabled"
+              },
+              "help": {
+                "text": "\"CloudFront Distribution should have WAF enabled\nResource: module.infra.aws_cloudfront_distribution.internal\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_general_27\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_50",
+              "name": "X-ray tracing is enabled for Lambda",
+              "shortDescription": {
+                "text": "X-ray tracing is enabled for Lambda"
+              },
+              "fullDescription": {
+                "text": "X-ray tracing is enabled for Lambda"
+              },
+              "help": {
+                "text": "\"X-ray tracing is enabled for Lambda\nResource: module.infra.aws_lambda_function.cloudfront-auth\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_serverless_4\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_117",
+              "name": "Ensure that AWS Lambda function is configured inside a VPC",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured inside a VPC"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured inside a VPC"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured inside a VPC\nResource: module.infra.aws_lambda_function.cloudfront-auth\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-inside-a-vpc-1\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_116",
+              "name": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)\nResource: module.infra.aws_lambda_function.cloudfront-auth\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-for-a-dead-letter-queue-dlq\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_115",
+              "name": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured for function-level concurrent execution limit\nResource: module.infra.aws_lambda_function.cloudfront-auth\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-for-function-level-concurrent-execution-limit\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_158",
+              "name": "Ensure that CloudWatch Log Group is encrypted by KMS",
+              "shortDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "fullDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "help": {
+                "text": "\"Ensure that CloudWatch Log Group is encrypted by KMS\nResource: module.infra.aws_cloudwatch_log_group.cloudfront-auth\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_68",
+              "name": "CloudFront Distribution should have WAF enabled",
+              "shortDescription": {
+                "text": "CloudFront Distribution should have WAF enabled"
+              },
+              "fullDescription": {
+                "text": "CloudFront Distribution should have WAF enabled"
+              },
+              "help": {
+                "text": "\"CloudFront Distribution should have WAF enabled\nResource: module.infra.aws_cloudfront_distribution.cloudweb\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_general_27\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_68",
+              "name": "CloudFront Distribution should have WAF enabled",
+              "shortDescription": {
+                "text": "CloudFront Distribution should have WAF enabled"
+              },
+              "fullDescription": {
+                "text": "CloudFront Distribution should have WAF enabled"
+              },
+              "help": {
+                "text": "\"CloudFront Distribution should have WAF enabled\nResource: module.infra.aws_cloudfront_distribution.web\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_general_27\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_158",
+              "name": "Ensure that CloudWatch Log Group is encrypted by KMS",
+              "shortDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "fullDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "help": {
+                "text": "\"Ensure that CloudWatch Log Group is encrypted by KMS\nResource: module.infra.aws_cloudwatch_log_group.infra\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_65",
+              "name": "Ensure container insights are enabled on ECS cluster",
+              "shortDescription": {
+                "text": "Ensure container insights are enabled on ECS cluster"
+              },
+              "fullDescription": {
+                "text": "Ensure container insights are enabled on ECS cluster"
+              },
+              "help": {
+                "text": "\"Ensure container insights are enabled on ECS cluster\nResource: module.infra.aws_ecs_cluster.main\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_logging_11\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_40",
+              "name": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)",
+              "shortDescription": {
+                "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+              },
+              "fullDescription": {
+                "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+              },
+              "help": {
+                "text": "\"Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)\nResource: module.infra.aws_iam_user_policy_attachment.vault_sts\nGuideline: https://docs.bridgecrew.io/docs/iam_16-iam-policy-privileges-1\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_40",
+              "name": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)",
+              "shortDescription": {
+                "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+              },
+              "fullDescription": {
+                "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+              },
+              "help": {
+                "text": "\"Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)\nResource: module.infra.aws_iam_user_policy.s3-results\nGuideline: https://docs.bridgecrew.io/docs/iam_16-iam-policy-privileges-1\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_40",
+              "name": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)",
+              "shortDescription": {
+                "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+              },
+              "fullDescription": {
+                "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+              },
+              "help": {
+                "text": "\"Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)\nResource: module.infra.aws_iam_user_policy.s3-os-results\nGuideline: https://docs.bridgecrew.io/docs/iam_16-iam-policy-privileges-1\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_40",
+              "name": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)",
+              "shortDescription": {
+                "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+              },
+              "fullDescription": {
+                "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+              },
+              "help": {
+                "text": "\"Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)\nResource: module.infra.aws_iam_user_policy_attachment.cloudwatch-grafana\nGuideline: https://docs.bridgecrew.io/docs/iam_16-iam-policy-privileges-1\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_40",
+              "name": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)",
+              "shortDescription": {
+                "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+              },
+              "fullDescription": {
+                "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+              },
+              "help": {
+                "text": "\"Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)\nResource: module.infra.aws_iam_user_policy.s3-cache\nGuideline: https://docs.bridgecrew.io/docs/iam_16-iam-policy-privileges-1\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_40",
+              "name": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)",
+              "shortDescription": {
+                "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+              },
+              "fullDescription": {
+                "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+              },
+              "help": {
+                "text": "\"Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)\nResource: module.infra.aws_iam_user_policy.s3-cloudweb\nGuideline: https://docs.bridgecrew.io/docs/iam_16-iam-policy-privileges-1\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_161",
+              "name": "Ensure RDS database has IAM authentication enabled",
+              "shortDescription": {
+                "text": "Ensure RDS database has IAM authentication enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure RDS database has IAM authentication enabled"
+              },
+              "help": {
+                "text": "\"Ensure RDS database has IAM authentication enabled\nResource: module.infra.aws_db_instance.qodana_postgresql\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_157",
+              "name": "Ensure that RDS instances have Multi-AZ enabled",
+              "shortDescription": {
+                "text": "Ensure that RDS instances have Multi-AZ enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure that RDS instances have Multi-AZ enabled"
+              },
+              "help": {
+                "text": "\"Ensure that RDS instances have Multi-AZ enabled\nResource: module.infra.aws_db_instance.qodana_postgresql\nGuideline: https://docs.bridgecrew.io/docs/general_73\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_129",
+              "name": "Ensure that respective logs of Amazon Relational Database Service (Amazon RDS) are enabled",
+              "shortDescription": {
+                "text": "Ensure that respective logs of Amazon Relational Database Service (Amazon RDS) are enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure that respective logs of Amazon Relational Database Service (Amazon RDS) are enabled"
+              },
+              "help": {
+                "text": "\"Ensure that respective logs of Amazon Relational Database Service (Amazon RDS) are enabled\nResource: module.infra.aws_db_instance.qodana_postgresql\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-respective-logs-of-amazon-relational-database-service-amazon-rds-are-enabled\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_118",
+              "name": "Ensure that enhanced monitoring is enabled for Amazon RDS instances",
+              "shortDescription": {
+                "text": "Ensure that enhanced monitoring is enabled for Amazon RDS instances"
+              },
+              "fullDescription": {
+                "text": "Ensure that enhanced monitoring is enabled for Amazon RDS instances"
+              },
+              "help": {
+                "text": "\"Ensure that enhanced monitoring is enabled for Amazon RDS instances\nResource: module.infra.aws_db_instance.qodana_postgresql\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-enhanced-monitoring-is-enabled-for-amazon-rds-instances\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_16",
+              "name": "Ensure all data stored in the RDS is securely encrypted at rest",
+              "shortDescription": {
+                "text": "Ensure all data stored in the RDS is securely encrypted at rest"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the RDS is securely encrypted at rest"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the RDS is securely encrypted at rest\nResource: module.infra.aws_db_instance.qodana_postgresql\nGuideline: https://docs.bridgecrew.io/docs/general_4\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_19",
+              "name": "Ensure all data stored in the S3 bucket is securely encrypted at rest",
+              "shortDescription": {
+                "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the S3 bucket is securely encrypted at rest\nResource: module.infra.aws_s3_bucket.state\nGuideline: https://docs.bridgecrew.io/docs/s3_14-data-encrypted-at-rest\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_18",
+              "name": "Ensure the S3 bucket has access logging enabled",
+              "shortDescription": {
+                "text": "Ensure the S3 bucket has access logging enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure the S3 bucket has access logging enabled"
+              },
+              "help": {
+                "text": "\"Ensure the S3 bucket has access logging enabled\nResource: module.infra.aws_s3_bucket.state\nGuideline: https://docs.bridgecrew.io/docs/s3_13-enable-logging\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_144",
+              "name": "Ensure that S3 bucket has cross-region replication enabled",
+              "shortDescription": {
+                "text": "Ensure that S3 bucket has cross-region replication enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 bucket has cross-region replication enabled"
+              },
+              "help": {
+                "text": "\"Ensure that S3 bucket has cross-region replication enabled\nResource: module.infra.aws_s3_bucket.state\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-s3-bucket-has-cross-region-replication-enabled\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_145",
+              "name": "Ensure that S3 buckets are encrypted with KMS by default",
+              "shortDescription": {
+                "text": "Ensure that S3 buckets are encrypted with KMS by default"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 buckets are encrypted with KMS by default"
+              },
+              "help": {
+                "text": "\"Ensure that S3 buckets are encrypted with KMS by default\nResource: module.infra.aws_s3_bucket.state\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-s3-buckets-are-encrypted-with-kms-by-default\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_56",
+              "name": "Ensure S3 bucket has 'restrict_public_bucket' enabled",
+              "shortDescription": {
+                "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+              },
+              "help": {
+                "text": "\"Ensure S3 bucket has 'restrict_public_bucket' enabled\nResource: module.infra.aws_s3_bucket_public_access_block.state\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_s3_22\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_19",
+              "name": "Ensure all data stored in the S3 bucket is securely encrypted at rest",
+              "shortDescription": {
+                "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the S3 bucket is securely encrypted at rest\nResource: module.infra.aws_s3_bucket.results\nGuideline: https://docs.bridgecrew.io/docs/s3_14-data-encrypted-at-rest\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_18",
+              "name": "Ensure the S3 bucket has access logging enabled",
+              "shortDescription": {
+                "text": "Ensure the S3 bucket has access logging enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure the S3 bucket has access logging enabled"
+              },
+              "help": {
+                "text": "\"Ensure the S3 bucket has access logging enabled\nResource: module.infra.aws_s3_bucket.results\nGuideline: https://docs.bridgecrew.io/docs/s3_13-enable-logging\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_144",
+              "name": "Ensure that S3 bucket has cross-region replication enabled",
+              "shortDescription": {
+                "text": "Ensure that S3 bucket has cross-region replication enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 bucket has cross-region replication enabled"
+              },
+              "help": {
+                "text": "\"Ensure that S3 bucket has cross-region replication enabled\nResource: module.infra.aws_s3_bucket.results\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-s3-bucket-has-cross-region-replication-enabled\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_145",
+              "name": "Ensure that S3 buckets are encrypted with KMS by default",
+              "shortDescription": {
+                "text": "Ensure that S3 buckets are encrypted with KMS by default"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 buckets are encrypted with KMS by default"
+              },
+              "help": {
+                "text": "\"Ensure that S3 buckets are encrypted with KMS by default\nResource: module.infra.aws_s3_bucket.results\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-s3-buckets-are-encrypted-with-kms-by-default\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_21",
+              "name": "Ensure all data stored in the S3 bucket have versioning enabled",
+              "shortDescription": {
+                "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the S3 bucket have versioning enabled\nResource: module.infra.aws_s3_bucket.results\nGuideline: https://docs.bridgecrew.io/docs/s3_16-enable-versioning\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_56",
+              "name": "Ensure S3 bucket has 'restrict_public_bucket' enabled",
+              "shortDescription": {
+                "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+              },
+              "help": {
+                "text": "\"Ensure S3 bucket has 'restrict_public_bucket' enabled\nResource: module.infra.aws_s3_bucket_public_access_block.results\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_s3_22\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_19",
+              "name": "Ensure all data stored in the S3 bucket is securely encrypted at rest",
+              "shortDescription": {
+                "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the S3 bucket is securely encrypted at rest\nResource: module.infra.aws_s3_bucket.qc-results\nGuideline: https://docs.bridgecrew.io/docs/s3_14-data-encrypted-at-rest\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_18",
+              "name": "Ensure the S3 bucket has access logging enabled",
+              "shortDescription": {
+                "text": "Ensure the S3 bucket has access logging enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure the S3 bucket has access logging enabled"
+              },
+              "help": {
+                "text": "\"Ensure the S3 bucket has access logging enabled\nResource: module.infra.aws_s3_bucket.qc-results\nGuideline: https://docs.bridgecrew.io/docs/s3_13-enable-logging\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_144",
+              "name": "Ensure that S3 bucket has cross-region replication enabled",
+              "shortDescription": {
+                "text": "Ensure that S3 bucket has cross-region replication enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 bucket has cross-region replication enabled"
+              },
+              "help": {
+                "text": "\"Ensure that S3 bucket has cross-region replication enabled\nResource: module.infra.aws_s3_bucket.qc-results\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-s3-bucket-has-cross-region-replication-enabled\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_145",
+              "name": "Ensure that S3 buckets are encrypted with KMS by default",
+              "shortDescription": {
+                "text": "Ensure that S3 buckets are encrypted with KMS by default"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 buckets are encrypted with KMS by default"
+              },
+              "help": {
+                "text": "\"Ensure that S3 buckets are encrypted with KMS by default\nResource: module.infra.aws_s3_bucket.qc-results\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-s3-buckets-are-encrypted-with-kms-by-default\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_21",
+              "name": "Ensure all data stored in the S3 bucket have versioning enabled",
+              "shortDescription": {
+                "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the S3 bucket have versioning enabled\nResource: module.infra.aws_s3_bucket.qc-results\nGuideline: https://docs.bridgecrew.io/docs/s3_16-enable-versioning\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_53",
+              "name": "Ensure S3 bucket has block public ACLS enabled",
+              "shortDescription": {
+                "text": "Ensure S3 bucket has block public ACLS enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure S3 bucket has block public ACLS enabled"
+              },
+              "help": {
+                "text": "\"Ensure S3 bucket has block public ACLS enabled\nResource: module.infra.aws_s3_bucket_public_access_block.qc-results\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_s3_19\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_54",
+              "name": "Ensure S3 bucket has block public policy enabled",
+              "shortDescription": {
+                "text": "Ensure S3 bucket has block public policy enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure S3 bucket has block public policy enabled"
+              },
+              "help": {
+                "text": "\"Ensure S3 bucket has block public policy enabled\nResource: module.infra.aws_s3_bucket_public_access_block.qc-results\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_s3_20\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_55",
+              "name": "Ensure S3 bucket has ignore public ACLs enabled",
+              "shortDescription": {
+                "text": "Ensure S3 bucket has ignore public ACLs enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure S3 bucket has ignore public ACLs enabled"
+              },
+              "help": {
+                "text": "\"Ensure S3 bucket has ignore public ACLs enabled\nResource: module.infra.aws_s3_bucket_public_access_block.qc-results\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_s3_21\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_56",
+              "name": "Ensure S3 bucket has 'restrict_public_bucket' enabled",
+              "shortDescription": {
+                "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+              },
+              "help": {
+                "text": "\"Ensure S3 bucket has 'restrict_public_bucket' enabled\nResource: module.infra.aws_s3_bucket_public_access_block.qc-results\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_s3_22\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_19",
+              "name": "Ensure all data stored in the S3 bucket is securely encrypted at rest",
+              "shortDescription": {
+                "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the S3 bucket is securely encrypted at rest\nResource: module.infra.aws_s3_bucket.internal\nGuideline: https://docs.bridgecrew.io/docs/s3_14-data-encrypted-at-rest\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_18",
+              "name": "Ensure the S3 bucket has access logging enabled",
+              "shortDescription": {
+                "text": "Ensure the S3 bucket has access logging enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure the S3 bucket has access logging enabled"
+              },
+              "help": {
+                "text": "\"Ensure the S3 bucket has access logging enabled\nResource: module.infra.aws_s3_bucket.internal\nGuideline: https://docs.bridgecrew.io/docs/s3_13-enable-logging\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_144",
+              "name": "Ensure that S3 bucket has cross-region replication enabled",
+              "shortDescription": {
+                "text": "Ensure that S3 bucket has cross-region replication enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 bucket has cross-region replication enabled"
+              },
+              "help": {
+                "text": "\"Ensure that S3 bucket has cross-region replication enabled\nResource: module.infra.aws_s3_bucket.internal\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-s3-bucket-has-cross-region-replication-enabled\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_145",
+              "name": "Ensure that S3 buckets are encrypted with KMS by default",
+              "shortDescription": {
+                "text": "Ensure that S3 buckets are encrypted with KMS by default"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 buckets are encrypted with KMS by default"
+              },
+              "help": {
+                "text": "\"Ensure that S3 buckets are encrypted with KMS by default\nResource: module.infra.aws_s3_bucket.internal\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-s3-buckets-are-encrypted-with-kms-by-default\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_21",
+              "name": "Ensure all data stored in the S3 bucket have versioning enabled",
+              "shortDescription": {
+                "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the S3 bucket have versioning enabled\nResource: module.infra.aws_s3_bucket.internal\nGuideline: https://docs.bridgecrew.io/docs/s3_16-enable-versioning\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_56",
+              "name": "Ensure S3 bucket has 'restrict_public_bucket' enabled",
+              "shortDescription": {
+                "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+              },
+              "help": {
+                "text": "\"Ensure S3 bucket has 'restrict_public_bucket' enabled\nResource: module.infra.aws_s3_bucket_public_access_block.internal\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_s3_22\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_19",
+              "name": "Ensure all data stored in the S3 bucket is securely encrypted at rest",
+              "shortDescription": {
+                "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the S3 bucket is securely encrypted at rest\nResource: module.infra.aws_s3_bucket.logs\nGuideline: https://docs.bridgecrew.io/docs/s3_14-data-encrypted-at-rest\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_18",
+              "name": "Ensure the S3 bucket has access logging enabled",
+              "shortDescription": {
+                "text": "Ensure the S3 bucket has access logging enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure the S3 bucket has access logging enabled"
+              },
+              "help": {
+                "text": "\"Ensure the S3 bucket has access logging enabled\nResource: module.infra.aws_s3_bucket.logs\nGuideline: https://docs.bridgecrew.io/docs/s3_13-enable-logging\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_144",
+              "name": "Ensure that S3 bucket has cross-region replication enabled",
+              "shortDescription": {
+                "text": "Ensure that S3 bucket has cross-region replication enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 bucket has cross-region replication enabled"
+              },
+              "help": {
+                "text": "\"Ensure that S3 bucket has cross-region replication enabled\nResource: module.infra.aws_s3_bucket.logs\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-s3-bucket-has-cross-region-replication-enabled\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_145",
+              "name": "Ensure that S3 buckets are encrypted with KMS by default",
+              "shortDescription": {
+                "text": "Ensure that S3 buckets are encrypted with KMS by default"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 buckets are encrypted with KMS by default"
+              },
+              "help": {
+                "text": "\"Ensure that S3 buckets are encrypted with KMS by default\nResource: module.infra.aws_s3_bucket.logs\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-s3-buckets-are-encrypted-with-kms-by-default\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_21",
+              "name": "Ensure all data stored in the S3 bucket have versioning enabled",
+              "shortDescription": {
+                "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the S3 bucket have versioning enabled\nResource: module.infra.aws_s3_bucket.logs\nGuideline: https://docs.bridgecrew.io/docs/s3_16-enable-versioning\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_19",
+              "name": "Ensure all data stored in the S3 bucket is securely encrypted at rest",
+              "shortDescription": {
+                "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the S3 bucket is securely encrypted at rest\nResource: module.infra.aws_s3_bucket.cache\nGuideline: https://docs.bridgecrew.io/docs/s3_14-data-encrypted-at-rest\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_18",
+              "name": "Ensure the S3 bucket has access logging enabled",
+              "shortDescription": {
+                "text": "Ensure the S3 bucket has access logging enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure the S3 bucket has access logging enabled"
+              },
+              "help": {
+                "text": "\"Ensure the S3 bucket has access logging enabled\nResource: module.infra.aws_s3_bucket.cache\nGuideline: https://docs.bridgecrew.io/docs/s3_13-enable-logging\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_144",
+              "name": "Ensure that S3 bucket has cross-region replication enabled",
+              "shortDescription": {
+                "text": "Ensure that S3 bucket has cross-region replication enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 bucket has cross-region replication enabled"
+              },
+              "help": {
+                "text": "\"Ensure that S3 bucket has cross-region replication enabled\nResource: module.infra.aws_s3_bucket.cache\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-s3-bucket-has-cross-region-replication-enabled\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_145",
+              "name": "Ensure that S3 buckets are encrypted with KMS by default",
+              "shortDescription": {
+                "text": "Ensure that S3 buckets are encrypted with KMS by default"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 buckets are encrypted with KMS by default"
+              },
+              "help": {
+                "text": "\"Ensure that S3 buckets are encrypted with KMS by default\nResource: module.infra.aws_s3_bucket.cache\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-s3-buckets-are-encrypted-with-kms-by-default\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_21",
+              "name": "Ensure all data stored in the S3 bucket have versioning enabled",
+              "shortDescription": {
+                "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the S3 bucket have versioning enabled\nResource: module.infra.aws_s3_bucket.cache\nGuideline: https://docs.bridgecrew.io/docs/s3_16-enable-versioning\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_56",
+              "name": "Ensure S3 bucket has 'restrict_public_bucket' enabled",
+              "shortDescription": {
+                "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+              },
+              "help": {
+                "text": "\"Ensure S3 bucket has 'restrict_public_bucket' enabled\nResource: module.infra.aws_s3_bucket_public_access_block.cache\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_s3_22\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_19",
+              "name": "Ensure all data stored in the S3 bucket is securely encrypted at rest",
+              "shortDescription": {
+                "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the S3 bucket is securely encrypted at rest\nResource: module.infra.aws_s3_bucket.cloudweb\nGuideline: https://docs.bridgecrew.io/docs/s3_14-data-encrypted-at-rest\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_18",
+              "name": "Ensure the S3 bucket has access logging enabled",
+              "shortDescription": {
+                "text": "Ensure the S3 bucket has access logging enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure the S3 bucket has access logging enabled"
+              },
+              "help": {
+                "text": "\"Ensure the S3 bucket has access logging enabled\nResource: module.infra.aws_s3_bucket.cloudweb\nGuideline: https://docs.bridgecrew.io/docs/s3_13-enable-logging\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_144",
+              "name": "Ensure that S3 bucket has cross-region replication enabled",
+              "shortDescription": {
+                "text": "Ensure that S3 bucket has cross-region replication enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 bucket has cross-region replication enabled"
+              },
+              "help": {
+                "text": "\"Ensure that S3 bucket has cross-region replication enabled\nResource: module.infra.aws_s3_bucket.cloudweb\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-s3-bucket-has-cross-region-replication-enabled\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_145",
+              "name": "Ensure that S3 buckets are encrypted with KMS by default",
+              "shortDescription": {
+                "text": "Ensure that S3 buckets are encrypted with KMS by default"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 buckets are encrypted with KMS by default"
+              },
+              "help": {
+                "text": "\"Ensure that S3 buckets are encrypted with KMS by default\nResource: module.infra.aws_s3_bucket.cloudweb\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-s3-buckets-are-encrypted-with-kms-by-default\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_21",
+              "name": "Ensure all data stored in the S3 bucket have versioning enabled",
+              "shortDescription": {
+                "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the S3 bucket have versioning enabled\nResource: module.infra.aws_s3_bucket.cloudweb\nGuideline: https://docs.bridgecrew.io/docs/s3_16-enable-versioning\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_56",
+              "name": "Ensure S3 bucket has 'restrict_public_bucket' enabled",
+              "shortDescription": {
+                "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+              },
+              "help": {
+                "text": "\"Ensure S3 bucket has 'restrict_public_bucket' enabled\nResource: module.infra.aws_s3_bucket_public_access_block.cloudweb\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_s3_22\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_24",
+              "name": "Ensure no security groups allow ingress from 0.0.0.0:0 to port 22",
+              "shortDescription": {
+                "text": "Ensure no security groups allow ingress from 0.0.0.0:0 to port 22"
+              },
+              "fullDescription": {
+                "text": "Ensure no security groups allow ingress from 0.0.0.0:0 to port 22"
+              },
+              "help": {
+                "text": "\"Ensure no security groups allow ingress from 0.0.0.0:0 to port 22\nResource: module.infra.aws_security_group.all\nGuideline: https://docs.bridgecrew.io/docs/networking_1-port-security\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_25",
+              "name": "Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389",
+              "shortDescription": {
+                "text": "Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389"
+              },
+              "fullDescription": {
+                "text": "Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389"
+              },
+              "help": {
+                "text": "\"Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389\nResource: module.infra.aws_security_group.all\nGuideline: https://docs.bridgecrew.io/docs/networking_2\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_158",
+              "name": "Ensure that CloudWatch Log Group is encrypted by KMS",
+              "shortDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "fullDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "help": {
+                "text": "\"Ensure that CloudWatch Log Group is encrypted by KMS\nResource: module.infra.aws_cloudwatch_log_group.spot-dns\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_50",
+              "name": "X-ray tracing is enabled for Lambda",
+              "shortDescription": {
+                "text": "X-ray tracing is enabled for Lambda"
+              },
+              "fullDescription": {
+                "text": "X-ray tracing is enabled for Lambda"
+              },
+              "help": {
+                "text": "\"X-ray tracing is enabled for Lambda\nResource: module.infra.aws_lambda_function.spot-dns\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_serverless_4\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_117",
+              "name": "Ensure that AWS Lambda function is configured inside a VPC",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured inside a VPC"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured inside a VPC"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured inside a VPC\nResource: module.infra.aws_lambda_function.spot-dns\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-inside-a-vpc-1\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_116",
+              "name": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)\nResource: module.infra.aws_lambda_function.spot-dns\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-for-a-dead-letter-queue-dlq\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_115",
+              "name": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured for function-level concurrent execution limit\nResource: module.infra.aws_lambda_function.spot-dns\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-for-function-level-concurrent-execution-limit\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_27",
+              "name": "Ensure all data stored in the SQS queue is encrypted",
+              "shortDescription": {
+                "text": "Ensure all data stored in the SQS queue is encrypted"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the SQS queue is encrypted"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the SQS queue is encrypted\nResource: module.infra.aws_sqs_queue.qodanaQueue\nGuideline: https://docs.bridgecrew.io/docs/general_16-encrypt-sqs-queue\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_27",
+              "name": "Ensure all data stored in the SQS queue is encrypted",
+              "shortDescription": {
+                "text": "Ensure all data stored in the SQS queue is encrypted"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the SQS queue is encrypted"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the SQS queue is encrypted\nResource: module.infra.aws_sqs_queue.qodanaDeadLetterQueue\nGuideline: https://docs.bridgecrew.io/docs/general_16-encrypt-sqs-queue\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_27",
+              "name": "Ensure all data stored in the SQS queue is encrypted",
+              "shortDescription": {
+                "text": "Ensure all data stored in the SQS queue is encrypted"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the SQS queue is encrypted"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the SQS queue is encrypted\nResource: module.infra.aws_sqs_queue.qodanaReportsQueue\nGuideline: https://docs.bridgecrew.io/docs/general_16-encrypt-sqs-queue\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_27",
+              "name": "Ensure all data stored in the SQS queue is encrypted",
+              "shortDescription": {
+                "text": "Ensure all data stored in the SQS queue is encrypted"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the SQS queue is encrypted"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the SQS queue is encrypted\nResource: module.infra.aws_sqs_queue.qodanaReportsDeadLetterQueue\nGuideline: https://docs.bridgecrew.io/docs/general_16-encrypt-sqs-queue\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_24",
+              "name": "Ensure no security groups allow ingress from 0.0.0.0:0 to port 22",
+              "shortDescription": {
+                "text": "Ensure no security groups allow ingress from 0.0.0.0:0 to port 22"
+              },
+              "fullDescription": {
+                "text": "Ensure no security groups allow ingress from 0.0.0.0:0 to port 22"
+              },
+              "help": {
+                "text": "\"Ensure no security groups allow ingress from 0.0.0.0:0 to port 22\nResource: module.infra.aws_security_group.agents\nGuideline: https://docs.bridgecrew.io/docs/networking_1-port-security\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_158",
+              "name": "Ensure that CloudWatch Log Group is encrypted by KMS",
+              "shortDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "fullDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "help": {
+                "text": "\"Ensure that CloudWatch Log Group is encrypted by KMS\nResource: module.publisher.aws_cloudwatch_log_group.apigateway\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_158",
+              "name": "Ensure that CloudWatch Log Group is encrypted by KMS",
+              "shortDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "fullDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "help": {
+                "text": "\"Ensure that CloudWatch Log Group is encrypted by KMS\nResource: module.publisher.aws_cloudwatch_log_group.publisher-apigateway\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_120",
+              "name": "Ensure API Gateway caching is enabled",
+              "shortDescription": {
+                "text": "Ensure API Gateway caching is enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure API Gateway caching is enabled"
+              },
+              "help": {
+                "text": "\"Ensure API Gateway caching is enabled\nResource: module.publisher.aws_api_gateway_stage.default\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_73",
+              "name": "Ensure API Gateway has X-Ray Tracing enabled",
+              "shortDescription": {
+                "text": "Ensure API Gateway has X-Ray Tracing enabled"
+              },
+              "fullDescription": {
+                "text": "Ensure API Gateway has X-Ray Tracing enabled"
+              },
+              "help": {
+                "text": "\"Ensure API Gateway has X-Ray Tracing enabled\nResource: module.publisher.aws_api_gateway_stage.default\nGuideline: https://docs.bridgecrew.io/docs/logging_15\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_59",
+              "name": "Ensure there is no open access to back-end resources through API",
+              "shortDescription": {
+                "text": "Ensure there is no open access to back-end resources through API"
+              },
+              "fullDescription": {
+                "text": "Ensure there is no open access to back-end resources through API"
+              },
+              "help": {
+                "text": "\"Ensure there is no open access to back-end resources through API\nResource: module.publisher.aws_api_gateway_method.os_post\nGuideline: https://docs.bridgecrew.io/docs/public_6-api-gateway-authorizer-set\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_59",
+              "name": "Ensure there is no open access to back-end resources through API",
+              "shortDescription": {
+                "text": "Ensure there is no open access to back-end resources through API"
+              },
+              "fullDescription": {
+                "text": "Ensure there is no open access to back-end resources through API"
+              },
+              "help": {
+                "text": "\"Ensure there is no open access to back-end resources through API\nResource: module.publisher.aws_api_gateway_method.os_get\nGuideline: https://docs.bridgecrew.io/docs/public_6-api-gateway-authorizer-set\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_50",
+              "name": "X-ray tracing is enabled for Lambda",
+              "shortDescription": {
+                "text": "X-ray tracing is enabled for Lambda"
+              },
+              "fullDescription": {
+                "text": "X-ray tracing is enabled for Lambda"
+              },
+              "help": {
+                "text": "\"X-ray tracing is enabled for Lambda\nResource: module.publisher.aws_lambda_function.os_publisher\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_serverless_4\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_117",
+              "name": "Ensure that AWS Lambda function is configured inside a VPC",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured inside a VPC"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured inside a VPC"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured inside a VPC\nResource: module.publisher.aws_lambda_function.os_publisher\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-inside-a-vpc-1\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_116",
+              "name": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)\nResource: module.publisher.aws_lambda_function.os_publisher\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-for-a-dead-letter-queue-dlq\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_115",
+              "name": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured for function-level concurrent execution limit\nResource: module.publisher.aws_lambda_function.os_publisher\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-for-function-level-concurrent-execution-limit\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_158",
+              "name": "Ensure that CloudWatch Log Group is encrypted by KMS",
+              "shortDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "fullDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "help": {
+                "text": "\"Ensure that CloudWatch Log Group is encrypted by KMS\nResource: module.publisher.aws_cloudwatch_log_group.os_publisher\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_50",
+              "name": "X-ray tracing is enabled for Lambda",
+              "shortDescription": {
+                "text": "X-ray tracing is enabled for Lambda"
+              },
+              "fullDescription": {
+                "text": "X-ray tracing is enabled for Lambda"
+              },
+              "help": {
+                "text": "\"X-ray tracing is enabled for Lambda\nResource: module.publisher.aws_lambda_function.publisher\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_serverless_4\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_117",
+              "name": "Ensure that AWS Lambda function is configured inside a VPC",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured inside a VPC"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured inside a VPC"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured inside a VPC\nResource: module.publisher.aws_lambda_function.publisher\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-inside-a-vpc-1\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_116",
+              "name": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)\nResource: module.publisher.aws_lambda_function.publisher\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-for-a-dead-letter-queue-dlq\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_115",
+              "name": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured for function-level concurrent execution limit\nResource: module.publisher.aws_lambda_function.publisher\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-for-function-level-concurrent-execution-limit\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_158",
+              "name": "Ensure that CloudWatch Log Group is encrypted by KMS",
+              "shortDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "fullDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "help": {
+                "text": "\"Ensure that CloudWatch Log Group is encrypted by KMS\nResource: module.publisher.aws_cloudwatch_log_group.publisher\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_158",
+              "name": "Ensure that CloudWatch Log Group is encrypted by KMS",
+              "shortDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "fullDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "help": {
+                "text": "\"Ensure that CloudWatch Log Group is encrypted by KMS\nResource: module.report_processor.aws_cloudwatch_log_group.report_processor\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_50",
+              "name": "X-ray tracing is enabled for Lambda",
+              "shortDescription": {
+                "text": "X-ray tracing is enabled for Lambda"
+              },
+              "fullDescription": {
+                "text": "X-ray tracing is enabled for Lambda"
+              },
+              "help": {
+                "text": "\"X-ray tracing is enabled for Lambda\nResource: module.web-results-processor.aws_lambda_function.results_processor\nGuideline: https://docs.bridgecrew.io/docs/bc_aws_serverless_4\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_116",
+              "name": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)\nResource: module.web-results-processor.aws_lambda_function.results_processor\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-for-a-dead-letter-queue-dlq\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_115",
+              "name": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit",
+              "shortDescription": {
+                "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+              },
+              "fullDescription": {
+                "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+              },
+              "help": {
+                "text": "\"Ensure that AWS Lambda function is configured for function-level concurrent execution limit\nResource: module.web-results-processor.aws_lambda_function.results_processor\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-aws-lambda-function-is-configured-for-function-level-concurrent-execution-limit\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_26",
+              "name": "Ensure all data stored in the SNS topic is encrypted",
+              "shortDescription": {
+                "text": "Ensure all data stored in the SNS topic is encrypted"
+              },
+              "fullDescription": {
+                "text": "Ensure all data stored in the SNS topic is encrypted"
+              },
+              "help": {
+                "text": "\"Ensure all data stored in the SNS topic is encrypted\nResource: module.web-results-processor.aws_sns_topic.qodana_results\nGuideline: https://docs.bridgecrew.io/docs/general_15\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV_AWS_158",
+              "name": "Ensure that CloudWatch Log Group is encrypted by KMS",
+              "shortDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "fullDescription": {
+                "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+              },
+              "help": {
+                "text": "\"Ensure that CloudWatch Log Group is encrypted by KMS\nResource: module.web-results-processor.aws_cloudwatch_log_group.results_processor\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV2_AWS_5",
+              "name": "Ensure that Security Groups are attached to an other resource",
+              "shortDescription": {
+                "text": "Ensure that Security Groups are attached to an other resource"
+              },
+              "fullDescription": {
+                "text": "Ensure that Security Groups are attached to an other resource"
+              },
+              "help": {
+                "text": "\"Ensure that Security Groups are attached to an other resource\nResource: aws_security_group.offices\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-security-groups-are-attached-to-ec2-instances-or-elastic-network-interfaces-enis\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV2_AWS_5",
+              "name": "Ensure that Security Groups are attached to an other resource",
+              "shortDescription": {
+                "text": "Ensure that Security Groups are attached to an other resource"
+              },
+              "fullDescription": {
+                "text": "Ensure that Security Groups are attached to an other resource"
+              },
+              "help": {
+                "text": "\"Ensure that Security Groups are attached to an other resource\nResource: aws_security_group.ecs\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-security-groups-are-attached-to-ec2-instances-or-elastic-network-interfaces-enis\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV2_AWS_5",
+              "name": "Ensure that Security Groups are attached to an other resource",
+              "shortDescription": {
+                "text": "Ensure that Security Groups are attached to an other resource"
+              },
+              "fullDescription": {
+                "text": "Ensure that Security Groups are attached to an other resource"
+              },
+              "help": {
+                "text": "\"Ensure that Security Groups are attached to an other resource\nResource: aws_security_group.web-oauth\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-security-groups-are-attached-to-ec2-instances-or-elastic-network-interfaces-enis\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV2_AWS_5",
+              "name": "Ensure that Security Groups are attached to an other resource",
+              "shortDescription": {
+                "text": "Ensure that Security Groups are attached to an other resource"
+              },
+              "fullDescription": {
+                "text": "Ensure that Security Groups are attached to an other resource"
+              },
+              "help": {
+                "text": "\"Ensure that Security Groups are attached to an other resource\nResource: aws_security_group.vpc\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-security-groups-are-attached-to-ec2-instances-or-elastic-network-interfaces-enis\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV2_AWS_5",
+              "name": "Ensure that Security Groups are attached to an other resource",
+              "shortDescription": {
+                "text": "Ensure that Security Groups are attached to an other resource"
+              },
+              "fullDescription": {
+                "text": "Ensure that Security Groups are attached to an other resource"
+              },
+              "help": {
+                "text": "\"Ensure that Security Groups are attached to an other resource\nResource: aws_security_group.agents\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-security-groups-are-attached-to-ec2-instances-or-elastic-network-interfaces-enis\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV2_AWS_1",
+              "name": "Ensure that all NACL are attached to subnets",
+              "shortDescription": {
+                "text": "Ensure that all NACL are attached to subnets"
+              },
+              "fullDescription": {
+                "text": "Ensure that all NACL are attached to subnets"
+              },
+              "help": {
+                "text": "\"Ensure that all NACL are attached to subnets\nResource: aws_vpc.agents\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-all-nacl-are-attached-to-subnets\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV2_AWS_1",
+              "name": "Ensure that all NACL are attached to subnets",
+              "shortDescription": {
+                "text": "Ensure that all NACL are attached to subnets"
+              },
+              "fullDescription": {
+                "text": "Ensure that all NACL are attached to subnets"
+              },
+              "help": {
+                "text": "\"Ensure that all NACL are attached to subnets\nResource: aws_vpc.main\nGuideline: https://docs.bridgecrew.io/docs/ensure-that-all-nacl-are-attached-to-subnets\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV2_AWS_12",
+              "name": "Ensure the default security group of every VPC restricts all traffic",
+              "shortDescription": {
+                "text": "Ensure the default security group of every VPC restricts all traffic"
+              },
+              "fullDescription": {
+                "text": "Ensure the default security group of every VPC restricts all traffic"
+              },
+              "help": {
+                "text": "\"Ensure the default security group of every VPC restricts all traffic\nResource: aws_vpc.agents\nGuideline: https://docs.bridgecrew.io/docs/networking_4\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV2_AWS_12",
+              "name": "Ensure the default security group of every VPC restricts all traffic",
+              "shortDescription": {
+                "text": "Ensure the default security group of every VPC restricts all traffic"
+              },
+              "fullDescription": {
+                "text": "Ensure the default security group of every VPC restricts all traffic"
+              },
+              "help": {
+                "text": "\"Ensure the default security group of every VPC restricts all traffic\nResource: aws_vpc.main\nGuideline: https://docs.bridgecrew.io/docs/networking_4\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV2_AWS_11",
+              "name": "Ensure VPC flow logging is enabled in all VPCs",
+              "shortDescription": {
+                "text": "Ensure VPC flow logging is enabled in all VPCs"
+              },
+              "fullDescription": {
+                "text": "Ensure VPC flow logging is enabled in all VPCs"
+              },
+              "help": {
+                "text": "\"Ensure VPC flow logging is enabled in all VPCs\nResource: aws_vpc.agents\nGuideline: https://docs.bridgecrew.io/docs/logging_9-enable-vpc-flow-logging\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV2_AWS_11",
+              "name": "Ensure VPC flow logging is enabled in all VPCs",
+              "shortDescription": {
+                "text": "Ensure VPC flow logging is enabled in all VPCs"
+              },
+              "fullDescription": {
+                "text": "Ensure VPC flow logging is enabled in all VPCs"
+              },
+              "help": {
+                "text": "\"Ensure VPC flow logging is enabled in all VPCs\nResource: aws_vpc.main\nGuideline: https://docs.bridgecrew.io/docs/logging_9-enable-vpc-flow-logging\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV2_AWS_27",
+              "name": "Postgres RDS has Query Logging enabled",
+              "shortDescription": {
+                "text": "Postgres RDS has Query Logging enabled"
+              },
+              "fullDescription": {
+                "text": "Postgres RDS has Query Logging enabled"
+              },
+              "help": {
+                "text": "\"Postgres RDS has Query Logging enabled\nResource: aws_db_instance.qodana_postgresql\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV2_AWS_29",
+              "name": "Ensure public API gateway are protected by WAF",
+              "shortDescription": {
+                "text": "Ensure public API gateway are protected by WAF"
+              },
+              "fullDescription": {
+                "text": "Ensure public API gateway are protected by WAF"
+              },
+              "help": {
+                "text": "\"Ensure public API gateway are protected by WAF\nResource: aws_api_gateway_stage.default\nGuideline: None\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV2_AWS_6",
+              "name": "Ensure that S3 bucket has a Public Access block",
+              "shortDescription": {
+                "text": "Ensure that S3 bucket has a Public Access block"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 bucket has a Public Access block"
+              },
+              "help": {
+                "text": "\"Ensure that S3 bucket has a Public Access block\nResource: aws_s3_bucket.qc-results\nGuideline: https://docs.bridgecrew.io/docs/s3-bucket-should-have-public-access-blocks-defaults-to-false-if-the-public-access-block-is-not-attached\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "CKV2_AWS_6",
+              "name": "Ensure that S3 bucket has a Public Access block",
+              "shortDescription": {
+                "text": "Ensure that S3 bucket has a Public Access block"
+              },
+              "fullDescription": {
+                "text": "Ensure that S3 bucket has a Public Access block"
+              },
+              "help": {
+                "text": "\"Ensure that S3 bucket has a Public Access block\nResource: aws_s3_bucket.logs\nGuideline: https://docs.bridgecrew.io/docs/s3-bucket-should-have-public-access-blocks-defaults-to-false-if-the-public-access-block-is-not-attached\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            }
+          ],
+          "organization": "bridgecrew"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CKV_AWS_158",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/web-oauth/apigateway.tf"
+                },
+                "region": {
+                  "startLine": 14,
+                  "endLine": 18
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_158",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/web-oauth/apigateway.tf"
+                },
+                "region": {
+                  "startLine": 25,
+                  "endLine": 29
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_120",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Ensure API Gateway caching is enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/web-oauth/apigateway.tf"
+                },
+                "region": {
+                  "startLine": 37,
+                  "endLine": 49
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_73",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "Ensure API Gateway has X-Ray Tracing enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/web-oauth/apigateway.tf"
+                },
+                "region": {
+                  "startLine": 37,
+                  "endLine": 49
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_50",
+          "ruleIndex": 4,
+          "level": "error",
+          "message": {
+            "text": "X-ray tracing is enabled for Lambda"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/web-oauth/lambda.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 22
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_116",
+          "ruleIndex": 5,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/web-oauth/lambda.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 22
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_115",
+          "ruleIndex": 6,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/web-oauth/lambda.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 22
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_158",
+          "ruleIndex": 7,
+          "level": "error",
+          "message": {
+            "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/web-oauth/lambda.tf"
+                },
+                "region": {
+                  "startLine": 34,
+                  "endLine": 38
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_59",
+          "ruleIndex": 8,
+          "level": "error",
+          "message": {
+            "text": "Ensure there is no open access to back-end resources through API"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/web-oauth/oauth-apigateway.tf"
+                },
+                "region": {
+                  "startLine": 20,
+                  "endLine": 31
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_158",
+          "ruleIndex": 9,
+          "level": "error",
+          "message": {
+            "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/app/main.tf"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_158",
+          "ruleIndex": 10,
+          "level": "error",
+          "message": {
+            "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/cloud/main.tf"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_150",
+          "ruleIndex": 11,
+          "level": "error",
+          "message": {
+            "text": "Ensure that Load Balancer has deletion protection enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/alb.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 7
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_91",
+          "ruleIndex": 12,
+          "level": "error",
+          "message": {
+            "text": "Ensure the ELBv2 (Application/Network) has access logging enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/alb.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 7
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_131",
+          "ruleIndex": 13,
+          "level": "error",
+          "message": {
+            "text": "Ensure that ALB drops HTTP headers"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/alb.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 7
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_68",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "CloudFront Distribution should have WAF enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/cloudfront-auth.tf"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 50
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_50",
+          "ruleIndex": 15,
+          "level": "error",
+          "message": {
+            "text": "X-ray tracing is enabled for Lambda"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/cloudfront-auth.tf"
+                },
+                "region": {
+                  "startLine": 87,
+                  "endLine": 98
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_117",
+          "ruleIndex": 16,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured inside a VPC"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/cloudfront-auth.tf"
+                },
+                "region": {
+                  "startLine": 87,
+                  "endLine": 98
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_116",
+          "ruleIndex": 17,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/cloudfront-auth.tf"
+                },
+                "region": {
+                  "startLine": 87,
+                  "endLine": 98
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_115",
+          "ruleIndex": 18,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/cloudfront-auth.tf"
+                },
+                "region": {
+                  "startLine": 87,
+                  "endLine": 98
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_158",
+          "ruleIndex": 19,
+          "level": "error",
+          "message": {
+            "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/cloudfront-auth.tf"
+                },
+                "region": {
+                  "startLine": 99,
+                  "endLine": 103
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_68",
+          "ruleIndex": 20,
+          "level": "error",
+          "message": {
+            "text": "CloudFront Distribution should have WAF enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/cloudfront-cloud.tf"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 58
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_68",
+          "ruleIndex": 21,
+          "level": "error",
+          "message": {
+            "text": "CloudFront Distribution should have WAF enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/cloudfront.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 44
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_158",
+          "ruleIndex": 22,
+          "level": "error",
+          "message": {
+            "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/ecs-tasks.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_65",
+          "ruleIndex": 23,
+          "level": "error",
+          "message": {
+            "text": "Ensure container insights are enabled on ECS cluster"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/ecs.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_40",
+          "ruleIndex": 24,
+          "level": "error",
+          "message": {
+            "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/iam.tf"
+                },
+                "region": {
+                  "startLine": 24,
+                  "endLine": 27
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_40",
+          "ruleIndex": 25,
+          "level": "error",
+          "message": {
+            "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/iam.tf"
+                },
+                "region": {
+                  "startLine": 55,
+                  "endLine": 93
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_40",
+          "ruleIndex": 26,
+          "level": "error",
+          "message": {
+            "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/iam.tf"
+                },
+                "region": {
+                  "startLine": 100,
+                  "endLine": 138
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_40",
+          "ruleIndex": 27,
+          "level": "error",
+          "message": {
+            "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/iam.tf"
+                },
+                "region": {
+                  "startLine": 302,
+                  "endLine": 305
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_40",
+          "ruleIndex": 28,
+          "level": "error",
+          "message": {
+            "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/iam.tf"
+                },
+                "region": {
+                  "startLine": 378,
+                  "endLine": 410
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_40",
+          "ruleIndex": 29,
+          "level": "error",
+          "message": {
+            "text": "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/iam.tf"
+                },
+                "region": {
+                  "startLine": 417,
+                  "endLine": 455
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_161",
+          "ruleIndex": 30,
+          "level": "error",
+          "message": {
+            "text": "Ensure RDS database has IAM authentication enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/rds.tf"
+                },
+                "region": {
+                  "startLine": 7,
+                  "endLine": 31
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_157",
+          "ruleIndex": 31,
+          "level": "error",
+          "message": {
+            "text": "Ensure that RDS instances have Multi-AZ enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/rds.tf"
+                },
+                "region": {
+                  "startLine": 7,
+                  "endLine": 31
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_129",
+          "ruleIndex": 32,
+          "level": "error",
+          "message": {
+            "text": "Ensure that respective logs of Amazon Relational Database Service (Amazon RDS) are enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/rds.tf"
+                },
+                "region": {
+                  "startLine": 7,
+                  "endLine": 31
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_118",
+          "ruleIndex": 33,
+          "level": "error",
+          "message": {
+            "text": "Ensure that enhanced monitoring is enabled for Amazon RDS instances"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/rds.tf"
+                },
+                "region": {
+                  "startLine": 7,
+                  "endLine": 31
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_16",
+          "ruleIndex": 34,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the RDS is securely encrypted at rest"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/rds.tf"
+                },
+                "region": {
+                  "startLine": 7,
+                  "endLine": 31
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_19",
+          "ruleIndex": 35,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 15
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_18",
+          "ruleIndex": 36,
+          "level": "error",
+          "message": {
+            "text": "Ensure the S3 bucket has access logging enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 15
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_144",
+          "ruleIndex": 37,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 bucket has cross-region replication enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 15
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_145",
+          "ruleIndex": 38,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 buckets are encrypted with KMS by default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 15
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_56",
+          "ruleIndex": 39,
+          "level": "error",
+          "message": {
+            "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 16,
+                  "endLine": 21
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_19",
+          "ruleIndex": 40,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 25,
+                  "endLine": 28
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_18",
+          "ruleIndex": 41,
+          "level": "error",
+          "message": {
+            "text": "Ensure the S3 bucket has access logging enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 25,
+                  "endLine": 28
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_144",
+          "ruleIndex": 42,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 bucket has cross-region replication enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 25,
+                  "endLine": 28
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_145",
+          "ruleIndex": 43,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 buckets are encrypted with KMS by default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 25,
+                  "endLine": 28
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_21",
+          "ruleIndex": 44,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 25,
+                  "endLine": 28
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_56",
+          "ruleIndex": 45,
+          "level": "error",
+          "message": {
+            "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 48,
+                  "endLine": 53
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_19",
+          "ruleIndex": 46,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 56,
+                  "endLine": 70
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_18",
+          "ruleIndex": 47,
+          "level": "error",
+          "message": {
+            "text": "Ensure the S3 bucket has access logging enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 56,
+                  "endLine": 70
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_144",
+          "ruleIndex": 48,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 bucket has cross-region replication enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 56,
+                  "endLine": 70
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_145",
+          "ruleIndex": 49,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 buckets are encrypted with KMS by default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 56,
+                  "endLine": 70
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_21",
+          "ruleIndex": 50,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 56,
+                  "endLine": 70
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_53",
+          "ruleIndex": 51,
+          "level": "error",
+          "message": {
+            "text": "Ensure S3 bucket has block public ACLS enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 73,
+                  "endLine": 77
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_54",
+          "ruleIndex": 52,
+          "level": "error",
+          "message": {
+            "text": "Ensure S3 bucket has block public policy enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 73,
+                  "endLine": 77
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_55",
+          "ruleIndex": 53,
+          "level": "error",
+          "message": {
+            "text": "Ensure S3 bucket has ignore public ACLs enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 73,
+                  "endLine": 77
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_56",
+          "ruleIndex": 54,
+          "level": "error",
+          "message": {
+            "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 73,
+                  "endLine": 77
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_19",
+          "ruleIndex": 55,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 80,
+                  "endLine": 83
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_18",
+          "ruleIndex": 56,
+          "level": "error",
+          "message": {
+            "text": "Ensure the S3 bucket has access logging enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 80,
+                  "endLine": 83
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_144",
+          "ruleIndex": 57,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 bucket has cross-region replication enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 80,
+                  "endLine": 83
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_145",
+          "ruleIndex": 58,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 buckets are encrypted with KMS by default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 80,
+                  "endLine": 83
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_21",
+          "ruleIndex": 59,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 80,
+                  "endLine": 83
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_56",
+          "ruleIndex": 60,
+          "level": "error",
+          "message": {
+            "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 103,
+                  "endLine": 108
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_19",
+          "ruleIndex": 61,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 111,
+                  "endLine": 132
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_18",
+          "ruleIndex": 62,
+          "level": "error",
+          "message": {
+            "text": "Ensure the S3 bucket has access logging enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 111,
+                  "endLine": 132
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_144",
+          "ruleIndex": 63,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 bucket has cross-region replication enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 111,
+                  "endLine": 132
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_145",
+          "ruleIndex": 64,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 buckets are encrypted with KMS by default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 111,
+                  "endLine": 132
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_21",
+          "ruleIndex": 65,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 111,
+                  "endLine": 132
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_19",
+          "ruleIndex": 66,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 141,
+                  "endLine": 150
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_18",
+          "ruleIndex": 67,
+          "level": "error",
+          "message": {
+            "text": "Ensure the S3 bucket has access logging enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 141,
+                  "endLine": 150
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_144",
+          "ruleIndex": 68,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 bucket has cross-region replication enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 141,
+                  "endLine": 150
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_145",
+          "ruleIndex": 69,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 buckets are encrypted with KMS by default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 141,
+                  "endLine": 150
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_21",
+          "ruleIndex": 70,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 141,
+                  "endLine": 150
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_56",
+          "ruleIndex": 71,
+          "level": "error",
+          "message": {
+            "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 151,
+                  "endLine": 156
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_19",
+          "ruleIndex": 72,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 159,
+                  "endLine": 162
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_18",
+          "ruleIndex": 73,
+          "level": "error",
+          "message": {
+            "text": "Ensure the S3 bucket has access logging enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 159,
+                  "endLine": 162
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_144",
+          "ruleIndex": 74,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 bucket has cross-region replication enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 159,
+                  "endLine": 162
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_145",
+          "ruleIndex": 75,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 buckets are encrypted with KMS by default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 159,
+                  "endLine": 162
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_21",
+          "ruleIndex": 76,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the S3 bucket have versioning enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 159,
+                  "endLine": 162
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_56",
+          "ruleIndex": 77,
+          "level": "error",
+          "message": {
+            "text": "Ensure S3 bucket has 'restrict_public_bucket' enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 182,
+                  "endLine": 187
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_24",
+          "ruleIndex": 78,
+          "level": "error",
+          "message": {
+            "text": "Ensure no security groups allow ingress from 0.0.0.0:0 to port 22"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/sg.tf"
+                },
+                "region": {
+                  "startLine": 66,
+                  "endLine": 86
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_25",
+          "ruleIndex": 79,
+          "level": "error",
+          "message": {
+            "text": "Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/sg.tf"
+                },
+                "region": {
+                  "startLine": 66,
+                  "endLine": 86
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_158",
+          "ruleIndex": 80,
+          "level": "error",
+          "message": {
+            "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/spot-dns-lambda.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_50",
+          "ruleIndex": 81,
+          "level": "error",
+          "message": {
+            "text": "X-ray tracing is enabled for Lambda"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/spot-dns-lambda.tf"
+                },
+                "region": {
+                  "startLine": 19,
+                  "endLine": 40
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_117",
+          "ruleIndex": 82,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured inside a VPC"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/spot-dns-lambda.tf"
+                },
+                "region": {
+                  "startLine": 19,
+                  "endLine": 40
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_116",
+          "ruleIndex": 83,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/spot-dns-lambda.tf"
+                },
+                "region": {
+                  "startLine": 19,
+                  "endLine": 40
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_115",
+          "ruleIndex": 84,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/spot-dns-lambda.tf"
+                },
+                "region": {
+                  "startLine": 19,
+                  "endLine": 40
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_27",
+          "ruleIndex": 85,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the SQS queue is encrypted"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/sqs.tf"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 13
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_27",
+          "ruleIndex": 86,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the SQS queue is encrypted"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/sqs.tf"
+                },
+                "region": {
+                  "startLine": 15,
+                  "endLine": 22
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_27",
+          "ruleIndex": 87,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the SQS queue is encrypted"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/sqs.tf"
+                },
+                "region": {
+                  "startLine": 25,
+                  "endLine": 36
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_27",
+          "ruleIndex": 88,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the SQS queue is encrypted"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/sqs.tf"
+                },
+                "region": {
+                  "startLine": 38,
+                  "endLine": 45
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_24",
+          "ruleIndex": 89,
+          "level": "error",
+          "message": {
+            "text": "Ensure no security groups allow ingress from 0.0.0.0:0 to port 22"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/vpc-agents.tf"
+                },
+                "region": {
+                  "startLine": 61,
+                  "endLine": 90
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_158",
+          "ruleIndex": 90,
+          "level": "error",
+          "message": {
+            "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/apigateway.tf"
+                },
+                "region": {
+                  "startLine": 13,
+                  "endLine": 17
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_158",
+          "ruleIndex": 91,
+          "level": "error",
+          "message": {
+            "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/apigateway.tf"
+                },
+                "region": {
+                  "startLine": 24,
+                  "endLine": 28
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_120",
+          "ruleIndex": 92,
+          "level": "error",
+          "message": {
+            "text": "Ensure API Gateway caching is enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/apigateway.tf"
+                },
+                "region": {
+                  "startLine": 36,
+                  "endLine": 48
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_73",
+          "ruleIndex": 93,
+          "level": "error",
+          "message": {
+            "text": "Ensure API Gateway has X-Ray Tracing enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/apigateway.tf"
+                },
+                "region": {
+                  "startLine": 36,
+                  "endLine": 48
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_59",
+          "ruleIndex": 94,
+          "level": "error",
+          "message": {
+            "text": "Ensure there is no open access to back-end resources through API"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/os-apigateway.tf"
+                },
+                "region": {
+                  "startLine": 21,
+                  "endLine": 32
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_59",
+          "ruleIndex": 95,
+          "level": "error",
+          "message": {
+            "text": "Ensure there is no open access to back-end resources through API"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/os-apigateway.tf"
+                },
+                "region": {
+                  "startLine": 93,
+                  "endLine": 99
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_50",
+          "ruleIndex": 96,
+          "level": "error",
+          "message": {
+            "text": "X-ray tracing is enabled for Lambda"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/os-lambda.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 19
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_117",
+          "ruleIndex": 97,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured inside a VPC"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/os-lambda.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 19
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_116",
+          "ruleIndex": 98,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/os-lambda.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 19
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_115",
+          "ruleIndex": 99,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/os-lambda.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 19
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_158",
+          "ruleIndex": 100,
+          "level": "error",
+          "message": {
+            "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/os-lambda.tf"
+                },
+                "region": {
+                  "startLine": 31,
+                  "endLine": 35
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_50",
+          "ruleIndex": 101,
+          "level": "error",
+          "message": {
+            "text": "X-ray tracing is enabled for Lambda"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/sa-lambda.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 19
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_117",
+          "ruleIndex": 102,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured inside a VPC"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/sa-lambda.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 19
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_116",
+          "ruleIndex": 103,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/sa-lambda.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 19
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_115",
+          "ruleIndex": 104,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/sa-lambda.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 19
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_158",
+          "ruleIndex": 105,
+          "level": "error",
+          "message": {
+            "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/sa-lambda.tf"
+                },
+                "region": {
+                  "startLine": 31,
+                  "endLine": 35
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_158",
+          "ruleIndex": 106,
+          "level": "error",
+          "message": {
+            "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/report_processor/main.tf"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_50",
+          "ruleIndex": 107,
+          "level": "error",
+          "message": {
+            "text": "X-ray tracing is enabled for Lambda"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/web-results-processor/lambda.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 25
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_116",
+          "ruleIndex": 108,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/web-results-processor/lambda.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 25
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_115",
+          "ruleIndex": 109,
+          "level": "error",
+          "message": {
+            "text": "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/web-results-processor/lambda.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 25
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_26",
+          "ruleIndex": 110,
+          "level": "error",
+          "message": {
+            "text": "Ensure all data stored in the SNS topic is encrypted"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/web-results-processor/lambda.tf"
+                },
+                "region": {
+                  "startLine": 37,
+                  "endLine": 39
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV_AWS_158",
+          "ruleIndex": 111,
+          "level": "error",
+          "message": {
+            "text": "Ensure that CloudWatch Log Group is encrypted by KMS"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/web-results-processor/lambda.tf"
+                },
+                "region": {
+                  "startLine": 49,
+                  "endLine": 53
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV2_AWS_5",
+          "ruleIndex": 112,
+          "level": "error",
+          "message": {
+            "text": "Ensure that Security Groups are attached to an other resource"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/sg.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 22
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV2_AWS_5",
+          "ruleIndex": 113,
+          "level": "error",
+          "message": {
+            "text": "Ensure that Security Groups are attached to an other resource"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/sg.tf"
+                },
+                "region": {
+                  "startLine": 24,
+                  "endLine": 42
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV2_AWS_5",
+          "ruleIndex": 114,
+          "level": "error",
+          "message": {
+            "text": "Ensure that Security Groups are attached to an other resource"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/sg.tf"
+                },
+                "region": {
+                  "startLine": 110,
+                  "endLine": 130
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV2_AWS_5",
+          "ruleIndex": 115,
+          "level": "error",
+          "message": {
+            "text": "Ensure that Security Groups are attached to an other resource"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/sg.tf"
+                },
+                "region": {
+                  "startLine": 132,
+                  "endLine": 152
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV2_AWS_5",
+          "ruleIndex": 116,
+          "level": "error",
+          "message": {
+            "text": "Ensure that Security Groups are attached to an other resource"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/vpc-agents.tf"
+                },
+                "region": {
+                  "startLine": 61,
+                  "endLine": 90
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV2_AWS_1",
+          "ruleIndex": 117,
+          "level": "error",
+          "message": {
+            "text": "Ensure that all NACL are attached to subnets"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/vpc-agents.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV2_AWS_1",
+          "ruleIndex": 118,
+          "level": "error",
+          "message": {
+            "text": "Ensure that all NACL are attached to subnets"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/vpc.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV2_AWS_12",
+          "ruleIndex": 119,
+          "level": "error",
+          "message": {
+            "text": "Ensure the default security group of every VPC restricts all traffic"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/vpc-agents.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV2_AWS_12",
+          "ruleIndex": 120,
+          "level": "error",
+          "message": {
+            "text": "Ensure the default security group of every VPC restricts all traffic"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/vpc.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV2_AWS_11",
+          "ruleIndex": 121,
+          "level": "error",
+          "message": {
+            "text": "Ensure VPC flow logging is enabled in all VPCs"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/vpc-agents.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV2_AWS_11",
+          "ruleIndex": 122,
+          "level": "error",
+          "message": {
+            "text": "Ensure VPC flow logging is enabled in all VPCs"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/vpc.tf"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV2_AWS_27",
+          "ruleIndex": 123,
+          "level": "error",
+          "message": {
+            "text": "Postgres RDS has Query Logging enabled"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/rds.tf"
+                },
+                "region": {
+                  "startLine": 7,
+                  "endLine": 31
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV2_AWS_29",
+          "ruleIndex": 124,
+          "level": "error",
+          "message": {
+            "text": "Ensure public API gateway are protected by WAF"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/publisher/apigateway.tf"
+                },
+                "region": {
+                  "startLine": 36,
+                  "endLine": 48
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV2_AWS_6",
+          "ruleIndex": 125,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 bucket has a Public Access block"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 56,
+                  "endLine": 70
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CKV2_AWS_6",
+          "ruleIndex": 126,
+          "level": "error",
+          "message": {
+            "text": "Ensure that S3 bucket has a Public Access block"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/modules/infra/s3.tf"
+                },
+                "region": {
+                  "startLine": 111,
+                  "endLine": 132
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "versionControlProvenance": [
+        {
+          "branch": "master",
+          "repositoryUri": "https://jetbrains.team/p/sa/repositories/jetbrains-static-analysis/",
+          "revisionId": "ef86e290592fd532944dd1edb5ad7c357f3ca8f0"
+        }
+      ]
+    }
+  ]
+}
