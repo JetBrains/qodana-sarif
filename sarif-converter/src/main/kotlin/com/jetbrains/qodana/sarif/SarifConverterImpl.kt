@@ -3,6 +3,7 @@ package com.jetbrains.qodana.sarif
 import com.google.common.hash.Hashing
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.jetbrains.qodana.sarif.SarifConverterImpl.Companion.severity
 import com.jetbrains.qodana.sarif.TextUtil.Companion.sanitizeText
 import com.jetbrains.qodana.sarif.model.*
 import com.jetbrains.qodana.sarif.model.Level.*
@@ -25,6 +26,27 @@ class SarifConverterImpl : SarifConverter {
     companion object {
         private val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
         private val log = LogManager.getLogger(SarifConverterImpl::class.java)!!
+
+        fun Result.severity(): Severity {
+            return properties?.get("ideaSeverity")?.run {
+                when (this) {
+                    "ERROR" -> Severity.ERROR
+                    "WARNING" -> Severity.WARNING
+                    "WEAK WARNING" -> Severity.WEAK_WARNING
+                    "TYPO" -> Severity.TYPO
+                    "INFORMATION" -> Severity.INFORMATION
+                    else -> throw InvalidSarifException("Unexpected severity type: $this")
+                }
+            } ?: run {
+                when (level) {
+                    NONE -> Severity.INFORMATION
+                    NOTE -> Severity.INFORMATION
+                    WARNING -> Severity.WARNING
+                    ERROR -> Severity.ERROR
+                    else -> throw InvalidSarifException("Can't handle level of problem: $level")
+                }
+            }
+        }
     }
 
     private val hasher: NullableHasher
@@ -173,28 +195,6 @@ class SarifConverterImpl : SarifConverter {
         return mutableMapOf<String, String>().apply {
             put("module", locations?.firstOrNull()?.logicalLocations?.first()?.fullyQualifiedName ?: "")
             put("inspectionName", ruleId)
-        }
-    }
-
-
-    private fun Result.severity(): Severity {
-        return properties?.get("ideaSeverity")?.run {
-            when (this) {
-                "ERROR" -> Severity.ERROR
-                "WARNING" -> Severity.WARNING
-                "WEAK WARNING" -> Severity.WEAK_WARNING
-                "TYPO" -> Severity.TYPO
-                "INFORMATION" -> Severity.INFORMATION
-                else -> throw InvalidSarifException("Unexpected severity type: $this")
-            }
-        } ?: run {
-            when (level) {
-                NONE -> Severity.INFORMATION
-                NOTE -> Severity.INFORMATION
-                WARNING -> Severity.WARNING
-                ERROR -> Severity.ERROR
-                else -> throw InvalidSarifException("Can't handle level of problem: $level")
-            }
         }
     }
 
