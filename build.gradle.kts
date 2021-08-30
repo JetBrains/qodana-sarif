@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     `maven-publish`
+    application
     kotlin("jvm") version "1.5.21"
 }
 
@@ -15,6 +16,7 @@ val spacePassword by extra(projectSettingsValue("spacePassword", spacePasswordTo
 allprojects {
     apply(plugin = "kotlin")
     apply(plugin = "maven-publish")
+    apply(plugin = "application")
 
     group = "com.jetbrains.qodana"
 

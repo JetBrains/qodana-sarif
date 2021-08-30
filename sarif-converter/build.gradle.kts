@@ -1,7 +1,6 @@
-plugins {
-    application
-}
+val archiveJarName: String by project
 
+val jarArchiveName by extra(projectSettingsValue("archiveJarName", archiveJarName))
 val kotlinVersion = project.rootProject.ext.properties["kotlinVersion"] as String
 
 dependencies {
@@ -22,6 +21,27 @@ dependencies {
 
 application {
    mainClass.set("com.jetbrains.qodana.sarif.app.Main")
+}
+
+tasks.register<Jar>("sarifConverter-fatJar") {
+    dependsOn(tasks.build, tasks.test)
+
+    archiveVersion.set("")
+    archiveFileName.set("$jarArchiveName.jar")
+    archiveClassifier.set("sarifConverter")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes("Main-Class" to "com.jetbrains.qodana.sarif.app.Main", "Multi-Release" to "true")
+    }
+
+    from(configurations.runtimeClasspath.get()
+        .onEach { println("Add from dependencies: ${it.name}") }
+        .map { if (it.isDirectory) it else zipTree(it) })
+
+    val sourcesMain = sourceSets.main.get()
+    from(sourcesMain.output)
+    sourcesMain.allSource.forEach { println("Add from sources: ${it.name}") }
 }
 
 
