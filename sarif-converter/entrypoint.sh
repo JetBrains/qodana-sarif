@@ -2,6 +2,10 @@
 
 serve_ui=''
 
+make_folders() {
+  mkdir -p /data/results
+}
+
 run_converter() {
   /app/bin/sarif-converter -s /data/sarif.json -o /data/results
 }
@@ -26,6 +30,7 @@ while getopts 's' flag; do
   esac
 done
 
+make_folders
 run_converter
 serve_ui
 
