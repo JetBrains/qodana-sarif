@@ -4,14 +4,12 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * A logical location of a construct that produced a result.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class LogicalLocation {
 
     /**

@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Set;
  * Describes a condition relevant to the tool itself, as opposed to being relevant to a target being analyzed by the tool.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class Notification {
 
     /**
@@ -370,7 +370,7 @@ public class Notification {
      * A value specifying the severity level of the notification.
      *
      */
-    @Generated("jsonschema2pojo")
+
     public enum Level {
 
         @SerializedName("none")

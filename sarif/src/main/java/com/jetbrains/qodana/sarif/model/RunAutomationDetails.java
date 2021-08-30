@@ -4,14 +4,12 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * Information that describes a run's identity and role within an engineering system process.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class RunAutomationDetails {
 
     /**

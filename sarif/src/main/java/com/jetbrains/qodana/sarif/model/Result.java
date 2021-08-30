@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.Set;
  * A result produced by an analysis tool.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class Result {
 
     /**
@@ -1067,7 +1067,7 @@ public class Result {
      * The state of a result relative to a baseline of a previous run.
      *
      */
-    @Generated("jsonschema2pojo")
+
     public enum BaselineState {
 
         @SerializedName("new")
@@ -1116,7 +1116,7 @@ public class Result {
      * A value that categorizes results by evaluation state.
      *
      */
-    @Generated("jsonschema2pojo")
+
     public enum Kind {
 
         @SerializedName("notApplicable")

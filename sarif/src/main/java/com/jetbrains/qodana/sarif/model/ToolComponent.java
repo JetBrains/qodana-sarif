@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.net.URI;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -16,7 +16,7 @@ import java.util.Set;
  * A component, such as a plug-in or the driver, of the analysis tool that was run.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class ToolComponent {
 
     /**

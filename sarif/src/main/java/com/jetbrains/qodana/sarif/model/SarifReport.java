@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.Set;
  * Static Analysis Results Format (SARIF) Version 2.1.0 JSON Schema: a standard format for the output of static analysis tools.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class SarifReport {
 
     /**
@@ -246,7 +246,7 @@ public class SarifReport {
      * The SARIF format version of this log file.
      *
      */
-    @Generated("jsonschema2pojo")
+
     public enum Version {
 
         @SerializedName("2.1.0")

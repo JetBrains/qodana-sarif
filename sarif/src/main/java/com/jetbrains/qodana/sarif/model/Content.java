@@ -3,11 +3,11 @@ package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.util.HashMap;
 import java.util.Map;
 
-@Generated("jsonschema2pojo")
+
 public enum Content {
 
     @SerializedName("localizedData")

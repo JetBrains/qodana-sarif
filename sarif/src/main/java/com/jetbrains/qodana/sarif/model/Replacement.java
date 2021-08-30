@@ -4,14 +4,12 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * The replacement of a single region of an artifact.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class Replacement {
 
     /**

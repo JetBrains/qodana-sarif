@@ -1,14 +1,12 @@
 
 package com.jetbrains.qodana.sarif.model;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * The artifact location specified by each uriBaseId symbol on the machine where the tool originally ran.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class OriginalUriBaseIds {
 
 

@@ -4,14 +4,12 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * Describes the response to an HTTP request.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class WebResponse {
 
     /**

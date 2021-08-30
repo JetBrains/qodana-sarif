@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.util.Date;
 import java.util.Set;
 
@@ -13,7 +13,7 @@ import java.util.Set;
  * A single artifact. In some cases, this artifact might be nested within another artifact.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class Artifact {
 
     /**

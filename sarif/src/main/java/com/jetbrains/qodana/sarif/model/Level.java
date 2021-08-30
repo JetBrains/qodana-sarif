@@ -2,14 +2,14 @@ package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Specifies the failure level for the report.
  */
-@Generated("jsonschema2pojo")
+
 public enum Level {
 
   @SerializedName("none")

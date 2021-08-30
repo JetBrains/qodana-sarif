@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.util.Set;
 
 
@@ -12,7 +12,7 @@ import java.util.Set;
  * Describes how a converter transformed the output of a static analysis tool from the analysis tool's native output format into the SARIF format.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class Conversion {
 
     /**

@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.util.List;
 
 
@@ -12,7 +12,7 @@ import java.util.List;
  * Encapsulates a message intended to be read by the end user.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class Message {
 
     /**

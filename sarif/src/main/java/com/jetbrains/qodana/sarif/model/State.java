@@ -1,14 +1,12 @@
 
 package com.jetbrains.qodana.sarif.model;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * A dictionary, each of whose keys specifies a variable or expression, the associated value of which represents the variable or expression value. For an annotation of kind 'continuation', for example, this dictionary might hold the current assumed values of a set of global variables.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class State {
 
 

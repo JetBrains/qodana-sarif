@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.net.URI;
 
 
@@ -12,7 +12,7 @@ import java.net.URI;
  * Provides additional metadata related to translation.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class TranslationMetadata {
 
     /**

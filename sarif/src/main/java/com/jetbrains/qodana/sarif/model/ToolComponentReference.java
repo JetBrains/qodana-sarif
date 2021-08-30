@@ -4,14 +4,12 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * Identifies a particular toolComponent object, either the driver or an extension.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class ToolComponentReference {
 
     /**

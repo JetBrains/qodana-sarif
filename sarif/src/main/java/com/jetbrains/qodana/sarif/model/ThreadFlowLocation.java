@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Set;
  * A location visited by an analysis tool while simulating or monitoring the execution of a program.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class ThreadFlowLocation {
 
     /**
@@ -516,7 +516,7 @@ public class ThreadFlowLocation {
      * Specifies the importance of this location in understanding the code flow in which it occurs. The order from most to least important is "essential", "important", "unimportant". Default: "important".
      *
      */
-    @Generated("jsonschema2pojo")
+
     public enum Importance {
 
         @SerializedName("important")

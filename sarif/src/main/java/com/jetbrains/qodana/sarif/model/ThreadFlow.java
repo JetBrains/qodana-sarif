@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.util.List;
 
 
@@ -12,7 +12,7 @@ import java.util.List;
  * Describes a sequence of code locations that specify a path through a single thread of execution such as an operating system or fiber.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class ThreadFlow {
 
     /**

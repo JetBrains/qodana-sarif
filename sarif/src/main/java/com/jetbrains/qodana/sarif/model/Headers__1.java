@@ -1,14 +1,12 @@
 
 package com.jetbrains.qodana.sarif.model;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * The response headers.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class Headers__1 {
 
 

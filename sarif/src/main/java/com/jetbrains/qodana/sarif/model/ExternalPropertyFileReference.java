@@ -4,14 +4,12 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * Contains information that enables a SARIF consumer to locate the external property file that contains the value of an externalized property associated with the run.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class ExternalPropertyFileReference {
 
     /**

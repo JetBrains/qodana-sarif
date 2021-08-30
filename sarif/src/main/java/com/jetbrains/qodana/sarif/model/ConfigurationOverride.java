@@ -4,14 +4,12 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * Information about how a specific rule or notification was reconfigured at runtime.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class ConfigurationOverride {
 
     /**

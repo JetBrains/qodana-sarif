@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.net.URI;
 import java.util.Set;
 
@@ -13,7 +13,7 @@ import java.util.Set;
  * Metadata that describes a specific report produced by the tool, as part of the analysis it provides or its runtime reporting.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class ReportingDescriptor {
 
     /**

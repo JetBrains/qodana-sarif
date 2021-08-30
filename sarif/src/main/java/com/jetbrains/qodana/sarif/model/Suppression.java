@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +13,7 @@ import java.util.Map;
  * A suppression that is relevant to a result.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class Suppression {
 
     /**
@@ -269,7 +269,7 @@ public class Suppression {
      * A string that indicates where the suppression is persisted.
      *
      */
-    @Generated("jsonschema2pojo")
+
     public enum Kind {
 
         @SerializedName("inSource")
@@ -314,7 +314,7 @@ public class Suppression {
      * A string that indicates the review status of the suppression.
      *
      */
-    @Generated("jsonschema2pojo")
+
     public enum Status {
 
         @SerializedName("accepted")

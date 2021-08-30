@@ -1,14 +1,12 @@
 
 package com.jetbrains.qodana.sarif.model;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * The values of relevant expressions after the edge has been traversed.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class FinalState {
 
 

@@ -4,14 +4,12 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * An area within an image.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class Rectangle {
 
     /**

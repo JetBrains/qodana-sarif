@@ -4,14 +4,12 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * A message string or message format string rendered in multiple formats.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class MultiformatMessageString {
 
     /**

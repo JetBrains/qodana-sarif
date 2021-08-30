@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.Set;
  * The top-level element of an external property file.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class ExternalProperties {
 
     /**
@@ -748,7 +748,7 @@ public class ExternalProperties {
      * The SARIF format version of this external properties object.
      *
      */
-    @Generated("jsonschema2pojo")
+
     public enum Version {
 
         @SerializedName("2.1.0")

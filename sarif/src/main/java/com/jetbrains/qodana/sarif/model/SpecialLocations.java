@@ -4,14 +4,12 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * Defines locations of special significance to SARIF consumers.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class SpecialLocations {
 
     /**

@@ -1,14 +1,12 @@
 
 package com.jetbrains.qodana.sarif.model;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * Values of relevant expressions at the start of the graph traversal that may change during graph traversal.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class InitialState__1 {
 
 

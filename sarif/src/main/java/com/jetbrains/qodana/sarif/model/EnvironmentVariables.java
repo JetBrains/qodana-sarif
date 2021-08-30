@@ -1,14 +1,12 @@
 
 package com.jetbrains.qodana.sarif.model;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * The environment variables associated with the analysis tool process, expressed as key/value pairs.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class EnvironmentVariables {
 
 

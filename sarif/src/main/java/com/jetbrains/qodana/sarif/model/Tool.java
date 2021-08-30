@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.util.Set;
 
 
@@ -12,7 +12,7 @@ import java.util.Set;
  * The analysis tool that was run.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class Tool {
 
     /**

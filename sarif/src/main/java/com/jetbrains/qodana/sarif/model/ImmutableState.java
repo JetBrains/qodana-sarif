@@ -1,14 +1,12 @@
 
 package com.jetbrains.qodana.sarif.model;
 
-import javax.annotation.processing.Generated;
-
 
 /**
  * Values of relevant expressions at the start of the thread flow that remain constant.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class ImmutableState {
 
 

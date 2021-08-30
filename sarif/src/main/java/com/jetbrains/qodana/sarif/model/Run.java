@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.util.*;
 
 
@@ -12,7 +12,7 @@ import java.util.*;
  * Describes a single run of an analysis tool, and contains the reported output of that run.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class Run {
 
     /**
@@ -994,7 +994,7 @@ public class Run {
      * Specifies the unit in which the tool measures columns.
      *
      */
-    @Generated("jsonschema2pojo")
+
     public enum ColumnKind {
 
         @SerializedName("utf16CodeUnits")

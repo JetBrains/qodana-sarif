@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.net.URI;
 import java.util.Date;
 
@@ -13,7 +13,7 @@ import java.util.Date;
  * Specifies the information necessary to retrieve a desired revision from a version control system.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class VersionControlDetails {
 
     /**

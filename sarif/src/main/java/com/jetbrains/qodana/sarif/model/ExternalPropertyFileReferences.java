@@ -4,7 +4,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.processing.Generated;
+
 import java.util.Set;
 
 
@@ -12,7 +12,7 @@ import java.util.Set;
  * References to external property files that should be inlined with the content of a root log file.
  * 
  */
-@Generated("jsonschema2pojo")
+
 public class ExternalPropertyFileReferences {
 
     /**
