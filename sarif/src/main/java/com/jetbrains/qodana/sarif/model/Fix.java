@@ -1,23 +1,18 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 import java.util.Set;
 
 
 /**
  * A proposed fix for the problem represented by a result object. A fix specifies a set of artifacts to modify. For each artifact, it specifies a set of bytes to remove, and provides a set of new bytes to replace them.
- * 
  */
-
 public class Fix {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     @SerializedName("description")
     @Expose
@@ -25,14 +20,12 @@ public class Fix {
     /**
      * One or more artifact changes that comprise a fix for a result.
      * (Required)
-     * 
      */
     @SerializedName("artifactChanges")
     @Expose
     private Set<ArtifactChange> artifactChanges = null;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -40,13 +33,11 @@ public class Fix {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Fix() {
     }
 
     /**
-     * 
      * @param artifactChanges
      */
     public Fix(Set<ArtifactChange> artifactChanges) {
@@ -56,7 +47,6 @@ public class Fix {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public Message getDescription() {
         return description;
@@ -64,7 +54,6 @@ public class Fix {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public void setDescription(Message description) {
         this.description = description;
@@ -78,7 +67,6 @@ public class Fix {
     /**
      * One or more artifact changes that comprise a fix for a result.
      * (Required)
-     * 
      */
     public Set<ArtifactChange> getArtifactChanges() {
         return artifactChanges;
@@ -87,7 +75,6 @@ public class Fix {
     /**
      * One or more artifact changes that comprise a fix for a result.
      * (Required)
-     * 
      */
     public void setArtifactChanges(Set<ArtifactChange> artifactChanges) {
         this.artifactChanges = artifactChanges;
@@ -100,7 +87,6 @@ public class Fix {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -108,7 +94,6 @@ public class Fix {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -125,18 +110,18 @@ public class Fix {
         sb.append(Fix.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("description");
         sb.append('=');
-        sb.append(((this.description == null)?"<null>":this.description));
+        sb.append(((this.description == null) ? "<null>" : this.description));
         sb.append(',');
         sb.append("artifactChanges");
         sb.append('=');
-        sb.append(((this.artifactChanges == null)?"<null>":this.artifactChanges));
+        sb.append(((this.artifactChanges == null) ? "<null>" : this.artifactChanges));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -146,9 +131,9 @@ public class Fix {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.artifactChanges == null)? 0 :this.artifactChanges.hashCode()));
-        result = ((result* 31)+((this.description == null)? 0 :this.description.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.artifactChanges == null) ? 0 : this.artifactChanges.hashCode()));
+        result = ((result * 31) + ((this.description == null) ? 0 : this.description.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -161,7 +146,7 @@ public class Fix {
             return false;
         }
         Fix rhs = ((Fix) other);
-        return ((((this.artifactChanges == rhs.artifactChanges)||((this.artifactChanges!= null)&&this.artifactChanges.equals(rhs.artifactChanges)))&&((this.description == rhs.description)||((this.description!= null)&&this.description.equals(rhs.description))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return ((((this.artifactChanges == rhs.artifactChanges) || ((this.artifactChanges != null) && this.artifactChanges.equals(rhs.artifactChanges))) && ((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

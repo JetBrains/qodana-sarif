@@ -1,4 +1,3 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.Gson;
@@ -119,7 +118,7 @@ public class PropertyBag implements Map<String, Object> {
             Object tags = map.remove("tags");
             result.putAll(map);
             if (tags instanceof String[]) {
-                for (String tag: (String[])tags) {
+                for (String tag : (String[]) tags) {
                     if (!map.containsKey(tag)) {
                         result.additionalTags.add(tag);
                     }

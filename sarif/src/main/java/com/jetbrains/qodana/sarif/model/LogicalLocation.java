@@ -1,4 +1,3 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
@@ -7,56 +6,47 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * A logical location of a construct that produced a result.
- * 
  */
-
 public class LogicalLocation {
 
     /**
      * Identifies the construct in which the result occurred. For example, this property might contain the name of a class or a method.
-     * 
      */
     @SerializedName("name")
     @Expose
     private String name;
     /**
      * The index within the logical locations array.
-     * 
      */
     @SerializedName("index")
     @Expose
     private Integer index = null;
     /**
      * The human-readable fully qualified name of the logical location.
-     * 
      */
     @SerializedName("fullyQualifiedName")
     @Expose
     private String fullyQualifiedName;
     /**
      * The machine-readable name for the logical location, such as a mangled function name provided by a C++ compiler that encodes calling convention, return type and other details along with the function name.
-     * 
      */
     @SerializedName("decoratedName")
     @Expose
     private String decoratedName;
     /**
      * Identifies the index of the immediate parent of the construct in which the result was detected. For example, this property might point to a logical location that represents the namespace that holds a type.
-     * 
      */
     @SerializedName("parentIndex")
     @Expose
     private Integer parentIndex = null;
     /**
      * The type of construct this logical location component refers to. Should be one of 'function', 'member', 'module', 'namespace', 'parameter', 'resource', 'returnType', 'type', 'variable', 'object', 'array', 'property', 'value', 'element', 'text', 'attribute', 'comment', 'declaration', 'dtd' or 'processingInstruction', if any of those accurately describe the construct.
-     * 
      */
     @SerializedName("kind")
     @Expose
     private String kind;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -64,7 +54,6 @@ public class LogicalLocation {
 
     /**
      * Identifies the construct in which the result occurred. For example, this property might contain the name of a class or a method.
-     * 
      */
     public String getName() {
         return name;
@@ -72,7 +61,6 @@ public class LogicalLocation {
 
     /**
      * Identifies the construct in which the result occurred. For example, this property might contain the name of a class or a method.
-     * 
      */
     public void setName(String name) {
         this.name = name;
@@ -85,7 +73,6 @@ public class LogicalLocation {
 
     /**
      * The index within the logical locations array.
-     * 
      */
     public Integer getIndex() {
         return index;
@@ -93,7 +80,6 @@ public class LogicalLocation {
 
     /**
      * The index within the logical locations array.
-     * 
      */
     public void setIndex(Integer index) {
         this.index = index;
@@ -106,7 +92,6 @@ public class LogicalLocation {
 
     /**
      * The human-readable fully qualified name of the logical location.
-     * 
      */
     public String getFullyQualifiedName() {
         return fullyQualifiedName;
@@ -114,7 +99,6 @@ public class LogicalLocation {
 
     /**
      * The human-readable fully qualified name of the logical location.
-     * 
      */
     public void setFullyQualifiedName(String fullyQualifiedName) {
         this.fullyQualifiedName = fullyQualifiedName;
@@ -127,7 +111,6 @@ public class LogicalLocation {
 
     /**
      * The machine-readable name for the logical location, such as a mangled function name provided by a C++ compiler that encodes calling convention, return type and other details along with the function name.
-     * 
      */
     public String getDecoratedName() {
         return decoratedName;
@@ -135,7 +118,6 @@ public class LogicalLocation {
 
     /**
      * The machine-readable name for the logical location, such as a mangled function name provided by a C++ compiler that encodes calling convention, return type and other details along with the function name.
-     * 
      */
     public void setDecoratedName(String decoratedName) {
         this.decoratedName = decoratedName;
@@ -148,7 +130,6 @@ public class LogicalLocation {
 
     /**
      * Identifies the index of the immediate parent of the construct in which the result was detected. For example, this property might point to a logical location that represents the namespace that holds a type.
-     * 
      */
     public Integer getParentIndex() {
         return parentIndex;
@@ -156,7 +137,6 @@ public class LogicalLocation {
 
     /**
      * Identifies the index of the immediate parent of the construct in which the result was detected. For example, this property might point to a logical location that represents the namespace that holds a type.
-     * 
      */
     public void setParentIndex(Integer parentIndex) {
         this.parentIndex = parentIndex;
@@ -169,7 +149,6 @@ public class LogicalLocation {
 
     /**
      * The type of construct this logical location component refers to. Should be one of 'function', 'member', 'module', 'namespace', 'parameter', 'resource', 'returnType', 'type', 'variable', 'object', 'array', 'property', 'value', 'element', 'text', 'attribute', 'comment', 'declaration', 'dtd' or 'processingInstruction', if any of those accurately describe the construct.
-     * 
      */
     public String getKind() {
         return kind;
@@ -177,7 +156,6 @@ public class LogicalLocation {
 
     /**
      * The type of construct this logical location component refers to. Should be one of 'function', 'member', 'module', 'namespace', 'parameter', 'resource', 'returnType', 'type', 'variable', 'object', 'array', 'property', 'value', 'element', 'text', 'attribute', 'comment', 'declaration', 'dtd' or 'processingInstruction', if any of those accurately describe the construct.
-     * 
      */
     public void setKind(String kind) {
         this.kind = kind;
@@ -190,7 +168,6 @@ public class LogicalLocation {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -198,7 +175,6 @@ public class LogicalLocation {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -215,34 +191,34 @@ public class LogicalLocation {
         sb.append(LogicalLocation.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("name");
         sb.append('=');
-        sb.append(((this.name == null)?"<null>":this.name));
+        sb.append(((this.name == null) ? "<null>" : this.name));
         sb.append(',');
         sb.append("index");
         sb.append('=');
-        sb.append(((this.index == null)?"<null>":this.index));
+        sb.append(((this.index == null) ? "<null>" : this.index));
         sb.append(',');
         sb.append("fullyQualifiedName");
         sb.append('=');
-        sb.append(((this.fullyQualifiedName == null)?"<null>":this.fullyQualifiedName));
+        sb.append(((this.fullyQualifiedName == null) ? "<null>" : this.fullyQualifiedName));
         sb.append(',');
         sb.append("decoratedName");
         sb.append('=');
-        sb.append(((this.decoratedName == null)?"<null>":this.decoratedName));
+        sb.append(((this.decoratedName == null) ? "<null>" : this.decoratedName));
         sb.append(',');
         sb.append("parentIndex");
         sb.append('=');
-        sb.append(((this.parentIndex == null)?"<null>":this.parentIndex));
+        sb.append(((this.parentIndex == null) ? "<null>" : this.parentIndex));
         sb.append(',');
         sb.append("kind");
         sb.append('=');
-        sb.append(((this.kind == null)?"<null>":this.kind));
+        sb.append(((this.kind == null) ? "<null>" : this.kind));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -252,13 +228,13 @@ public class LogicalLocation {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.parentIndex == null)? 0 :this.parentIndex.hashCode()));
-        result = ((result* 31)+((this.kind == null)? 0 :this.kind.hashCode()));
-        result = ((result* 31)+((this.name == null)? 0 :this.name.hashCode()));
-        result = ((result* 31)+((this.index == null)? 0 :this.index.hashCode()));
-        result = ((result* 31)+((this.decoratedName == null)? 0 :this.decoratedName.hashCode()));
-        result = ((result* 31)+((this.fullyQualifiedName == null)? 0 :this.fullyQualifiedName.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.parentIndex == null) ? 0 : this.parentIndex.hashCode()));
+        result = ((result * 31) + ((this.kind == null) ? 0 : this.kind.hashCode()));
+        result = ((result * 31) + ((this.name == null) ? 0 : this.name.hashCode()));
+        result = ((result * 31) + ((this.index == null) ? 0 : this.index.hashCode()));
+        result = ((result * 31) + ((this.decoratedName == null) ? 0 : this.decoratedName.hashCode()));
+        result = ((result * 31) + ((this.fullyQualifiedName == null) ? 0 : this.fullyQualifiedName.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -271,7 +247,7 @@ public class LogicalLocation {
             return false;
         }
         LogicalLocation rhs = ((LogicalLocation) other);
-        return ((((((((this.parentIndex == rhs.parentIndex)||((this.parentIndex!= null)&&this.parentIndex.equals(rhs.parentIndex)))&&((this.kind == rhs.kind)||((this.kind!= null)&&this.kind.equals(rhs.kind))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.index == rhs.index)||((this.index!= null)&&this.index.equals(rhs.index))))&&((this.decoratedName == rhs.decoratedName)||((this.decoratedName!= null)&&this.decoratedName.equals(rhs.decoratedName))))&&((this.fullyQualifiedName == rhs.fullyQualifiedName)||((this.fullyQualifiedName!= null)&&this.fullyQualifiedName.equals(rhs.fullyQualifiedName))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return ((((((((this.parentIndex == rhs.parentIndex) || ((this.parentIndex != null) && this.parentIndex.equals(rhs.parentIndex))) && ((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind)))) && ((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name)))) && ((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index)))) && ((this.decoratedName == rhs.decoratedName) || ((this.decoratedName != null) && this.decoratedName.equals(rhs.decoratedName)))) && ((this.fullyQualifiedName == rhs.fullyQualifiedName) || ((this.fullyQualifiedName != null) && this.fullyQualifiedName.equals(rhs.fullyQualifiedName)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

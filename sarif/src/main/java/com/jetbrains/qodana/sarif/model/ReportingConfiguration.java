@@ -1,4 +1,3 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
@@ -7,42 +6,35 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Information about a rule or notification that can be configured at runtime.
- * 
  */
-
 public class ReportingConfiguration {
 
     /**
      * Specifies whether the report may be produced during the scan.
-     * 
      */
     @SerializedName("enabled")
     @Expose
     private Boolean enabled = true;
     /**
      * Specifies the failure level for the report.
-     * 
      */
     @SerializedName("level")
     @Expose
     private Level level = Level.WARNING;
     /**
      * Specifies the relative priority of the report. Used for analysis output only.
-     * 
      */
     @SerializedName("rank")
     @Expose
     private Double rank = null;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("parameters")
     @Expose
     private PropertyBag parameters;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -50,7 +42,6 @@ public class ReportingConfiguration {
 
     /**
      * Specifies whether the report may be produced during the scan.
-     * 
      */
     public Boolean getEnabled() {
         return enabled;
@@ -58,7 +49,6 @@ public class ReportingConfiguration {
 
     /**
      * Specifies whether the report may be produced during the scan.
-     * 
      */
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
@@ -71,7 +61,6 @@ public class ReportingConfiguration {
 
     /**
      * Specifies the failure level for the report.
-     * 
      */
     public Level getLevel() {
         return level;
@@ -79,7 +68,6 @@ public class ReportingConfiguration {
 
     /**
      * Specifies the failure level for the report.
-     * 
      */
     public void setLevel(Level level) {
         this.level = level;
@@ -92,7 +80,6 @@ public class ReportingConfiguration {
 
     /**
      * Specifies the relative priority of the report. Used for analysis output only.
-     * 
      */
     public Double getRank() {
         return rank;
@@ -100,7 +87,6 @@ public class ReportingConfiguration {
 
     /**
      * Specifies the relative priority of the report. Used for analysis output only.
-     * 
      */
     public void setRank(Double rank) {
         this.rank = rank;
@@ -113,7 +99,6 @@ public class ReportingConfiguration {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getParameters() {
         return parameters;
@@ -121,7 +106,6 @@ public class ReportingConfiguration {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setParameters(PropertyBag parameters) {
         this.parameters = parameters;
@@ -134,7 +118,6 @@ public class ReportingConfiguration {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -142,7 +125,6 @@ public class ReportingConfiguration {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -159,26 +141,26 @@ public class ReportingConfiguration {
         sb.append(ReportingConfiguration.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("enabled");
         sb.append('=');
-        sb.append(((this.enabled == null)?"<null>":this.enabled));
+        sb.append(((this.enabled == null) ? "<null>" : this.enabled));
         sb.append(',');
         sb.append("level");
         sb.append('=');
-        sb.append(((this.level == null)?"<null>":this.level));
+        sb.append(((this.level == null) ? "<null>" : this.level));
         sb.append(',');
         sb.append("rank");
         sb.append('=');
-        sb.append(((this.rank == null)?"<null>":this.rank));
+        sb.append(((this.rank == null) ? "<null>" : this.rank));
         sb.append(',');
         sb.append("parameters");
         sb.append('=');
-        sb.append(((this.parameters == null)?"<null>":this.parameters));
+        sb.append(((this.parameters == null) ? "<null>" : this.parameters));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -188,11 +170,11 @@ public class ReportingConfiguration {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.rank == null)? 0 :this.rank.hashCode()));
-        result = ((result* 31)+((this.level == null)? 0 :this.level.hashCode()));
-        result = ((result* 31)+((this.parameters == null)? 0 :this.parameters.hashCode()));
-        result = ((result* 31)+((this.enabled == null)? 0 :this.enabled.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.rank == null) ? 0 : this.rank.hashCode()));
+        result = ((result * 31) + ((this.level == null) ? 0 : this.level.hashCode()));
+        result = ((result * 31) + ((this.parameters == null) ? 0 : this.parameters.hashCode()));
+        result = ((result * 31) + ((this.enabled == null) ? 0 : this.enabled.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -205,6 +187,6 @@ public class ReportingConfiguration {
             return false;
         }
         ReportingConfiguration rhs = ((ReportingConfiguration) other);
-        return ((((((this.rank == rhs.rank)||((this.rank!= null)&&this.rank.equals(rhs.rank)))&&((this.level == rhs.level)||((this.level!= null)&&this.level.equals(rhs.level))))&&((this.parameters == rhs.parameters)||((this.parameters!= null)&&this.parameters.equals(rhs.parameters))))&&((this.enabled == rhs.enabled)||((this.enabled!= null)&&this.enabled.equals(rhs.enabled))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return ((((((this.rank == rhs.rank) || ((this.rank != null) && this.rank.equals(rhs.rank))) && ((this.level == rhs.level) || ((this.level != null) && this.level.equals(rhs.level)))) && ((this.parameters == rhs.parameters) || ((this.parameters != null) && this.parameters.equals(rhs.parameters)))) && ((this.enabled == rhs.enabled) || ((this.enabled != null) && this.enabled.equals(rhs.enabled)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 }

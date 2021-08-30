@@ -1,4 +1,3 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
@@ -7,49 +6,41 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * An area within an image.
- * 
  */
-
 public class Rectangle {
 
     /**
      * The Y coordinate of the top edge of the rectangle, measured in the image's natural units.
-     * 
      */
     @SerializedName("top")
     @Expose
     private Double top;
     /**
      * The X coordinate of the left edge of the rectangle, measured in the image's natural units.
-     * 
      */
     @SerializedName("left")
     @Expose
     private Double left;
     /**
      * The Y coordinate of the bottom edge of the rectangle, measured in the image's natural units.
-     * 
      */
     @SerializedName("bottom")
     @Expose
     private Double bottom;
     /**
      * The X coordinate of the right edge of the rectangle, measured in the image's natural units.
-     * 
      */
     @SerializedName("right")
     @Expose
     private Double right;
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     @SerializedName("message")
     @Expose
     private Message message;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -57,7 +48,6 @@ public class Rectangle {
 
     /**
      * The Y coordinate of the top edge of the rectangle, measured in the image's natural units.
-     * 
      */
     public Double getTop() {
         return top;
@@ -65,7 +55,6 @@ public class Rectangle {
 
     /**
      * The Y coordinate of the top edge of the rectangle, measured in the image's natural units.
-     * 
      */
     public void setTop(Double top) {
         this.top = top;
@@ -78,7 +67,6 @@ public class Rectangle {
 
     /**
      * The X coordinate of the left edge of the rectangle, measured in the image's natural units.
-     * 
      */
     public Double getLeft() {
         return left;
@@ -86,7 +74,6 @@ public class Rectangle {
 
     /**
      * The X coordinate of the left edge of the rectangle, measured in the image's natural units.
-     * 
      */
     public void setLeft(Double left) {
         this.left = left;
@@ -99,7 +86,6 @@ public class Rectangle {
 
     /**
      * The Y coordinate of the bottom edge of the rectangle, measured in the image's natural units.
-     * 
      */
     public Double getBottom() {
         return bottom;
@@ -107,7 +93,6 @@ public class Rectangle {
 
     /**
      * The Y coordinate of the bottom edge of the rectangle, measured in the image's natural units.
-     * 
      */
     public void setBottom(Double bottom) {
         this.bottom = bottom;
@@ -120,7 +105,6 @@ public class Rectangle {
 
     /**
      * The X coordinate of the right edge of the rectangle, measured in the image's natural units.
-     * 
      */
     public Double getRight() {
         return right;
@@ -128,7 +112,6 @@ public class Rectangle {
 
     /**
      * The X coordinate of the right edge of the rectangle, measured in the image's natural units.
-     * 
      */
     public void setRight(Double right) {
         this.right = right;
@@ -141,7 +124,6 @@ public class Rectangle {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public Message getMessage() {
         return message;
@@ -149,7 +131,6 @@ public class Rectangle {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public void setMessage(Message message) {
         this.message = message;
@@ -162,7 +143,6 @@ public class Rectangle {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -170,7 +150,6 @@ public class Rectangle {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -187,30 +166,30 @@ public class Rectangle {
         sb.append(Rectangle.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("top");
         sb.append('=');
-        sb.append(((this.top == null)?"<null>":this.top));
+        sb.append(((this.top == null) ? "<null>" : this.top));
         sb.append(',');
         sb.append("left");
         sb.append('=');
-        sb.append(((this.left == null)?"<null>":this.left));
+        sb.append(((this.left == null) ? "<null>" : this.left));
         sb.append(',');
         sb.append("bottom");
         sb.append('=');
-        sb.append(((this.bottom == null)?"<null>":this.bottom));
+        sb.append(((this.bottom == null) ? "<null>" : this.bottom));
         sb.append(',');
         sb.append("right");
         sb.append('=');
-        sb.append(((this.right == null)?"<null>":this.right));
+        sb.append(((this.right == null) ? "<null>" : this.right));
         sb.append(',');
         sb.append("message");
         sb.append('=');
-        sb.append(((this.message == null)?"<null>":this.message));
+        sb.append(((this.message == null) ? "<null>" : this.message));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -220,12 +199,12 @@ public class Rectangle {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.top == null)? 0 :this.top.hashCode()));
-        result = ((result* 31)+((this.left == null)? 0 :this.left.hashCode()));
-        result = ((result* 31)+((this.bottom == null)? 0 :this.bottom.hashCode()));
-        result = ((result* 31)+((this.right == null)? 0 :this.right.hashCode()));
-        result = ((result* 31)+((this.message == null)? 0 :this.message.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.top == null) ? 0 : this.top.hashCode()));
+        result = ((result * 31) + ((this.left == null) ? 0 : this.left.hashCode()));
+        result = ((result * 31) + ((this.bottom == null) ? 0 : this.bottom.hashCode()));
+        result = ((result * 31) + ((this.right == null) ? 0 : this.right.hashCode()));
+        result = ((result * 31) + ((this.message == null) ? 0 : this.message.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -238,7 +217,7 @@ public class Rectangle {
             return false;
         }
         Rectangle rhs = ((Rectangle) other);
-        return (((((((this.top == rhs.top)||((this.top!= null)&&this.top.equals(rhs.top)))&&((this.left == rhs.left)||((this.left!= null)&&this.left.equals(rhs.left))))&&((this.bottom == rhs.bottom)||((this.bottom!= null)&&this.bottom.equals(rhs.bottom))))&&((this.right == rhs.right)||((this.right!= null)&&this.right.equals(rhs.right))))&&((this.message == rhs.message)||((this.message!= null)&&this.message.equals(rhs.message))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return (((((((this.top == rhs.top) || ((this.top != null) && this.top.equals(rhs.top))) && ((this.left == rhs.left) || ((this.left != null) && this.left.equals(rhs.left)))) && ((this.bottom == rhs.bottom) || ((this.bottom != null) && this.bottom.equals(rhs.bottom)))) && ((this.right == rhs.right) || ((this.right != null) && this.right.equals(rhs.right)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

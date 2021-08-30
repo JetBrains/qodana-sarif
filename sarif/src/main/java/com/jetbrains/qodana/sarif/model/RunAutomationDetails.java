@@ -1,4 +1,3 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
@@ -7,42 +6,35 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Information that describes a run's identity and role within an engineering system process.
- * 
  */
-
 public class RunAutomationDetails {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     @SerializedName("description")
     @Expose
     private Message description;
     /**
      * A hierarchical string that uniquely identifies this object's containing run object.
-     * 
      */
     @SerializedName("id")
     @Expose
     private String id;
     /**
      * A stable, unique identifer for this object's containing run object in the form of a GUID.
-     * 
      */
     @SerializedName("guid")
     @Expose
     private String guid;
     /**
      * A stable, unique identifier for the equivalence class of runs to which this object's containing run object belongs in the form of a GUID.
-     * 
      */
     @SerializedName("correlationGuid")
     @Expose
     private String correlationGuid;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -50,7 +42,6 @@ public class RunAutomationDetails {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public Message getDescription() {
         return description;
@@ -58,7 +49,6 @@ public class RunAutomationDetails {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public void setDescription(Message description) {
         this.description = description;
@@ -71,7 +61,6 @@ public class RunAutomationDetails {
 
     /**
      * A hierarchical string that uniquely identifies this object's containing run object.
-     * 
      */
     public String getId() {
         return id;
@@ -79,7 +68,6 @@ public class RunAutomationDetails {
 
     /**
      * A hierarchical string that uniquely identifies this object's containing run object.
-     * 
      */
     public void setId(String id) {
         this.id = id;
@@ -92,7 +80,6 @@ public class RunAutomationDetails {
 
     /**
      * A stable, unique identifer for this object's containing run object in the form of a GUID.
-     * 
      */
     public String getGuid() {
         return guid;
@@ -100,7 +87,6 @@ public class RunAutomationDetails {
 
     /**
      * A stable, unique identifer for this object's containing run object in the form of a GUID.
-     * 
      */
     public void setGuid(String guid) {
         this.guid = guid;
@@ -113,7 +99,6 @@ public class RunAutomationDetails {
 
     /**
      * A stable, unique identifier for the equivalence class of runs to which this object's containing run object belongs in the form of a GUID.
-     * 
      */
     public String getCorrelationGuid() {
         return correlationGuid;
@@ -121,7 +106,6 @@ public class RunAutomationDetails {
 
     /**
      * A stable, unique identifier for the equivalence class of runs to which this object's containing run object belongs in the form of a GUID.
-     * 
      */
     public void setCorrelationGuid(String correlationGuid) {
         this.correlationGuid = correlationGuid;
@@ -134,7 +118,6 @@ public class RunAutomationDetails {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -142,7 +125,6 @@ public class RunAutomationDetails {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -159,26 +141,26 @@ public class RunAutomationDetails {
         sb.append(RunAutomationDetails.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("description");
         sb.append('=');
-        sb.append(((this.description == null)?"<null>":this.description));
+        sb.append(((this.description == null) ? "<null>" : this.description));
         sb.append(',');
         sb.append("id");
         sb.append('=');
-        sb.append(((this.id == null)?"<null>":this.id));
+        sb.append(((this.id == null) ? "<null>" : this.id));
         sb.append(',');
         sb.append("guid");
         sb.append('=');
-        sb.append(((this.guid == null)?"<null>":this.guid));
+        sb.append(((this.guid == null) ? "<null>" : this.guid));
         sb.append(',');
         sb.append("correlationGuid");
         sb.append('=');
-        sb.append(((this.correlationGuid == null)?"<null>":this.correlationGuid));
+        sb.append(((this.correlationGuid == null) ? "<null>" : this.correlationGuid));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -188,11 +170,11 @@ public class RunAutomationDetails {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.description == null)? 0 :this.description.hashCode()));
-        result = ((result* 31)+((this.guid == null)? 0 :this.guid.hashCode()));
-        result = ((result* 31)+((this.id == null)? 0 :this.id.hashCode()));
-        result = ((result* 31)+((this.correlationGuid == null)? 0 :this.correlationGuid.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.description == null) ? 0 : this.description.hashCode()));
+        result = ((result * 31) + ((this.guid == null) ? 0 : this.guid.hashCode()));
+        result = ((result * 31) + ((this.id == null) ? 0 : this.id.hashCode()));
+        result = ((result * 31) + ((this.correlationGuid == null) ? 0 : this.correlationGuid.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -205,7 +187,7 @@ public class RunAutomationDetails {
             return false;
         }
         RunAutomationDetails rhs = ((RunAutomationDetails) other);
-        return ((((((this.description == rhs.description)||((this.description!= null)&&this.description.equals(rhs.description)))&&((this.guid == rhs.guid)||((this.guid!= null)&&this.guid.equals(rhs.guid))))&&((this.id == rhs.id)||((this.id!= null)&&this.id.equals(rhs.id))))&&((this.correlationGuid == rhs.correlationGuid)||((this.correlationGuid!= null)&&this.correlationGuid.equals(rhs.correlationGuid))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return ((((((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.correlationGuid == rhs.correlationGuid) || ((this.correlationGuid != null) && this.correlationGuid.equals(rhs.correlationGuid)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

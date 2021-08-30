@@ -1,51 +1,42 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 import java.util.List;
 
 
 /**
  * Encapsulates a message intended to be read by the end user.
- * 
  */
-
 public class Message {
 
     /**
      * A plain text message string.
-     * 
      */
     @SerializedName("text")
     @Expose
     private String text;
     /**
      * A Markdown message string.
-     * 
      */
     @SerializedName("markdown")
     @Expose
     private String markdown;
     /**
      * The identifier for this message.
-     * 
      */
     @SerializedName("id")
     @Expose
     private String id;
     /**
      * An array of strings to substitute into the message string.
-     * 
      */
     @SerializedName("arguments")
     @Expose
     private List<String> arguments = null;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -53,7 +44,6 @@ public class Message {
 
     /**
      * A plain text message string.
-     * 
      */
     public String getText() {
         return text;
@@ -61,7 +51,6 @@ public class Message {
 
     /**
      * A plain text message string.
-     * 
      */
     public void setText(String text) {
         this.text = text;
@@ -74,7 +63,6 @@ public class Message {
 
     /**
      * A Markdown message string.
-     * 
      */
     public String getMarkdown() {
         return markdown;
@@ -82,7 +70,6 @@ public class Message {
 
     /**
      * A Markdown message string.
-     * 
      */
     public void setMarkdown(String markdown) {
         this.markdown = markdown;
@@ -95,7 +82,6 @@ public class Message {
 
     /**
      * The identifier for this message.
-     * 
      */
     public String getId() {
         return id;
@@ -103,7 +89,6 @@ public class Message {
 
     /**
      * The identifier for this message.
-     * 
      */
     public void setId(String id) {
         this.id = id;
@@ -116,7 +101,6 @@ public class Message {
 
     /**
      * An array of strings to substitute into the message string.
-     * 
      */
     public List<String> getArguments() {
         return arguments;
@@ -124,7 +108,6 @@ public class Message {
 
     /**
      * An array of strings to substitute into the message string.
-     * 
      */
     public void setArguments(List<String> arguments) {
         this.arguments = arguments;
@@ -137,7 +120,6 @@ public class Message {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -145,7 +127,6 @@ public class Message {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -162,26 +143,26 @@ public class Message {
         sb.append(Message.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("text");
         sb.append('=');
-        sb.append(((this.text == null)?"<null>":this.text));
+        sb.append(((this.text == null) ? "<null>" : this.text));
         sb.append(',');
         sb.append("markdown");
         sb.append('=');
-        sb.append(((this.markdown == null)?"<null>":this.markdown));
+        sb.append(((this.markdown == null) ? "<null>" : this.markdown));
         sb.append(',');
         sb.append("id");
         sb.append('=');
-        sb.append(((this.id == null)?"<null>":this.id));
+        sb.append(((this.id == null) ? "<null>" : this.id));
         sb.append(',');
         sb.append("arguments");
         sb.append('=');
-        sb.append(((this.arguments == null)?"<null>":this.arguments));
+        sb.append(((this.arguments == null) ? "<null>" : this.arguments));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -191,11 +172,11 @@ public class Message {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.markdown == null)? 0 :this.markdown.hashCode()));
-        result = ((result* 31)+((this.arguments == null)? 0 :this.arguments.hashCode()));
-        result = ((result* 31)+((this.text == null)? 0 :this.text.hashCode()));
-        result = ((result* 31)+((this.id == null)? 0 :this.id.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.markdown == null) ? 0 : this.markdown.hashCode()));
+        result = ((result * 31) + ((this.arguments == null) ? 0 : this.arguments.hashCode()));
+        result = ((result * 31) + ((this.text == null) ? 0 : this.text.hashCode()));
+        result = ((result * 31) + ((this.id == null) ? 0 : this.id.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -208,7 +189,7 @@ public class Message {
             return false;
         }
         Message rhs = ((Message) other);
-        return ((((((this.markdown == rhs.markdown)||((this.markdown!= null)&&this.markdown.equals(rhs.markdown)))&&((this.arguments == rhs.arguments)||((this.arguments!= null)&&this.arguments.equals(rhs.arguments))))&&((this.text == rhs.text)||((this.text!= null)&&this.text.equals(rhs.text))))&&((this.id == rhs.id)||((this.id!= null)&&this.id.equals(rhs.id))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return ((((((this.markdown == rhs.markdown) || ((this.markdown != null) && this.markdown.equals(rhs.markdown))) && ((this.arguments == rhs.arguments) || ((this.arguments != null) && this.arguments.equals(rhs.arguments)))) && ((this.text == rhs.text) || ((this.text != null) && this.text.equals(rhs.text)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

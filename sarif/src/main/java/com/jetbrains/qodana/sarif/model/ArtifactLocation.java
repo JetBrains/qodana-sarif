@@ -1,4 +1,3 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
@@ -7,42 +6,35 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Specifies the location of an artifact.
- * 
  */
-
 public class ArtifactLocation {
 
     /**
      * A string containing a valid relative or absolute URI.
-     * 
      */
     @SerializedName("uri")
     @Expose
     private String uri;
     /**
      * A string which indirectly specifies the absolute URI with respect to which a relative URI in the "uri" property is interpreted.
-     * 
      */
     @SerializedName("uriBaseId")
     @Expose
     private String uriBaseId;
     /**
      * The index within the run artifacts array of the artifact object associated with the artifact location.
-     * 
      */
     @SerializedName("index")
     @Expose
     private Integer index = null;
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     @SerializedName("description")
     @Expose
     private Message description;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -50,7 +42,6 @@ public class ArtifactLocation {
 
     /**
      * A string containing a valid relative or absolute URI.
-     * 
      */
     public String getUri() {
         return uri;
@@ -58,7 +49,6 @@ public class ArtifactLocation {
 
     /**
      * A string containing a valid relative or absolute URI.
-     * 
      */
     public void setUri(String uri) {
         this.uri = uri;
@@ -71,7 +61,6 @@ public class ArtifactLocation {
 
     /**
      * A string which indirectly specifies the absolute URI with respect to which a relative URI in the "uri" property is interpreted.
-     * 
      */
     public String getUriBaseId() {
         return uriBaseId;
@@ -79,7 +68,6 @@ public class ArtifactLocation {
 
     /**
      * A string which indirectly specifies the absolute URI with respect to which a relative URI in the "uri" property is interpreted.
-     * 
      */
     public void setUriBaseId(String uriBaseId) {
         this.uriBaseId = uriBaseId;
@@ -92,7 +80,6 @@ public class ArtifactLocation {
 
     /**
      * The index within the run artifacts array of the artifact object associated with the artifact location.
-     * 
      */
     public Integer getIndex() {
         return index;
@@ -100,7 +87,6 @@ public class ArtifactLocation {
 
     /**
      * The index within the run artifacts array of the artifact object associated with the artifact location.
-     * 
      */
     public void setIndex(Integer index) {
         this.index = index;
@@ -113,7 +99,6 @@ public class ArtifactLocation {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public Message getDescription() {
         return description;
@@ -121,7 +106,6 @@ public class ArtifactLocation {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public void setDescription(Message description) {
         this.description = description;
@@ -134,7 +118,6 @@ public class ArtifactLocation {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -142,7 +125,6 @@ public class ArtifactLocation {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -159,26 +141,26 @@ public class ArtifactLocation {
         sb.append(ArtifactLocation.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("uri");
         sb.append('=');
-        sb.append(((this.uri == null)?"<null>":this.uri));
+        sb.append(((this.uri == null) ? "<null>" : this.uri));
         sb.append(',');
         sb.append("uriBaseId");
         sb.append('=');
-        sb.append(((this.uriBaseId == null)?"<null>":this.uriBaseId));
+        sb.append(((this.uriBaseId == null) ? "<null>" : this.uriBaseId));
         sb.append(',');
         sb.append("index");
         sb.append('=');
-        sb.append(((this.index == null)?"<null>":this.index));
+        sb.append(((this.index == null) ? "<null>" : this.index));
         sb.append(',');
         sb.append("description");
         sb.append('=');
-        sb.append(((this.description == null)?"<null>":this.description));
+        sb.append(((this.description == null) ? "<null>" : this.description));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -188,11 +170,11 @@ public class ArtifactLocation {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.index == null)? 0 :this.index.hashCode()));
-        result = ((result* 31)+((this.description == null)? 0 :this.description.hashCode()));
-        result = ((result* 31)+((this.uri == null)? 0 :this.uri.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
-        result = ((result* 31)+((this.uriBaseId == null)? 0 :this.uriBaseId.hashCode()));
+        result = ((result * 31) + ((this.index == null) ? 0 : this.index.hashCode()));
+        result = ((result * 31) + ((this.description == null) ? 0 : this.description.hashCode()));
+        result = ((result * 31) + ((this.uri == null) ? 0 : this.uri.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
+        result = ((result * 31) + ((this.uriBaseId == null) ? 0 : this.uriBaseId.hashCode()));
         return result;
     }
 
@@ -205,7 +187,7 @@ public class ArtifactLocation {
             return false;
         }
         ArtifactLocation rhs = ((ArtifactLocation) other);
-        return ((((((this.index == rhs.index)||((this.index!= null)&&this.index.equals(rhs.index)))&&((this.description == rhs.description)||((this.description!= null)&&this.description.equals(rhs.description))))&&((this.uri == rhs.uri)||((this.uri!= null)&&this.uri.equals(rhs.uri))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))))&&((this.uriBaseId == rhs.uriBaseId)||((this.uriBaseId!= null)&&this.uriBaseId.equals(rhs.uriBaseId))));
+        return ((((((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index))) && ((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description)))) && ((this.uri == rhs.uri) || ((this.uri != null) && this.uri.equals(rhs.uri)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.uriBaseId == rhs.uriBaseId) || ((this.uriBaseId != null) && this.uriBaseId.equals(rhs.uriBaseId))));
     }
 
 }

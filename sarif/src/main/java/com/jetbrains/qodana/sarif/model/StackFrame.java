@@ -1,51 +1,42 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 import java.util.List;
 
 
 /**
  * A function call within a stack trace.
- * 
  */
-
 public class StackFrame {
 
     /**
      * A location within a programming artifact.
-     * 
      */
     @SerializedName("location")
     @Expose
     private Location location;
     /**
      * The name of the module that contains the code of this stack frame.
-     * 
      */
     @SerializedName("module")
     @Expose
     private String module;
     /**
      * The thread identifier of the stack frame.
-     * 
      */
     @SerializedName("threadId")
     @Expose
     private Integer threadId;
     /**
      * The parameters of the call that is executing.
-     * 
      */
     @SerializedName("parameters")
     @Expose
     private List<String> parameters = null;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -53,7 +44,6 @@ public class StackFrame {
 
     /**
      * A location within a programming artifact.
-     * 
      */
     public Location getLocation() {
         return location;
@@ -61,7 +51,6 @@ public class StackFrame {
 
     /**
      * A location within a programming artifact.
-     * 
      */
     public void setLocation(Location location) {
         this.location = location;
@@ -74,7 +63,6 @@ public class StackFrame {
 
     /**
      * The name of the module that contains the code of this stack frame.
-     * 
      */
     public String getModule() {
         return module;
@@ -82,7 +70,6 @@ public class StackFrame {
 
     /**
      * The name of the module that contains the code of this stack frame.
-     * 
      */
     public void setModule(String module) {
         this.module = module;
@@ -95,7 +82,6 @@ public class StackFrame {
 
     /**
      * The thread identifier of the stack frame.
-     * 
      */
     public Integer getThreadId() {
         return threadId;
@@ -103,7 +89,6 @@ public class StackFrame {
 
     /**
      * The thread identifier of the stack frame.
-     * 
      */
     public void setThreadId(Integer threadId) {
         this.threadId = threadId;
@@ -116,7 +101,6 @@ public class StackFrame {
 
     /**
      * The parameters of the call that is executing.
-     * 
      */
     public List<String> getParameters() {
         return parameters;
@@ -124,7 +108,6 @@ public class StackFrame {
 
     /**
      * The parameters of the call that is executing.
-     * 
      */
     public void setParameters(List<String> parameters) {
         this.parameters = parameters;
@@ -137,7 +120,6 @@ public class StackFrame {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -145,7 +127,6 @@ public class StackFrame {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -162,26 +143,26 @@ public class StackFrame {
         sb.append(StackFrame.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("location");
         sb.append('=');
-        sb.append(((this.location == null)?"<null>":this.location));
+        sb.append(((this.location == null) ? "<null>" : this.location));
         sb.append(',');
         sb.append("module");
         sb.append('=');
-        sb.append(((this.module == null)?"<null>":this.module));
+        sb.append(((this.module == null) ? "<null>" : this.module));
         sb.append(',');
         sb.append("threadId");
         sb.append('=');
-        sb.append(((this.threadId == null)?"<null>":this.threadId));
+        sb.append(((this.threadId == null) ? "<null>" : this.threadId));
         sb.append(',');
         sb.append("parameters");
         sb.append('=');
-        sb.append(((this.parameters == null)?"<null>":this.parameters));
+        sb.append(((this.parameters == null) ? "<null>" : this.parameters));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -191,11 +172,11 @@ public class StackFrame {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.threadId == null)? 0 :this.threadId.hashCode()));
-        result = ((result* 31)+((this.location == null)? 0 :this.location.hashCode()));
-        result = ((result* 31)+((this.parameters == null)? 0 :this.parameters.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
-        result = ((result* 31)+((this.module == null)? 0 :this.module.hashCode()));
+        result = ((result * 31) + ((this.threadId == null) ? 0 : this.threadId.hashCode()));
+        result = ((result * 31) + ((this.location == null) ? 0 : this.location.hashCode()));
+        result = ((result * 31) + ((this.parameters == null) ? 0 : this.parameters.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
+        result = ((result * 31) + ((this.module == null) ? 0 : this.module.hashCode()));
         return result;
     }
 
@@ -208,7 +189,7 @@ public class StackFrame {
             return false;
         }
         StackFrame rhs = ((StackFrame) other);
-        return ((((((this.threadId == rhs.threadId)||((this.threadId!= null)&&this.threadId.equals(rhs.threadId)))&&((this.location == rhs.location)||((this.location!= null)&&this.location.equals(rhs.location))))&&((this.parameters == rhs.parameters)||((this.parameters!= null)&&this.parameters.equals(rhs.parameters))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))))&&((this.module == rhs.module)||((this.module!= null)&&this.module.equals(rhs.module))));
+        return ((((((this.threadId == rhs.threadId) || ((this.threadId != null) && this.threadId.equals(rhs.threadId))) && ((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location)))) && ((this.parameters == rhs.parameters) || ((this.parameters != null) && this.parameters.equals(rhs.parameters)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.module == rhs.module) || ((this.module != null) && this.module.equals(rhs.module))));
     }
 
 }

@@ -1,65 +1,54 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 import java.util.Set;
 
 
 /**
  * A location within a programming artifact.
- * 
  */
-
 public class Location {
 
     /**
      * Value that distinguishes this location from all other locations within a single result object.
-     * 
      */
     @SerializedName("id")
     @Expose
     private Integer id = null;
     /**
      * A physical location relevant to a result. Specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.
-     * 
      */
     @SerializedName("physicalLocation")
     @Expose
     private PhysicalLocation physicalLocation;
     /**
      * The logical locations associated with the result.
-     * 
      */
     @SerializedName("logicalLocations")
     @Expose
     private Set<LogicalLocation> logicalLocations = null;
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     @SerializedName("message")
     @Expose
     private Message message;
     /**
      * A set of regions relevant to the location.
-     * 
      */
     @SerializedName("annotations")
     @Expose
     private Set<Region> annotations = null;
     /**
      * An array of objects that describe relationships between this location and others.
-     * 
      */
     @SerializedName("relationships")
     @Expose
     private Set<LocationRelationship> relationships = null;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -67,7 +56,6 @@ public class Location {
 
     /**
      * Value that distinguishes this location from all other locations within a single result object.
-     * 
      */
     public Integer getId() {
         return id;
@@ -75,7 +63,6 @@ public class Location {
 
     /**
      * Value that distinguishes this location from all other locations within a single result object.
-     * 
      */
     public void setId(Integer id) {
         this.id = id;
@@ -88,7 +75,6 @@ public class Location {
 
     /**
      * A physical location relevant to a result. Specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.
-     * 
      */
     public PhysicalLocation getPhysicalLocation() {
         return physicalLocation;
@@ -96,7 +82,6 @@ public class Location {
 
     /**
      * A physical location relevant to a result. Specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.
-     * 
      */
     public void setPhysicalLocation(PhysicalLocation physicalLocation) {
         this.physicalLocation = physicalLocation;
@@ -109,7 +94,6 @@ public class Location {
 
     /**
      * The logical locations associated with the result.
-     * 
      */
     public Set<LogicalLocation> getLogicalLocations() {
         return logicalLocations;
@@ -117,7 +101,6 @@ public class Location {
 
     /**
      * The logical locations associated with the result.
-     * 
      */
     public void setLogicalLocations(Set<LogicalLocation> logicalLocations) {
         this.logicalLocations = logicalLocations;
@@ -130,7 +113,6 @@ public class Location {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public Message getMessage() {
         return message;
@@ -138,7 +120,6 @@ public class Location {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public void setMessage(Message message) {
         this.message = message;
@@ -151,7 +132,6 @@ public class Location {
 
     /**
      * A set of regions relevant to the location.
-     * 
      */
     public Set<Region> getAnnotations() {
         return annotations;
@@ -159,7 +139,6 @@ public class Location {
 
     /**
      * A set of regions relevant to the location.
-     * 
      */
     public void setAnnotations(Set<Region> annotations) {
         this.annotations = annotations;
@@ -172,7 +151,6 @@ public class Location {
 
     /**
      * An array of objects that describe relationships between this location and others.
-     * 
      */
     public Set<LocationRelationship> getRelationships() {
         return relationships;
@@ -180,7 +158,6 @@ public class Location {
 
     /**
      * An array of objects that describe relationships between this location and others.
-     * 
      */
     public void setRelationships(Set<LocationRelationship> relationships) {
         this.relationships = relationships;
@@ -193,7 +170,6 @@ public class Location {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -201,7 +177,6 @@ public class Location {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -218,34 +193,34 @@ public class Location {
         sb.append(Location.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("id");
         sb.append('=');
-        sb.append(((this.id == null)?"<null>":this.id));
+        sb.append(((this.id == null) ? "<null>" : this.id));
         sb.append(',');
         sb.append("physicalLocation");
         sb.append('=');
-        sb.append(((this.physicalLocation == null)?"<null>":this.physicalLocation));
+        sb.append(((this.physicalLocation == null) ? "<null>" : this.physicalLocation));
         sb.append(',');
         sb.append("logicalLocations");
         sb.append('=');
-        sb.append(((this.logicalLocations == null)?"<null>":this.logicalLocations));
+        sb.append(((this.logicalLocations == null) ? "<null>" : this.logicalLocations));
         sb.append(',');
         sb.append("message");
         sb.append('=');
-        sb.append(((this.message == null)?"<null>":this.message));
+        sb.append(((this.message == null) ? "<null>" : this.message));
         sb.append(',');
         sb.append("annotations");
         sb.append('=');
-        sb.append(((this.annotations == null)?"<null>":this.annotations));
+        sb.append(((this.annotations == null) ? "<null>" : this.annotations));
         sb.append(',');
         sb.append("relationships");
         sb.append('=');
-        sb.append(((this.relationships == null)?"<null>":this.relationships));
+        sb.append(((this.relationships == null) ? "<null>" : this.relationships));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -255,13 +230,13 @@ public class Location {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.relationships == null)? 0 :this.relationships.hashCode()));
-        result = ((result* 31)+((this.physicalLocation == null)? 0 :this.physicalLocation.hashCode()));
-        result = ((result* 31)+((this.logicalLocations == null)? 0 :this.logicalLocations.hashCode()));
-        result = ((result* 31)+((this.annotations == null)? 0 :this.annotations.hashCode()));
-        result = ((result* 31)+((this.id == null)? 0 :this.id.hashCode()));
-        result = ((result* 31)+((this.message == null)? 0 :this.message.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.relationships == null) ? 0 : this.relationships.hashCode()));
+        result = ((result * 31) + ((this.physicalLocation == null) ? 0 : this.physicalLocation.hashCode()));
+        result = ((result * 31) + ((this.logicalLocations == null) ? 0 : this.logicalLocations.hashCode()));
+        result = ((result * 31) + ((this.annotations == null) ? 0 : this.annotations.hashCode()));
+        result = ((result * 31) + ((this.id == null) ? 0 : this.id.hashCode()));
+        result = ((result * 31) + ((this.message == null) ? 0 : this.message.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -274,7 +249,7 @@ public class Location {
             return false;
         }
         Location rhs = ((Location) other);
-        return ((((((((this.relationships == rhs.relationships)||((this.relationships!= null)&&this.relationships.equals(rhs.relationships)))&&((this.physicalLocation == rhs.physicalLocation)||((this.physicalLocation!= null)&&this.physicalLocation.equals(rhs.physicalLocation))))&&((this.logicalLocations == rhs.logicalLocations)||((this.logicalLocations!= null)&&this.logicalLocations.equals(rhs.logicalLocations))))&&((this.annotations == rhs.annotations)||((this.annotations!= null)&&this.annotations.equals(rhs.annotations))))&&((this.id == rhs.id)||((this.id!= null)&&this.id.equals(rhs.id))))&&((this.message == rhs.message)||((this.message!= null)&&this.message.equals(rhs.message))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return ((((((((this.relationships == rhs.relationships) || ((this.relationships != null) && this.relationships.equals(rhs.relationships))) && ((this.physicalLocation == rhs.physicalLocation) || ((this.physicalLocation != null) && this.physicalLocation.equals(rhs.physicalLocation)))) && ((this.logicalLocations == rhs.logicalLocations) || ((this.logicalLocations != null) && this.logicalLocations.equals(rhs.logicalLocations)))) && ((this.annotations == rhs.annotations) || ((this.annotations != null) && this.annotations.equals(rhs.annotations)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

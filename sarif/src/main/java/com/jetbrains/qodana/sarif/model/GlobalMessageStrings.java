@@ -1,12 +1,9 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 
 /**
  * A dictionary, each of whose keys is a resource identifier and each of whose values is a multiformatMessageString object, which holds message strings in plain text and (optionally) Markdown format. The strings can include placeholders, which can be used to construct a message in combination with an arbitrary number of additional string arguments.
- * 
  */
-
 public class GlobalMessageStrings {
 
 
@@ -14,8 +11,8 @@ public class GlobalMessageStrings {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(GlobalMessageStrings.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }

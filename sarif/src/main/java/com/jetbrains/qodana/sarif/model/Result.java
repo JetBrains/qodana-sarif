@@ -1,10 +1,8 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-
 
 import java.net.URI;
 import java.util.HashMap;
@@ -15,42 +13,35 @@ import java.util.Set;
 
 /**
  * A result produced by an analysis tool.
- * 
  */
-
 public class Result {
 
     /**
      * The stable, unique identifier of the rule, if any, to which this result is relevant.
-     * 
      */
     @SerializedName("ruleId")
     @Expose
     private String ruleId;
     /**
      * The index within the tool component rules array of the rule object associated with this result.
-     * 
      */
     @SerializedName("ruleIndex")
     @Expose
     private Integer ruleIndex = null;
     /**
      * Information about how to locate a relevant reporting descriptor.
-     * 
      */
     @SerializedName("rule")
     @Expose
     private ReportingDescriptorReference rule;
     /**
      * A value that categorizes results by evaluation state.
-     * 
      */
     @SerializedName("kind")
     @Expose
     private Result.Kind kind = Kind.fromValue("fail");
     /**
      * A value specifying the severity level of the result.
-     *
      */
     @SerializedName("level")
     @Expose
@@ -58,49 +49,42 @@ public class Result {
     /**
      * Encapsulates a message intended to be read by the end user.
      * (Required)
-     *
      */
     @SerializedName("message")
     @Expose
     private Message message;
     /**
      * Specifies the location of an artifact.
-     *
      */
     @SerializedName("analysisTarget")
     @Expose
     private ArtifactLocation analysisTarget;
     /**
      * The set of locations where the result was detected. Specify only one location unless the problem indicated by the result can only be corrected by making a change at every specified location.
-     *
      */
     @SerializedName("locations")
     @Expose
     private List<Location> locations = null;
     /**
      * A stable, unique identifer for the result in the form of a GUID.
-     *
      */
     @SerializedName("guid")
     @Expose
     private String guid;
     /**
      * A stable, unique identifier for the equivalence class of logically identical results to which this result belongs, in the form of a GUID.
-     *
      */
     @SerializedName("correlationGuid")
     @Expose
     private String correlationGuid;
     /**
      * A positive integer specifying the number of times this logically unique result was observed in this run.
-     *
      */
     @SerializedName("occurrenceCount")
     @Expose
     private Integer occurrenceCount;
     /**
      * A set of strings that contribute to the stable, unique identity of the result.
-     *
      */
     @JsonAdapter(VersionedMap.VersionedMapTypeAdapter.class)
     @SerializedName("partialFingerprints")
@@ -108,7 +92,6 @@ public class Result {
     private VersionedMap<String> partialFingerprints;
     /**
      * A set of strings each of which individually defines a stable, unique identity for the result.
-     *
      */
     @JsonAdapter(VersionedMap.VersionedMapTypeAdapter.class)
     @SerializedName("fingerprints")
@@ -116,119 +99,102 @@ public class Result {
     private VersionedMap<String> fingerprints;
     /**
      * An array of 'stack' objects relevant to the result.
-     *
      */
     @SerializedName("stacks")
     @Expose
     private Set<Stack> stacks = null;
     /**
      * An array of 'codeFlow' objects relevant to the result.
-     *
      */
     @SerializedName("codeFlows")
     @Expose
     private List<CodeFlow> codeFlows = null;
     /**
      * An array of zero or more unique graph objects associated with the result.
-     *
      */
     @SerializedName("graphs")
     @Expose
     private Set<Graph> graphs = null;
     /**
      * An array of one or more unique 'graphTraversal' objects.
-     *
      */
     @SerializedName("graphTraversals")
     @Expose
     private Set<GraphTraversal> graphTraversals = null;
     /**
      * A set of locations relevant to this result.
-     *
      */
     @SerializedName("relatedLocations")
     @Expose
     private Set<Location> relatedLocations = null;
     /**
      * A set of suppressions relevant to this result.
-     *
      */
     @SerializedName("suppressions")
     @Expose
     private Set<Suppression> suppressions = null;
     /**
      * The state of a result relative to a baseline of a previous run.
-     *
      */
     @SerializedName("baselineState")
     @Expose
     private Result.BaselineState baselineState;
     /**
      * A number representing the priority or importance of the result.
-     *
      */
     @SerializedName("rank")
     @Expose
     private Double rank = null;
     /**
      * A set of artifacts relevant to the result.
-     *
      */
     @SerializedName("attachments")
     @Expose
     private Set<Attachment> attachments = null;
     /**
      * An absolute URI at which the result can be viewed.
-     *
      */
     @SerializedName("hostedViewerUri")
     @Expose
     private URI hostedViewerUri;
     /**
      * The URIs of the work items associated with this result.
-     *
      */
     @SerializedName("workItemUris")
     @Expose
     private Set<URI> workItemUris = null;
     /**
      * Contains information about how and when a result was detected.
-     *
      */
     @SerializedName("provenance")
     @Expose
     private ResultProvenance provenance;
     /**
      * An array of 'fix' objects, each of which represents a proposed fix to the problem indicated by the result.
-     *
      */
     @SerializedName("fixes")
     @Expose
     private Set<Fix> fixes = null;
     /**
      * An array of references to taxonomy reporting descriptors that are applicable to the result.
-     *
      */
     @SerializedName("taxa")
     @Expose
     private Set<ReportingDescriptorReference> taxa = null;
     /**
      * Describes an HTTP request.
-     *
      */
     @SerializedName("webRequest")
     @Expose
     private WebRequest webRequest;
     /**
      * Describes the response to an HTTP request.
-     *
      */
     @SerializedName("webResponse")
     @Expose
     private WebResponse webResponse;
     /**
      * Key/value pairs that provide additional information about the object.
-     *
      */
     @SerializedName("properties")
     @Expose
@@ -236,13 +202,11 @@ public class Result {
 
     /**
      * No args constructor for use in serialization
-     *
      */
     public Result() {
     }
 
     /**
-     *
      * @param message
      */
     public Result(Message message) {
@@ -252,7 +216,6 @@ public class Result {
 
     /**
      * The stable, unique identifier of the rule, if any, to which this result is relevant.
-     *
      */
     public String getRuleId() {
         return ruleId;
@@ -260,7 +223,6 @@ public class Result {
 
     /**
      * The stable, unique identifier of the rule, if any, to which this result is relevant.
-     *
      */
     public void setRuleId(String ruleId) {
         this.ruleId = ruleId;
@@ -273,7 +235,6 @@ public class Result {
 
     /**
      * The index within the tool component rules array of the rule object associated with this result.
-     *
      */
     public Integer getRuleIndex() {
         return ruleIndex;
@@ -281,7 +242,6 @@ public class Result {
 
     /**
      * The index within the tool component rules array of the rule object associated with this result.
-     *
      */
     public void setRuleIndex(Integer ruleIndex) {
         this.ruleIndex = ruleIndex;
@@ -294,7 +254,6 @@ public class Result {
 
     /**
      * Information about how to locate a relevant reporting descriptor.
-     *
      */
     public ReportingDescriptorReference getRule() {
         return rule;
@@ -302,7 +261,6 @@ public class Result {
 
     /**
      * Information about how to locate a relevant reporting descriptor.
-     *
      */
     public void setRule(ReportingDescriptorReference rule) {
         this.rule = rule;
@@ -315,7 +273,6 @@ public class Result {
 
     /**
      * A value that categorizes results by evaluation state.
-     *
      */
     public Kind getKind() {
         return kind;
@@ -323,7 +280,6 @@ public class Result {
 
     /**
      * A value that categorizes results by evaluation state.
-     *
      */
     public void setKind(Kind kind) {
         this.kind = kind;
@@ -336,7 +292,6 @@ public class Result {
 
     /**
      * A value specifying the severity level of the result.
-     *
      */
     public Level getLevel() {
         return level;
@@ -344,7 +299,6 @@ public class Result {
 
     /**
      * A value specifying the severity level of the result.
-     *
      */
     public void setLevel(Level level) {
         this.level = level;
@@ -358,7 +312,6 @@ public class Result {
     /**
      * Encapsulates a message intended to be read by the end user.
      * (Required)
-     *
      */
     public Message getMessage() {
         return message;
@@ -367,7 +320,6 @@ public class Result {
     /**
      * Encapsulates a message intended to be read by the end user.
      * (Required)
-     *
      */
     public void setMessage(Message message) {
         this.message = message;
@@ -380,7 +332,6 @@ public class Result {
 
     /**
      * Specifies the location of an artifact.
-     *
      */
     public ArtifactLocation getAnalysisTarget() {
         return analysisTarget;
@@ -388,7 +339,6 @@ public class Result {
 
     /**
      * Specifies the location of an artifact.
-     *
      */
     public void setAnalysisTarget(ArtifactLocation analysisTarget) {
         this.analysisTarget = analysisTarget;
@@ -401,7 +351,6 @@ public class Result {
 
     /**
      * The set of locations where the result was detected. Specify only one location unless the problem indicated by the result can only be corrected by making a change at every specified location.
-     *
      */
     public List<Location> getLocations() {
         return locations;
@@ -409,7 +358,6 @@ public class Result {
 
     /**
      * The set of locations where the result was detected. Specify only one location unless the problem indicated by the result can only be corrected by making a change at every specified location.
-     *
      */
     public void setLocations(List<Location> locations) {
         this.locations = locations;
@@ -422,7 +370,6 @@ public class Result {
 
     /**
      * A stable, unique identifer for the result in the form of a GUID.
-     *
      */
     public String getGuid() {
         return guid;
@@ -430,7 +377,6 @@ public class Result {
 
     /**
      * A stable, unique identifer for the result in the form of a GUID.
-     *
      */
     public void setGuid(String guid) {
         this.guid = guid;
@@ -443,7 +389,6 @@ public class Result {
 
     /**
      * A stable, unique identifier for the equivalence class of logically identical results to which this result belongs, in the form of a GUID.
-     *
      */
     public String getCorrelationGuid() {
         return correlationGuid;
@@ -451,7 +396,6 @@ public class Result {
 
     /**
      * A stable, unique identifier for the equivalence class of logically identical results to which this result belongs, in the form of a GUID.
-     *
      */
     public void setCorrelationGuid(String correlationGuid) {
         this.correlationGuid = correlationGuid;
@@ -464,7 +408,6 @@ public class Result {
 
     /**
      * A positive integer specifying the number of times this logically unique result was observed in this run.
-     *
      */
     public Integer getOccurrenceCount() {
         return occurrenceCount;
@@ -472,7 +415,6 @@ public class Result {
 
     /**
      * A positive integer specifying the number of times this logically unique result was observed in this run.
-     *
      */
     public void setOccurrenceCount(Integer occurrenceCount) {
         this.occurrenceCount = occurrenceCount;
@@ -485,7 +427,6 @@ public class Result {
 
     /**
      * A set of strings that contribute to the stable, unique identity of the result.
-     *
      */
     public VersionedMap<String> getPartialFingerprints() {
         return partialFingerprints;
@@ -493,7 +434,6 @@ public class Result {
 
     /**
      * A set of strings that contribute to the stable, unique identity of the result.
-     *
      */
     public void setPartialFingerprints(VersionedMap<String> partialFingerprints) {
         this.partialFingerprints = partialFingerprints;
@@ -506,7 +446,6 @@ public class Result {
 
     /**
      * A set of strings each of which individually defines a stable, unique identity for the result.
-     *
      */
     public VersionedMap<String> getFingerprints() {
         return fingerprints;
@@ -514,7 +453,6 @@ public class Result {
 
     /**
      * A set of strings each of which individually defines a stable, unique identity for the result.
-     *
      */
     public void setFingerprints(VersionedMap<String> fingerprints) {
         this.fingerprints = fingerprints;
@@ -527,7 +465,6 @@ public class Result {
 
     /**
      * An array of 'stack' objects relevant to the result.
-     *
      */
     public Set<Stack> getStacks() {
         return stacks;
@@ -535,7 +472,6 @@ public class Result {
 
     /**
      * An array of 'stack' objects relevant to the result.
-     *
      */
     public void setStacks(Set<Stack> stacks) {
         this.stacks = stacks;
@@ -548,7 +484,6 @@ public class Result {
 
     /**
      * An array of 'codeFlow' objects relevant to the result.
-     *
      */
     public List<CodeFlow> getCodeFlows() {
         return codeFlows;
@@ -556,7 +491,6 @@ public class Result {
 
     /**
      * An array of 'codeFlow' objects relevant to the result.
-     *
      */
     public void setCodeFlows(List<CodeFlow> codeFlows) {
         this.codeFlows = codeFlows;
@@ -569,7 +503,6 @@ public class Result {
 
     /**
      * An array of zero or more unique graph objects associated with the result.
-     *
      */
     public Set<Graph> getGraphs() {
         return graphs;
@@ -577,7 +510,6 @@ public class Result {
 
     /**
      * An array of zero or more unique graph objects associated with the result.
-     *
      */
     public void setGraphs(Set<Graph> graphs) {
         this.graphs = graphs;
@@ -590,7 +522,6 @@ public class Result {
 
     /**
      * An array of one or more unique 'graphTraversal' objects.
-     *
      */
     public Set<GraphTraversal> getGraphTraversals() {
         return graphTraversals;
@@ -598,7 +529,6 @@ public class Result {
 
     /**
      * An array of one or more unique 'graphTraversal' objects.
-     *
      */
     public void setGraphTraversals(Set<GraphTraversal> graphTraversals) {
         this.graphTraversals = graphTraversals;
@@ -611,7 +541,6 @@ public class Result {
 
     /**
      * A set of locations relevant to this result.
-     *
      */
     public Set<Location> getRelatedLocations() {
         return relatedLocations;
@@ -619,7 +548,6 @@ public class Result {
 
     /**
      * A set of locations relevant to this result.
-     *
      */
     public void setRelatedLocations(Set<Location> relatedLocations) {
         this.relatedLocations = relatedLocations;
@@ -632,7 +560,6 @@ public class Result {
 
     /**
      * A set of suppressions relevant to this result.
-     *
      */
     public Set<Suppression> getSuppressions() {
         return suppressions;
@@ -640,7 +567,6 @@ public class Result {
 
     /**
      * A set of suppressions relevant to this result.
-     *
      */
     public void setSuppressions(Set<Suppression> suppressions) {
         this.suppressions = suppressions;
@@ -653,7 +579,6 @@ public class Result {
 
     /**
      * The state of a result relative to a baseline of a previous run.
-     *
      */
     public BaselineState getBaselineState() {
         return baselineState;
@@ -661,7 +586,6 @@ public class Result {
 
     /**
      * The state of a result relative to a baseline of a previous run.
-     *
      */
     public void setBaselineState(BaselineState baselineState) {
         this.baselineState = baselineState;
@@ -674,7 +598,6 @@ public class Result {
 
     /**
      * A number representing the priority or importance of the result.
-     *
      */
     public Double getRank() {
         return rank;
@@ -682,7 +605,6 @@ public class Result {
 
     /**
      * A number representing the priority or importance of the result.
-     *
      */
     public void setRank(Double rank) {
         this.rank = rank;
@@ -695,7 +617,6 @@ public class Result {
 
     /**
      * A set of artifacts relevant to the result.
-     *
      */
     public Set<Attachment> getAttachments() {
         return attachments;
@@ -703,7 +624,6 @@ public class Result {
 
     /**
      * A set of artifacts relevant to the result.
-     *
      */
     public void setAttachments(Set<Attachment> attachments) {
         this.attachments = attachments;
@@ -716,7 +636,6 @@ public class Result {
 
     /**
      * An absolute URI at which the result can be viewed.
-     *
      */
     public URI getHostedViewerUri() {
         return hostedViewerUri;
@@ -724,7 +643,6 @@ public class Result {
 
     /**
      * An absolute URI at which the result can be viewed.
-     *
      */
     public void setHostedViewerUri(URI hostedViewerUri) {
         this.hostedViewerUri = hostedViewerUri;
@@ -737,7 +655,6 @@ public class Result {
 
     /**
      * The URIs of the work items associated with this result.
-     *
      */
     public Set<URI> getWorkItemUris() {
         return workItemUris;
@@ -745,7 +662,6 @@ public class Result {
 
     /**
      * The URIs of the work items associated with this result.
-     *
      */
     public void setWorkItemUris(Set<URI> workItemUris) {
         this.workItemUris = workItemUris;
@@ -758,7 +674,6 @@ public class Result {
 
     /**
      * Contains information about how and when a result was detected.
-     *
      */
     public ResultProvenance getProvenance() {
         return provenance;
@@ -766,7 +681,6 @@ public class Result {
 
     /**
      * Contains information about how and when a result was detected.
-     *
      */
     public void setProvenance(ResultProvenance provenance) {
         this.provenance = provenance;
@@ -779,7 +693,6 @@ public class Result {
 
     /**
      * An array of 'fix' objects, each of which represents a proposed fix to the problem indicated by the result.
-     *
      */
     public Set<Fix> getFixes() {
         return fixes;
@@ -787,7 +700,6 @@ public class Result {
 
     /**
      * An array of 'fix' objects, each of which represents a proposed fix to the problem indicated by the result.
-     *
      */
     public void setFixes(Set<Fix> fixes) {
         this.fixes = fixes;
@@ -800,7 +712,6 @@ public class Result {
 
     /**
      * An array of references to taxonomy reporting descriptors that are applicable to the result.
-     *
      */
     public Set<ReportingDescriptorReference> getTaxa() {
         return taxa;
@@ -808,7 +719,6 @@ public class Result {
 
     /**
      * An array of references to taxonomy reporting descriptors that are applicable to the result.
-     *
      */
     public void setTaxa(Set<ReportingDescriptorReference> taxa) {
         this.taxa = taxa;
@@ -821,7 +731,6 @@ public class Result {
 
     /**
      * Describes an HTTP request.
-     *
      */
     public WebRequest getWebRequest() {
         return webRequest;
@@ -829,7 +738,6 @@ public class Result {
 
     /**
      * Describes an HTTP request.
-     *
      */
     public void setWebRequest(WebRequest webRequest) {
         this.webRequest = webRequest;
@@ -842,7 +750,6 @@ public class Result {
 
     /**
      * Describes the response to an HTTP request.
-     *
      */
     public WebResponse getWebResponse() {
         return webResponse;
@@ -850,7 +757,6 @@ public class Result {
 
     /**
      * Describes the response to an HTTP request.
-     *
      */
     public void setWebResponse(WebResponse webResponse) {
         this.webResponse = webResponse;
@@ -863,7 +769,6 @@ public class Result {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     *
      */
     public PropertyBag getProperties() {
         return properties;
@@ -871,7 +776,6 @@ public class Result {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     *
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -888,126 +792,126 @@ public class Result {
         sb.append(Result.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("ruleId");
         sb.append('=');
-        sb.append(((this.ruleId == null)?"<null>":this.ruleId));
+        sb.append(((this.ruleId == null) ? "<null>" : this.ruleId));
         sb.append(',');
         sb.append("ruleIndex");
         sb.append('=');
-        sb.append(((this.ruleIndex == null)?"<null>":this.ruleIndex));
+        sb.append(((this.ruleIndex == null) ? "<null>" : this.ruleIndex));
         sb.append(',');
         sb.append("rule");
         sb.append('=');
-        sb.append(((this.rule == null)?"<null>":this.rule));
+        sb.append(((this.rule == null) ? "<null>" : this.rule));
         sb.append(',');
         sb.append("kind");
         sb.append('=');
-        sb.append(((this.kind == null)?"<null>":this.kind));
+        sb.append(((this.kind == null) ? "<null>" : this.kind));
         sb.append(',');
         sb.append("level");
         sb.append('=');
-        sb.append(((this.level == null)?"<null>":this.level));
+        sb.append(((this.level == null) ? "<null>" : this.level));
         sb.append(',');
         sb.append("message");
         sb.append('=');
-        sb.append(((this.message == null)?"<null>":this.message));
+        sb.append(((this.message == null) ? "<null>" : this.message));
         sb.append(',');
         sb.append("analysisTarget");
         sb.append('=');
-        sb.append(((this.analysisTarget == null)?"<null>":this.analysisTarget));
+        sb.append(((this.analysisTarget == null) ? "<null>" : this.analysisTarget));
         sb.append(',');
         sb.append("locations");
         sb.append('=');
-        sb.append(((this.locations == null)?"<null>":this.locations));
+        sb.append(((this.locations == null) ? "<null>" : this.locations));
         sb.append(',');
         sb.append("guid");
         sb.append('=');
-        sb.append(((this.guid == null)?"<null>":this.guid));
+        sb.append(((this.guid == null) ? "<null>" : this.guid));
         sb.append(',');
         sb.append("correlationGuid");
         sb.append('=');
-        sb.append(((this.correlationGuid == null)?"<null>":this.correlationGuid));
+        sb.append(((this.correlationGuid == null) ? "<null>" : this.correlationGuid));
         sb.append(',');
         sb.append("occurrenceCount");
         sb.append('=');
-        sb.append(((this.occurrenceCount == null)?"<null>":this.occurrenceCount));
+        sb.append(((this.occurrenceCount == null) ? "<null>" : this.occurrenceCount));
         sb.append(',');
         sb.append("partialFingerprints");
         sb.append('=');
-        sb.append(((this.partialFingerprints == null)?"<null>":this.partialFingerprints));
+        sb.append(((this.partialFingerprints == null) ? "<null>" : this.partialFingerprints));
         sb.append(',');
         sb.append("fingerprints");
         sb.append('=');
-        sb.append(((this.fingerprints == null)?"<null>":this.fingerprints));
+        sb.append(((this.fingerprints == null) ? "<null>" : this.fingerprints));
         sb.append(',');
         sb.append("stacks");
         sb.append('=');
-        sb.append(((this.stacks == null)?"<null>":this.stacks));
+        sb.append(((this.stacks == null) ? "<null>" : this.stacks));
         sb.append(',');
         sb.append("codeFlows");
         sb.append('=');
-        sb.append(((this.codeFlows == null)?"<null>":this.codeFlows));
+        sb.append(((this.codeFlows == null) ? "<null>" : this.codeFlows));
         sb.append(',');
         sb.append("graphs");
         sb.append('=');
-        sb.append(((this.graphs == null)?"<null>":this.graphs));
+        sb.append(((this.graphs == null) ? "<null>" : this.graphs));
         sb.append(',');
         sb.append("graphTraversals");
         sb.append('=');
-        sb.append(((this.graphTraversals == null)?"<null>":this.graphTraversals));
+        sb.append(((this.graphTraversals == null) ? "<null>" : this.graphTraversals));
         sb.append(',');
         sb.append("relatedLocations");
         sb.append('=');
-        sb.append(((this.relatedLocations == null)?"<null>":this.relatedLocations));
+        sb.append(((this.relatedLocations == null) ? "<null>" : this.relatedLocations));
         sb.append(',');
         sb.append("suppressions");
         sb.append('=');
-        sb.append(((this.suppressions == null)?"<null>":this.suppressions));
+        sb.append(((this.suppressions == null) ? "<null>" : this.suppressions));
         sb.append(',');
         sb.append("baselineState");
         sb.append('=');
-        sb.append(((this.baselineState == null)?"<null>":this.baselineState));
+        sb.append(((this.baselineState == null) ? "<null>" : this.baselineState));
         sb.append(',');
         sb.append("rank");
         sb.append('=');
-        sb.append(((this.rank == null)?"<null>":this.rank));
+        sb.append(((this.rank == null) ? "<null>" : this.rank));
         sb.append(',');
         sb.append("attachments");
         sb.append('=');
-        sb.append(((this.attachments == null)?"<null>":this.attachments));
+        sb.append(((this.attachments == null) ? "<null>" : this.attachments));
         sb.append(',');
         sb.append("hostedViewerUri");
         sb.append('=');
-        sb.append(((this.hostedViewerUri == null)?"<null>":this.hostedViewerUri));
+        sb.append(((this.hostedViewerUri == null) ? "<null>" : this.hostedViewerUri));
         sb.append(',');
         sb.append("workItemUris");
         sb.append('=');
-        sb.append(((this.workItemUris == null)?"<null>":this.workItemUris));
+        sb.append(((this.workItemUris == null) ? "<null>" : this.workItemUris));
         sb.append(',');
         sb.append("provenance");
         sb.append('=');
-        sb.append(((this.provenance == null)?"<null>":this.provenance));
+        sb.append(((this.provenance == null) ? "<null>" : this.provenance));
         sb.append(',');
         sb.append("fixes");
         sb.append('=');
-        sb.append(((this.fixes == null)?"<null>":this.fixes));
+        sb.append(((this.fixes == null) ? "<null>" : this.fixes));
         sb.append(',');
         sb.append("taxa");
         sb.append('=');
-        sb.append(((this.taxa == null)?"<null>":this.taxa));
+        sb.append(((this.taxa == null) ? "<null>" : this.taxa));
         sb.append(',');
         sb.append("webRequest");
         sb.append('=');
-        sb.append(((this.webRequest == null)?"<null>":this.webRequest));
+        sb.append(((this.webRequest == null) ? "<null>" : this.webRequest));
         sb.append(',');
         sb.append("webResponse");
         sb.append('=');
-        sb.append(((this.webResponse == null)?"<null>":this.webResponse));
+        sb.append(((this.webResponse == null) ? "<null>" : this.webResponse));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -1017,36 +921,36 @@ public class Result {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.attachments == null)? 0 :this.attachments.hashCode()));
-        result = ((result* 31)+((this.correlationGuid == null)? 0 :this.correlationGuid.hashCode()));
-        result = ((result* 31)+((this.webRequest == null)? 0 :this.webRequest.hashCode()));
-        result = ((result* 31)+((this.graphTraversals == null)? 0 :this.graphTraversals.hashCode()));
-        result = ((result* 31)+((this.rule == null)? 0 :this.rule.hashCode()));
-        result = ((result* 31)+((this.analysisTarget == null)? 0 :this.analysisTarget.hashCode()));
-        result = ((result* 31)+((this.fixes == null)? 0 :this.fixes.hashCode()));
-        result = ((result* 31)+((this.relatedLocations == null)? 0 :this.relatedLocations.hashCode()));
-        result = ((result* 31)+((this.graphs == null)? 0 :this.graphs.hashCode()));
-        result = ((result* 31)+((this.provenance == null)? 0 :this.provenance.hashCode()));
-        result = ((result* 31)+((this.rank == null)? 0 :this.rank.hashCode()));
-        result = ((result* 31)+((this.ruleId == null)? 0 :this.ruleId.hashCode()));
-        result = ((result* 31)+((this.taxa == null)? 0 :this.taxa.hashCode()));
-        result = ((result* 31)+((this.ruleIndex == null)? 0 :this.ruleIndex.hashCode()));
-        result = ((result* 31)+((this.suppressions == null)? 0 :this.suppressions.hashCode()));
-        result = ((result* 31)+((this.level == null)? 0 :this.level.hashCode()));
-        result = ((result* 31)+((this.hostedViewerUri == null)? 0 :this.hostedViewerUri.hashCode()));
-        result = ((result* 31)+((this.kind == null)? 0 :this.kind.hashCode()));
-        result = ((result* 31)+((this.stacks == null)? 0 :this.stacks.hashCode()));
-        result = ((result* 31)+((this.occurrenceCount == null)? 0 :this.occurrenceCount.hashCode()));
-        result = ((result* 31)+((this.message == null)? 0 :this.message.hashCode()));
-        result = ((result* 31)+((this.fingerprints == null)? 0 :this.fingerprints.hashCode()));
-        result = ((result* 31)+((this.codeFlows == null)? 0 :this.codeFlows.hashCode()));
-        result = ((result* 31)+((this.guid == null)? 0 :this.guid.hashCode()));
-        result = ((result* 31)+((this.partialFingerprints == null)? 0 :this.partialFingerprints.hashCode()));
-        result = ((result* 31)+((this.webResponse == null)? 0 :this.webResponse.hashCode()));
-        result = ((result* 31)+((this.locations == null)? 0 :this.locations.hashCode()));
-        result = ((result* 31)+((this.baselineState == null)? 0 :this.baselineState.hashCode()));
-        result = ((result* 31)+((this.workItemUris == null)? 0 :this.workItemUris.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.attachments == null) ? 0 : this.attachments.hashCode()));
+        result = ((result * 31) + ((this.correlationGuid == null) ? 0 : this.correlationGuid.hashCode()));
+        result = ((result * 31) + ((this.webRequest == null) ? 0 : this.webRequest.hashCode()));
+        result = ((result * 31) + ((this.graphTraversals == null) ? 0 : this.graphTraversals.hashCode()));
+        result = ((result * 31) + ((this.rule == null) ? 0 : this.rule.hashCode()));
+        result = ((result * 31) + ((this.analysisTarget == null) ? 0 : this.analysisTarget.hashCode()));
+        result = ((result * 31) + ((this.fixes == null) ? 0 : this.fixes.hashCode()));
+        result = ((result * 31) + ((this.relatedLocations == null) ? 0 : this.relatedLocations.hashCode()));
+        result = ((result * 31) + ((this.graphs == null) ? 0 : this.graphs.hashCode()));
+        result = ((result * 31) + ((this.provenance == null) ? 0 : this.provenance.hashCode()));
+        result = ((result * 31) + ((this.rank == null) ? 0 : this.rank.hashCode()));
+        result = ((result * 31) + ((this.ruleId == null) ? 0 : this.ruleId.hashCode()));
+        result = ((result * 31) + ((this.taxa == null) ? 0 : this.taxa.hashCode()));
+        result = ((result * 31) + ((this.ruleIndex == null) ? 0 : this.ruleIndex.hashCode()));
+        result = ((result * 31) + ((this.suppressions == null) ? 0 : this.suppressions.hashCode()));
+        result = ((result * 31) + ((this.level == null) ? 0 : this.level.hashCode()));
+        result = ((result * 31) + ((this.hostedViewerUri == null) ? 0 : this.hostedViewerUri.hashCode()));
+        result = ((result * 31) + ((this.kind == null) ? 0 : this.kind.hashCode()));
+        result = ((result * 31) + ((this.stacks == null) ? 0 : this.stacks.hashCode()));
+        result = ((result * 31) + ((this.occurrenceCount == null) ? 0 : this.occurrenceCount.hashCode()));
+        result = ((result * 31) + ((this.message == null) ? 0 : this.message.hashCode()));
+        result = ((result * 31) + ((this.fingerprints == null) ? 0 : this.fingerprints.hashCode()));
+        result = ((result * 31) + ((this.codeFlows == null) ? 0 : this.codeFlows.hashCode()));
+        result = ((result * 31) + ((this.guid == null) ? 0 : this.guid.hashCode()));
+        result = ((result * 31) + ((this.partialFingerprints == null) ? 0 : this.partialFingerprints.hashCode()));
+        result = ((result * 31) + ((this.webResponse == null) ? 0 : this.webResponse.hashCode()));
+        result = ((result * 31) + ((this.locations == null) ? 0 : this.locations.hashCode()));
+        result = ((result * 31) + ((this.baselineState == null) ? 0 : this.baselineState.hashCode()));
+        result = ((result * 31) + ((this.workItemUris == null) ? 0 : this.workItemUris.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -1059,13 +963,12 @@ public class Result {
             return false;
         }
         Result rhs = ((Result) other);
-        return (((((((((((((((((((((((((((((((this.attachments == rhs.attachments)||((this.attachments!= null)&&this.attachments.equals(rhs.attachments)))&&((this.correlationGuid == rhs.correlationGuid)||((this.correlationGuid!= null)&&this.correlationGuid.equals(rhs.correlationGuid))))&&((this.webRequest == rhs.webRequest)||((this.webRequest!= null)&&this.webRequest.equals(rhs.webRequest))))&&((this.graphTraversals == rhs.graphTraversals)||((this.graphTraversals!= null)&&this.graphTraversals.equals(rhs.graphTraversals))))&&((this.rule == rhs.rule)||((this.rule!= null)&&this.rule.equals(rhs.rule))))&&((this.analysisTarget == rhs.analysisTarget)||((this.analysisTarget!= null)&&this.analysisTarget.equals(rhs.analysisTarget))))&&((this.fixes == rhs.fixes)||((this.fixes!= null)&&this.fixes.equals(rhs.fixes))))&&((this.relatedLocations == rhs.relatedLocations)||((this.relatedLocations!= null)&&this.relatedLocations.equals(rhs.relatedLocations))))&&((this.graphs == rhs.graphs)||((this.graphs!= null)&&this.graphs.equals(rhs.graphs))))&&((this.provenance == rhs.provenance)||((this.provenance!= null)&&this.provenance.equals(rhs.provenance))))&&((this.rank == rhs.rank)||((this.rank!= null)&&this.rank.equals(rhs.rank))))&&((this.ruleId == rhs.ruleId)||((this.ruleId!= null)&&this.ruleId.equals(rhs.ruleId))))&&((this.taxa == rhs.taxa)||((this.taxa!= null)&&this.taxa.equals(rhs.taxa))))&&((this.ruleIndex == rhs.ruleIndex)||((this.ruleIndex!= null)&&this.ruleIndex.equals(rhs.ruleIndex))))&&((this.suppressions == rhs.suppressions)||((this.suppressions!= null)&&this.suppressions.equals(rhs.suppressions))))&&((this.level == rhs.level)||((this.level!= null)&&this.level.equals(rhs.level))))&&((this.hostedViewerUri == rhs.hostedViewerUri)||((this.hostedViewerUri!= null)&&this.hostedViewerUri.equals(rhs.hostedViewerUri))))&&((this.kind == rhs.kind)||((this.kind!= null)&&this.kind.equals(rhs.kind))))&&((this.stacks == rhs.stacks)||((this.stacks!= null)&&this.stacks.equals(rhs.stacks))))&&((this.occurrenceCount == rhs.occurrenceCount)||((this.occurrenceCount!= null)&&this.occurrenceCount.equals(rhs.occurrenceCount))))&&((this.message == rhs.message)||((this.message!= null)&&this.message.equals(rhs.message))))&&((this.fingerprints == rhs.fingerprints)||((this.fingerprints!= null)&&this.fingerprints.equals(rhs.fingerprints))))&&((this.codeFlows == rhs.codeFlows)||((this.codeFlows!= null)&&this.codeFlows.equals(rhs.codeFlows))))&&((this.guid == rhs.guid)||((this.guid!= null)&&this.guid.equals(rhs.guid))))&&((this.partialFingerprints == rhs.partialFingerprints)||((this.partialFingerprints!= null)&&this.partialFingerprints.equals(rhs.partialFingerprints))))&&((this.webResponse == rhs.webResponse)||((this.webResponse!= null)&&this.webResponse.equals(rhs.webResponse))))&&((this.locations == rhs.locations)||((this.locations!= null)&&this.locations.equals(rhs.locations))))&&((this.baselineState == rhs.baselineState)||((this.baselineState!= null)&&this.baselineState.equals(rhs.baselineState))))&&((this.workItemUris == rhs.workItemUris)||((this.workItemUris!= null)&&this.workItemUris.equals(rhs.workItemUris))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return (((((((((((((((((((((((((((((((this.attachments == rhs.attachments) || ((this.attachments != null) && this.attachments.equals(rhs.attachments))) && ((this.correlationGuid == rhs.correlationGuid) || ((this.correlationGuid != null) && this.correlationGuid.equals(rhs.correlationGuid)))) && ((this.webRequest == rhs.webRequest) || ((this.webRequest != null) && this.webRequest.equals(rhs.webRequest)))) && ((this.graphTraversals == rhs.graphTraversals) || ((this.graphTraversals != null) && this.graphTraversals.equals(rhs.graphTraversals)))) && ((this.rule == rhs.rule) || ((this.rule != null) && this.rule.equals(rhs.rule)))) && ((this.analysisTarget == rhs.analysisTarget) || ((this.analysisTarget != null) && this.analysisTarget.equals(rhs.analysisTarget)))) && ((this.fixes == rhs.fixes) || ((this.fixes != null) && this.fixes.equals(rhs.fixes)))) && ((this.relatedLocations == rhs.relatedLocations) || ((this.relatedLocations != null) && this.relatedLocations.equals(rhs.relatedLocations)))) && ((this.graphs == rhs.graphs) || ((this.graphs != null) && this.graphs.equals(rhs.graphs)))) && ((this.provenance == rhs.provenance) || ((this.provenance != null) && this.provenance.equals(rhs.provenance)))) && ((this.rank == rhs.rank) || ((this.rank != null) && this.rank.equals(rhs.rank)))) && ((this.ruleId == rhs.ruleId) || ((this.ruleId != null) && this.ruleId.equals(rhs.ruleId)))) && ((this.taxa == rhs.taxa) || ((this.taxa != null) && this.taxa.equals(rhs.taxa)))) && ((this.ruleIndex == rhs.ruleIndex) || ((this.ruleIndex != null) && this.ruleIndex.equals(rhs.ruleIndex)))) && ((this.suppressions == rhs.suppressions) || ((this.suppressions != null) && this.suppressions.equals(rhs.suppressions)))) && ((this.level == rhs.level) || ((this.level != null) && this.level.equals(rhs.level)))) && ((this.hostedViewerUri == rhs.hostedViewerUri) || ((this.hostedViewerUri != null) && this.hostedViewerUri.equals(rhs.hostedViewerUri)))) && ((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind)))) && ((this.stacks == rhs.stacks) || ((this.stacks != null) && this.stacks.equals(rhs.stacks)))) && ((this.occurrenceCount == rhs.occurrenceCount) || ((this.occurrenceCount != null) && this.occurrenceCount.equals(rhs.occurrenceCount)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.fingerprints == rhs.fingerprints) || ((this.fingerprints != null) && this.fingerprints.equals(rhs.fingerprints)))) && ((this.codeFlows == rhs.codeFlows) || ((this.codeFlows != null) && this.codeFlows.equals(rhs.codeFlows)))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.partialFingerprints == rhs.partialFingerprints) || ((this.partialFingerprints != null) && this.partialFingerprints.equals(rhs.partialFingerprints)))) && ((this.webResponse == rhs.webResponse) || ((this.webResponse != null) && this.webResponse.equals(rhs.webResponse)))) && ((this.locations == rhs.locations) || ((this.locations != null) && this.locations.equals(rhs.locations)))) && ((this.baselineState == rhs.baselineState) || ((this.baselineState != null) && this.baselineState.equals(rhs.baselineState)))) && ((this.workItemUris == rhs.workItemUris) || ((this.workItemUris != null) && this.workItemUris.equals(rhs.workItemUris)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 
     /**
      * The state of a result relative to a baseline of a previous run.
-     *
      */
 
     public enum BaselineState {
@@ -1078,26 +981,18 @@ public class Result {
         UPDATED("updated"),
         @SerializedName("absent")
         ABSENT("absent");
-        private final String value;
         private final static Map<String, BaselineState> CONSTANTS = new HashMap<String, BaselineState>();
 
         static {
-            for (BaselineState c: values()) {
+            for (BaselineState c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         private BaselineState(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static BaselineState fromValue(String value) {
@@ -1109,12 +1004,20 @@ public class Result {
             }
         }
 
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
+        }
+
     }
 
 
     /**
      * A value that categorizes results by evaluation state.
-     *
      */
 
     public enum Kind {
@@ -1131,26 +1034,18 @@ public class Result {
         OPEN("open"),
         @SerializedName("informational")
         INFORMATIONAL("informational");
-        private final String value;
         private final static Map<String, Kind> CONSTANTS = new HashMap<String, Kind>();
 
         static {
-            for (Kind c: values()) {
+            for (Kind c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         private Kind(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static Kind fromValue(String value) {
@@ -1160,6 +1055,15 @@ public class Result {
             } else {
                 return constant;
             }
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
         }
 
     }

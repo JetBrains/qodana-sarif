@@ -1,12 +1,9 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 
 /**
  * The request parameters.
- * 
  */
-
 public class Parameters {
 
 
@@ -14,8 +11,8 @@ public class Parameters {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(Parameters.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }

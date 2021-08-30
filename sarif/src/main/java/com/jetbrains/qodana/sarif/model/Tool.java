@@ -1,38 +1,31 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 import java.util.Set;
 
 
 /**
  * The analysis tool that was run.
- * 
  */
-
 public class Tool {
 
     /**
      * A component, such as a plug-in or the driver, of the analysis tool that was run.
      * (Required)
-     * 
      */
     @SerializedName("driver")
     @Expose
     private ToolComponent driver;
     /**
      * Tool extensions that contributed to or reconfigured the analysis tool that was run.
-     * 
      */
     @SerializedName("extensions")
     @Expose
     private Set<ToolComponent> extensions = null;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -40,13 +33,11 @@ public class Tool {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Tool() {
     }
 
     /**
-     * 
      * @param driver
      */
     public Tool(ToolComponent driver) {
@@ -57,7 +48,6 @@ public class Tool {
     /**
      * A component, such as a plug-in or the driver, of the analysis tool that was run.
      * (Required)
-     * 
      */
     public ToolComponent getDriver() {
         return driver;
@@ -66,7 +56,6 @@ public class Tool {
     /**
      * A component, such as a plug-in or the driver, of the analysis tool that was run.
      * (Required)
-     * 
      */
     public void setDriver(ToolComponent driver) {
         this.driver = driver;
@@ -79,7 +68,6 @@ public class Tool {
 
     /**
      * Tool extensions that contributed to or reconfigured the analysis tool that was run.
-     * 
      */
     public Set<ToolComponent> getExtensions() {
         return extensions;
@@ -87,7 +75,6 @@ public class Tool {
 
     /**
      * Tool extensions that contributed to or reconfigured the analysis tool that was run.
-     * 
      */
     public void setExtensions(Set<ToolComponent> extensions) {
         this.extensions = extensions;
@@ -100,7 +87,6 @@ public class Tool {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -108,7 +94,6 @@ public class Tool {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -125,18 +110,18 @@ public class Tool {
         sb.append(Tool.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("driver");
         sb.append('=');
-        sb.append(((this.driver == null)?"<null>":this.driver));
+        sb.append(((this.driver == null) ? "<null>" : this.driver));
         sb.append(',');
         sb.append("extensions");
         sb.append('=');
-        sb.append(((this.extensions == null)?"<null>":this.extensions));
+        sb.append(((this.extensions == null) ? "<null>" : this.extensions));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -146,9 +131,9 @@ public class Tool {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.extensions == null)? 0 :this.extensions.hashCode()));
-        result = ((result* 31)+((this.driver == null)? 0 :this.driver.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.extensions == null) ? 0 : this.extensions.hashCode()));
+        result = ((result * 31) + ((this.driver == null) ? 0 : this.driver.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -161,7 +146,7 @@ public class Tool {
             return false;
         }
         Tool rhs = ((Tool) other);
-        return ((((this.extensions == rhs.extensions)||((this.extensions!= null)&&this.extensions.equals(rhs.extensions)))&&((this.driver == rhs.driver)||((this.driver!= null)&&this.driver.equals(rhs.driver))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return ((((this.extensions == rhs.extensions) || ((this.extensions != null) && this.extensions.equals(rhs.extensions))) && ((this.driver == rhs.driver) || ((this.driver != null) && this.driver.equals(rhs.driver)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

@@ -1,23 +1,18 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 import java.util.List;
 
 
 /**
  * A call stack that is relevant to a result.
- * 
  */
-
 public class Stack {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     @SerializedName("message")
     @Expose
@@ -25,14 +20,12 @@ public class Stack {
     /**
      * An array of stack frames that represents a sequence of calls, rendered in reverse chronological order, that comprise the call stack.
      * (Required)
-     * 
      */
     @SerializedName("frames")
     @Expose
     private List<StackFrame> frames = null;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -40,13 +33,11 @@ public class Stack {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Stack() {
     }
 
     /**
-     * 
      * @param frames
      */
     public Stack(List<StackFrame> frames) {
@@ -56,7 +47,6 @@ public class Stack {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public Message getMessage() {
         return message;
@@ -64,7 +54,6 @@ public class Stack {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public void setMessage(Message message) {
         this.message = message;
@@ -78,7 +67,6 @@ public class Stack {
     /**
      * An array of stack frames that represents a sequence of calls, rendered in reverse chronological order, that comprise the call stack.
      * (Required)
-     * 
      */
     public List<StackFrame> getFrames() {
         return frames;
@@ -87,7 +75,6 @@ public class Stack {
     /**
      * An array of stack frames that represents a sequence of calls, rendered in reverse chronological order, that comprise the call stack.
      * (Required)
-     * 
      */
     public void setFrames(List<StackFrame> frames) {
         this.frames = frames;
@@ -100,7 +87,6 @@ public class Stack {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -108,7 +94,6 @@ public class Stack {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -125,18 +110,18 @@ public class Stack {
         sb.append(Stack.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("message");
         sb.append('=');
-        sb.append(((this.message == null)?"<null>":this.message));
+        sb.append(((this.message == null) ? "<null>" : this.message));
         sb.append(',');
         sb.append("frames");
         sb.append('=');
-        sb.append(((this.frames == null)?"<null>":this.frames));
+        sb.append(((this.frames == null) ? "<null>" : this.frames));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -146,9 +131,9 @@ public class Stack {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.message == null)? 0 :this.message.hashCode()));
-        result = ((result* 31)+((this.frames == null)? 0 :this.frames.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.message == null) ? 0 : this.message.hashCode()));
+        result = ((result * 31) + ((this.frames == null) ? 0 : this.frames.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -161,7 +146,7 @@ public class Stack {
             return false;
         }
         Stack rhs = ((Stack) other);
-        return ((((this.message == rhs.message)||((this.message!= null)&&this.message.equals(rhs.message)))&&((this.frames == rhs.frames)||((this.frames!= null)&&this.frames.equals(rhs.frames))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return ((((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message))) && ((this.frames == rhs.frames) || ((this.frames != null) && this.frames.equals(rhs.frames)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

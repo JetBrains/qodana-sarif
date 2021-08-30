@@ -1,4 +1,3 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
@@ -7,42 +6,35 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * A physical location relevant to a result. Specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.
- * 
  */
-
 public class PhysicalLocation {
 
     /**
      * A physical or virtual address, or a range of addresses, in an 'addressable region' (memory or a binary file).
-     * 
      */
     @SerializedName("address")
     @Expose
     private Address address;
     /**
      * Specifies the location of an artifact.
-     * 
      */
     @SerializedName("artifactLocation")
     @Expose
     private ArtifactLocation artifactLocation;
     /**
      * A region within an artifact where a result was detected.
-     * 
      */
     @SerializedName("region")
     @Expose
     private Region region;
     /**
      * A region within an artifact where a result was detected.
-     * 
      */
     @SerializedName("contextRegion")
     @Expose
     private Region contextRegion;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -50,7 +42,6 @@ public class PhysicalLocation {
 
     /**
      * A physical or virtual address, or a range of addresses, in an 'addressable region' (memory or a binary file).
-     * 
      */
     public Address getAddress() {
         return address;
@@ -58,7 +49,6 @@ public class PhysicalLocation {
 
     /**
      * A physical or virtual address, or a range of addresses, in an 'addressable region' (memory or a binary file).
-     * 
      */
     public void setAddress(Address address) {
         this.address = address;
@@ -71,7 +61,6 @@ public class PhysicalLocation {
 
     /**
      * Specifies the location of an artifact.
-     * 
      */
     public ArtifactLocation getArtifactLocation() {
         return artifactLocation;
@@ -79,7 +68,6 @@ public class PhysicalLocation {
 
     /**
      * Specifies the location of an artifact.
-     * 
      */
     public void setArtifactLocation(ArtifactLocation artifactLocation) {
         this.artifactLocation = artifactLocation;
@@ -92,7 +80,6 @@ public class PhysicalLocation {
 
     /**
      * A region within an artifact where a result was detected.
-     * 
      */
     public Region getRegion() {
         return region;
@@ -100,7 +87,6 @@ public class PhysicalLocation {
 
     /**
      * A region within an artifact where a result was detected.
-     * 
      */
     public void setRegion(Region region) {
         this.region = region;
@@ -113,7 +99,6 @@ public class PhysicalLocation {
 
     /**
      * A region within an artifact where a result was detected.
-     * 
      */
     public Region getContextRegion() {
         return contextRegion;
@@ -121,7 +106,6 @@ public class PhysicalLocation {
 
     /**
      * A region within an artifact where a result was detected.
-     * 
      */
     public void setContextRegion(Region contextRegion) {
         this.contextRegion = contextRegion;
@@ -134,7 +118,6 @@ public class PhysicalLocation {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -142,7 +125,6 @@ public class PhysicalLocation {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -159,26 +141,26 @@ public class PhysicalLocation {
         sb.append(PhysicalLocation.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("address");
         sb.append('=');
-        sb.append(((this.address == null)?"<null>":this.address));
+        sb.append(((this.address == null) ? "<null>" : this.address));
         sb.append(',');
         sb.append("artifactLocation");
         sb.append('=');
-        sb.append(((this.artifactLocation == null)?"<null>":this.artifactLocation));
+        sb.append(((this.artifactLocation == null) ? "<null>" : this.artifactLocation));
         sb.append(',');
         sb.append("region");
         sb.append('=');
-        sb.append(((this.region == null)?"<null>":this.region));
+        sb.append(((this.region == null) ? "<null>" : this.region));
         sb.append(',');
         sb.append("contextRegion");
         sb.append('=');
-        sb.append(((this.contextRegion == null)?"<null>":this.contextRegion));
+        sb.append(((this.contextRegion == null) ? "<null>" : this.contextRegion));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -188,11 +170,11 @@ public class PhysicalLocation {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.contextRegion == null)? 0 :this.contextRegion.hashCode()));
-        result = ((result* 31)+((this.address == null)? 0 :this.address.hashCode()));
-        result = ((result* 31)+((this.region == null)? 0 :this.region.hashCode()));
-        result = ((result* 31)+((this.artifactLocation == null)? 0 :this.artifactLocation.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.contextRegion == null) ? 0 : this.contextRegion.hashCode()));
+        result = ((result * 31) + ((this.address == null) ? 0 : this.address.hashCode()));
+        result = ((result * 31) + ((this.region == null) ? 0 : this.region.hashCode()));
+        result = ((result * 31) + ((this.artifactLocation == null) ? 0 : this.artifactLocation.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -205,7 +187,7 @@ public class PhysicalLocation {
             return false;
         }
         PhysicalLocation rhs = ((PhysicalLocation) other);
-        return ((((((this.contextRegion == rhs.contextRegion)||((this.contextRegion!= null)&&this.contextRegion.equals(rhs.contextRegion)))&&((this.address == rhs.address)||((this.address!= null)&&this.address.equals(rhs.address))))&&((this.region == rhs.region)||((this.region!= null)&&this.region.equals(rhs.region))))&&((this.artifactLocation == rhs.artifactLocation)||((this.artifactLocation!= null)&&this.artifactLocation.equals(rhs.artifactLocation))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return ((((((this.contextRegion == rhs.contextRegion) || ((this.contextRegion != null) && this.contextRegion.equals(rhs.contextRegion))) && ((this.address == rhs.address) || ((this.address != null) && this.address.equals(rhs.address)))) && ((this.region == rhs.region) || ((this.region != null) && this.region.equals(rhs.region)))) && ((this.artifactLocation == rhs.artifactLocation) || ((this.artifactLocation != null) && this.artifactLocation.equals(rhs.artifactLocation)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

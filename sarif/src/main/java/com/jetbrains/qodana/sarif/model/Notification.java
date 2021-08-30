@@ -1,9 +1,7 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 import java.util.Date;
 import java.util.HashMap;
@@ -13,14 +11,11 @@ import java.util.Set;
 
 /**
  * Describes a condition relevant to the tool itself, as opposed to being relevant to a target being analyzed by the tool.
- * 
  */
-
 public class Notification {
 
     /**
      * The locations relevant to this notification.
-     * 
      */
     @SerializedName("locations")
     @Expose
@@ -28,56 +23,48 @@ public class Notification {
     /**
      * Encapsulates a message intended to be read by the end user.
      * (Required)
-     * 
      */
     @SerializedName("message")
     @Expose
     private Message message;
     /**
      * A value specifying the severity level of the notification.
-     * 
      */
     @SerializedName("level")
     @Expose
     private Notification.Level level = Level.fromValue("warning");
     /**
      * The thread identifier of the code that generated the notification.
-     *
      */
     @SerializedName("threadId")
     @Expose
     private Integer threadId;
     /**
      * The Coordinated Universal Time (UTC) date and time at which the analysis tool generated the notification.
-     *
      */
     @SerializedName("timeUtc")
     @Expose
     private Date timeUtc;
     /**
      * Describes a runtime exception encountered during the execution of an analysis tool.
-     *
      */
     @SerializedName("exception")
     @Expose
     private Exception exception;
     /**
      * Information about how to locate a relevant reporting descriptor.
-     *
      */
     @SerializedName("descriptor")
     @Expose
     private ReportingDescriptorReference descriptor;
     /**
      * Information about how to locate a relevant reporting descriptor.
-     *
      */
     @SerializedName("associatedRule")
     @Expose
     private ReportingDescriptorReference associatedRule;
     /**
      * Key/value pairs that provide additional information about the object.
-     *
      */
     @SerializedName("properties")
     @Expose
@@ -85,13 +72,11 @@ public class Notification {
 
     /**
      * No args constructor for use in serialization
-     *
      */
     public Notification() {
     }
 
     /**
-     *
      * @param message
      */
     public Notification(Message message) {
@@ -101,7 +86,6 @@ public class Notification {
 
     /**
      * The locations relevant to this notification.
-     *
      */
     public Set<Location> getLocations() {
         return locations;
@@ -109,7 +93,6 @@ public class Notification {
 
     /**
      * The locations relevant to this notification.
-     *
      */
     public void setLocations(Set<Location> locations) {
         this.locations = locations;
@@ -123,7 +106,6 @@ public class Notification {
     /**
      * Encapsulates a message intended to be read by the end user.
      * (Required)
-     *
      */
     public Message getMessage() {
         return message;
@@ -132,7 +114,6 @@ public class Notification {
     /**
      * Encapsulates a message intended to be read by the end user.
      * (Required)
-     *
      */
     public void setMessage(Message message) {
         this.message = message;
@@ -145,7 +126,6 @@ public class Notification {
 
     /**
      * A value specifying the severity level of the notification.
-     *
      */
     public Level getLevel() {
         return level;
@@ -153,7 +133,6 @@ public class Notification {
 
     /**
      * A value specifying the severity level of the notification.
-     *
      */
     public void setLevel(Level level) {
         this.level = level;
@@ -166,7 +145,6 @@ public class Notification {
 
     /**
      * The thread identifier of the code that generated the notification.
-     *
      */
     public Integer getThreadId() {
         return threadId;
@@ -174,7 +152,6 @@ public class Notification {
 
     /**
      * The thread identifier of the code that generated the notification.
-     *
      */
     public void setThreadId(Integer threadId) {
         this.threadId = threadId;
@@ -187,7 +164,6 @@ public class Notification {
 
     /**
      * The Coordinated Universal Time (UTC) date and time at which the analysis tool generated the notification.
-     *
      */
     public Date getTimeUtc() {
         return timeUtc;
@@ -195,7 +171,6 @@ public class Notification {
 
     /**
      * The Coordinated Universal Time (UTC) date and time at which the analysis tool generated the notification.
-     *
      */
     public void setTimeUtc(Date timeUtc) {
         this.timeUtc = timeUtc;
@@ -208,7 +183,6 @@ public class Notification {
 
     /**
      * Describes a runtime exception encountered during the execution of an analysis tool.
-     *
      */
     public Exception getException() {
         return exception;
@@ -216,7 +190,6 @@ public class Notification {
 
     /**
      * Describes a runtime exception encountered during the execution of an analysis tool.
-     *
      */
     public void setException(Exception exception) {
         this.exception = exception;
@@ -229,7 +202,6 @@ public class Notification {
 
     /**
      * Information about how to locate a relevant reporting descriptor.
-     *
      */
     public ReportingDescriptorReference getDescriptor() {
         return descriptor;
@@ -237,7 +209,6 @@ public class Notification {
 
     /**
      * Information about how to locate a relevant reporting descriptor.
-     *
      */
     public void setDescriptor(ReportingDescriptorReference descriptor) {
         this.descriptor = descriptor;
@@ -250,7 +221,6 @@ public class Notification {
 
     /**
      * Information about how to locate a relevant reporting descriptor.
-     *
      */
     public ReportingDescriptorReference getAssociatedRule() {
         return associatedRule;
@@ -258,7 +228,6 @@ public class Notification {
 
     /**
      * Information about how to locate a relevant reporting descriptor.
-     *
      */
     public void setAssociatedRule(ReportingDescriptorReference associatedRule) {
         this.associatedRule = associatedRule;
@@ -271,7 +240,6 @@ public class Notification {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     *
      */
     public PropertyBag getProperties() {
         return properties;
@@ -279,7 +247,6 @@ public class Notification {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     *
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -296,42 +263,42 @@ public class Notification {
         sb.append(Notification.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("locations");
         sb.append('=');
-        sb.append(((this.locations == null)?"<null>":this.locations));
+        sb.append(((this.locations == null) ? "<null>" : this.locations));
         sb.append(',');
         sb.append("message");
         sb.append('=');
-        sb.append(((this.message == null)?"<null>":this.message));
+        sb.append(((this.message == null) ? "<null>" : this.message));
         sb.append(',');
         sb.append("level");
         sb.append('=');
-        sb.append(((this.level == null)?"<null>":this.level));
+        sb.append(((this.level == null) ? "<null>" : this.level));
         sb.append(',');
         sb.append("threadId");
         sb.append('=');
-        sb.append(((this.threadId == null)?"<null>":this.threadId));
+        sb.append(((this.threadId == null) ? "<null>" : this.threadId));
         sb.append(',');
         sb.append("timeUtc");
         sb.append('=');
-        sb.append(((this.timeUtc == null)?"<null>":this.timeUtc));
+        sb.append(((this.timeUtc == null) ? "<null>" : this.timeUtc));
         sb.append(',');
         sb.append("exception");
         sb.append('=');
-        sb.append(((this.exception == null)?"<null>":this.exception));
+        sb.append(((this.exception == null) ? "<null>" : this.exception));
         sb.append(',');
         sb.append("descriptor");
         sb.append('=');
-        sb.append(((this.descriptor == null)?"<null>":this.descriptor));
+        sb.append(((this.descriptor == null) ? "<null>" : this.descriptor));
         sb.append(',');
         sb.append("associatedRule");
         sb.append('=');
-        sb.append(((this.associatedRule == null)?"<null>":this.associatedRule));
+        sb.append(((this.associatedRule == null) ? "<null>" : this.associatedRule));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -341,15 +308,15 @@ public class Notification {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.threadId == null)? 0 :this.threadId.hashCode()));
-        result = ((result* 31)+((this.exception == null)? 0 :this.exception.hashCode()));
-        result = ((result* 31)+((this.level == null)? 0 :this.level.hashCode()));
-        result = ((result* 31)+((this.associatedRule == null)? 0 :this.associatedRule.hashCode()));
-        result = ((result* 31)+((this.timeUtc == null)? 0 :this.timeUtc.hashCode()));
-        result = ((result* 31)+((this.locations == null)? 0 :this.locations.hashCode()));
-        result = ((result* 31)+((this.descriptor == null)? 0 :this.descriptor.hashCode()));
-        result = ((result* 31)+((this.message == null)? 0 :this.message.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.threadId == null) ? 0 : this.threadId.hashCode()));
+        result = ((result * 31) + ((this.exception == null) ? 0 : this.exception.hashCode()));
+        result = ((result * 31) + ((this.level == null) ? 0 : this.level.hashCode()));
+        result = ((result * 31) + ((this.associatedRule == null) ? 0 : this.associatedRule.hashCode()));
+        result = ((result * 31) + ((this.timeUtc == null) ? 0 : this.timeUtc.hashCode()));
+        result = ((result * 31) + ((this.locations == null) ? 0 : this.locations.hashCode()));
+        result = ((result * 31) + ((this.descriptor == null) ? 0 : this.descriptor.hashCode()));
+        result = ((result * 31) + ((this.message == null) ? 0 : this.message.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -362,13 +329,12 @@ public class Notification {
             return false;
         }
         Notification rhs = ((Notification) other);
-        return ((((((((((this.threadId == rhs.threadId)||((this.threadId!= null)&&this.threadId.equals(rhs.threadId)))&&((this.exception == rhs.exception)||((this.exception!= null)&&this.exception.equals(rhs.exception))))&&((this.level == rhs.level)||((this.level!= null)&&this.level.equals(rhs.level))))&&((this.associatedRule == rhs.associatedRule)||((this.associatedRule!= null)&&this.associatedRule.equals(rhs.associatedRule))))&&((this.timeUtc == rhs.timeUtc)||((this.timeUtc!= null)&&this.timeUtc.equals(rhs.timeUtc))))&&((this.locations == rhs.locations)||((this.locations!= null)&&this.locations.equals(rhs.locations))))&&((this.descriptor == rhs.descriptor)||((this.descriptor!= null)&&this.descriptor.equals(rhs.descriptor))))&&((this.message == rhs.message)||((this.message!= null)&&this.message.equals(rhs.message))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return ((((((((((this.threadId == rhs.threadId) || ((this.threadId != null) && this.threadId.equals(rhs.threadId))) && ((this.exception == rhs.exception) || ((this.exception != null) && this.exception.equals(rhs.exception)))) && ((this.level == rhs.level) || ((this.level != null) && this.level.equals(rhs.level)))) && ((this.associatedRule == rhs.associatedRule) || ((this.associatedRule != null) && this.associatedRule.equals(rhs.associatedRule)))) && ((this.timeUtc == rhs.timeUtc) || ((this.timeUtc != null) && this.timeUtc.equals(rhs.timeUtc)))) && ((this.locations == rhs.locations) || ((this.locations != null) && this.locations.equals(rhs.locations)))) && ((this.descriptor == rhs.descriptor) || ((this.descriptor != null) && this.descriptor.equals(rhs.descriptor)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 
     /**
      * A value specifying the severity level of the notification.
-     *
      */
 
     public enum Level {
@@ -381,26 +347,18 @@ public class Notification {
         WARNING("warning"),
         @SerializedName("error")
         ERROR("error");
-        private final String value;
         private final static Map<String, Level> CONSTANTS = new HashMap<String, Level>();
 
         static {
-            for (Level c: values()) {
+            for (Level c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }
 
+        private final String value;
+
         private Level(String value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
-
-        public String value() {
-            return this.value;
         }
 
         public static Level fromValue(String value) {
@@ -410,6 +368,15 @@ public class Notification {
             } else {
                 return constant;
             }
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        public String value() {
+            return this.value;
         }
 
     }

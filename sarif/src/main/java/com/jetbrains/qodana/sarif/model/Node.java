@@ -1,52 +1,43 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 import java.util.Set;
 
 
 /**
  * Represents a node in a graph.
- * 
  */
-
 public class Node {
 
     /**
      * A string that uniquely identifies the node within its graph.
      * (Required)
-     * 
      */
     @SerializedName("id")
     @Expose
     private String id;
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     @SerializedName("label")
     @Expose
     private Message label;
     /**
      * A location within a programming artifact.
-     * 
      */
     @SerializedName("location")
     @Expose
     private Location location;
     /**
      * Array of child nodes.
-     * 
      */
     @SerializedName("children")
     @Expose
     private Set<Node> children = null;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -54,13 +45,11 @@ public class Node {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Node() {
     }
 
     /**
-     * 
      * @param id
      */
     public Node(String id) {
@@ -71,7 +60,6 @@ public class Node {
     /**
      * A string that uniquely identifies the node within its graph.
      * (Required)
-     * 
      */
     public String getId() {
         return id;
@@ -80,7 +68,6 @@ public class Node {
     /**
      * A string that uniquely identifies the node within its graph.
      * (Required)
-     * 
      */
     public void setId(String id) {
         this.id = id;
@@ -93,7 +80,6 @@ public class Node {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public Message getLabel() {
         return label;
@@ -101,7 +87,6 @@ public class Node {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public void setLabel(Message label) {
         this.label = label;
@@ -114,7 +99,6 @@ public class Node {
 
     /**
      * A location within a programming artifact.
-     * 
      */
     public Location getLocation() {
         return location;
@@ -122,7 +106,6 @@ public class Node {
 
     /**
      * A location within a programming artifact.
-     * 
      */
     public void setLocation(Location location) {
         this.location = location;
@@ -135,7 +118,6 @@ public class Node {
 
     /**
      * Array of child nodes.
-     * 
      */
     public Set<Node> getChildren() {
         return children;
@@ -143,7 +125,6 @@ public class Node {
 
     /**
      * Array of child nodes.
-     * 
      */
     public void setChildren(Set<Node> children) {
         this.children = children;
@@ -156,7 +137,6 @@ public class Node {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -164,7 +144,6 @@ public class Node {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -181,26 +160,26 @@ public class Node {
         sb.append(Node.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("id");
         sb.append('=');
-        sb.append(((this.id == null)?"<null>":this.id));
+        sb.append(((this.id == null) ? "<null>" : this.id));
         sb.append(',');
         sb.append("label");
         sb.append('=');
-        sb.append(((this.label == null)?"<null>":this.label));
+        sb.append(((this.label == null) ? "<null>" : this.label));
         sb.append(',');
         sb.append("location");
         sb.append('=');
-        sb.append(((this.location == null)?"<null>":this.location));
+        sb.append(((this.location == null) ? "<null>" : this.location));
         sb.append(',');
         sb.append("children");
         sb.append('=');
-        sb.append(((this.children == null)?"<null>":this.children));
+        sb.append(((this.children == null) ? "<null>" : this.children));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -210,11 +189,11 @@ public class Node {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.location == null)? 0 :this.location.hashCode()));
-        result = ((result* 31)+((this.id == null)? 0 :this.id.hashCode()));
-        result = ((result* 31)+((this.label == null)? 0 :this.label.hashCode()));
-        result = ((result* 31)+((this.children == null)? 0 :this.children.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.location == null) ? 0 : this.location.hashCode()));
+        result = ((result * 31) + ((this.id == null) ? 0 : this.id.hashCode()));
+        result = ((result * 31) + ((this.label == null) ? 0 : this.label.hashCode()));
+        result = ((result * 31) + ((this.children == null) ? 0 : this.children.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -227,7 +206,7 @@ public class Node {
             return false;
         }
         Node rhs = ((Node) other);
-        return ((((((this.location == rhs.location)||((this.location!= null)&&this.location.equals(rhs.location)))&&((this.id == rhs.id)||((this.id!= null)&&this.id.equals(rhs.id))))&&((this.label == rhs.label)||((this.label!= null)&&this.label.equals(rhs.label))))&&((this.children == rhs.children)||((this.children!= null)&&this.children.equals(rhs.children))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return ((((((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.label == rhs.label) || ((this.label != null) && this.label.equals(rhs.label)))) && ((this.children == rhs.children) || ((this.children != null) && this.children.equals(rhs.children)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

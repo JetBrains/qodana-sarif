@@ -1,4 +1,3 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
@@ -7,77 +6,65 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * A physical or virtual address, or a range of addresses, in an 'addressable region' (memory or a binary file).
- *
  */
-
 public class Address {
 
     /**
      * The address expressed as a byte offset from the start of the addressable region.
-     *
      */
     @SerializedName("absoluteAddress")
     @Expose
     private Integer absoluteAddress = null;
     /**
      * The address expressed as a byte offset from the absolute address of the top-most parent object.
-     *
      */
     @SerializedName("relativeAddress")
     @Expose
     private Integer relativeAddress;
     /**
      * The number of bytes in this range of addresses.
-     *
      */
     @SerializedName("length")
     @Expose
     private Integer length;
     /**
      * An open-ended string that identifies the address kind. 'data', 'function', 'header','instruction', 'module', 'page', 'section', 'segment', 'stack', 'stackFrame', 'table' are well-known values.
-     *
      */
     @SerializedName("kind")
     @Expose
     private String kind;
     /**
      * A name that is associated with the address, e.g., '.text'.
-     *
      */
     @SerializedName("name")
     @Expose
     private String name;
     /**
      * A human-readable fully qualified name that is associated with the address.
-     *
      */
     @SerializedName("fullyQualifiedName")
     @Expose
     private String fullyQualifiedName;
     /**
      * The byte offset of this address from the absolute or relative address of the parent object.
-     *
      */
     @SerializedName("offsetFromParent")
     @Expose
     private Integer offsetFromParent;
     /**
      * The index within run.addresses of the cached object for this address.
-     *
      */
     @SerializedName("index")
     @Expose
     private Integer index = null;
     /**
      * The index within run.addresses of the parent object.
-     *
      */
     @SerializedName("parentIndex")
     @Expose
     private Integer parentIndex = null;
     /**
      * Key/value pairs that provide additional information about the object.
-     *
      */
     @SerializedName("properties")
     @Expose
@@ -85,7 +72,6 @@ public class Address {
 
     /**
      * The address expressed as a byte offset from the start of the addressable region.
-     *
      */
     public Integer getAbsoluteAddress() {
         return absoluteAddress;
@@ -93,7 +79,6 @@ public class Address {
 
     /**
      * The address expressed as a byte offset from the start of the addressable region.
-     *
      */
     public void setAbsoluteAddress(Integer absoluteAddress) {
         this.absoluteAddress = absoluteAddress;
@@ -106,7 +91,6 @@ public class Address {
 
     /**
      * The address expressed as a byte offset from the absolute address of the top-most parent object.
-     *
      */
     public Integer getRelativeAddress() {
         return relativeAddress;
@@ -114,7 +98,6 @@ public class Address {
 
     /**
      * The address expressed as a byte offset from the absolute address of the top-most parent object.
-     *
      */
     public void setRelativeAddress(Integer relativeAddress) {
         this.relativeAddress = relativeAddress;
@@ -127,7 +110,6 @@ public class Address {
 
     /**
      * The number of bytes in this range of addresses.
-     *
      */
     public Integer getLength() {
         return length;
@@ -135,7 +117,6 @@ public class Address {
 
     /**
      * The number of bytes in this range of addresses.
-     *
      */
     public void setLength(Integer length) {
         this.length = length;
@@ -148,7 +129,6 @@ public class Address {
 
     /**
      * An open-ended string that identifies the address kind. 'data', 'function', 'header','instruction', 'module', 'page', 'section', 'segment', 'stack', 'stackFrame', 'table' are well-known values.
-     *
      */
     public String getKind() {
         return kind;
@@ -156,7 +136,6 @@ public class Address {
 
     /**
      * An open-ended string that identifies the address kind. 'data', 'function', 'header','instruction', 'module', 'page', 'section', 'segment', 'stack', 'stackFrame', 'table' are well-known values.
-     *
      */
     public void setKind(String kind) {
         this.kind = kind;
@@ -169,7 +148,6 @@ public class Address {
 
     /**
      * A name that is associated with the address, e.g., '.text'.
-     *
      */
     public String getName() {
         return name;
@@ -177,7 +155,6 @@ public class Address {
 
     /**
      * A name that is associated with the address, e.g., '.text'.
-     *
      */
     public void setName(String name) {
         this.name = name;
@@ -190,7 +167,6 @@ public class Address {
 
     /**
      * A human-readable fully qualified name that is associated with the address.
-     *
      */
     public String getFullyQualifiedName() {
         return fullyQualifiedName;
@@ -198,7 +174,6 @@ public class Address {
 
     /**
      * A human-readable fully qualified name that is associated with the address.
-     *
      */
     public void setFullyQualifiedName(String fullyQualifiedName) {
         this.fullyQualifiedName = fullyQualifiedName;
@@ -211,7 +186,6 @@ public class Address {
 
     /**
      * The byte offset of this address from the absolute or relative address of the parent object.
-     *
      */
     public Integer getOffsetFromParent() {
         return offsetFromParent;
@@ -219,7 +193,6 @@ public class Address {
 
     /**
      * The byte offset of this address from the absolute or relative address of the parent object.
-     *
      */
     public void setOffsetFromParent(Integer offsetFromParent) {
         this.offsetFromParent = offsetFromParent;
@@ -232,7 +205,6 @@ public class Address {
 
     /**
      * The index within run.addresses of the cached object for this address.
-     *
      */
     public Integer getIndex() {
         return index;
@@ -240,7 +212,6 @@ public class Address {
 
     /**
      * The index within run.addresses of the cached object for this address.
-     *
      */
     public void setIndex(Integer index) {
         this.index = index;
@@ -253,7 +224,6 @@ public class Address {
 
     /**
      * The index within run.addresses of the parent object.
-     *
      */
     public Integer getParentIndex() {
         return parentIndex;
@@ -261,7 +231,6 @@ public class Address {
 
     /**
      * The index within run.addresses of the parent object.
-     *
      */
     public void setParentIndex(Integer parentIndex) {
         this.parentIndex = parentIndex;
@@ -274,7 +243,6 @@ public class Address {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     *
      */
     public PropertyBag getProperties() {
         return properties;
@@ -282,7 +250,6 @@ public class Address {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     *
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -299,46 +266,46 @@ public class Address {
         sb.append(Address.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("absoluteAddress");
         sb.append('=');
-        sb.append(((this.absoluteAddress == null)?"<null>":this.absoluteAddress));
+        sb.append(((this.absoluteAddress == null) ? "<null>" : this.absoluteAddress));
         sb.append(',');
         sb.append("relativeAddress");
         sb.append('=');
-        sb.append(((this.relativeAddress == null)?"<null>":this.relativeAddress));
+        sb.append(((this.relativeAddress == null) ? "<null>" : this.relativeAddress));
         sb.append(',');
         sb.append("length");
         sb.append('=');
-        sb.append(((this.length == null)?"<null>":this.length));
+        sb.append(((this.length == null) ? "<null>" : this.length));
         sb.append(',');
         sb.append("kind");
         sb.append('=');
-        sb.append(((this.kind == null)?"<null>":this.kind));
+        sb.append(((this.kind == null) ? "<null>" : this.kind));
         sb.append(',');
         sb.append("name");
         sb.append('=');
-        sb.append(((this.name == null)?"<null>":this.name));
+        sb.append(((this.name == null) ? "<null>" : this.name));
         sb.append(',');
         sb.append("fullyQualifiedName");
         sb.append('=');
-        sb.append(((this.fullyQualifiedName == null)?"<null>":this.fullyQualifiedName));
+        sb.append(((this.fullyQualifiedName == null) ? "<null>" : this.fullyQualifiedName));
         sb.append(',');
         sb.append("offsetFromParent");
         sb.append('=');
-        sb.append(((this.offsetFromParent == null)?"<null>":this.offsetFromParent));
+        sb.append(((this.offsetFromParent == null) ? "<null>" : this.offsetFromParent));
         sb.append(',');
         sb.append("index");
         sb.append('=');
-        sb.append(((this.index == null)?"<null>":this.index));
+        sb.append(((this.index == null) ? "<null>" : this.index));
         sb.append(',');
         sb.append("parentIndex");
         sb.append('=');
-        sb.append(((this.parentIndex == null)?"<null>":this.parentIndex));
+        sb.append(((this.parentIndex == null) ? "<null>" : this.parentIndex));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -348,16 +315,16 @@ public class Address {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.offsetFromParent == null)? 0 :this.offsetFromParent.hashCode()));
-        result = ((result* 31)+((this.parentIndex == null)? 0 :this.parentIndex.hashCode()));
-        result = ((result* 31)+((this.relativeAddress == null)? 0 :this.relativeAddress.hashCode()));
-        result = ((result* 31)+((this.kind == null)? 0 :this.kind.hashCode()));
-        result = ((result* 31)+((this.length == null)? 0 :this.length.hashCode()));
-        result = ((result* 31)+((this.name == null)? 0 :this.name.hashCode()));
-        result = ((result* 31)+((this.index == null)? 0 :this.index.hashCode()));
-        result = ((result* 31)+((this.fullyQualifiedName == null)? 0 :this.fullyQualifiedName.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
-        result = ((result* 31)+((this.absoluteAddress == null)? 0 :this.absoluteAddress.hashCode()));
+        result = ((result * 31) + ((this.offsetFromParent == null) ? 0 : this.offsetFromParent.hashCode()));
+        result = ((result * 31) + ((this.parentIndex == null) ? 0 : this.parentIndex.hashCode()));
+        result = ((result * 31) + ((this.relativeAddress == null) ? 0 : this.relativeAddress.hashCode()));
+        result = ((result * 31) + ((this.kind == null) ? 0 : this.kind.hashCode()));
+        result = ((result * 31) + ((this.length == null) ? 0 : this.length.hashCode()));
+        result = ((result * 31) + ((this.name == null) ? 0 : this.name.hashCode()));
+        result = ((result * 31) + ((this.index == null) ? 0 : this.index.hashCode()));
+        result = ((result * 31) + ((this.fullyQualifiedName == null) ? 0 : this.fullyQualifiedName.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
+        result = ((result * 31) + ((this.absoluteAddress == null) ? 0 : this.absoluteAddress.hashCode()));
         return result;
     }
 
@@ -370,7 +337,7 @@ public class Address {
             return false;
         }
         Address rhs = ((Address) other);
-        return (((((((((((this.offsetFromParent == rhs.offsetFromParent)||((this.offsetFromParent!= null)&&this.offsetFromParent.equals(rhs.offsetFromParent)))&&((this.parentIndex == rhs.parentIndex)||((this.parentIndex!= null)&&this.parentIndex.equals(rhs.parentIndex))))&&((this.relativeAddress == rhs.relativeAddress)||((this.relativeAddress!= null)&&this.relativeAddress.equals(rhs.relativeAddress))))&&((this.kind == rhs.kind)||((this.kind!= null)&&this.kind.equals(rhs.kind))))&&((this.length == rhs.length)||((this.length!= null)&&this.length.equals(rhs.length))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.index == rhs.index)||((this.index!= null)&&this.index.equals(rhs.index))))&&((this.fullyQualifiedName == rhs.fullyQualifiedName)||((this.fullyQualifiedName!= null)&&this.fullyQualifiedName.equals(rhs.fullyQualifiedName))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))))&&((this.absoluteAddress == rhs.absoluteAddress)||((this.absoluteAddress!= null)&&this.absoluteAddress.equals(rhs.absoluteAddress))));
+        return (((((((((((this.offsetFromParent == rhs.offsetFromParent) || ((this.offsetFromParent != null) && this.offsetFromParent.equals(rhs.offsetFromParent))) && ((this.parentIndex == rhs.parentIndex) || ((this.parentIndex != null) && this.parentIndex.equals(rhs.parentIndex)))) && ((this.relativeAddress == rhs.relativeAddress) || ((this.relativeAddress != null) && this.relativeAddress.equals(rhs.relativeAddress)))) && ((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind)))) && ((this.length == rhs.length) || ((this.length != null) && this.length.equals(rhs.length)))) && ((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name)))) && ((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index)))) && ((this.fullyQualifiedName == rhs.fullyQualifiedName) || ((this.fullyQualifiedName != null) && this.fullyQualifiedName.equals(rhs.fullyQualifiedName)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.absoluteAddress == rhs.absoluteAddress) || ((this.absoluteAddress != null) && this.absoluteAddress.equals(rhs.absoluteAddress))));
     }
 
 }

@@ -1,9 +1,7 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 import java.net.URI;
 import java.util.Arrays;
@@ -14,14 +12,11 @@ import java.util.Set;
 
 /**
  * A component, such as a plug-in or the driver, of the analysis tool that was run.
- * 
  */
-
 public class ToolComponent {
 
     /**
      * A unique identifer for the tool component in the form of a GUID.
-     * 
      */
     @SerializedName("guid")
     @Expose
@@ -29,189 +24,162 @@ public class ToolComponent {
     /**
      * The name of the tool component.
      * (Required)
-     * 
      */
     @SerializedName("name")
     @Expose
     private String name;
     /**
      * The organization or company that produced the tool component.
-     * 
      */
     @SerializedName("organization")
     @Expose
     private String organization;
     /**
      * A product suite to which the tool component belongs.
-     * 
      */
     @SerializedName("product")
     @Expose
     private String product;
     /**
      * A localizable string containing the name of the suite of products to which the tool component belongs.
-     * 
      */
     @SerializedName("productSuite")
     @Expose
     private String productSuite;
     /**
      * A message string or message format string rendered in multiple formats.
-     * 
      */
     @SerializedName("shortDescription")
     @Expose
     private MultiformatMessageString shortDescription;
     /**
      * A message string or message format string rendered in multiple formats.
-     * 
      */
     @SerializedName("fullDescription")
     @Expose
     private MultiformatMessageString fullDescription;
     /**
      * The name of the tool component along with its version and any other useful identifying information, such as its locale.
-     * 
      */
     @SerializedName("fullName")
     @Expose
     private String fullName;
     /**
      * The tool component version, in whatever format the component natively provides.
-     * 
      */
     @SerializedName("version")
     @Expose
     private String version;
     /**
      * The tool component version in the format specified by Semantic Versioning 2.0.
-     * 
      */
     @SerializedName("semanticVersion")
     @Expose
     private String semanticVersion;
     /**
      * The binary version of the tool component's primary executable file expressed as four non-negative integers separated by a period (for operating systems that express file versions in this way).
-     * 
      */
     @SerializedName("dottedQuadFileVersion")
     @Expose
     private String dottedQuadFileVersion;
     /**
      * A string specifying the UTC date (and optionally, the time) of the component's release.
-     * 
      */
     @SerializedName("releaseDateUtc")
     @Expose
     private String releaseDateUtc;
     /**
      * The absolute URI from which the tool component can be downloaded.
-     * 
      */
     @SerializedName("downloadUri")
     @Expose
     private URI downloadUri;
     /**
      * The absolute URI at which information about this version of the tool component can be found.
-     * 
      */
     @SerializedName("informationUri")
     @Expose
     private URI informationUri;
     /**
      * A dictionary, each of whose keys is a resource identifier and each of whose values is a multiformatMessageString object, which holds message strings in plain text and (optionally) Markdown format. The strings can include placeholders, which can be used to construct a message in combination with an arbitrary number of additional string arguments.
-     * 
      */
     @SerializedName("globalMessageStrings")
     @Expose
     private GlobalMessageStrings globalMessageStrings;
     /**
      * An array of reportingDescriptor objects relevant to the notifications related to the configuration and runtime execution of the tool component.
-     * 
      */
     @SerializedName("notifications")
     @Expose
     private List<ReportingDescriptor> notifications = null;
     /**
      * An array of reportingDescriptor objects relevant to the analysis performed by the tool component.
-     * 
      */
     @SerializedName("rules")
     @Expose
     private List<ReportingDescriptor> rules = null;
     /**
      * An array of reportingDescriptor objects relevant to the definitions of both standalone and tool-defined taxonomies.
-     * 
      */
     @SerializedName("taxa")
     @Expose
     private List<ReportingDescriptor> taxa = null;
     /**
      * An array of the artifactLocation objects associated with the tool component.
-     * 
      */
     @SerializedName("locations")
     @Expose
     private List<ArtifactLocation> locations = null;
     /**
      * The language of the messages emitted into the log file during this run (expressed as an ISO 639-1 two-letter lowercase language code) and an optional region (expressed as an ISO 3166-1 two-letter uppercase subculture code associated with a country or region). The casing is recommended but not required (in order for this data to conform to RFC5646).
-     * 
      */
     @SerializedName("language")
     @Expose
     private String language = "en-US";
     /**
      * The kinds of data contained in this object.
-     * 
      */
     @SerializedName("contents")
     @Expose
     private Set<Content> contents = new LinkedHashSet<Content>(Arrays.asList(Content.fromValue("localizedData"), Content.fromValue("nonLocalizedData")));
     /**
      * Specifies whether this object contains a complete definition of the localizable and/or non-localizable data for this component, as opposed to including only data that is relevant to the results persisted to this log file.
-     * 
      */
     @SerializedName("isComprehensive")
     @Expose
     private Boolean isComprehensive = false;
     /**
      * The semantic version of the localized strings defined in this component; maintained by components that provide translations.
-     * 
      */
     @SerializedName("localizedDataSemanticVersion")
     @Expose
     private String localizedDataSemanticVersion;
     /**
      * The minimum value of localizedDataSemanticVersion required in translations consumed by this component; used by components that consume translations.
-     * 
      */
     @SerializedName("minimumRequiredLocalizedDataSemanticVersion")
     @Expose
     private String minimumRequiredLocalizedDataSemanticVersion;
     /**
      * Identifies a particular toolComponent object, either the driver or an extension.
-     * 
      */
     @SerializedName("associatedComponent")
     @Expose
     private ToolComponentReference associatedComponent;
     /**
      * Provides additional metadata related to translation.
-     * 
      */
     @SerializedName("translationMetadata")
     @Expose
     private TranslationMetadata translationMetadata;
     /**
      * An array of toolComponentReference objects to declare the taxonomies supported by the tool component.
-     * 
      */
     @SerializedName("supportedTaxonomies")
     @Expose
     private Set<ToolComponentReference> supportedTaxonomies = null;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -219,13 +187,11 @@ public class ToolComponent {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public ToolComponent() {
     }
 
     /**
-     * 
      * @param name
      */
     public ToolComponent(String name) {
@@ -235,7 +201,6 @@ public class ToolComponent {
 
     /**
      * A unique identifer for the tool component in the form of a GUID.
-     * 
      */
     public String getGuid() {
         return guid;
@@ -243,7 +208,6 @@ public class ToolComponent {
 
     /**
      * A unique identifer for the tool component in the form of a GUID.
-     * 
      */
     public void setGuid(String guid) {
         this.guid = guid;
@@ -257,7 +221,6 @@ public class ToolComponent {
     /**
      * The name of the tool component.
      * (Required)
-     * 
      */
     public String getName() {
         return name;
@@ -266,7 +229,6 @@ public class ToolComponent {
     /**
      * The name of the tool component.
      * (Required)
-     * 
      */
     public void setName(String name) {
         this.name = name;
@@ -279,7 +241,6 @@ public class ToolComponent {
 
     /**
      * The organization or company that produced the tool component.
-     * 
      */
     public String getOrganization() {
         return organization;
@@ -287,7 +248,6 @@ public class ToolComponent {
 
     /**
      * The organization or company that produced the tool component.
-     * 
      */
     public void setOrganization(String organization) {
         this.organization = organization;
@@ -300,7 +260,6 @@ public class ToolComponent {
 
     /**
      * A product suite to which the tool component belongs.
-     * 
      */
     public String getProduct() {
         return product;
@@ -308,7 +267,6 @@ public class ToolComponent {
 
     /**
      * A product suite to which the tool component belongs.
-     * 
      */
     public void setProduct(String product) {
         this.product = product;
@@ -321,7 +279,6 @@ public class ToolComponent {
 
     /**
      * A localizable string containing the name of the suite of products to which the tool component belongs.
-     * 
      */
     public String getProductSuite() {
         return productSuite;
@@ -329,7 +286,6 @@ public class ToolComponent {
 
     /**
      * A localizable string containing the name of the suite of products to which the tool component belongs.
-     * 
      */
     public void setProductSuite(String productSuite) {
         this.productSuite = productSuite;
@@ -342,7 +298,6 @@ public class ToolComponent {
 
     /**
      * A message string or message format string rendered in multiple formats.
-     * 
      */
     public MultiformatMessageString getShortDescription() {
         return shortDescription;
@@ -350,7 +305,6 @@ public class ToolComponent {
 
     /**
      * A message string or message format string rendered in multiple formats.
-     * 
      */
     public void setShortDescription(MultiformatMessageString shortDescription) {
         this.shortDescription = shortDescription;
@@ -363,7 +317,6 @@ public class ToolComponent {
 
     /**
      * A message string or message format string rendered in multiple formats.
-     * 
      */
     public MultiformatMessageString getFullDescription() {
         return fullDescription;
@@ -371,7 +324,6 @@ public class ToolComponent {
 
     /**
      * A message string or message format string rendered in multiple formats.
-     * 
      */
     public void setFullDescription(MultiformatMessageString fullDescription) {
         this.fullDescription = fullDescription;
@@ -384,7 +336,6 @@ public class ToolComponent {
 
     /**
      * The name of the tool component along with its version and any other useful identifying information, such as its locale.
-     * 
      */
     public String getFullName() {
         return fullName;
@@ -392,7 +343,6 @@ public class ToolComponent {
 
     /**
      * The name of the tool component along with its version and any other useful identifying information, such as its locale.
-     * 
      */
     public void setFullName(String fullName) {
         this.fullName = fullName;
@@ -405,7 +355,6 @@ public class ToolComponent {
 
     /**
      * The tool component version, in whatever format the component natively provides.
-     * 
      */
     public String getVersion() {
         return version;
@@ -413,7 +362,6 @@ public class ToolComponent {
 
     /**
      * The tool component version, in whatever format the component natively provides.
-     * 
      */
     public void setVersion(String version) {
         this.version = version;
@@ -426,7 +374,6 @@ public class ToolComponent {
 
     /**
      * The tool component version in the format specified by Semantic Versioning 2.0.
-     * 
      */
     public String getSemanticVersion() {
         return semanticVersion;
@@ -434,7 +381,6 @@ public class ToolComponent {
 
     /**
      * The tool component version in the format specified by Semantic Versioning 2.0.
-     * 
      */
     public void setSemanticVersion(String semanticVersion) {
         this.semanticVersion = semanticVersion;
@@ -447,7 +393,6 @@ public class ToolComponent {
 
     /**
      * The binary version of the tool component's primary executable file expressed as four non-negative integers separated by a period (for operating systems that express file versions in this way).
-     * 
      */
     public String getDottedQuadFileVersion() {
         return dottedQuadFileVersion;
@@ -455,7 +400,6 @@ public class ToolComponent {
 
     /**
      * The binary version of the tool component's primary executable file expressed as four non-negative integers separated by a period (for operating systems that express file versions in this way).
-     * 
      */
     public void setDottedQuadFileVersion(String dottedQuadFileVersion) {
         this.dottedQuadFileVersion = dottedQuadFileVersion;
@@ -468,7 +412,6 @@ public class ToolComponent {
 
     /**
      * A string specifying the UTC date (and optionally, the time) of the component's release.
-     * 
      */
     public String getReleaseDateUtc() {
         return releaseDateUtc;
@@ -476,7 +419,6 @@ public class ToolComponent {
 
     /**
      * A string specifying the UTC date (and optionally, the time) of the component's release.
-     * 
      */
     public void setReleaseDateUtc(String releaseDateUtc) {
         this.releaseDateUtc = releaseDateUtc;
@@ -489,7 +431,6 @@ public class ToolComponent {
 
     /**
      * The absolute URI from which the tool component can be downloaded.
-     * 
      */
     public URI getDownloadUri() {
         return downloadUri;
@@ -497,7 +438,6 @@ public class ToolComponent {
 
     /**
      * The absolute URI from which the tool component can be downloaded.
-     * 
      */
     public void setDownloadUri(URI downloadUri) {
         this.downloadUri = downloadUri;
@@ -510,7 +450,6 @@ public class ToolComponent {
 
     /**
      * The absolute URI at which information about this version of the tool component can be found.
-     * 
      */
     public URI getInformationUri() {
         return informationUri;
@@ -518,7 +457,6 @@ public class ToolComponent {
 
     /**
      * The absolute URI at which information about this version of the tool component can be found.
-     * 
      */
     public void setInformationUri(URI informationUri) {
         this.informationUri = informationUri;
@@ -531,7 +469,6 @@ public class ToolComponent {
 
     /**
      * A dictionary, each of whose keys is a resource identifier and each of whose values is a multiformatMessageString object, which holds message strings in plain text and (optionally) Markdown format. The strings can include placeholders, which can be used to construct a message in combination with an arbitrary number of additional string arguments.
-     * 
      */
     public GlobalMessageStrings getGlobalMessageStrings() {
         return globalMessageStrings;
@@ -539,7 +476,6 @@ public class ToolComponent {
 
     /**
      * A dictionary, each of whose keys is a resource identifier and each of whose values is a multiformatMessageString object, which holds message strings in plain text and (optionally) Markdown format. The strings can include placeholders, which can be used to construct a message in combination with an arbitrary number of additional string arguments.
-     * 
      */
     public void setGlobalMessageStrings(GlobalMessageStrings globalMessageStrings) {
         this.globalMessageStrings = globalMessageStrings;
@@ -552,7 +488,6 @@ public class ToolComponent {
 
     /**
      * An array of reportingDescriptor objects relevant to the notifications related to the configuration and runtime execution of the tool component.
-     * 
      */
     public List<ReportingDescriptor> getNotifications() {
         return notifications;
@@ -560,7 +495,6 @@ public class ToolComponent {
 
     /**
      * An array of reportingDescriptor objects relevant to the notifications related to the configuration and runtime execution of the tool component.
-     * 
      */
     public void setNotifications(List<ReportingDescriptor> notifications) {
         this.notifications = notifications;
@@ -573,7 +507,6 @@ public class ToolComponent {
 
     /**
      * An array of reportingDescriptor objects relevant to the analysis performed by the tool component.
-     * 
      */
     public List<ReportingDescriptor> getRules() {
         return rules;
@@ -581,7 +514,6 @@ public class ToolComponent {
 
     /**
      * An array of reportingDescriptor objects relevant to the analysis performed by the tool component.
-     * 
      */
     public void setRules(List<ReportingDescriptor> rules) {
         this.rules = rules;
@@ -594,7 +526,6 @@ public class ToolComponent {
 
     /**
      * An array of reportingDescriptor objects relevant to the definitions of both standalone and tool-defined taxonomies.
-     * 
      */
     public List<ReportingDescriptor> getTaxa() {
         return taxa;
@@ -602,7 +533,6 @@ public class ToolComponent {
 
     /**
      * An array of reportingDescriptor objects relevant to the definitions of both standalone and tool-defined taxonomies.
-     * 
      */
     public void setTaxa(List<ReportingDescriptor> taxa) {
         this.taxa = taxa;
@@ -615,7 +545,6 @@ public class ToolComponent {
 
     /**
      * An array of the artifactLocation objects associated with the tool component.
-     * 
      */
     public List<ArtifactLocation> getLocations() {
         return locations;
@@ -623,7 +552,6 @@ public class ToolComponent {
 
     /**
      * An array of the artifactLocation objects associated with the tool component.
-     * 
      */
     public void setLocations(List<ArtifactLocation> locations) {
         this.locations = locations;
@@ -636,7 +564,6 @@ public class ToolComponent {
 
     /**
      * The language of the messages emitted into the log file during this run (expressed as an ISO 639-1 two-letter lowercase language code) and an optional region (expressed as an ISO 3166-1 two-letter uppercase subculture code associated with a country or region). The casing is recommended but not required (in order for this data to conform to RFC5646).
-     * 
      */
     public String getLanguage() {
         return language;
@@ -644,7 +571,6 @@ public class ToolComponent {
 
     /**
      * The language of the messages emitted into the log file during this run (expressed as an ISO 639-1 two-letter lowercase language code) and an optional region (expressed as an ISO 3166-1 two-letter uppercase subculture code associated with a country or region). The casing is recommended but not required (in order for this data to conform to RFC5646).
-     * 
      */
     public void setLanguage(String language) {
         this.language = language;
@@ -657,7 +583,6 @@ public class ToolComponent {
 
     /**
      * The kinds of data contained in this object.
-     * 
      */
     public Set<Content> getContents() {
         return contents;
@@ -665,7 +590,6 @@ public class ToolComponent {
 
     /**
      * The kinds of data contained in this object.
-     * 
      */
     public void setContents(Set<Content> contents) {
         this.contents = contents;
@@ -678,7 +602,6 @@ public class ToolComponent {
 
     /**
      * Specifies whether this object contains a complete definition of the localizable and/or non-localizable data for this component, as opposed to including only data that is relevant to the results persisted to this log file.
-     * 
      */
     public Boolean getIsComprehensive() {
         return isComprehensive;
@@ -686,7 +609,6 @@ public class ToolComponent {
 
     /**
      * Specifies whether this object contains a complete definition of the localizable and/or non-localizable data for this component, as opposed to including only data that is relevant to the results persisted to this log file.
-     * 
      */
     public void setIsComprehensive(Boolean isComprehensive) {
         this.isComprehensive = isComprehensive;
@@ -699,7 +621,6 @@ public class ToolComponent {
 
     /**
      * The semantic version of the localized strings defined in this component; maintained by components that provide translations.
-     * 
      */
     public String getLocalizedDataSemanticVersion() {
         return localizedDataSemanticVersion;
@@ -707,7 +628,6 @@ public class ToolComponent {
 
     /**
      * The semantic version of the localized strings defined in this component; maintained by components that provide translations.
-     * 
      */
     public void setLocalizedDataSemanticVersion(String localizedDataSemanticVersion) {
         this.localizedDataSemanticVersion = localizedDataSemanticVersion;
@@ -720,7 +640,6 @@ public class ToolComponent {
 
     /**
      * The minimum value of localizedDataSemanticVersion required in translations consumed by this component; used by components that consume translations.
-     * 
      */
     public String getMinimumRequiredLocalizedDataSemanticVersion() {
         return minimumRequiredLocalizedDataSemanticVersion;
@@ -728,7 +647,6 @@ public class ToolComponent {
 
     /**
      * The minimum value of localizedDataSemanticVersion required in translations consumed by this component; used by components that consume translations.
-     * 
      */
     public void setMinimumRequiredLocalizedDataSemanticVersion(String minimumRequiredLocalizedDataSemanticVersion) {
         this.minimumRequiredLocalizedDataSemanticVersion = minimumRequiredLocalizedDataSemanticVersion;
@@ -741,7 +659,6 @@ public class ToolComponent {
 
     /**
      * Identifies a particular toolComponent object, either the driver or an extension.
-     * 
      */
     public ToolComponentReference getAssociatedComponent() {
         return associatedComponent;
@@ -749,7 +666,6 @@ public class ToolComponent {
 
     /**
      * Identifies a particular toolComponent object, either the driver or an extension.
-     * 
      */
     public void setAssociatedComponent(ToolComponentReference associatedComponent) {
         this.associatedComponent = associatedComponent;
@@ -762,7 +678,6 @@ public class ToolComponent {
 
     /**
      * Provides additional metadata related to translation.
-     * 
      */
     public TranslationMetadata getTranslationMetadata() {
         return translationMetadata;
@@ -770,7 +685,6 @@ public class ToolComponent {
 
     /**
      * Provides additional metadata related to translation.
-     * 
      */
     public void setTranslationMetadata(TranslationMetadata translationMetadata) {
         this.translationMetadata = translationMetadata;
@@ -783,7 +697,6 @@ public class ToolComponent {
 
     /**
      * An array of toolComponentReference objects to declare the taxonomies supported by the tool component.
-     * 
      */
     public Set<ToolComponentReference> getSupportedTaxonomies() {
         return supportedTaxonomies;
@@ -791,7 +704,6 @@ public class ToolComponent {
 
     /**
      * An array of toolComponentReference objects to declare the taxonomies supported by the tool component.
-     * 
      */
     public void setSupportedTaxonomies(Set<ToolComponentReference> supportedTaxonomies) {
         this.supportedTaxonomies = supportedTaxonomies;
@@ -804,7 +716,6 @@ public class ToolComponent {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -812,7 +723,6 @@ public class ToolComponent {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -829,118 +739,118 @@ public class ToolComponent {
         sb.append(ToolComponent.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("guid");
         sb.append('=');
-        sb.append(((this.guid == null)?"<null>":this.guid));
+        sb.append(((this.guid == null) ? "<null>" : this.guid));
         sb.append(',');
         sb.append("name");
         sb.append('=');
-        sb.append(((this.name == null)?"<null>":this.name));
+        sb.append(((this.name == null) ? "<null>" : this.name));
         sb.append(',');
         sb.append("organization");
         sb.append('=');
-        sb.append(((this.organization == null)?"<null>":this.organization));
+        sb.append(((this.organization == null) ? "<null>" : this.organization));
         sb.append(',');
         sb.append("product");
         sb.append('=');
-        sb.append(((this.product == null)?"<null>":this.product));
+        sb.append(((this.product == null) ? "<null>" : this.product));
         sb.append(',');
         sb.append("productSuite");
         sb.append('=');
-        sb.append(((this.productSuite == null)?"<null>":this.productSuite));
+        sb.append(((this.productSuite == null) ? "<null>" : this.productSuite));
         sb.append(',');
         sb.append("shortDescription");
         sb.append('=');
-        sb.append(((this.shortDescription == null)?"<null>":this.shortDescription));
+        sb.append(((this.shortDescription == null) ? "<null>" : this.shortDescription));
         sb.append(',');
         sb.append("fullDescription");
         sb.append('=');
-        sb.append(((this.fullDescription == null)?"<null>":this.fullDescription));
+        sb.append(((this.fullDescription == null) ? "<null>" : this.fullDescription));
         sb.append(',');
         sb.append("fullName");
         sb.append('=');
-        sb.append(((this.fullName == null)?"<null>":this.fullName));
+        sb.append(((this.fullName == null) ? "<null>" : this.fullName));
         sb.append(',');
         sb.append("version");
         sb.append('=');
-        sb.append(((this.version == null)?"<null>":this.version));
+        sb.append(((this.version == null) ? "<null>" : this.version));
         sb.append(',');
         sb.append("semanticVersion");
         sb.append('=');
-        sb.append(((this.semanticVersion == null)?"<null>":this.semanticVersion));
+        sb.append(((this.semanticVersion == null) ? "<null>" : this.semanticVersion));
         sb.append(',');
         sb.append("dottedQuadFileVersion");
         sb.append('=');
-        sb.append(((this.dottedQuadFileVersion == null)?"<null>":this.dottedQuadFileVersion));
+        sb.append(((this.dottedQuadFileVersion == null) ? "<null>" : this.dottedQuadFileVersion));
         sb.append(',');
         sb.append("releaseDateUtc");
         sb.append('=');
-        sb.append(((this.releaseDateUtc == null)?"<null>":this.releaseDateUtc));
+        sb.append(((this.releaseDateUtc == null) ? "<null>" : this.releaseDateUtc));
         sb.append(',');
         sb.append("downloadUri");
         sb.append('=');
-        sb.append(((this.downloadUri == null)?"<null>":this.downloadUri));
+        sb.append(((this.downloadUri == null) ? "<null>" : this.downloadUri));
         sb.append(',');
         sb.append("informationUri");
         sb.append('=');
-        sb.append(((this.informationUri == null)?"<null>":this.informationUri));
+        sb.append(((this.informationUri == null) ? "<null>" : this.informationUri));
         sb.append(',');
         sb.append("globalMessageStrings");
         sb.append('=');
-        sb.append(((this.globalMessageStrings == null)?"<null>":this.globalMessageStrings));
+        sb.append(((this.globalMessageStrings == null) ? "<null>" : this.globalMessageStrings));
         sb.append(',');
         sb.append("notifications");
         sb.append('=');
-        sb.append(((this.notifications == null)?"<null>":this.notifications));
+        sb.append(((this.notifications == null) ? "<null>" : this.notifications));
         sb.append(',');
         sb.append("rules");
         sb.append('=');
-        sb.append(((this.rules == null)?"<null>":this.rules));
+        sb.append(((this.rules == null) ? "<null>" : this.rules));
         sb.append(',');
         sb.append("taxa");
         sb.append('=');
-        sb.append(((this.taxa == null)?"<null>":this.taxa));
+        sb.append(((this.taxa == null) ? "<null>" : this.taxa));
         sb.append(',');
         sb.append("locations");
         sb.append('=');
-        sb.append(((this.locations == null)?"<null>":this.locations));
+        sb.append(((this.locations == null) ? "<null>" : this.locations));
         sb.append(',');
         sb.append("language");
         sb.append('=');
-        sb.append(((this.language == null)?"<null>":this.language));
+        sb.append(((this.language == null) ? "<null>" : this.language));
         sb.append(',');
         sb.append("contents");
         sb.append('=');
-        sb.append(((this.contents == null)?"<null>":this.contents));
+        sb.append(((this.contents == null) ? "<null>" : this.contents));
         sb.append(',');
         sb.append("isComprehensive");
         sb.append('=');
-        sb.append(((this.isComprehensive == null)?"<null>":this.isComprehensive));
+        sb.append(((this.isComprehensive == null) ? "<null>" : this.isComprehensive));
         sb.append(',');
         sb.append("localizedDataSemanticVersion");
         sb.append('=');
-        sb.append(((this.localizedDataSemanticVersion == null)?"<null>":this.localizedDataSemanticVersion));
+        sb.append(((this.localizedDataSemanticVersion == null) ? "<null>" : this.localizedDataSemanticVersion));
         sb.append(',');
         sb.append("minimumRequiredLocalizedDataSemanticVersion");
         sb.append('=');
-        sb.append(((this.minimumRequiredLocalizedDataSemanticVersion == null)?"<null>":this.minimumRequiredLocalizedDataSemanticVersion));
+        sb.append(((this.minimumRequiredLocalizedDataSemanticVersion == null) ? "<null>" : this.minimumRequiredLocalizedDataSemanticVersion));
         sb.append(',');
         sb.append("associatedComponent");
         sb.append('=');
-        sb.append(((this.associatedComponent == null)?"<null>":this.associatedComponent));
+        sb.append(((this.associatedComponent == null) ? "<null>" : this.associatedComponent));
         sb.append(',');
         sb.append("translationMetadata");
         sb.append('=');
-        sb.append(((this.translationMetadata == null)?"<null>":this.translationMetadata));
+        sb.append(((this.translationMetadata == null) ? "<null>" : this.translationMetadata));
         sb.append(',');
         sb.append("supportedTaxonomies");
         sb.append('=');
-        sb.append(((this.supportedTaxonomies == null)?"<null>":this.supportedTaxonomies));
+        sb.append(((this.supportedTaxonomies == null) ? "<null>" : this.supportedTaxonomies));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -950,34 +860,34 @@ public class ToolComponent {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.releaseDateUtc == null)? 0 :this.releaseDateUtc.hashCode()));
-        result = ((result* 31)+((this.rules == null)? 0 :this.rules.hashCode()));
-        result = ((result* 31)+((this.language == null)? 0 :this.language.hashCode()));
-        result = ((result* 31)+((this.downloadUri == null)? 0 :this.downloadUri.hashCode()));
-        result = ((result* 31)+((this.supportedTaxonomies == null)? 0 :this.supportedTaxonomies.hashCode()));
-        result = ((result* 31)+((this.fullDescription == null)? 0 :this.fullDescription.hashCode()));
-        result = ((result* 31)+((this.informationUri == null)? 0 :this.informationUri.hashCode()));
-        result = ((result* 31)+((this.associatedComponent == null)? 0 :this.associatedComponent.hashCode()));
-        result = ((result* 31)+((this.translationMetadata == null)? 0 :this.translationMetadata.hashCode()));
-        result = ((result* 31)+((this.productSuite == null)? 0 :this.productSuite.hashCode()));
-        result = ((result* 31)+((this.taxa == null)? 0 :this.taxa.hashCode()));
-        result = ((result* 31)+((this.product == null)? 0 :this.product.hashCode()));
-        result = ((result* 31)+((this.isComprehensive == null)? 0 :this.isComprehensive.hashCode()));
-        result = ((result* 31)+((this.minimumRequiredLocalizedDataSemanticVersion == null)? 0 :this.minimumRequiredLocalizedDataSemanticVersion.hashCode()));
-        result = ((result* 31)+((this.fullName == null)? 0 :this.fullName.hashCode()));
-        result = ((result* 31)+((this.shortDescription == null)? 0 :this.shortDescription.hashCode()));
-        result = ((result* 31)+((this.version == null)? 0 :this.version.hashCode()));
-        result = ((result* 31)+((this.globalMessageStrings == null)? 0 :this.globalMessageStrings.hashCode()));
-        result = ((result* 31)+((this.localizedDataSemanticVersion == null)? 0 :this.localizedDataSemanticVersion.hashCode()));
-        result = ((result* 31)+((this.dottedQuadFileVersion == null)? 0 :this.dottedQuadFileVersion.hashCode()));
-        result = ((result* 31)+((this.contents == null)? 0 :this.contents.hashCode()));
-        result = ((result* 31)+((this.organization == null)? 0 :this.organization.hashCode()));
-        result = ((result* 31)+((this.name == null)? 0 :this.name.hashCode()));
-        result = ((result* 31)+((this.semanticVersion == null)? 0 :this.semanticVersion.hashCode()));
-        result = ((result* 31)+((this.guid == null)? 0 :this.guid.hashCode()));
-        result = ((result* 31)+((this.locations == null)? 0 :this.locations.hashCode()));
-        result = ((result* 31)+((this.notifications == null)? 0 :this.notifications.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.releaseDateUtc == null) ? 0 : this.releaseDateUtc.hashCode()));
+        result = ((result * 31) + ((this.rules == null) ? 0 : this.rules.hashCode()));
+        result = ((result * 31) + ((this.language == null) ? 0 : this.language.hashCode()));
+        result = ((result * 31) + ((this.downloadUri == null) ? 0 : this.downloadUri.hashCode()));
+        result = ((result * 31) + ((this.supportedTaxonomies == null) ? 0 : this.supportedTaxonomies.hashCode()));
+        result = ((result * 31) + ((this.fullDescription == null) ? 0 : this.fullDescription.hashCode()));
+        result = ((result * 31) + ((this.informationUri == null) ? 0 : this.informationUri.hashCode()));
+        result = ((result * 31) + ((this.associatedComponent == null) ? 0 : this.associatedComponent.hashCode()));
+        result = ((result * 31) + ((this.translationMetadata == null) ? 0 : this.translationMetadata.hashCode()));
+        result = ((result * 31) + ((this.productSuite == null) ? 0 : this.productSuite.hashCode()));
+        result = ((result * 31) + ((this.taxa == null) ? 0 : this.taxa.hashCode()));
+        result = ((result * 31) + ((this.product == null) ? 0 : this.product.hashCode()));
+        result = ((result * 31) + ((this.isComprehensive == null) ? 0 : this.isComprehensive.hashCode()));
+        result = ((result * 31) + ((this.minimumRequiredLocalizedDataSemanticVersion == null) ? 0 : this.minimumRequiredLocalizedDataSemanticVersion.hashCode()));
+        result = ((result * 31) + ((this.fullName == null) ? 0 : this.fullName.hashCode()));
+        result = ((result * 31) + ((this.shortDescription == null) ? 0 : this.shortDescription.hashCode()));
+        result = ((result * 31) + ((this.version == null) ? 0 : this.version.hashCode()));
+        result = ((result * 31) + ((this.globalMessageStrings == null) ? 0 : this.globalMessageStrings.hashCode()));
+        result = ((result * 31) + ((this.localizedDataSemanticVersion == null) ? 0 : this.localizedDataSemanticVersion.hashCode()));
+        result = ((result * 31) + ((this.dottedQuadFileVersion == null) ? 0 : this.dottedQuadFileVersion.hashCode()));
+        result = ((result * 31) + ((this.contents == null) ? 0 : this.contents.hashCode()));
+        result = ((result * 31) + ((this.organization == null) ? 0 : this.organization.hashCode()));
+        result = ((result * 31) + ((this.name == null) ? 0 : this.name.hashCode()));
+        result = ((result * 31) + ((this.semanticVersion == null) ? 0 : this.semanticVersion.hashCode()));
+        result = ((result * 31) + ((this.guid == null) ? 0 : this.guid.hashCode()));
+        result = ((result * 31) + ((this.locations == null) ? 0 : this.locations.hashCode()));
+        result = ((result * 31) + ((this.notifications == null) ? 0 : this.notifications.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -990,7 +900,7 @@ public class ToolComponent {
             return false;
         }
         ToolComponent rhs = ((ToolComponent) other);
-        return (((((((((((((((((((((((((((((this.releaseDateUtc == rhs.releaseDateUtc)||((this.releaseDateUtc!= null)&&this.releaseDateUtc.equals(rhs.releaseDateUtc)))&&((this.rules == rhs.rules)||((this.rules!= null)&&this.rules.equals(rhs.rules))))&&((this.language == rhs.language)||((this.language!= null)&&this.language.equals(rhs.language))))&&((this.downloadUri == rhs.downloadUri)||((this.downloadUri!= null)&&this.downloadUri.equals(rhs.downloadUri))))&&((this.supportedTaxonomies == rhs.supportedTaxonomies)||((this.supportedTaxonomies!= null)&&this.supportedTaxonomies.equals(rhs.supportedTaxonomies))))&&((this.fullDescription == rhs.fullDescription)||((this.fullDescription!= null)&&this.fullDescription.equals(rhs.fullDescription))))&&((this.informationUri == rhs.informationUri)||((this.informationUri!= null)&&this.informationUri.equals(rhs.informationUri))))&&((this.associatedComponent == rhs.associatedComponent)||((this.associatedComponent!= null)&&this.associatedComponent.equals(rhs.associatedComponent))))&&((this.translationMetadata == rhs.translationMetadata)||((this.translationMetadata!= null)&&this.translationMetadata.equals(rhs.translationMetadata))))&&((this.productSuite == rhs.productSuite)||((this.productSuite!= null)&&this.productSuite.equals(rhs.productSuite))))&&((this.taxa == rhs.taxa)||((this.taxa!= null)&&this.taxa.equals(rhs.taxa))))&&((this.product == rhs.product)||((this.product!= null)&&this.product.equals(rhs.product))))&&((this.isComprehensive == rhs.isComprehensive)||((this.isComprehensive!= null)&&this.isComprehensive.equals(rhs.isComprehensive))))&&((this.minimumRequiredLocalizedDataSemanticVersion == rhs.minimumRequiredLocalizedDataSemanticVersion)||((this.minimumRequiredLocalizedDataSemanticVersion!= null)&&this.minimumRequiredLocalizedDataSemanticVersion.equals(rhs.minimumRequiredLocalizedDataSemanticVersion))))&&((this.fullName == rhs.fullName)||((this.fullName!= null)&&this.fullName.equals(rhs.fullName))))&&((this.shortDescription == rhs.shortDescription)||((this.shortDescription!= null)&&this.shortDescription.equals(rhs.shortDescription))))&&((this.version == rhs.version)||((this.version!= null)&&this.version.equals(rhs.version))))&&((this.globalMessageStrings == rhs.globalMessageStrings)||((this.globalMessageStrings!= null)&&this.globalMessageStrings.equals(rhs.globalMessageStrings))))&&((this.localizedDataSemanticVersion == rhs.localizedDataSemanticVersion)||((this.localizedDataSemanticVersion!= null)&&this.localizedDataSemanticVersion.equals(rhs.localizedDataSemanticVersion))))&&((this.dottedQuadFileVersion == rhs.dottedQuadFileVersion)||((this.dottedQuadFileVersion!= null)&&this.dottedQuadFileVersion.equals(rhs.dottedQuadFileVersion))))&&((this.contents == rhs.contents)||((this.contents!= null)&&this.contents.equals(rhs.contents))))&&((this.organization == rhs.organization)||((this.organization!= null)&&this.organization.equals(rhs.organization))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.semanticVersion == rhs.semanticVersion)||((this.semanticVersion!= null)&&this.semanticVersion.equals(rhs.semanticVersion))))&&((this.guid == rhs.guid)||((this.guid!= null)&&this.guid.equals(rhs.guid))))&&((this.locations == rhs.locations)||((this.locations!= null)&&this.locations.equals(rhs.locations))))&&((this.notifications == rhs.notifications)||((this.notifications!= null)&&this.notifications.equals(rhs.notifications))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return (((((((((((((((((((((((((((((this.releaseDateUtc == rhs.releaseDateUtc) || ((this.releaseDateUtc != null) && this.releaseDateUtc.equals(rhs.releaseDateUtc))) && ((this.rules == rhs.rules) || ((this.rules != null) && this.rules.equals(rhs.rules)))) && ((this.language == rhs.language) || ((this.language != null) && this.language.equals(rhs.language)))) && ((this.downloadUri == rhs.downloadUri) || ((this.downloadUri != null) && this.downloadUri.equals(rhs.downloadUri)))) && ((this.supportedTaxonomies == rhs.supportedTaxonomies) || ((this.supportedTaxonomies != null) && this.supportedTaxonomies.equals(rhs.supportedTaxonomies)))) && ((this.fullDescription == rhs.fullDescription) || ((this.fullDescription != null) && this.fullDescription.equals(rhs.fullDescription)))) && ((this.informationUri == rhs.informationUri) || ((this.informationUri != null) && this.informationUri.equals(rhs.informationUri)))) && ((this.associatedComponent == rhs.associatedComponent) || ((this.associatedComponent != null) && this.associatedComponent.equals(rhs.associatedComponent)))) && ((this.translationMetadata == rhs.translationMetadata) || ((this.translationMetadata != null) && this.translationMetadata.equals(rhs.translationMetadata)))) && ((this.productSuite == rhs.productSuite) || ((this.productSuite != null) && this.productSuite.equals(rhs.productSuite)))) && ((this.taxa == rhs.taxa) || ((this.taxa != null) && this.taxa.equals(rhs.taxa)))) && ((this.product == rhs.product) || ((this.product != null) && this.product.equals(rhs.product)))) && ((this.isComprehensive == rhs.isComprehensive) || ((this.isComprehensive != null) && this.isComprehensive.equals(rhs.isComprehensive)))) && ((this.minimumRequiredLocalizedDataSemanticVersion == rhs.minimumRequiredLocalizedDataSemanticVersion) || ((this.minimumRequiredLocalizedDataSemanticVersion != null) && this.minimumRequiredLocalizedDataSemanticVersion.equals(rhs.minimumRequiredLocalizedDataSemanticVersion)))) && ((this.fullName == rhs.fullName) || ((this.fullName != null) && this.fullName.equals(rhs.fullName)))) && ((this.shortDescription == rhs.shortDescription) || ((this.shortDescription != null) && this.shortDescription.equals(rhs.shortDescription)))) && ((this.version == rhs.version) || ((this.version != null) && this.version.equals(rhs.version)))) && ((this.globalMessageStrings == rhs.globalMessageStrings) || ((this.globalMessageStrings != null) && this.globalMessageStrings.equals(rhs.globalMessageStrings)))) && ((this.localizedDataSemanticVersion == rhs.localizedDataSemanticVersion) || ((this.localizedDataSemanticVersion != null) && this.localizedDataSemanticVersion.equals(rhs.localizedDataSemanticVersion)))) && ((this.dottedQuadFileVersion == rhs.dottedQuadFileVersion) || ((this.dottedQuadFileVersion != null) && this.dottedQuadFileVersion.equals(rhs.dottedQuadFileVersion)))) && ((this.contents == rhs.contents) || ((this.contents != null) && this.contents.equals(rhs.contents)))) && ((this.organization == rhs.organization) || ((this.organization != null) && this.organization.equals(rhs.organization)))) && ((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name)))) && ((this.semanticVersion == rhs.semanticVersion) || ((this.semanticVersion != null) && this.semanticVersion.equals(rhs.semanticVersion)))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.locations == rhs.locations) || ((this.locations != null) && this.locations.equals(rhs.locations)))) && ((this.notifications == rhs.notifications) || ((this.notifications != null) && this.notifications.equals(rhs.notifications)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

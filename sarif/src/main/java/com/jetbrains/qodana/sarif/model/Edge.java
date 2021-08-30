@@ -1,4 +1,3 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
@@ -7,22 +6,18 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Represents a directed edge in a graph.
- * 
  */
-
 public class Edge {
 
     /**
      * A string that uniquely identifies the edge within its graph.
      * (Required)
-     * 
      */
     @SerializedName("id")
     @Expose
     private String id;
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     @SerializedName("label")
     @Expose
@@ -30,7 +25,6 @@ public class Edge {
     /**
      * Identifies the source node (the node at which the edge starts).
      * (Required)
-     * 
      */
     @SerializedName("sourceNodeId")
     @Expose
@@ -38,14 +32,12 @@ public class Edge {
     /**
      * Identifies the target node (the node at which the edge ends).
      * (Required)
-     * 
      */
     @SerializedName("targetNodeId")
     @Expose
     private String targetNodeId;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -53,13 +45,11 @@ public class Edge {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Edge() {
     }
 
     /**
-     * 
      * @param sourceNodeId
      * @param id
      * @param targetNodeId
@@ -74,7 +64,6 @@ public class Edge {
     /**
      * A string that uniquely identifies the edge within its graph.
      * (Required)
-     * 
      */
     public String getId() {
         return id;
@@ -83,7 +72,6 @@ public class Edge {
     /**
      * A string that uniquely identifies the edge within its graph.
      * (Required)
-     * 
      */
     public void setId(String id) {
         this.id = id;
@@ -96,7 +84,6 @@ public class Edge {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public Message getLabel() {
         return label;
@@ -104,7 +91,6 @@ public class Edge {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public void setLabel(Message label) {
         this.label = label;
@@ -118,7 +104,6 @@ public class Edge {
     /**
      * Identifies the source node (the node at which the edge starts).
      * (Required)
-     * 
      */
     public String getSourceNodeId() {
         return sourceNodeId;
@@ -127,7 +112,6 @@ public class Edge {
     /**
      * Identifies the source node (the node at which the edge starts).
      * (Required)
-     * 
      */
     public void setSourceNodeId(String sourceNodeId) {
         this.sourceNodeId = sourceNodeId;
@@ -141,7 +125,6 @@ public class Edge {
     /**
      * Identifies the target node (the node at which the edge ends).
      * (Required)
-     * 
      */
     public String getTargetNodeId() {
         return targetNodeId;
@@ -150,7 +133,6 @@ public class Edge {
     /**
      * Identifies the target node (the node at which the edge ends).
      * (Required)
-     * 
      */
     public void setTargetNodeId(String targetNodeId) {
         this.targetNodeId = targetNodeId;
@@ -163,7 +145,6 @@ public class Edge {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -171,7 +152,6 @@ public class Edge {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -188,26 +168,26 @@ public class Edge {
         sb.append(Edge.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("id");
         sb.append('=');
-        sb.append(((this.id == null)?"<null>":this.id));
+        sb.append(((this.id == null) ? "<null>" : this.id));
         sb.append(',');
         sb.append("label");
         sb.append('=');
-        sb.append(((this.label == null)?"<null>":this.label));
+        sb.append(((this.label == null) ? "<null>" : this.label));
         sb.append(',');
         sb.append("sourceNodeId");
         sb.append('=');
-        sb.append(((this.sourceNodeId == null)?"<null>":this.sourceNodeId));
+        sb.append(((this.sourceNodeId == null) ? "<null>" : this.sourceNodeId));
         sb.append(',');
         sb.append("targetNodeId");
         sb.append('=');
-        sb.append(((this.targetNodeId == null)?"<null>":this.targetNodeId));
+        sb.append(((this.targetNodeId == null) ? "<null>" : this.targetNodeId));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -217,11 +197,11 @@ public class Edge {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.id == null)? 0 :this.id.hashCode()));
-        result = ((result* 31)+((this.label == null)? 0 :this.label.hashCode()));
-        result = ((result* 31)+((this.targetNodeId == null)? 0 :this.targetNodeId.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
-        result = ((result* 31)+((this.sourceNodeId == null)? 0 :this.sourceNodeId.hashCode()));
+        result = ((result * 31) + ((this.id == null) ? 0 : this.id.hashCode()));
+        result = ((result * 31) + ((this.label == null) ? 0 : this.label.hashCode()));
+        result = ((result * 31) + ((this.targetNodeId == null) ? 0 : this.targetNodeId.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
+        result = ((result * 31) + ((this.sourceNodeId == null) ? 0 : this.sourceNodeId.hashCode()));
         return result;
     }
 
@@ -234,7 +214,7 @@ public class Edge {
             return false;
         }
         Edge rhs = ((Edge) other);
-        return ((((((this.id == rhs.id)||((this.id!= null)&&this.id.equals(rhs.id)))&&((this.label == rhs.label)||((this.label!= null)&&this.label.equals(rhs.label))))&&((this.targetNodeId == rhs.targetNodeId)||((this.targetNodeId!= null)&&this.targetNodeId.equals(rhs.targetNodeId))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))))&&((this.sourceNodeId == rhs.sourceNodeId)||((this.sourceNodeId!= null)&&this.sourceNodeId.equals(rhs.sourceNodeId))));
+        return ((((((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id))) && ((this.label == rhs.label) || ((this.label != null) && this.label.equals(rhs.label)))) && ((this.targetNodeId == rhs.targetNodeId) || ((this.targetNodeId != null) && this.targetNodeId.equals(rhs.targetNodeId)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.sourceNodeId == rhs.sourceNodeId) || ((this.sourceNodeId != null) && this.sourceNodeId.equals(rhs.sourceNodeId))));
     }
 
 }

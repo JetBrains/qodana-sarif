@@ -1,23 +1,18 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 import java.util.Set;
 
 
 /**
  * An artifact relevant to a result.
- * 
  */
-
 public class Attachment {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     @SerializedName("description")
     @Expose
@@ -25,28 +20,24 @@ public class Attachment {
     /**
      * Specifies the location of an artifact.
      * (Required)
-     * 
      */
     @SerializedName("artifactLocation")
     @Expose
     private ArtifactLocation artifactLocation;
     /**
      * An array of regions of interest within the attachment.
-     * 
      */
     @SerializedName("regions")
     @Expose
     private Set<Region> regions = null;
     /**
      * An array of rectangles specifying areas of interest within the image.
-     * 
      */
     @SerializedName("rectangles")
     @Expose
     private Set<Rectangle> rectangles = null;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -54,13 +45,11 @@ public class Attachment {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Attachment() {
     }
 
     /**
-     * 
      * @param artifactLocation
      */
     public Attachment(ArtifactLocation artifactLocation) {
@@ -70,7 +59,6 @@ public class Attachment {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public Message getDescription() {
         return description;
@@ -78,7 +66,6 @@ public class Attachment {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public void setDescription(Message description) {
         this.description = description;
@@ -92,7 +79,6 @@ public class Attachment {
     /**
      * Specifies the location of an artifact.
      * (Required)
-     * 
      */
     public ArtifactLocation getArtifactLocation() {
         return artifactLocation;
@@ -101,7 +87,6 @@ public class Attachment {
     /**
      * Specifies the location of an artifact.
      * (Required)
-     * 
      */
     public void setArtifactLocation(ArtifactLocation artifactLocation) {
         this.artifactLocation = artifactLocation;
@@ -114,7 +99,6 @@ public class Attachment {
 
     /**
      * An array of regions of interest within the attachment.
-     * 
      */
     public Set<Region> getRegions() {
         return regions;
@@ -122,7 +106,6 @@ public class Attachment {
 
     /**
      * An array of regions of interest within the attachment.
-     * 
      */
     public void setRegions(Set<Region> regions) {
         this.regions = regions;
@@ -135,7 +118,6 @@ public class Attachment {
 
     /**
      * An array of rectangles specifying areas of interest within the image.
-     * 
      */
     public Set<Rectangle> getRectangles() {
         return rectangles;
@@ -143,7 +125,6 @@ public class Attachment {
 
     /**
      * An array of rectangles specifying areas of interest within the image.
-     * 
      */
     public void setRectangles(Set<Rectangle> rectangles) {
         this.rectangles = rectangles;
@@ -156,7 +137,6 @@ public class Attachment {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -164,7 +144,6 @@ public class Attachment {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -181,26 +160,26 @@ public class Attachment {
         sb.append(Attachment.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("description");
         sb.append('=');
-        sb.append(((this.description == null)?"<null>":this.description));
+        sb.append(((this.description == null) ? "<null>" : this.description));
         sb.append(',');
         sb.append("artifactLocation");
         sb.append('=');
-        sb.append(((this.artifactLocation == null)?"<null>":this.artifactLocation));
+        sb.append(((this.artifactLocation == null) ? "<null>" : this.artifactLocation));
         sb.append(',');
         sb.append("regions");
         sb.append('=');
-        sb.append(((this.regions == null)?"<null>":this.regions));
+        sb.append(((this.regions == null) ? "<null>" : this.regions));
         sb.append(',');
         sb.append("rectangles");
         sb.append('=');
-        sb.append(((this.rectangles == null)?"<null>":this.rectangles));
+        sb.append(((this.rectangles == null) ? "<null>" : this.rectangles));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -210,11 +189,11 @@ public class Attachment {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.description == null)? 0 :this.description.hashCode()));
-        result = ((result* 31)+((this.regions == null)? 0 :this.regions.hashCode()));
-        result = ((result* 31)+((this.rectangles == null)? 0 :this.rectangles.hashCode()));
-        result = ((result* 31)+((this.artifactLocation == null)? 0 :this.artifactLocation.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.description == null) ? 0 : this.description.hashCode()));
+        result = ((result * 31) + ((this.regions == null) ? 0 : this.regions.hashCode()));
+        result = ((result * 31) + ((this.rectangles == null) ? 0 : this.rectangles.hashCode()));
+        result = ((result * 31) + ((this.artifactLocation == null) ? 0 : this.artifactLocation.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -227,7 +206,7 @@ public class Attachment {
             return false;
         }
         Attachment rhs = ((Attachment) other);
-        return ((((((this.description == rhs.description)||((this.description!= null)&&this.description.equals(rhs.description)))&&((this.regions == rhs.regions)||((this.regions!= null)&&this.regions.equals(rhs.regions))))&&((this.rectangles == rhs.rectangles)||((this.rectangles!= null)&&this.rectangles.equals(rhs.rectangles))))&&((this.artifactLocation == rhs.artifactLocation)||((this.artifactLocation!= null)&&this.artifactLocation.equals(rhs.artifactLocation))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return ((((((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description))) && ((this.regions == rhs.regions) || ((this.regions != null) && this.regions.equals(rhs.regions)))) && ((this.rectangles == rhs.rectangles) || ((this.rectangles != null) && this.rectangles.equals(rhs.rectangles)))) && ((this.artifactLocation == rhs.artifactLocation) || ((this.artifactLocation != null) && this.artifactLocation.equals(rhs.artifactLocation)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

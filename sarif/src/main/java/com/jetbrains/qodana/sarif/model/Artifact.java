@@ -1,9 +1,7 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 import java.util.Date;
 import java.util.Set;
@@ -11,98 +9,83 @@ import java.util.Set;
 
 /**
  * A single artifact. In some cases, this artifact might be nested within another artifact.
- * 
  */
-
 public class Artifact {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     @SerializedName("description")
     @Expose
     private Message description;
     /**
      * Specifies the location of an artifact.
-     * 
      */
     @SerializedName("location")
     @Expose
     private ArtifactLocation location;
     /**
      * Identifies the index of the immediate parent of the artifact, if this artifact is nested.
-     * 
      */
     @SerializedName("parentIndex")
     @Expose
     private Integer parentIndex = null;
     /**
      * The offset in bytes of the artifact within its containing artifact.
-     * 
      */
     @SerializedName("offset")
     @Expose
     private Integer offset;
     /**
      * The length of the artifact in bytes.
-     * 
      */
     @SerializedName("length")
     @Expose
     private Integer length = null;
     /**
      * The role or roles played by the artifact in the analysis.
-     * 
      */
     @SerializedName("roles")
     @Expose
     private Set<Role> roles = null;
     /**
      * The MIME type (RFC 2045) of the artifact.
-     * 
      */
     @SerializedName("mimeType")
     @Expose
     private String mimeType;
     /**
      * Represents the contents of an artifact.
-     * 
      */
     @SerializedName("contents")
     @Expose
     private ArtifactContent contents;
     /**
      * Specifies the encoding for an artifact object that refers to a text file.
-     * 
      */
     @SerializedName("encoding")
     @Expose
     private String encoding;
     /**
      * Specifies the source language for any artifact object that refers to a text file that contains source code.
-     * 
      */
     @SerializedName("sourceLanguage")
     @Expose
     private String sourceLanguage;
     /**
      * A dictionary, each of whose keys is the name of a hash function and each of whose values is the hashed value of the artifact produced by the specified hash function.
-     * 
      */
     @SerializedName("hashes")
     @Expose
     private Hashes hashes;
     /**
      * The Coordinated Universal Time (UTC) date and time at which the artifact was most recently modified. See "Date/time properties" in the SARIF spec for the required format.
-     * 
      */
     @SerializedName("lastModifiedTimeUtc")
     @Expose
     private Date lastModifiedTimeUtc;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -110,7 +93,6 @@ public class Artifact {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public Message getDescription() {
         return description;
@@ -118,7 +100,6 @@ public class Artifact {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public void setDescription(Message description) {
         this.description = description;
@@ -131,7 +112,6 @@ public class Artifact {
 
     /**
      * Specifies the location of an artifact.
-     * 
      */
     public ArtifactLocation getLocation() {
         return location;
@@ -139,7 +119,6 @@ public class Artifact {
 
     /**
      * Specifies the location of an artifact.
-     * 
      */
     public void setLocation(ArtifactLocation location) {
         this.location = location;
@@ -152,7 +131,6 @@ public class Artifact {
 
     /**
      * Identifies the index of the immediate parent of the artifact, if this artifact is nested.
-     * 
      */
     public Integer getParentIndex() {
         return parentIndex;
@@ -160,7 +138,6 @@ public class Artifact {
 
     /**
      * Identifies the index of the immediate parent of the artifact, if this artifact is nested.
-     * 
      */
     public void setParentIndex(Integer parentIndex) {
         this.parentIndex = parentIndex;
@@ -173,7 +150,6 @@ public class Artifact {
 
     /**
      * The offset in bytes of the artifact within its containing artifact.
-     * 
      */
     public Integer getOffset() {
         return offset;
@@ -181,7 +157,6 @@ public class Artifact {
 
     /**
      * The offset in bytes of the artifact within its containing artifact.
-     * 
      */
     public void setOffset(Integer offset) {
         this.offset = offset;
@@ -194,7 +169,6 @@ public class Artifact {
 
     /**
      * The length of the artifact in bytes.
-     * 
      */
     public Integer getLength() {
         return length;
@@ -202,7 +176,6 @@ public class Artifact {
 
     /**
      * The length of the artifact in bytes.
-     * 
      */
     public void setLength(Integer length) {
         this.length = length;
@@ -215,7 +188,6 @@ public class Artifact {
 
     /**
      * The role or roles played by the artifact in the analysis.
-     * 
      */
     public Set<Role> getRoles() {
         return roles;
@@ -223,7 +195,6 @@ public class Artifact {
 
     /**
      * The role or roles played by the artifact in the analysis.
-     * 
      */
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
@@ -236,7 +207,6 @@ public class Artifact {
 
     /**
      * The MIME type (RFC 2045) of the artifact.
-     * 
      */
     public String getMimeType() {
         return mimeType;
@@ -244,7 +214,6 @@ public class Artifact {
 
     /**
      * The MIME type (RFC 2045) of the artifact.
-     * 
      */
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
@@ -257,7 +226,6 @@ public class Artifact {
 
     /**
      * Represents the contents of an artifact.
-     * 
      */
     public ArtifactContent getContents() {
         return contents;
@@ -265,7 +233,6 @@ public class Artifact {
 
     /**
      * Represents the contents of an artifact.
-     * 
      */
     public void setContents(ArtifactContent contents) {
         this.contents = contents;
@@ -278,7 +245,6 @@ public class Artifact {
 
     /**
      * Specifies the encoding for an artifact object that refers to a text file.
-     * 
      */
     public String getEncoding() {
         return encoding;
@@ -286,7 +252,6 @@ public class Artifact {
 
     /**
      * Specifies the encoding for an artifact object that refers to a text file.
-     * 
      */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
@@ -299,7 +264,6 @@ public class Artifact {
 
     /**
      * Specifies the source language for any artifact object that refers to a text file that contains source code.
-     * 
      */
     public String getSourceLanguage() {
         return sourceLanguage;
@@ -307,7 +271,6 @@ public class Artifact {
 
     /**
      * Specifies the source language for any artifact object that refers to a text file that contains source code.
-     * 
      */
     public void setSourceLanguage(String sourceLanguage) {
         this.sourceLanguage = sourceLanguage;
@@ -320,7 +283,6 @@ public class Artifact {
 
     /**
      * A dictionary, each of whose keys is the name of a hash function and each of whose values is the hashed value of the artifact produced by the specified hash function.
-     * 
      */
     public Hashes getHashes() {
         return hashes;
@@ -328,7 +290,6 @@ public class Artifact {
 
     /**
      * A dictionary, each of whose keys is the name of a hash function and each of whose values is the hashed value of the artifact produced by the specified hash function.
-     * 
      */
     public void setHashes(Hashes hashes) {
         this.hashes = hashes;
@@ -341,7 +302,6 @@ public class Artifact {
 
     /**
      * The Coordinated Universal Time (UTC) date and time at which the artifact was most recently modified. See "Date/time properties" in the SARIF spec for the required format.
-     * 
      */
     public Date getLastModifiedTimeUtc() {
         return lastModifiedTimeUtc;
@@ -349,7 +309,6 @@ public class Artifact {
 
     /**
      * The Coordinated Universal Time (UTC) date and time at which the artifact was most recently modified. See "Date/time properties" in the SARIF spec for the required format.
-     * 
      */
     public void setLastModifiedTimeUtc(Date lastModifiedTimeUtc) {
         this.lastModifiedTimeUtc = lastModifiedTimeUtc;
@@ -362,7 +321,6 @@ public class Artifact {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -370,7 +328,6 @@ public class Artifact {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -387,58 +344,58 @@ public class Artifact {
         sb.append(Artifact.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("description");
         sb.append('=');
-        sb.append(((this.description == null)?"<null>":this.description));
+        sb.append(((this.description == null) ? "<null>" : this.description));
         sb.append(',');
         sb.append("location");
         sb.append('=');
-        sb.append(((this.location == null)?"<null>":this.location));
+        sb.append(((this.location == null) ? "<null>" : this.location));
         sb.append(',');
         sb.append("parentIndex");
         sb.append('=');
-        sb.append(((this.parentIndex == null)?"<null>":this.parentIndex));
+        sb.append(((this.parentIndex == null) ? "<null>" : this.parentIndex));
         sb.append(',');
         sb.append("offset");
         sb.append('=');
-        sb.append(((this.offset == null)?"<null>":this.offset));
+        sb.append(((this.offset == null) ? "<null>" : this.offset));
         sb.append(',');
         sb.append("length");
         sb.append('=');
-        sb.append(((this.length == null)?"<null>":this.length));
+        sb.append(((this.length == null) ? "<null>" : this.length));
         sb.append(',');
         sb.append("roles");
         sb.append('=');
-        sb.append(((this.roles == null)?"<null>":this.roles));
+        sb.append(((this.roles == null) ? "<null>" : this.roles));
         sb.append(',');
         sb.append("mimeType");
         sb.append('=');
-        sb.append(((this.mimeType == null)?"<null>":this.mimeType));
+        sb.append(((this.mimeType == null) ? "<null>" : this.mimeType));
         sb.append(',');
         sb.append("contents");
         sb.append('=');
-        sb.append(((this.contents == null)?"<null>":this.contents));
+        sb.append(((this.contents == null) ? "<null>" : this.contents));
         sb.append(',');
         sb.append("encoding");
         sb.append('=');
-        sb.append(((this.encoding == null)?"<null>":this.encoding));
+        sb.append(((this.encoding == null) ? "<null>" : this.encoding));
         sb.append(',');
         sb.append("sourceLanguage");
         sb.append('=');
-        sb.append(((this.sourceLanguage == null)?"<null>":this.sourceLanguage));
+        sb.append(((this.sourceLanguage == null) ? "<null>" : this.sourceLanguage));
         sb.append(',');
         sb.append("hashes");
         sb.append('=');
-        sb.append(((this.hashes == null)?"<null>":this.hashes));
+        sb.append(((this.hashes == null) ? "<null>" : this.hashes));
         sb.append(',');
         sb.append("lastModifiedTimeUtc");
         sb.append('=');
-        sb.append(((this.lastModifiedTimeUtc == null)?"<null>":this.lastModifiedTimeUtc));
+        sb.append(((this.lastModifiedTimeUtc == null) ? "<null>" : this.lastModifiedTimeUtc));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -448,19 +405,19 @@ public class Artifact {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.parentIndex == null)? 0 :this.parentIndex.hashCode()));
-        result = ((result* 31)+((this.offset == null)? 0 :this.offset.hashCode()));
-        result = ((result* 31)+((this.roles == null)? 0 :this.roles.hashCode()));
-        result = ((result* 31)+((this.lastModifiedTimeUtc == null)? 0 :this.lastModifiedTimeUtc.hashCode()));
-        result = ((result* 31)+((this.length == null)? 0 :this.length.hashCode()));
-        result = ((result* 31)+((this.description == null)? 0 :this.description.hashCode()));
-        result = ((result* 31)+((this.mimeType == null)? 0 :this.mimeType.hashCode()));
-        result = ((result* 31)+((this.encoding == null)? 0 :this.encoding.hashCode()));
-        result = ((result* 31)+((this.contents == null)? 0 :this.contents.hashCode()));
-        result = ((result* 31)+((this.hashes == null)? 0 :this.hashes.hashCode()));
-        result = ((result* 31)+((this.location == null)? 0 :this.location.hashCode()));
-        result = ((result* 31)+((this.sourceLanguage == null)? 0 :this.sourceLanguage.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.parentIndex == null) ? 0 : this.parentIndex.hashCode()));
+        result = ((result * 31) + ((this.offset == null) ? 0 : this.offset.hashCode()));
+        result = ((result * 31) + ((this.roles == null) ? 0 : this.roles.hashCode()));
+        result = ((result * 31) + ((this.lastModifiedTimeUtc == null) ? 0 : this.lastModifiedTimeUtc.hashCode()));
+        result = ((result * 31) + ((this.length == null) ? 0 : this.length.hashCode()));
+        result = ((result * 31) + ((this.description == null) ? 0 : this.description.hashCode()));
+        result = ((result * 31) + ((this.mimeType == null) ? 0 : this.mimeType.hashCode()));
+        result = ((result * 31) + ((this.encoding == null) ? 0 : this.encoding.hashCode()));
+        result = ((result * 31) + ((this.contents == null) ? 0 : this.contents.hashCode()));
+        result = ((result * 31) + ((this.hashes == null) ? 0 : this.hashes.hashCode()));
+        result = ((result * 31) + ((this.location == null) ? 0 : this.location.hashCode()));
+        result = ((result * 31) + ((this.sourceLanguage == null) ? 0 : this.sourceLanguage.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -473,7 +430,7 @@ public class Artifact {
             return false;
         }
         Artifact rhs = ((Artifact) other);
-        return ((((((((((((((this.parentIndex == rhs.parentIndex)||((this.parentIndex!= null)&&this.parentIndex.equals(rhs.parentIndex)))&&((this.offset == rhs.offset)||((this.offset!= null)&&this.offset.equals(rhs.offset))))&&((this.roles == rhs.roles)||((this.roles!= null)&&this.roles.equals(rhs.roles))))&&((this.lastModifiedTimeUtc == rhs.lastModifiedTimeUtc)||((this.lastModifiedTimeUtc!= null)&&this.lastModifiedTimeUtc.equals(rhs.lastModifiedTimeUtc))))&&((this.length == rhs.length)||((this.length!= null)&&this.length.equals(rhs.length))))&&((this.description == rhs.description)||((this.description!= null)&&this.description.equals(rhs.description))))&&((this.mimeType == rhs.mimeType)||((this.mimeType!= null)&&this.mimeType.equals(rhs.mimeType))))&&((this.encoding == rhs.encoding)||((this.encoding!= null)&&this.encoding.equals(rhs.encoding))))&&((this.contents == rhs.contents)||((this.contents!= null)&&this.contents.equals(rhs.contents))))&&((this.hashes == rhs.hashes)||((this.hashes!= null)&&this.hashes.equals(rhs.hashes))))&&((this.location == rhs.location)||((this.location!= null)&&this.location.equals(rhs.location))))&&((this.sourceLanguage == rhs.sourceLanguage)||((this.sourceLanguage!= null)&&this.sourceLanguage.equals(rhs.sourceLanguage))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return ((((((((((((((this.parentIndex == rhs.parentIndex) || ((this.parentIndex != null) && this.parentIndex.equals(rhs.parentIndex))) && ((this.offset == rhs.offset) || ((this.offset != null) && this.offset.equals(rhs.offset)))) && ((this.roles == rhs.roles) || ((this.roles != null) && this.roles.equals(rhs.roles)))) && ((this.lastModifiedTimeUtc == rhs.lastModifiedTimeUtc) || ((this.lastModifiedTimeUtc != null) && this.lastModifiedTimeUtc.equals(rhs.lastModifiedTimeUtc)))) && ((this.length == rhs.length) || ((this.length != null) && this.length.equals(rhs.length)))) && ((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description)))) && ((this.mimeType == rhs.mimeType) || ((this.mimeType != null) && this.mimeType.equals(rhs.mimeType)))) && ((this.encoding == rhs.encoding) || ((this.encoding != null) && this.encoding.equals(rhs.encoding)))) && ((this.contents == rhs.contents) || ((this.contents != null) && this.contents.equals(rhs.contents)))) && ((this.hashes == rhs.hashes) || ((this.hashes != null) && this.hashes.equals(rhs.hashes)))) && ((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location)))) && ((this.sourceLanguage == rhs.sourceLanguage) || ((this.sourceLanguage != null) && this.sourceLanguage.equals(rhs.sourceLanguage)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

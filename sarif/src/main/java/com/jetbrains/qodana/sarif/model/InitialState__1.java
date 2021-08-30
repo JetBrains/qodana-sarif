@@ -1,21 +1,18 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 
 /**
  * Values of relevant expressions at the start of the graph traversal that may change during graph traversal.
- * 
  */
-
 public class InitialState__1 {
 
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(InitialState__1 .class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        sb.append(InitialState__1.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }

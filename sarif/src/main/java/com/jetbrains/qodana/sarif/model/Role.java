@@ -1,8 +1,6 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.SerializedName;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,26 +54,18 @@ public enum Role {
     TOOL_SPECIFIED_CONFIGURATION("toolSpecifiedConfiguration"),
     @SerializedName("debugOutputFile")
     DEBUG_OUTPUT_FILE("debugOutputFile");
-    private final String value;
     private final static Map<String, Role> CONSTANTS = new HashMap<String, Role>();
 
     static {
-        for (Role c: values()) {
+        for (Role c : values()) {
             CONSTANTS.put(c.value, c);
         }
     }
 
+    private final String value;
+
     private Role(String value) {
         this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return this.value;
-    }
-
-    public String value() {
-        return this.value;
     }
 
     public static Role fromValue(String value) {
@@ -85,6 +75,15 @@ public enum Role {
         } else {
             return constant;
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.value;
+    }
+
+    public String value() {
+        return this.value;
     }
 
 }

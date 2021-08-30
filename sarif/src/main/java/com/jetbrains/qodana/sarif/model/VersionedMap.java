@@ -78,7 +78,8 @@ public class VersionedMap<V> {
             Map<String, V> map = embedded.fromJson(reader, Map.class);
             map.forEach((key, value) -> {
                 String[] split = key.split("/v");
-                if (split.length != 2) throw new JsonParseException("VersionedMap key should be formatted like '%key/v%number%'. Actual value : " + key);
+                if (split.length != 2)
+                    throw new JsonParseException("VersionedMap key should be formatted like '%key/v%number%'. Actual value : " + key);
                 Integer version = Integer.valueOf(split[1]);
                 result.put(split[0], version, value);
             });

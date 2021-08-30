@@ -1,45 +1,37 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 import java.util.Set;
 
 
 /**
  * Describes how a converter transformed the output of a static analysis tool from the analysis tool's native output format into the SARIF format.
- * 
  */
-
 public class Conversion {
 
     /**
      * The analysis tool that was run.
      * (Required)
-     * 
      */
     @SerializedName("tool")
     @Expose
     private Tool tool;
     /**
      * The runtime environment of the analysis tool run.
-     * 
      */
     @SerializedName("invocation")
     @Expose
     private Invocation invocation;
     /**
      * The locations of the analysis tool's per-run log files.
-     * 
      */
     @SerializedName("analysisToolLogFiles")
     @Expose
     private Set<ArtifactLocation> analysisToolLogFiles = null;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -47,13 +39,11 @@ public class Conversion {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Conversion() {
     }
 
     /**
-     * 
      * @param tool
      */
     public Conversion(Tool tool) {
@@ -64,7 +54,6 @@ public class Conversion {
     /**
      * The analysis tool that was run.
      * (Required)
-     * 
      */
     public Tool getTool() {
         return tool;
@@ -73,7 +62,6 @@ public class Conversion {
     /**
      * The analysis tool that was run.
      * (Required)
-     * 
      */
     public void setTool(Tool tool) {
         this.tool = tool;
@@ -86,7 +74,6 @@ public class Conversion {
 
     /**
      * The runtime environment of the analysis tool run.
-     * 
      */
     public Invocation getInvocation() {
         return invocation;
@@ -94,7 +81,6 @@ public class Conversion {
 
     /**
      * The runtime environment of the analysis tool run.
-     * 
      */
     public void setInvocation(Invocation invocation) {
         this.invocation = invocation;
@@ -107,7 +93,6 @@ public class Conversion {
 
     /**
      * The locations of the analysis tool's per-run log files.
-     * 
      */
     public Set<ArtifactLocation> getAnalysisToolLogFiles() {
         return analysisToolLogFiles;
@@ -115,7 +100,6 @@ public class Conversion {
 
     /**
      * The locations of the analysis tool's per-run log files.
-     * 
      */
     public void setAnalysisToolLogFiles(Set<ArtifactLocation> analysisToolLogFiles) {
         this.analysisToolLogFiles = analysisToolLogFiles;
@@ -128,7 +112,6 @@ public class Conversion {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -136,7 +119,6 @@ public class Conversion {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -153,22 +135,22 @@ public class Conversion {
         sb.append(Conversion.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("tool");
         sb.append('=');
-        sb.append(((this.tool == null)?"<null>":this.tool));
+        sb.append(((this.tool == null) ? "<null>" : this.tool));
         sb.append(',');
         sb.append("invocation");
         sb.append('=');
-        sb.append(((this.invocation == null)?"<null>":this.invocation));
+        sb.append(((this.invocation == null) ? "<null>" : this.invocation));
         sb.append(',');
         sb.append("analysisToolLogFiles");
         sb.append('=');
-        sb.append(((this.analysisToolLogFiles == null)?"<null>":this.analysisToolLogFiles));
+        sb.append(((this.analysisToolLogFiles == null) ? "<null>" : this.analysisToolLogFiles));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -178,10 +160,10 @@ public class Conversion {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.invocation == null)? 0 :this.invocation.hashCode()));
-        result = ((result* 31)+((this.analysisToolLogFiles == null)? 0 :this.analysisToolLogFiles.hashCode()));
-        result = ((result* 31)+((this.tool == null)? 0 :this.tool.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.invocation == null) ? 0 : this.invocation.hashCode()));
+        result = ((result * 31) + ((this.analysisToolLogFiles == null) ? 0 : this.analysisToolLogFiles.hashCode()));
+        result = ((result * 31) + ((this.tool == null) ? 0 : this.tool.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -194,7 +176,7 @@ public class Conversion {
             return false;
         }
         Conversion rhs = ((Conversion) other);
-        return (((((this.invocation == rhs.invocation)||((this.invocation!= null)&&this.invocation.equals(rhs.invocation)))&&((this.analysisToolLogFiles == rhs.analysisToolLogFiles)||((this.analysisToolLogFiles!= null)&&this.analysisToolLogFiles.equals(rhs.analysisToolLogFiles))))&&((this.tool == rhs.tool)||((this.tool!= null)&&this.tool.equals(rhs.tool))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return (((((this.invocation == rhs.invocation) || ((this.invocation != null) && this.invocation.equals(rhs.invocation))) && ((this.analysisToolLogFiles == rhs.analysisToolLogFiles) || ((this.analysisToolLogFiles != null) && this.analysisToolLogFiles.equals(rhs.analysisToolLogFiles)))) && ((this.tool == rhs.tool) || ((this.tool != null) && this.tool.equals(rhs.tool)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

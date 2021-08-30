@@ -1,8 +1,6 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.SerializedName;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,26 +12,18 @@ public enum Content {
     LOCALIZED_DATA("localizedData"),
     @SerializedName("nonLocalizedData")
     NON_LOCALIZED_DATA("nonLocalizedData");
-    private final String value;
     private final static Map<String, Content> CONSTANTS = new HashMap<String, Content>();
 
     static {
-        for (Content c: values()) {
+        for (Content c : values()) {
             CONSTANTS.put(c.value, c);
         }
     }
 
+    private final String value;
+
     private Content(String value) {
         this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return this.value;
-    }
-
-    public String value() {
-        return this.value;
     }
 
     public static Content fromValue(String value) {
@@ -43,6 +33,15 @@ public enum Content {
         } else {
             return constant;
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.value;
+    }
+
+    public String value() {
+        return this.value;
     }
 
 }

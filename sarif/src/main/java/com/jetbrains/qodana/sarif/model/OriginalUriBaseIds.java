@@ -1,12 +1,9 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 
 /**
  * The artifact location specified by each uriBaseId symbol on the machine where the tool originally ran.
- * 
  */
-
 public class OriginalUriBaseIds {
 
 
@@ -14,8 +11,8 @@ public class OriginalUriBaseIds {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(OriginalUriBaseIds.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }

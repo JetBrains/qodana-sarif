@@ -1,12 +1,9 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 
 /**
  * The environment variables associated with the analysis tool process, expressed as key/value pairs.
- * 
  */
-
 public class EnvironmentVariables {
 
 
@@ -14,8 +11,8 @@ public class EnvironmentVariables {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(EnvironmentVariables.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }

@@ -1,4 +1,3 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
@@ -7,29 +6,24 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * The replacement of a single region of an artifact.
- * 
  */
-
 public class Replacement {
 
     /**
      * A region within an artifact where a result was detected.
      * (Required)
-     * 
      */
     @SerializedName("deletedRegion")
     @Expose
     private Region deletedRegion;
     /**
      * Represents the contents of an artifact.
-     * 
      */
     @SerializedName("insertedContent")
     @Expose
     private ArtifactContent insertedContent;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -37,13 +31,11 @@ public class Replacement {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Replacement() {
     }
 
     /**
-     * 
      * @param deletedRegion
      */
     public Replacement(Region deletedRegion) {
@@ -54,7 +46,6 @@ public class Replacement {
     /**
      * A region within an artifact where a result was detected.
      * (Required)
-     * 
      */
     public Region getDeletedRegion() {
         return deletedRegion;
@@ -63,7 +54,6 @@ public class Replacement {
     /**
      * A region within an artifact where a result was detected.
      * (Required)
-     * 
      */
     public void setDeletedRegion(Region deletedRegion) {
         this.deletedRegion = deletedRegion;
@@ -76,7 +66,6 @@ public class Replacement {
 
     /**
      * Represents the contents of an artifact.
-     * 
      */
     public ArtifactContent getInsertedContent() {
         return insertedContent;
@@ -84,7 +73,6 @@ public class Replacement {
 
     /**
      * Represents the contents of an artifact.
-     * 
      */
     public void setInsertedContent(ArtifactContent insertedContent) {
         this.insertedContent = insertedContent;
@@ -97,7 +85,6 @@ public class Replacement {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -105,7 +92,6 @@ public class Replacement {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -122,18 +108,18 @@ public class Replacement {
         sb.append(Replacement.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("deletedRegion");
         sb.append('=');
-        sb.append(((this.deletedRegion == null)?"<null>":this.deletedRegion));
+        sb.append(((this.deletedRegion == null) ? "<null>" : this.deletedRegion));
         sb.append(',');
         sb.append("insertedContent");
         sb.append('=');
-        sb.append(((this.insertedContent == null)?"<null>":this.insertedContent));
+        sb.append(((this.insertedContent == null) ? "<null>" : this.insertedContent));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -143,9 +129,9 @@ public class Replacement {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.insertedContent == null)? 0 :this.insertedContent.hashCode()));
-        result = ((result* 31)+((this.deletedRegion == null)? 0 :this.deletedRegion.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.insertedContent == null) ? 0 : this.insertedContent.hashCode()));
+        result = ((result * 31) + ((this.deletedRegion == null) ? 0 : this.deletedRegion.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -158,7 +144,7 @@ public class Replacement {
             return false;
         }
         Replacement rhs = ((Replacement) other);
-        return ((((this.insertedContent == rhs.insertedContent)||((this.insertedContent!= null)&&this.insertedContent.equals(rhs.insertedContent)))&&((this.deletedRegion == rhs.deletedRegion)||((this.deletedRegion!= null)&&this.deletedRegion.equals(rhs.deletedRegion))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return ((((this.insertedContent == rhs.insertedContent) || ((this.insertedContent != null) && this.insertedContent.equals(rhs.insertedContent))) && ((this.deletedRegion == rhs.deletedRegion) || ((this.deletedRegion != null) && this.deletedRegion.equals(rhs.deletedRegion)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

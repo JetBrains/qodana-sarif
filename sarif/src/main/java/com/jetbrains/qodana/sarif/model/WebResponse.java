@@ -1,4 +1,3 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
@@ -7,70 +6,59 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Describes the response to an HTTP request.
- * 
  */
-
 public class WebResponse {
 
     /**
      * The index within the run.webResponses array of the response object associated with this result.
-     * 
      */
     @SerializedName("index")
     @Expose
     private Integer index = null;
     /**
      * The response protocol. Example: 'http'.
-     * 
      */
     @SerializedName("protocol")
     @Expose
     private String protocol;
     /**
      * The response version. Example: '1.1'.
-     * 
      */
     @SerializedName("version")
     @Expose
     private String version;
     /**
      * The response status code. Example: 451.
-     * 
      */
     @SerializedName("statusCode")
     @Expose
     private Integer statusCode;
     /**
      * The response reason. Example: 'Not found'.
-     * 
      */
     @SerializedName("reasonPhrase")
     @Expose
     private String reasonPhrase;
     /**
      * The response headers.
-     * 
      */
     @SerializedName("headers")
     @Expose
     private Headers__1 headers;
     /**
      * Represents the contents of an artifact.
-     * 
      */
     @SerializedName("body")
     @Expose
     private ArtifactContent body;
     /**
      * Specifies whether a response was received from the server.
-     * 
      */
     @SerializedName("noResponseReceived")
     @Expose
     private Boolean noResponseReceived = false;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -78,7 +66,6 @@ public class WebResponse {
 
     /**
      * The index within the run.webResponses array of the response object associated with this result.
-     * 
      */
     public Integer getIndex() {
         return index;
@@ -86,7 +73,6 @@ public class WebResponse {
 
     /**
      * The index within the run.webResponses array of the response object associated with this result.
-     * 
      */
     public void setIndex(Integer index) {
         this.index = index;
@@ -99,7 +85,6 @@ public class WebResponse {
 
     /**
      * The response protocol. Example: 'http'.
-     * 
      */
     public String getProtocol() {
         return protocol;
@@ -107,7 +92,6 @@ public class WebResponse {
 
     /**
      * The response protocol. Example: 'http'.
-     * 
      */
     public void setProtocol(String protocol) {
         this.protocol = protocol;
@@ -120,7 +104,6 @@ public class WebResponse {
 
     /**
      * The response version. Example: '1.1'.
-     * 
      */
     public String getVersion() {
         return version;
@@ -128,7 +111,6 @@ public class WebResponse {
 
     /**
      * The response version. Example: '1.1'.
-     * 
      */
     public void setVersion(String version) {
         this.version = version;
@@ -141,7 +123,6 @@ public class WebResponse {
 
     /**
      * The response status code. Example: 451.
-     * 
      */
     public Integer getStatusCode() {
         return statusCode;
@@ -149,7 +130,6 @@ public class WebResponse {
 
     /**
      * The response status code. Example: 451.
-     * 
      */
     public void setStatusCode(Integer statusCode) {
         this.statusCode = statusCode;
@@ -162,7 +142,6 @@ public class WebResponse {
 
     /**
      * The response reason. Example: 'Not found'.
-     * 
      */
     public String getReasonPhrase() {
         return reasonPhrase;
@@ -170,7 +149,6 @@ public class WebResponse {
 
     /**
      * The response reason. Example: 'Not found'.
-     * 
      */
     public void setReasonPhrase(String reasonPhrase) {
         this.reasonPhrase = reasonPhrase;
@@ -183,7 +161,6 @@ public class WebResponse {
 
     /**
      * The response headers.
-     * 
      */
     public Headers__1 getHeaders() {
         return headers;
@@ -191,7 +168,6 @@ public class WebResponse {
 
     /**
      * The response headers.
-     * 
      */
     public void setHeaders(Headers__1 headers) {
         this.headers = headers;
@@ -204,7 +180,6 @@ public class WebResponse {
 
     /**
      * Represents the contents of an artifact.
-     * 
      */
     public ArtifactContent getBody() {
         return body;
@@ -212,7 +187,6 @@ public class WebResponse {
 
     /**
      * Represents the contents of an artifact.
-     * 
      */
     public void setBody(ArtifactContent body) {
         this.body = body;
@@ -225,7 +199,6 @@ public class WebResponse {
 
     /**
      * Specifies whether a response was received from the server.
-     * 
      */
     public Boolean getNoResponseReceived() {
         return noResponseReceived;
@@ -233,7 +206,6 @@ public class WebResponse {
 
     /**
      * Specifies whether a response was received from the server.
-     * 
      */
     public void setNoResponseReceived(Boolean noResponseReceived) {
         this.noResponseReceived = noResponseReceived;
@@ -246,7 +218,6 @@ public class WebResponse {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -254,7 +225,6 @@ public class WebResponse {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -271,42 +241,42 @@ public class WebResponse {
         sb.append(WebResponse.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("index");
         sb.append('=');
-        sb.append(((this.index == null)?"<null>":this.index));
+        sb.append(((this.index == null) ? "<null>" : this.index));
         sb.append(',');
         sb.append("protocol");
         sb.append('=');
-        sb.append(((this.protocol == null)?"<null>":this.protocol));
+        sb.append(((this.protocol == null) ? "<null>" : this.protocol));
         sb.append(',');
         sb.append("version");
         sb.append('=');
-        sb.append(((this.version == null)?"<null>":this.version));
+        sb.append(((this.version == null) ? "<null>" : this.version));
         sb.append(',');
         sb.append("statusCode");
         sb.append('=');
-        sb.append(((this.statusCode == null)?"<null>":this.statusCode));
+        sb.append(((this.statusCode == null) ? "<null>" : this.statusCode));
         sb.append(',');
         sb.append("reasonPhrase");
         sb.append('=');
-        sb.append(((this.reasonPhrase == null)?"<null>":this.reasonPhrase));
+        sb.append(((this.reasonPhrase == null) ? "<null>" : this.reasonPhrase));
         sb.append(',');
         sb.append("headers");
         sb.append('=');
-        sb.append(((this.headers == null)?"<null>":this.headers));
+        sb.append(((this.headers == null) ? "<null>" : this.headers));
         sb.append(',');
         sb.append("body");
         sb.append('=');
-        sb.append(((this.body == null)?"<null>":this.body));
+        sb.append(((this.body == null) ? "<null>" : this.body));
         sb.append(',');
         sb.append("noResponseReceived");
         sb.append('=');
-        sb.append(((this.noResponseReceived == null)?"<null>":this.noResponseReceived));
+        sb.append(((this.noResponseReceived == null) ? "<null>" : this.noResponseReceived));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -316,15 +286,15 @@ public class WebResponse {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.headers == null)? 0 :this.headers.hashCode()));
-        result = ((result* 31)+((this.protocol == null)? 0 :this.protocol.hashCode()));
-        result = ((result* 31)+((this.reasonPhrase == null)? 0 :this.reasonPhrase.hashCode()));
-        result = ((result* 31)+((this.noResponseReceived == null)? 0 :this.noResponseReceived.hashCode()));
-        result = ((result* 31)+((this.index == null)? 0 :this.index.hashCode()));
-        result = ((result* 31)+((this.body == null)? 0 :this.body.hashCode()));
-        result = ((result* 31)+((this.version == null)? 0 :this.version.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
-        result = ((result* 31)+((this.statusCode == null)? 0 :this.statusCode.hashCode()));
+        result = ((result * 31) + ((this.headers == null) ? 0 : this.headers.hashCode()));
+        result = ((result * 31) + ((this.protocol == null) ? 0 : this.protocol.hashCode()));
+        result = ((result * 31) + ((this.reasonPhrase == null) ? 0 : this.reasonPhrase.hashCode()));
+        result = ((result * 31) + ((this.noResponseReceived == null) ? 0 : this.noResponseReceived.hashCode()));
+        result = ((result * 31) + ((this.index == null) ? 0 : this.index.hashCode()));
+        result = ((result * 31) + ((this.body == null) ? 0 : this.body.hashCode()));
+        result = ((result * 31) + ((this.version == null) ? 0 : this.version.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
+        result = ((result * 31) + ((this.statusCode == null) ? 0 : this.statusCode.hashCode()));
         return result;
     }
 
@@ -337,7 +307,7 @@ public class WebResponse {
             return false;
         }
         WebResponse rhs = ((WebResponse) other);
-        return ((((((((((this.headers == rhs.headers)||((this.headers!= null)&&this.headers.equals(rhs.headers)))&&((this.protocol == rhs.protocol)||((this.protocol!= null)&&this.protocol.equals(rhs.protocol))))&&((this.reasonPhrase == rhs.reasonPhrase)||((this.reasonPhrase!= null)&&this.reasonPhrase.equals(rhs.reasonPhrase))))&&((this.noResponseReceived == rhs.noResponseReceived)||((this.noResponseReceived!= null)&&this.noResponseReceived.equals(rhs.noResponseReceived))))&&((this.index == rhs.index)||((this.index!= null)&&this.index.equals(rhs.index))))&&((this.body == rhs.body)||((this.body!= null)&&this.body.equals(rhs.body))))&&((this.version == rhs.version)||((this.version!= null)&&this.version.equals(rhs.version))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))))&&((this.statusCode == rhs.statusCode)||((this.statusCode!= null)&&this.statusCode.equals(rhs.statusCode))));
+        return ((((((((((this.headers == rhs.headers) || ((this.headers != null) && this.headers.equals(rhs.headers))) && ((this.protocol == rhs.protocol) || ((this.protocol != null) && this.protocol.equals(rhs.protocol)))) && ((this.reasonPhrase == rhs.reasonPhrase) || ((this.reasonPhrase != null) && this.reasonPhrase.equals(rhs.reasonPhrase)))) && ((this.noResponseReceived == rhs.noResponseReceived) || ((this.noResponseReceived != null) && this.noResponseReceived.equals(rhs.noResponseReceived)))) && ((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index)))) && ((this.body == rhs.body) || ((this.body != null) && this.body.equals(rhs.body)))) && ((this.version == rhs.version) || ((this.version != null) && this.version.equals(rhs.version)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.statusCode == rhs.statusCode) || ((this.statusCode != null) && this.statusCode.equals(rhs.statusCode))));
     }
 
 }

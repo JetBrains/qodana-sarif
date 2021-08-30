@@ -1,44 +1,36 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 import java.util.Set;
 
 
 /**
  * A network of nodes and directed edges that describes some aspect of the structure of the code (for example, a call graph).
- * 
  */
-
 public class Graph {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     @SerializedName("description")
     @Expose
     private Message description;
     /**
      * An array of node objects representing the nodes of the graph.
-     * 
      */
     @SerializedName("nodes")
     @Expose
     private Set<Node> nodes = null;
     /**
      * An array of edge objects representing the edges of the graph.
-     * 
      */
     @SerializedName("edges")
     @Expose
     private Set<Edge> edges = null;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -46,7 +38,6 @@ public class Graph {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public Message getDescription() {
         return description;
@@ -54,7 +45,6 @@ public class Graph {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public void setDescription(Message description) {
         this.description = description;
@@ -67,7 +57,6 @@ public class Graph {
 
     /**
      * An array of node objects representing the nodes of the graph.
-     * 
      */
     public Set<Node> getNodes() {
         return nodes;
@@ -75,7 +64,6 @@ public class Graph {
 
     /**
      * An array of node objects representing the nodes of the graph.
-     * 
      */
     public void setNodes(Set<Node> nodes) {
         this.nodes = nodes;
@@ -88,7 +76,6 @@ public class Graph {
 
     /**
      * An array of edge objects representing the edges of the graph.
-     * 
      */
     public Set<Edge> getEdges() {
         return edges;
@@ -96,7 +83,6 @@ public class Graph {
 
     /**
      * An array of edge objects representing the edges of the graph.
-     * 
      */
     public void setEdges(Set<Edge> edges) {
         this.edges = edges;
@@ -109,7 +95,6 @@ public class Graph {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -117,7 +102,6 @@ public class Graph {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -134,22 +118,22 @@ public class Graph {
         sb.append(Graph.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("description");
         sb.append('=');
-        sb.append(((this.description == null)?"<null>":this.description));
+        sb.append(((this.description == null) ? "<null>" : this.description));
         sb.append(',');
         sb.append("nodes");
         sb.append('=');
-        sb.append(((this.nodes == null)?"<null>":this.nodes));
+        sb.append(((this.nodes == null) ? "<null>" : this.nodes));
         sb.append(',');
         sb.append("edges");
         sb.append('=');
-        sb.append(((this.edges == null)?"<null>":this.edges));
+        sb.append(((this.edges == null) ? "<null>" : this.edges));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -159,10 +143,10 @@ public class Graph {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.edges == null)? 0 :this.edges.hashCode()));
-        result = ((result* 31)+((this.description == null)? 0 :this.description.hashCode()));
-        result = ((result* 31)+((this.nodes == null)? 0 :this.nodes.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.edges == null) ? 0 : this.edges.hashCode()));
+        result = ((result * 31) + ((this.description == null) ? 0 : this.description.hashCode()));
+        result = ((result * 31) + ((this.nodes == null) ? 0 : this.nodes.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -175,7 +159,7 @@ public class Graph {
             return false;
         }
         Graph rhs = ((Graph) other);
-        return (((((this.edges == rhs.edges)||((this.edges!= null)&&this.edges.equals(rhs.edges)))&&((this.description == rhs.description)||((this.description!= null)&&this.description.equals(rhs.description))))&&((this.nodes == rhs.nodes)||((this.nodes!= null)&&this.nodes.equals(rhs.nodes))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return (((((this.edges == rhs.edges) || ((this.edges != null) && this.edges.equals(rhs.edges))) && ((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description)))) && ((this.nodes == rhs.nodes) || ((this.nodes != null) && this.nodes.equals(rhs.nodes)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

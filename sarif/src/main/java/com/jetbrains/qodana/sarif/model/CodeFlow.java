@@ -1,23 +1,18 @@
-
 package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 import java.util.List;
 
 
 /**
  * A set of threadFlows which together describe a pattern of code execution relevant to detecting a result.
- * 
  */
-
 public class CodeFlow {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     @SerializedName("message")
     @Expose
@@ -25,14 +20,12 @@ public class CodeFlow {
     /**
      * An array of one or more unique threadFlow objects, each of which describes the progress of a program through a thread of execution.
      * (Required)
-     * 
      */
     @SerializedName("threadFlows")
     @Expose
     private List<ThreadFlow> threadFlows = null;
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     @SerializedName("properties")
     @Expose
@@ -40,13 +33,11 @@ public class CodeFlow {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public CodeFlow() {
     }
 
     /**
-     * 
      * @param threadFlows
      */
     public CodeFlow(List<ThreadFlow> threadFlows) {
@@ -56,7 +47,6 @@ public class CodeFlow {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public Message getMessage() {
         return message;
@@ -64,7 +54,6 @@ public class CodeFlow {
 
     /**
      * Encapsulates a message intended to be read by the end user.
-     * 
      */
     public void setMessage(Message message) {
         this.message = message;
@@ -78,7 +67,6 @@ public class CodeFlow {
     /**
      * An array of one or more unique threadFlow objects, each of which describes the progress of a program through a thread of execution.
      * (Required)
-     * 
      */
     public List<ThreadFlow> getThreadFlows() {
         return threadFlows;
@@ -87,7 +75,6 @@ public class CodeFlow {
     /**
      * An array of one or more unique threadFlow objects, each of which describes the progress of a program through a thread of execution.
      * (Required)
-     * 
      */
     public void setThreadFlows(List<ThreadFlow> threadFlows) {
         this.threadFlows = threadFlows;
@@ -100,7 +87,6 @@ public class CodeFlow {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public PropertyBag getProperties() {
         return properties;
@@ -108,7 +94,6 @@ public class CodeFlow {
 
     /**
      * Key/value pairs that provide additional information about the object.
-     * 
      */
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
@@ -125,18 +110,18 @@ public class CodeFlow {
         sb.append(CodeFlow.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("message");
         sb.append('=');
-        sb.append(((this.message == null)?"<null>":this.message));
+        sb.append(((this.message == null) ? "<null>" : this.message));
         sb.append(',');
         sb.append("threadFlows");
         sb.append('=');
-        sb.append(((this.threadFlows == null)?"<null>":this.threadFlows));
+        sb.append(((this.threadFlows == null) ? "<null>" : this.threadFlows));
         sb.append(',');
         sb.append("properties");
         sb.append('=');
-        sb.append(((this.properties == null)?"<null>":this.properties));
+        sb.append(((this.properties == null) ? "<null>" : this.properties));
         sb.append(',');
-        if (sb.charAt((sb.length()- 1)) == ',') {
-            sb.setCharAt((sb.length()- 1), ']');
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
         } else {
             sb.append(']');
         }
@@ -146,9 +131,9 @@ public class CodeFlow {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.message == null)? 0 :this.message.hashCode()));
-        result = ((result* 31)+((this.threadFlows == null)? 0 :this.threadFlows.hashCode()));
-        result = ((result* 31)+((this.properties == null)? 0 :this.properties.hashCode()));
+        result = ((result * 31) + ((this.message == null) ? 0 : this.message.hashCode()));
+        result = ((result * 31) + ((this.threadFlows == null) ? 0 : this.threadFlows.hashCode()));
+        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
         return result;
     }
 
@@ -161,7 +146,7 @@ public class CodeFlow {
             return false;
         }
         CodeFlow rhs = ((CodeFlow) other);
-        return ((((this.message == rhs.message)||((this.message!= null)&&this.message.equals(rhs.message)))&&((this.threadFlows == rhs.threadFlows)||((this.threadFlows!= null)&&this.threadFlows.equals(rhs.threadFlows))))&&((this.properties == rhs.properties)||((this.properties!= null)&&this.properties.equals(rhs.properties))));
+        return ((((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message))) && ((this.threadFlows == rhs.threadFlows) || ((this.threadFlows != null) && this.threadFlows.equals(rhs.threadFlows)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }
