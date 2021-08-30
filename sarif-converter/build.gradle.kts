@@ -32,16 +32,16 @@ tasks.register<Jar>("sarifConverter-fatJar") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     manifest {
-        attributes("Main-Class" to "com.jetbrains.qodana.sarif.app.Main", "Multi-Release" to "true")
+        attributes(
+            "Main-Class" to "com.jetbrains.qodana.sarif.app.Main",
+            "Multi-Release" to "true"
+        )
     }
 
-    from(configurations.runtimeClasspath.get()
-        .onEach { println("Add from dependencies: ${it.name}") }
-        .map { if (it.isDirectory) it else zipTree(it) })
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
 
     val sourcesMain = sourceSets.main.get()
     from(sourcesMain.output)
-    sourcesMain.allSource.forEach { println("Add from sources: ${it.name}") }
 }
 
 
