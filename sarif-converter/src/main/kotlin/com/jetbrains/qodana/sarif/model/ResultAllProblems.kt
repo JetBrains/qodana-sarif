@@ -6,6 +6,7 @@ import org.jetbrains.teamcity.qodana.json.version3.SimpleProblem
 
 data class ResultAllProblems(val version: String = "3", val listProblem: List<Problem>) {
     companion object {
-        internal fun emptySimpleProblem() = SimpleProblem("", "", "", null, Severity.TYPO, "", "", mutableListOf(), null, 0)
+        internal fun emptySimpleProblem() =
+            SimpleProblem("", "", "", null, Severity.TYPO, "", "", mutableListOf(), null, "0")
     }
 }

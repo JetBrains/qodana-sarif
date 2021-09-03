@@ -109,7 +109,7 @@ class SarifConverterImpl : SarifConverter {
                     problems.add(emptySimpleProblem().apply {
                         tool = toolName
                         comment = sanitizeText(result.message?.text ?: "")
-                        hash = result?.hash() ?: Random.nextLong()
+                        hash = result?.hash() ?: Random.nextLong().toString()
                         type = rule.shortDescription?.text ?: ""
                         detailsInfo = rule.fullDescription?.text ?: ""
                         category = rule.relationships?.first()?.target?.id
@@ -209,13 +209,16 @@ class SarifConverterImpl : SarifConverter {
         }
     }
 
-    private fun Result.hash(): Long? {
+    private fun Result.hash(): String? {
         val (key, version) = "equalIndicator" to 1
-        val fingerprint = fingerprints?.get(key, version)
         val partialFingerprint = partialFingerprints?.get(key, version)
+        if (!partialFingerprint.isNullOrBlank()) {
+            return partialFingerprint
+        }
+        val fingerprint = fingerprints?.get(key, version)
         val h = hasher
         fingerprint?.let { h.putUnencodedChars(it) }
         partialFingerprint?.let { h.putUnencodedChars(it) }
-        return h.hash()?.asLong()
+        return h.hash()?.asBytes()?.toString()
     }
 }
