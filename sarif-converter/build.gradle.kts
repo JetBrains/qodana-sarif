@@ -8,7 +8,7 @@ dependencies {
     implementation("commons-cli", "commons-cli", "1.4")
     implementation("org.apache.logging.log4j:log4j-core:2.14.0")
     implementation("org.apache.logging.log4j:log4j-api:2.14.0")
-    implementation("org.jetbrains.teamcity.qodana:teamcity-common:0.10.68+test")
+    implementation("org.jetbrains.teamcity.qodana:teamcity-common:0.10.68")
     implementation("com.google.guava:guava:28.1-jre")
     implementation("org.jsoup:jsoup:1.11.3")
     implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20191001.1")
