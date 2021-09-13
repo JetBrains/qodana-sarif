@@ -3,7 +3,6 @@ package com.jetbrains.qodana.sarif
 import com.google.common.hash.Hashing
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.jetbrains.qodana.sarif.SarifConverterImpl.Companion.severity
 import com.jetbrains.qodana.sarif.TextUtil.Companion.sanitizeText
 import com.jetbrains.qodana.sarif.model.*
 import com.jetbrains.qodana.sarif.model.Level.*
@@ -15,7 +14,6 @@ import org.jetbrains.teamcity.qodana.json.version3.SimpleProblem
 import org.jetbrains.teamcity.qodana.json.version3.Source
 import java.io.File
 import java.nio.charset.StandardCharsets
-import java.nio.file.Files
 import java.nio.file.Path
 import java.rmi.UnexpectedException
 import kotlin.Exception
@@ -181,7 +179,7 @@ class SarifConverterImpl : SarifConverter {
                             contextRegion?.startLine ?: region?.startLine ?: 0,
                             contextRegion?.charLength ?: region?.charLength ?: 0,
                             contextRegion?.charOffset ?: region?.charOffset ?: 0,
-                            contextRegion?.snippet?.text ?: region?.snippet?.text ?: "",
+                            contextRegion?.snippet?.text ?: region?.snippet?.text ?: ""
                         ),
                         null
                     )
@@ -200,7 +198,8 @@ class SarifConverterImpl : SarifConverter {
 
     private fun Tool.findRuleById(ruleId: String): ReportingDescriptor {
         val driverRules = driver.rules?.asSequence() ?: emptySequence()
-        val extensionRules = extensions?.asSequence()?.flatMap { it?.rules ?: emptyList() } ?: emptySequence()
+        val extensionRules =
+            extensions?.asSequence()?.flatMap { it?.rules?.asSequence() ?: emptySequence() } ?: emptySequence()
         try {
             return driverRules.firstOrNull { it.id == ruleId } ?: extensionRules.first { it.id == ruleId }
         } catch (e: NoSuchElementException) {

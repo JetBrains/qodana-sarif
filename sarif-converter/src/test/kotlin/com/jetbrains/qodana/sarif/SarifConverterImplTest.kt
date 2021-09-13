@@ -3,11 +3,12 @@ package com.jetbrains.qodana.sarif
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
 import com.jetbrains.qodana.sarif.Util.Companion.getResourceFile
+import com.jetbrains.qodana.sarif.Util.Companion.readFileAsText
+import com.jetbrains.qodana.sarif.Util.Companion.readText
 import org.jetbrains.teamcity.qodana.json.version3.SimpleProblem
 import org.junit.Assert
 import org.junit.Test
 import java.nio.file.Paths
-import kotlin.io.path.readText
 
 
 internal class SarifConverterImplTest {
@@ -46,8 +47,8 @@ internal class SarifConverterImplTest {
 
     private fun assertConverterWorksOn(dirPath: String) {
         val sarifFile = getResourceFile("$dirPath/qodana.sarif.json")
-        val expectedMetaInformation = getResourceFile("$dirPath/expected/metaInformation.json").readText()
-        val expectedResultsAllProblems = getResourceFile("$dirPath/expected/result-allProblems.json").readText()
+        val expectedMetaInformation = readFileAsText("/$dirPath/expected/metaInformation.json")
+        val expectedResultsAllProblems = readFileAsText("/$dirPath/expected/result-allProblems.json")
         val tempDirectory = Paths.get("tempTestDirectory_1").apply { toFile().mkdirs() }
 
         try {
