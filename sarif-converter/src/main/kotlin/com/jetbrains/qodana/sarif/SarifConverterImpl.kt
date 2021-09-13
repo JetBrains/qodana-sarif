@@ -33,7 +33,10 @@ class SarifConverterImpl : SarifConverter {
                     "WEAK WARNING" -> Severity.WEAK_WARNING
                     "TYPO" -> Severity.TYPO
                     "INFORMATION" -> Severity.INFORMATION
-                    else -> throw InvalidSarifException("Unexpected severity type: $this")
+                    "INFO" -> Severity.INFORMATION
+                    else -> Severity.INFORMATION.also {
+                        log.info("Unexpected severity type: $this, used INFORMATION")
+                    }
                 }
             } ?: run {
                 when (level) {
