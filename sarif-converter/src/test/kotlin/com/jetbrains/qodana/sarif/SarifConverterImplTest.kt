@@ -26,9 +26,10 @@ internal class SarifConverterImplTest {
     fun `have to convert Checkov Linter sarif output to expected UI files`() {
         assertConverterWorksOn("sarif/checkov")
     }
-
-    companion object {
-        val gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
+    
+    @Test
+    fun `have to convert baseline sarif report to expected UI files`() {
+        assertConverterWorksOn("sarif/baseline-sarif")
     }
 
     internal data class ResultAllProblems(val version: String = "3", @SerializedName("listProblem") val problems: List<SimpleProblem> = emptyList()) {
@@ -62,4 +63,7 @@ internal class SarifConverterImplTest {
         }
     }
 
+    companion object {
+        val gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
+    }
 }

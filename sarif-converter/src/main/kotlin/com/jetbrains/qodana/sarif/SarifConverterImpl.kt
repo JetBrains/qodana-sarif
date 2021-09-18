@@ -196,8 +196,11 @@ class SarifConverterImpl : SarifConverter {
         return mutableMapOf<String, String>().apply {
             put("module", locations?.firstOrNull()?.logicalLocations?.first()?.fullyQualifiedName ?: "")
             put("inspectionName", ruleId)
+            baselineState?.let { if (it.isTechDebt()) put("isTechDebt", "true") }
         }
     }
+
+    private fun Result.BaselineState.isTechDebt() = this == Result.BaselineState.UNCHANGED || this == Result.BaselineState.ABSENT
 
     private fun Tool.findRuleById(ruleId: String): ReportingDescriptor {
         val driverRules = driver.rules?.asSequence() ?: emptySequence()

@@ -56,8 +56,7 @@
       ],
       "attributes": {
         "module": "root.asm-util.main",
-        "inspectionName": "ConstantConditions",
-        "isTechDebt": "true"
+        "inspectionName": "ConstantConditions"
       },
       "hash": "21fc525599339e758326644928cf5219f9f68409b18708d1b16ccf04511f53d5"
     },
@@ -86,10 +85,39 @@
       ],
       "attributes": {
         "module": "root.asm-util.main",
+        "inspectionName": "InfiniteRecursion"
+      },
+      "hash": "ac5714b0b15b7e8c4311899afd1c2b44069865039f2a9d309dcab04eddd4681d"
+    },
+    {
+      "tool": "Qodana Intellij Linter",
+      "category": "Probable bugs",
+      "type": "Infinite recursion",
+      "severity": "High",
+      "comment": "Method visitTypeVariable() recurses infinitely, and can only end by throwing an exception",
+      "detailsInfo": "<html>\n<body>\nReports methods that call themselves infinitely unless an exception is thrown.\n<p>\n  Methods reported by this inspection cannot return normally.\n  While such behavior may be intended, in many cases this is just an oversight.\n</p>\n<p><b>Example:</b></p>\n<pre><code>  int baz() {\n      return baz();\n  }</code></pre>\n<!-- tooltip end -->\n\n</body>\n</html>",
+      "sources": [
+        {
+          "type": "file",
+          "path": "asm-util/src/main/java/org/objectweb/asm/util/CheckSignatureAdapter.java",
+          "language": "JAVA",
+          "line": 258,
+          "offset": 1,
+          "length": 152,
+          "code": {
+            "startLine": 258,
+            "length": 152,
+            "offset": 27,
+            "surroundingCode": "\n  @Override\n  public void visitTypeVariable(final String name) {\n    visitTypeVariable(name);\n    if (type != TYPE_SIGNATURE || state != State.EMPTY) {"
+          }
+        }
+      ],
+      "attributes": {
+        "module": "root.asm-util.main",
         "inspectionName": "InfiniteRecursion",
         "isTechDebt": "true"
       },
-      "hash": "ac5714b0b15b7e8c4311899afd1c2b44069865039f2a9d309dcab04eddd4681d"
+      "hash": "ad5714b0b15b7e8c4311891afd1c2b44069865039f2a9d309dcab04eddd4681d"
     }
   ]
 }
