@@ -14,7 +14,7 @@
           "path": "wp-includes/deprecated.php",
           "language": "PHP",
           "line": 1733,
-          "offset": 47,
+          "offset": 46,
           "length": 2,
           "code": {
             "startLine": 1731,
@@ -44,7 +44,7 @@
           "path": "wp-includes/deprecated.php",
           "language": "PHP",
           "line": 2720,
-          "offset": 78,
+          "offset": 77,
           "length": 4,
           "code": {
             "startLine": 2718,
@@ -73,7 +73,7 @@
           "path": "wp-includes/deprecated.php",
           "language": "PHP",
           "line": 2720,
-          "offset": 78,
+          "offset": 77,
           "length": 4,
           "code": {
             "startLine": 2718,
@@ -102,7 +102,7 @@
           "path": "wp-includes/deprecated.php",
           "language": "PHP",
           "line": 2720,
-          "offset": 78,
+          "offset": 77,
           "length": 4,
           "code": {
             "startLine": 2718,
