@@ -183,31 +183,32 @@
           "kind": "fail",
           "level": "warning",
           "message": {
-            "text": "<code>if</code> statement has empty body"
+            "text": "Argument matches the parameter's default value"
           },
           "locations": [
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "asm-util/src/main/java/org/objectweb/asm/util/CheckSignatureAdapter.java",
+                  "uri": "wp-includes/deprecated.php",
                   "uriBaseId": "SRCROOT"
                 },
                 "region": {
-                  "startLine": 218,
-                  "startColumn": 4,
+                  "startLine": 1733,
+                  "startColumn": 47,
+                  "charOffset": 52074,
                   "charLength": 2,
                   "snippet": {
-                    "text": "if"
+                    "text": "''"
                   },
-                  "sourceLanguage": "JAVA"
+                  "sourceLanguage": "PHP"
                 },
                 "contextRegion": {
-                  "startLine": 216,
+                  "startLine": 1731,
                   "startColumn": 1,
-                  "charOffset": 51,
-                  "charLength": 138,
+                  "charOffset": 51983,
+                  "charLength": 202,
                   "snippet": {
-                    "text": "      throw new IllegalStateException();\n    }\n    if(true) {}\n    state = State.RETURN;\n    CheckSignatureAdapter checkSignatureAdapter ="
+                    "text": " */\nfunction make_url_footnote( $content ) {\n\t_deprecated_function( __FUNCTION__, '2.9.0', '' );\n\tpreg_match_all( '/<a(.+?)href=\\\"(.+?)\\\"(.*?)>(.+?)<\\/a>/', $content, $matches );\n\t$links_summary = \"\\n\";"
                   }
                 }
               },
@@ -231,35 +232,36 @@
           }
         },
         {
-          "ruleId": "ConstantConditions",
+          "ruleId": "EmptyStatementBody",
           "kind": "fail",
           "level": "warning",
           "message": {
-            "text": "Condition is always true"
+            "text": "Argument matches the parameter's default value"
           },
           "locations": [
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "asm-util/src/main/java/org/objectweb/asm/util/CheckSignatureAdapter.java",
+                  "uri": "wp-includes/deprecated.php",
                   "uriBaseId": "SRCROOT"
                 },
                 "region": {
-                  "startLine": 218,
-                  "startColumn": 7,
+                  "startLine": 2720,
+                  "startColumn": 78,
+                  "charOffset": 82921,
                   "charLength": 4,
                   "snippet": {
                     "text": "true"
                   },
-                  "sourceLanguage": "JAVA"
+                  "sourceLanguage": "PHP"
                 },
                 "contextRegion": {
-                  "startLine": 216,
+                  "startLine": 2718,
                   "startColumn": 1,
-                  "charOffset": 54,
-                  "charLength": 138,
+                  "charOffset": 82795,
+                  "charLength": 135,
                   "snippet": {
-                    "text": "      throw new IllegalStateException();\n    }\n    if(true) {}\n    state = State.RETURN;\n    CheckSignatureAdapter checkSignatureAdapter ="
+                    "text": "\t_deprecated_function( __FUNCTION__, '3.3.0' );\n\n\techo get_boundary_post_rel_link($title, $in_same_cat, $excluded_categories, true);\n}\n"
                   }
                 }
               },
@@ -283,35 +285,36 @@
           }
         },
         {
-          "ruleId": "InfiniteRecursion",
+          "ruleId": "EmptyStatementBody",
           "kind": "fail",
           "level": "warning",
           "message": {
-            "text": "Method <code>visitTypeVariable()</code> recurses infinitely, and can only end by throwing an exception"
+            "text": "Argument matches the parameter's default value"
           },
           "locations": [
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "asm-util/src/main/java/org/objectweb/asm/util/CheckSignatureAdapter.java",
+                  "uri": "wp-includes/deprecated.php",
                   "uriBaseId": "SRCROOT"
                 },
                 "region": {
-                  "startLine": 259,
-                  "startColumn": 14,
-                  "charLength": 17,
+                  "startLine": 2720,
+                  "startColumn": 78,
+                  "charOffset": 82921,
+                  "charLength": 4,
                   "snippet": {
-                    "text": "visitTypeVariable"
+                    "text": "true"
                   },
-                  "sourceLanguage": "JAVA"
+                  "sourceLanguage": "PHP"
                 },
                 "contextRegion": {
-                  "startLine": 257,
+                  "startLine": 2718,
                   "startColumn": 1,
-                  "charOffset": 27,
-                  "charLength": 152,
+                  "charOffset": 82795,
+                  "charLength": 135,
                   "snippet": {
-                    "text": "\n  @Override\n  public void visitTypeVariable(final String name) {\n    visitTypeVariable(name);\n    if (type != TYPE_SIGNATURE || state != State.EMPTY) {"
+                    "text": "\t_deprecated_function( __FUNCTION__, '3.3.0' );\n\n\techo get_boundary_post_rel_link($title, $in_same_cat, $excluded_categories, true);\n}\n"
                   }
                 }
               },
@@ -335,35 +338,36 @@
           }
         },
         {
-          "ruleId": "InfiniteRecursion",
+          "ruleId": "EmptyStatementBody",
           "kind": "fail",
           "level": "warning",
           "message": {
-            "text": "Method <code>visitTypeVariable()</code> recurses infinitely, and can only end by throwing an exception"
+            "text": "Argument matches the parameter's default value"
           },
           "locations": [
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "asm-util/src/main/java/org/objectweb/asm/util/CheckSignatureAdapter.java",
+                  "uri": "wp-includes/deprecated.php",
                   "uriBaseId": "SRCROOT"
                 },
                 "region": {
-                  "startLine": 260,
-                  "startColumn": 14,
-                  "charLength": 17,
+                  "startLine": 2720,
+                  "startColumn": 78,
+                  "charOffset": 82921,
+                  "charLength": 4,
                   "snippet": {
-                    "text": "visitTypeVariable"
+                    "text": "true"
                   },
-                  "sourceLanguage": "JAVA"
+                  "sourceLanguage": "PHP"
                 },
                 "contextRegion": {
-                  "startLine": 258,
+                  "startLine": 2718,
                   "startColumn": 1,
-                  "charOffset": 27,
-                  "charLength": 152,
+                  "charOffset": 82795,
+                  "charLength": 135,
                   "snippet": {
-                    "text": "\n  @Override\n  public void visitTypeVariable(final String name) {\n    visitTypeVariable(name);\n    if (type != TYPE_SIGNATURE || state != State.EMPTY) {"
+                    "text": "\t_deprecated_function( __FUNCTION__, '3.3.0' );\n\n\techo get_boundary_post_rel_link($title, $in_same_cat, $excluded_categories, true);\n}\n"
                   }
                 }
               },

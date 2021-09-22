@@ -166,29 +166,42 @@ class SarifConverterImpl : SarifConverter {
 
         return mutableListOf<Source>().apply {
             locations.forEach { location ->
-                val physicalLocation = location.physicalLocation
-                val contextRegion = physicalLocation?.contextRegion
-                val region = physicalLocation?.region
-
-                add(
-                    Source(
-                        type(location),
-                        physicalLocation?.artifactLocation?.uri ?: "",
-                        contextRegion?.sourceLanguage ?: region?.sourceLanguage ?: "",
-                        contextRegion?.startLine ?: region?.startLine ?: 0,
-                        contextRegion?.startColumn ?: region?.startColumn ?: 0,
-                        contextRegion?.charLength ?: region?.charLength ?: 0,
-                        Code(
-                            contextRegion?.startLine ?: region?.startLine ?: 0,
-                            contextRegion?.charLength ?: region?.charLength ?: 0,
-                            contextRegion?.charOffset ?: region?.charOffset ?: 0,
-                            contextRegion?.snippet?.text ?: region?.snippet?.text ?: ""
-                        ),
-                        null
-                    )
-                )
+                add(source(location, type(location)))
             }
         }
+    }
+
+    private fun source(location: Location, sourceType: String): Source {
+        val physicalLocation = location.physicalLocation
+        val contextRegion = physicalLocation?.contextRegion
+        val region = physicalLocation?.region
+
+        return Source(
+            sourceType,
+            physicalLocation?.artifactLocation?.uri ?: "",
+            region?.sourceLanguage ?: contextRegion?.sourceLanguage ?: "",
+            region?.startLine ?: contextRegion?.startLine ?: 0,
+            region?.startColumn ?: contextRegion?.startColumn ?: 0,
+            region?.charLength ?: contextRegion?.charLength ?: 0,
+            code(contextRegion, region),
+            null
+        )
+    }
+
+
+    private fun code(contextRegion: Region?, region: Region?): Code {
+        val offset = if (contextRegion?.charOffset != null && region?.charOffset != null) {
+            region.charOffset - contextRegion.charOffset
+        } else {
+            contextRegion?.charOffset ?: region?.charOffset ?: 0
+        }
+
+        return Code(
+            contextRegion?.startLine ?: region?.startLine ?: 0,
+            region?.charLength ?: contextRegion?.charLength ?: 0,
+            offset,
+            contextRegion?.snippet?.text ?: region?.snippet?.text ?: ""
+        )
     }
 
 

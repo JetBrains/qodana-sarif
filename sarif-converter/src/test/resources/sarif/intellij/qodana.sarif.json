@@ -183,31 +183,32 @@
           "kind": "fail",
           "level": "warning",
           "message": {
-            "text": "<code>if</code> statement has empty body"
+            "text": "Argument matches the parameter's default value"
           },
           "locations": [
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "asm-util/src/main/java/org/objectweb/asm/util/CheckSignatureAdapter.java",
+                  "uri": "wp-includes/deprecated.php",
                   "uriBaseId": "SRCROOT"
                 },
                 "region": {
-                  "startLine": 218,
-                  "startColumn": 4,
+                  "startLine": 1733,
+                  "startColumn": 47,
+                  "charOffset": 52074,
                   "charLength": 2,
                   "snippet": {
-                    "text": "if"
+                    "text": "''"
                   },
-                  "sourceLanguage": "JAVA"
+                  "sourceLanguage": "PHP"
                 },
                 "contextRegion": {
-                  "startLine": 216,
+                  "startLine": 1731,
                   "startColumn": 1,
-                  "charOffset": 51,
-                  "charLength": 138,
+                  "charOffset": 51983,
+                  "charLength": 202,
                   "snippet": {
-                    "text": "      throw new IllegalStateException();\n    }\n    if(true) {}\n    state = State.RETURN;\n    CheckSignatureAdapter checkSignatureAdapter ="
+                    "text": " */\nfunction make_url_footnote( $content ) {\n\t_deprecated_function( __FUNCTION__, '2.9.0', '' );\n\tpreg_match_all( '/<a(.+?)href=\\\"(.+?)\\\"(.*?)>(.+?)<\\/a>/', $content, $matches );\n\t$links_summary = \"\\n\";"
                   }
                 }
               },
@@ -222,7 +223,6 @@
           "partialFingerprints": {
             "equalIndicator/v1": "c4406ef27470a515f616155fe7ffa92c3e6b7a3833a49323cb4fefd81d3d01ef"
           },
-          "baselineState": "unchanged",
           "properties": {
             "ideaSeverity": "WARNING",
             "tags": [
@@ -231,35 +231,36 @@
           }
         },
         {
-          "ruleId": "ConstantConditions",
+          "ruleId": "EmptyStatementBody",
           "kind": "fail",
           "level": "warning",
           "message": {
-            "text": "Condition is always true"
+            "text": "Argument matches the parameter's default value"
           },
           "locations": [
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "asm-util/src/main/java/org/objectweb/asm/util/CheckSignatureAdapter.java",
+                  "uri": "wp-includes/deprecated.php",
                   "uriBaseId": "SRCROOT"
                 },
                 "region": {
-                  "startLine": 218,
-                  "startColumn": 7,
+                  "startLine": 2720,
+                  "startColumn": 78,
+                  "charOffset": 82921,
                   "charLength": 4,
                   "snippet": {
                     "text": "true"
                   },
-                  "sourceLanguage": "JAVA"
+                  "sourceLanguage": "PHP"
                 },
                 "contextRegion": {
-                  "startLine": 216,
+                  "startLine": 2718,
                   "startColumn": 1,
-                  "charOffset": 54,
-                  "charLength": 138,
+                  "charOffset": 82795,
+                  "charLength": 135,
                   "snippet": {
-                    "text": "      throw new IllegalStateException();\n    }\n    if(true) {}\n    state = State.RETURN;\n    CheckSignatureAdapter checkSignatureAdapter ="
+                    "text": "\t_deprecated_function( __FUNCTION__, '3.3.0' );\n\n\techo get_boundary_post_rel_link($title, $in_same_cat, $excluded_categories, true);\n}\n"
                   }
                 }
               },
@@ -274,59 +275,6 @@
           "partialFingerprints": {
             "equalIndicator/v1": "21fc525599339e758326644928cf5219f9f68409b18708d1b16ccf04511f53d5"
           },
-          "baselineState": "unchanged",
-          "properties": {
-            "ideaSeverity": "WARNING",
-            "tags": [
-              "ideaSeverity"
-            ]
-          }
-        },
-        {
-          "ruleId": "InfiniteRecursion",
-          "kind": "fail",
-          "level": "warning",
-          "message": {
-            "text": "Method <code>visitTypeVariable()</code> recurses infinitely, and can only end by throwing an exception"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "asm-util/src/main/java/org/objectweb/asm/util/CheckSignatureAdapter.java",
-                  "uriBaseId": "SRCROOT"
-                },
-                "region": {
-                  "startLine": 259,
-                  "startColumn": 14,
-                  "charLength": 17,
-                  "snippet": {
-                    "text": "visitTypeVariable"
-                  },
-                  "sourceLanguage": "JAVA"
-                },
-                "contextRegion": {
-                  "startLine": 257,
-                  "startColumn": 1,
-                  "charOffset": 27,
-                  "charLength": 152,
-                  "snippet": {
-                    "text": "\n  @Override\n  public void visitTypeVariable(final String name) {\n    visitTypeVariable(name);\n    if (type != TYPE_SIGNATURE || state != State.EMPTY) {"
-                  }
-                }
-              },
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "root.asm-util.main",
-                  "kind": "module"
-                }
-              ]
-            }
-          ],
-          "partialFingerprints": {
-            "equalIndicator/v1": "ac5714b0b15b7e8c4311899afd1c2b44069865039f2a9d309dcab04eddd4681d"
-          },
-          "baselineState": "unchanged",
           "properties": {
             "ideaSeverity": "WARNING",
             "tags": [
