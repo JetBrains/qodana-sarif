@@ -53,21 +53,8 @@ class SarifConverterImpl : SarifConverter {
     private val hasher: NullableHasher
         get() = NullableHasher(Hashing.sha256().newHasher())
 
-    override fun convert(sarifFile: File, output: Path): List<File> {
+    fun convert(sarifFile: File, output: Path): List<File> {
         val sarifReport = SarifUtil.readReport(sarifFile.toPath())
-        return convert(sarifReport, output)
-    }
-
-    override fun convert(sarifFile: File): Pair<MetaInformation, ResultAllProblems> {
-        val sarifReport = SarifUtil.readReport(sarifFile.toPath())
-        return convert(sarifReport)
-    }
-
-    private fun File.writeResult(src: Any) {
-        bufferedWriter(StandardCharsets.UTF_8).use { gson.toJson(src, it) }
-    }
-
-    override fun convert(sarifReport: SarifReport, output: Path): List<File> {
         log.info("sarif file version: ${sarifReport.version}")
 
         val (metaInformation, resultAllProblems) = convert(sarifReport)
@@ -94,7 +81,16 @@ class SarifConverterImpl : SarifConverter {
         return writtenFiles
     }
 
-    override fun convert(sarifReport: SarifReport): Pair<MetaInformation, ResultAllProblems> {
+    override fun convert(sarifFile: File): Pair<MetaInformation, ResultAllProblems> {
+        val sarifReport = SarifUtil.readReport(sarifFile.toPath())
+        return convert(sarifReport)
+    }
+
+    private fun File.writeResult(src: Any) {
+        bufferedWriter(StandardCharsets.UTF_8).use { gson.toJson(src, it) }
+    }
+
+    private fun convert(sarifReport: SarifReport): Pair<MetaInformation, ResultAllProblems> {
         val problems = mutableListOf<SimpleProblem>()
         val metaInformation = MetaInformation()
         var lostProblems = 0
