@@ -19,7 +19,7 @@ serve_ui() {
 
 print_usage() {
   printf "Usage:"
-  printf "-s -- serve UI after convering"
+  printf "-s -- serve UI after converting"
 }
 
 while getopts 's' flag; do

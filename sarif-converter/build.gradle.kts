@@ -87,3 +87,11 @@ publishing {
 fun projectSettingsValue(extraParameter: String, propertiesParameter: String): String {
     return project.findProperty(extraParameter)?.toString()?.ifBlank { null } ?: propertiesParameter
 }
+
+tasks.named("publishAllPublicationsToSpaceRepository") {
+    dependsOn(tasks.test)
+}
+
+tasks.named("publishSarifConverterPublicationToSpaceRepository") {
+    dependsOn(tasks.test)
+}
