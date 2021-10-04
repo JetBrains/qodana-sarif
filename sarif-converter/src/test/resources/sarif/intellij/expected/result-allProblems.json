@@ -14,7 +14,7 @@
           "path": "wp-includes/deprecated.php",
           "language": "PHP",
           "line": 1733,
-          "offset": 46,
+          "offset": 47,
           "length": 2,
           "code": {
             "startLine": 1731,
@@ -43,7 +43,7 @@
           "path": "wp-includes/deprecated.php",
           "language": "PHP",
           "line": 2720,
-          "offset": 77,
+          "offset": 78,
           "length": 4,
           "code": {
             "startLine": 2718,

@@ -177,7 +177,7 @@ class SarifConverterImpl : SarifConverter {
             physicalLocation?.artifactLocation?.uri ?: "",
             region?.sourceLanguage ?: contextRegion?.sourceLanguage ?: "",
             region?.startLine ?: contextRegion?.startLine ?: 0,
-            (region?.startColumn ?: contextRegion?.startColumn?: 0).minus(1).coerceAtLeast(0),
+            region?.startColumn ?: contextRegion?.startColumn?: 0,
             region?.charLength ?: contextRegion?.charLength ?: 0,
             code(contextRegion, region),
             null
