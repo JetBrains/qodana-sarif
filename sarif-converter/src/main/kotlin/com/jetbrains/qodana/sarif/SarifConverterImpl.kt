@@ -206,6 +206,7 @@ class SarifConverterImpl : SarifConverter {
             put("module", locations?.firstOrNull()?.logicalLocations?.first()?.fullyQualifiedName ?: "")
             put("inspectionName", ruleId)
             baselineState?.let { if (it.isTechDebt()) put("isTechDebt", "true") }
+            baselineState?.let { put("baselineState", it.toString()) }
         }
     }
 
