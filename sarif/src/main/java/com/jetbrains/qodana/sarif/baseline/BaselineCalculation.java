@@ -44,17 +44,32 @@ public class BaselineCalculation {
     }
 
     public void fillBaselineState(SarifReport report, SarifReport baseline) {
-        List<Run> baselineRuns = baseline.getRuns();
+        List<Run> baselineRunsField = baseline.getRuns();
+        List<Run> baselineRuns = baselineRunsField != null ? new ArrayList<>(baselineRunsField) : Collections.emptyList();
+
+        List<Run> unmatched = new ArrayList<>();
+
         for (Run run : report.getRuns()) {
-            Optional<Run> first = baselineRuns == null ?
-                    Optional.empty() :
+            Optional<Run> first =
                     baselineRuns.stream().filter((it) -> Objects.equals(getToolName(it), getToolName(run))).findFirst();
 
             if (first.isPresent()) {
-                new RunResultGroup(run, first.get()).build();
+                Run baselineRun = first.get();
+                new RunResultGroup(run, baselineRun).build();
+                baselineRuns.remove(baselineRun);
             } else {
-                markRunAsNew(run);
+                unmatched.add(run);
             }
+        }
+
+        for (int i = 0; i < unmatched.size(); i++) {
+            Run run = unmatched.get(i);
+            Run baselineRun = i < baselineRuns.size() ? baselineRuns.get(i) : null;
+            if (baselineRun == null) {
+                markRunAsNew(run);
+                continue;
+            }
+            new RunResultGroup(run, baselineRun).build();
         }
     }
 

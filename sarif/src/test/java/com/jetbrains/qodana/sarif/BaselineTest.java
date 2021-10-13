@@ -88,6 +88,18 @@ public class BaselineTest {
         assertEquals(Result.BaselineState.NEW, newResult.getBaselineState());
     }
 
+    @Test
+    public void testDifferentToolName() throws IOException {
+        SarifReport report = readReport();
+        SarifReport baseline = readReport();
+        Result newResult = new Result(new Message().withText("new result"));
+        report.getRuns().get(0).getResults().add(newResult);
+
+        baseline.getRuns().get(0).getTool().getDriver().setName("AnotherName");
+        doTest(report, baseline, problemsCount(report) - 1, 0, 1);
+        assertEquals(Result.BaselineState.NEW, newResult.getBaselineState());
+    }
+
     private void doTest(SarifReport report,
                         SarifReport baseline,
                         int expectedUnchanged,
