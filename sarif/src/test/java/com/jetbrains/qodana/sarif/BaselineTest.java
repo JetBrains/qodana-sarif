@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 public class BaselineTest {
 
     private static final String QODANA_REPORT_JSON = "src/test/resources/testData/readWriteTest/qodanaReport.json";
+    private static final String QODANA_REPORT_JSON_2 = "src/test/resources/testData/readWriteTest/qodanaReport2.json";
 
     @Test
     public void testSameReport() throws IOException {
@@ -91,13 +92,10 @@ public class BaselineTest {
     @Test
     public void testDifferentToolName() throws IOException {
         SarifReport report = readReport();
-        SarifReport baseline = readReport();
-        Result newResult = new Result(new Message().withText("new result"));
-        report.getRuns().get(0).getResults().add(newResult);
-
-        baseline.getRuns().get(0).getTool().getDriver().setName("AnotherName");
-        doTest(report, baseline, problemsCount(report) - 1, 0, 1);
-        assertEquals(Result.BaselineState.NEW, newResult.getBaselineState());
+        SarifReport baseline = readReport(QODANA_REPORT_JSON_2);
+        int problemsCount = problemsCount(report);
+        doTest(report, baseline, problemsCount, 0, 1, new BaselineCalculation.Options(true));
+        //assertEquals(Result.BaselineState.NEW, newResult.getBaselineState());
     }
 
     private void doTest(SarifReport report,
