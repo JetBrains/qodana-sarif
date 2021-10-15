@@ -94,7 +94,7 @@ public class BaselineTest {
         SarifReport report = readReport();
         SarifReport baseline = readReport(QODANA_REPORT_JSON_2);
         int problemsCount = problemsCount(report);
-        doTest(report, baseline, problemsCount, 0, 1, new BaselineCalculation.Options(true));
+        doTest(report, baseline, problemsCount, 1, 0, new BaselineCalculation.Options(true));
         //assertEquals(Result.BaselineState.NEW, newResult.getBaselineState());
     }
 
