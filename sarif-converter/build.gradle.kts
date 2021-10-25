@@ -48,11 +48,13 @@ tasks.register<Jar>("sarifConverter-fatJar") {
 publishing {
     publications {
         create<MavenPublication>("sarifConverter") {
+            val majorVersion: String by project
             val minorVersion: String by project
+            val patch: String by project
 
             groupId = project.group.toString()
             artifactId = project.name
-            version = "0.1.$minorVersion"
+            version = "$majorVersion.$minorVersion.$patch"
 
             from(components["java"])
 
