@@ -24,6 +24,7 @@ public class BaselineCalculation {
     public static BaselineCalculation compare(SarifReport report, SarifReport baseline, Options options) {
         BaselineCalculation result = new BaselineCalculation(options);
         result.fillBaselineState(report, baseline);
+
         return result;
     }
 
@@ -75,7 +76,7 @@ public class BaselineCalculation {
 
     private void markRunAsNew(Run run) {
         for (Result result : run.getResults()) {
-            result.setBaselineState(NEW);
+            setBaselineState(result, NEW);
             newResults++;
         }
     }
@@ -92,13 +93,34 @@ public class BaselineCalculation {
         public static final Options DEFAULT = new Options();
 
         private final boolean includeAbsent;
+        private final boolean includeUnchanged;
+        private final boolean fillBaselineState;
 
         public Options() {
             includeAbsent = false;
+            includeUnchanged = true;
+            fillBaselineState = true;
         }
 
         public Options(boolean includeAbsent) {
+            this(includeAbsent, true, true);
+        }
+        public Options(boolean includeAbsent, boolean includeUnchanged, boolean fillBaselineState) {
             this.includeAbsent = includeAbsent;
+            this.includeUnchanged = includeUnchanged;
+            this.fillBaselineState = fillBaselineState;
+        }
+
+        public boolean isIncludeAbsent() {
+            return includeAbsent;
+        }
+
+        public boolean isIncludeUnchanged() {
+            return includeUnchanged;
+        }
+
+        public boolean isFillBaselineState() {
+            return fillBaselineState;
         }
     }
 
@@ -112,12 +134,12 @@ public class BaselineCalculation {
         public RunResultGroup(Run report, Run baseline) {
             this.report = report;
             buildMap(baseline, baselineHashes, diffBaseline);
-            removeAbsentResults(report);
+            removeProblemsWithState(report, ABSENT);
             buildMap(report, reportHashes, diffReport);
         }
 
-        private void removeAbsentResults(Run report) {
-            report.getResults().removeIf(result -> result.getBaselineState() == ABSENT);
+        private void removeProblemsWithState(Run report, Result.BaselineState state) {
+            report.getResults().removeIf(result -> result.getBaselineState() == state);
         }
 
         private void buildMap(Run run, Map<String, Result> map, Map<ResultKey, List<Result>> diffSet) {
@@ -144,7 +166,7 @@ public class BaselineCalculation {
         public void build() {
             reportHashes.forEach((hash, result) -> {
                 if (baselineHashes.containsKey(hash)) {
-                    result.setBaselineState(UNCHANGED);
+                    setBaselineState(result, UNCHANGED);
                     unchangedResults++;
                 } else {
                     addToDiff(result, diffReport);
@@ -161,10 +183,10 @@ public class BaselineCalculation {
                 List<Result> baselineDiffBucket = diffBaseline.getOrDefault(key, Collections.emptyList());
                 for (Result result : reportDiffBucket) {
                     if (baselineDiffBucket.isEmpty()) {
-                        result.setBaselineState(NEW);
+                        setBaselineState(result, NEW);
                         newResults++;
                     } else {
-                        result.setBaselineState(UNCHANGED);
+                        setBaselineState(result, UNCHANGED);
                         baselineDiffBucket.remove(baselineDiffBucket.size() - 1);
                         unchangedResults++;
                     }
@@ -173,11 +195,22 @@ public class BaselineCalculation {
 
             if (options.includeAbsent) {
                 diffBaseline.entrySet().stream().flatMap((it) -> it.getValue().stream()).forEach(result -> {
-                    result.setBaselineState(ABSENT);
+                    setBaselineState(result, ABSENT);
                     absentResults++;
                     report.getResults().add(result);
                 });
             }
+
+            if (!options.includeUnchanged) {
+                removeProblemsWithState(report, UNCHANGED);
+                unchangedResults = 0;
+            }
+        }
+    }
+
+    private void setBaselineState(Result result, Result.BaselineState state) {
+        if (options.fillBaselineState) {
+            result.setBaselineState(state);
         }
     }
 }

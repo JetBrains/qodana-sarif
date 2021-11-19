@@ -30,6 +30,14 @@ public class BaselineTest {
     }
 
     @Test
+    public void testSameReportNotFillState() throws IOException {
+        SarifReport report = readReport();
+        SarifReport baseline = readReport();
+
+        doTest(report, baseline, problemsCount(report), 0, 0, new BaselineCalculation.Options(false, true, false));
+    }
+
+    @Test
     public void testCompareWithEmpty() throws IOException {
         SarifReport report = readReport();
         SarifReport baseline = new SarifReport();
@@ -90,6 +98,18 @@ public class BaselineTest {
     }
 
     @Test
+    public void testCompareWithOneNewIgnoreUnchanged() throws IOException {
+        SarifReport report = readReport();
+        SarifReport baseline = readReport();
+        Result newResult = new Result(new Message().withText("new result"));
+        report.getRuns().get(0).getResults().add(newResult);
+
+        doTest(report, baseline, 0, 0, 1, new BaselineCalculation.Options(false, false, true));
+        assertEquals(Result.BaselineState.NEW, newResult.getBaselineState());
+        assertEquals(1, report.getRuns().get(0).getResults().size());
+    }
+
+    @Test
     public void testDifferentToolName() throws IOException {
         SarifReport report = readReport();
         SarifReport baseline = readReport(QODANA_REPORT_JSON_2);
@@ -109,16 +129,24 @@ public class BaselineTest {
         assertEquals("Unchanged:", expectedUnchanged, calculation.getUnchangedResults());
         assertEquals("Absent:", expectedAbsent, calculation.getAbsentResults());
         assertEquals("New:", expectedNew, calculation.getNewResults());
+        List<Result> results = report.getRuns().get(0).getResults();
+        if (!options.isFillBaselineState()) {
+            long count = results.stream().filter(it -> it.getBaselineState() == null).count();
+            assertEquals(results.size(), count);
+            assertEquals(expectedUnchanged + expectedAbsent + expectedNew, count);
+            return;
+        }
 
-        Map<Result.BaselineState, List<Result>> results = report.getRuns().get(0).getResults().stream().collect(Collectors.groupingBy(Result::getBaselineState));
+        Map<Result.BaselineState, List<Result>> grouped = results.stream()
+                .filter(it -> it.getBaselineState() != null)
+                .collect(Collectors.groupingBy(Result::getBaselineState));
 
-        List<Result> resultsUnchanged = results.get(Result.BaselineState.UNCHANGED);
-        List<Result> resultsAbsent = results.get(Result.BaselineState.ABSENT);
-        List<Result> resultsNew = results.get(Result.BaselineState.NEW);
+        List<Result> resultsUnchanged = grouped.get(Result.BaselineState.UNCHANGED);
+        List<Result> resultsAbsent = grouped.get(Result.BaselineState.ABSENT);
+        List<Result> resultsNew = grouped.get(Result.BaselineState.NEW);
         assertEquals("Unchanged:", expectedUnchanged, resultsUnchanged == null ? 0 : resultsUnchanged.size());
         assertEquals("Absent:", expectedAbsent, resultsAbsent == null ? 0 : resultsAbsent.size());
         assertEquals("New:", expectedNew, resultsNew == null ? 0 : resultsNew.size());
-
     }
 
     private void doTest(SarifReport report,
