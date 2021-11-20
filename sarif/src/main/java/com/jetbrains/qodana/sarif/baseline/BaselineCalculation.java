@@ -105,6 +105,7 @@ public class BaselineCalculation {
         public Options(boolean includeAbsent) {
             this(includeAbsent, true, true);
         }
+
         public Options(boolean includeAbsent, boolean includeUnchanged, boolean fillBaselineState) {
             this.includeAbsent = includeAbsent;
             this.includeUnchanged = includeUnchanged;
@@ -205,13 +206,17 @@ public class BaselineCalculation {
                 removeProblemsWithState(report, UNCHANGED);
                 unchangedResults = 0;
             }
+
+            if (!options.fillBaselineState) {
+                for (Result result : report.getResults()) {
+                    result.setBaselineState(null);
+                }
+            }
         }
     }
 
     private void setBaselineState(Result result, Result.BaselineState state) {
-        if (options.fillBaselineState) {
-            result.setBaselineState(state);
-        }
+        result.setBaselineState(state);
     }
 }
 

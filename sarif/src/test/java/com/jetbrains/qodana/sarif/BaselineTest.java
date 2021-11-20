@@ -38,6 +38,14 @@ public class BaselineTest {
     }
 
     @Test
+    public void testSameReportNotFillStateAndUnchanged() throws IOException {
+        SarifReport report = readReport();
+        SarifReport baseline = readReport();
+
+        doTest(report, baseline, 0, 0, 0, new BaselineCalculation.Options(false, false, false));
+    }
+
+    @Test
     public void testCompareWithEmpty() throws IOException {
         SarifReport report = readReport();
         SarifReport baseline = new SarifReport();
@@ -130,6 +138,7 @@ public class BaselineTest {
         assertEquals("Absent:", expectedAbsent, calculation.getAbsentResults());
         assertEquals("New:", expectedNew, calculation.getNewResults());
         List<Result> results = report.getRuns().get(0).getResults();
+
         if (!options.isFillBaselineState()) {
             long count = results.stream().filter(it -> it.getBaselineState() == null).count();
             assertEquals(results.size(), count);
