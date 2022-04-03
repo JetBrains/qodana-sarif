@@ -105,8 +105,11 @@ public class ResultKey {
         if (result.getLocations() == null) return hash;
         for (Location location : result.getLocations()) {
             hash = ((hash * 31) + hashPhysicalLocation(location.getPhysicalLocation()));
-            for (LogicalLocation logicalLocation : location.getLogicalLocations()) {
-                hash = ((hash * 31) + hashLogicalLocation(logicalLocation));
+            Set<LogicalLocation> logicalLocations = location.getLogicalLocations();
+            if (logicalLocations != null) {
+                for (LogicalLocation logicalLocation : logicalLocations) {
+                    hash = ((hash * 31) + hashLogicalLocation(logicalLocation));
+                }
             }
         }
         return hash;
