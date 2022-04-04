@@ -41,13 +41,14 @@ publishing {
         }
         maven {
             name = "Space"
-            val spaceLogin: String by rootProject.extra
-            val spacePassword: String by rootProject.extra
+            val spaceUsername: String by project
+            val spacePassword: String by project
             val spaceArtifactoryUrl: String by project
 
             url = uri(spaceArtifactoryUrl)
             credentials {
-                username = spaceLogin
+
+                username = spaceUsername
                 password = spacePassword
             }
         }
