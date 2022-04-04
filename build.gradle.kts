@@ -5,12 +5,12 @@ plugins {
     kotlin("jvm") version "1.3.72"
 }
 
-val spaceUser: String by project
-val spacePasswordToken: String by project
+val spaceUsername: String by project
+val spacePassword: String by project
 
 val kotlinVersion by extra("1.3.72")
-val spaceLogin by extra(projectSettingsValue("spaceLogin", spaceUser))
-val spacePassword by extra(projectSettingsValue("spacePassword", spacePasswordToken))
+//val spaceLogin by extra(projectSettingsValue("spaceLogin", spaceUser))
+//val spacePassword by extra(projectSettingsValue("spacePassword", spacePasswordToken))
 
 
 allprojects {
@@ -32,7 +32,7 @@ allprojects {
             url = uri(spaceArtifactoryUrl)
 
             credentials {
-                username = spaceLogin
+                username = spaceUsername
                 password = spacePassword
             }
         }
