@@ -1,6 +1,7 @@
 package com.jetbrains.qodana.sarif;
 
 import com.jetbrains.qodana.sarif.model.PropertyBag;
+import com.jetbrains.qodana.sarif.model.Result;
 import com.jetbrains.qodana.sarif.model.SarifReport;
 import com.jetbrains.qodana.sarif.model.VersionedMap;
 import org.junit.Assert;
@@ -12,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -34,6 +36,18 @@ public class DeserializeTest {
 
         assertEquals(fingerprints,
                 SarifUtil.readReport(target).getRuns().get(0).getResults().iterator().next().getPartialFingerprints());
+    }
+
+    @Test
+    public void testPromoAndSanity() throws IOException {
+        Path target = Paths.get("src/test/resources/testData/serializeTest/real.sarif.json");
+
+        PropertyBag properties = SarifUtil.readReport(target).getRuns().get(0).getProperties();
+        List<Result> promo = SarifUtil.readResultsFromObject(properties.get("qodana.promo.results"));
+        List<Result> sanity = SarifUtil.readResultsFromObject(properties.get("qodana.sanity.results"));
+
+        Assert.assertEquals(7, promo.size());
+        Assert.assertEquals(2, sanity.size());
     }
 
 

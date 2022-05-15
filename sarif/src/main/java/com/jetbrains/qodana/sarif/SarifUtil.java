@@ -2,6 +2,7 @@ package com.jetbrains.qodana.sarif;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.jetbrains.qodana.sarif.model.*;
 
 import java.io.IOException;
@@ -26,6 +27,12 @@ public class SarifUtil {
         try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             return readReport(reader);
         }
+    }
+
+    public static List<Result> readResultsFromObject(Object o) {
+        Gson gson = createGson();
+        String json = gson.toJson(o);
+        return gson.fromJson(json, new TypeToken<List<Result>>(){}.getType());
     }
 
     public static SarifReport emptyReport(String toolName) {
