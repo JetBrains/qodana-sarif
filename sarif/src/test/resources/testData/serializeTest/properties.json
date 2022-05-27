@@ -1,14 +1,3 @@
-{
-  "properties": {
-    "someProp": "someValue",
-    "someArray": [
-      "1",
-      "2",
-      "3"
-    ],
-    "tags": [
-      "someProp",
-      "someArray"
-    ]
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:692932aceb2c123ad6d015653e7c723ae2b319f14b9cd039efdaa73b430f3dfb
+size 168

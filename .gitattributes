@@ -1,0 +1,1 @@
+sarif/src/test/resources/**/*.json filter=lfs diff=lfs merge=lfs -text

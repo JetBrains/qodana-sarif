@@ -2,6 +2,11 @@ package com.jetbrains.qodana.sarif;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jetbrains.qodana.sarif.model.streaming.IndexedResult;
+import com.jetbrains.qodana.sarif.model.streaming.IndexedResultIterator;
+import com.jetbrains.qodana.sarif.model.streaming.ResultIterator;
+import com.jetbrains.qodana.sarif.model.streaming.StreamJsonRunsListTypeAdapter;
+import com.jetbrains.qodana.sarif.model.streaming.StreamingFieldsExclusionStrategy;
 import com.google.gson.reflect.TypeToken;
 import com.jetbrains.qodana.sarif.model.*;
 
@@ -12,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class SarifUtil {
@@ -19,8 +25,16 @@ public class SarifUtil {
     }
 
     public static SarifReport readReport(Reader reader) {
-        Gson gson = createGson();
-        return gson.fromJson(reader, SarifReport.class);
+        return readReport(reader, true);
+    }
+
+    public static SarifReport readReport(Reader reader, boolean readResults) {
+        GsonBuilder gsonBuilder = createGsonBuilder();
+        if (!readResults) {
+            gsonBuilder.addDeserializationExclusionStrategy(new StreamingFieldsExclusionStrategy());
+            gsonBuilder.registerTypeAdapterFactory(StreamJsonRunsListTypeAdapter.makeFactory());
+        }
+        return gsonBuilder.create().fromJson(reader, SarifReport.class);
     }
 
     public static SarifReport readReport(Path path) throws IOException {
@@ -52,10 +66,33 @@ public class SarifUtil {
     }
 
     public static Gson createGson() {
+        return createGsonBuilder().create();
+    }
+
+    public static GsonBuilder createGsonBuilder() {
         return new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
-                .registerTypeAdapter(PropertyBag.class, new PropertyBag.PropertyBagTypeAdapter().nullSafe())
-                .create();
+                .registerTypeAdapter(PropertyBag.class, new PropertyBag.PropertyBagTypeAdapter().nullSafe());
+    }
+
+    /**
+     *
+     * @param reader reader in the begging of SarifReport object
+     * @param runIndexInReport run's index in runs array of sarif report
+     * @return iterator over results, that lazily reads results from reader
+     */
+    public static Iterator<Result> lazyReadResults(Reader reader, int runIndexInReport) {
+        return new ResultIterator(reader, runIndexInReport);
+    }
+
+    /**
+     *
+     * @param reader reader in the begging of SarifReport object
+     * @return iterator over pairs of run's index (from runs array of sarif report) and results in that run, that
+     * lazily reads pairs from reader
+     */
+    public static Iterator<IndexedResult> lazyReadIndexedResults(Reader reader) {
+        return new IndexedResultIterator(reader);
     }
 }

@@ -2,7 +2,11 @@ package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.jetbrains.qodana.sarif.model.streaming.IndexedResult;
+import com.jetbrains.qodana.sarif.model.streaming.IndexedResultIterator;
+import com.jetbrains.qodana.sarif.model.streaming.ResultIterator;
 
+import java.io.Reader;
 import java.util.*;
 
 
@@ -68,6 +72,7 @@ public class Run {
     private Set<Graph> graphs = null;
     /**
      * The set of results contained in an SARIF log. The results array can be omitted when a run is solely exporting rules metadata. It must be present (but may be empty) if a log file represents an actual scan.
+     * This field can be null, it means it is not read
      */
     @SerializedName("results")
     @Expose
@@ -370,6 +375,7 @@ public class Run {
 
     /**
      * The set of results contained in an SARIF log. The results array can be omitted when a run is solely exporting rules metadata. It must be present (but may be empty) if a log file represents an actual scan.
+     * This can return null, it means it is not read
      */
     public List<Result> getResults() {
         return results;
@@ -855,36 +861,13 @@ public class Run {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        result = ((result * 31) + ((this.addresses == null) ? 0 : this.addresses.hashCode()));
-        result = ((result * 31) + ((this.logicalLocations == null) ? 0 : this.logicalLocations.hashCode()));
-        result = ((result * 31) + ((this.policies == null) ? 0 : this.policies.hashCode()));
-        result = ((result * 31) + ((this.language == null) ? 0 : this.language.hashCode()));
-        result = ((result * 31) + ((this.invocations == null) ? 0 : this.invocations.hashCode()));
-        result = ((result * 31) + ((this.graphs == null) ? 0 : this.graphs.hashCode()));
-        result = ((result * 31) + ((this.baselineGuid == null) ? 0 : this.baselineGuid.hashCode()));
-        result = ((result * 31) + ((this.translations == null) ? 0 : this.translations.hashCode()));
-        result = ((result * 31) + ((this.newlineSequences == null) ? 0 : this.newlineSequences.hashCode()));
-        result = ((result * 31) + ((this.webResponses == null) ? 0 : this.webResponses.hashCode()));
-        result = ((result * 31) + ((this.externalPropertyFileReferences == null) ? 0 : this.externalPropertyFileReferences.hashCode()));
-        result = ((result * 31) + ((this.defaultSourceLanguage == null) ? 0 : this.defaultSourceLanguage.hashCode()));
-        result = ((result * 31) + ((this.webRequests == null) ? 0 : this.webRequests.hashCode()));
-        result = ((result * 31) + ((this.results == null) ? 0 : this.results.hashCode()));
-        result = ((result * 31) + ((this.automationDetails == null) ? 0 : this.automationDetails.hashCode()));
-        result = ((result * 31) + ((this.conversion == null) ? 0 : this.conversion.hashCode()));
-        result = ((result * 31) + ((this.artifacts == null) ? 0 : this.artifacts.hashCode()));
-        result = ((result * 31) + ((this.originalUriBaseIds == null) ? 0 : this.originalUriBaseIds.hashCode()));
-        result = ((result * 31) + ((this.specialLocations == null) ? 0 : this.specialLocations.hashCode()));
-        result = ((result * 31) + ((this.defaultEncoding == null) ? 0 : this.defaultEncoding.hashCode()));
-        result = ((result * 31) + ((this.tool == null) ? 0 : this.tool.hashCode()));
-        result = ((result * 31) + ((this.versionControlProvenance == null) ? 0 : this.versionControlProvenance.hashCode()));
-        result = ((result * 31) + ((this.runAggregates == null) ? 0 : this.runAggregates.hashCode()));
-        result = ((result * 31) + ((this.redactionTokens == null) ? 0 : this.redactionTokens.hashCode()));
-        result = ((result * 31) + ((this.taxonomies == null) ? 0 : this.taxonomies.hashCode()));
-        result = ((result * 31) + ((this.columnKind == null) ? 0 : this.columnKind.hashCode()));
-        result = ((result * 31) + ((this.threadFlowLocations == null) ? 0 : this.threadFlowLocations.hashCode()));
-        result = ((result * 31) + ((this.properties == null) ? 0 : this.properties.hashCode()));
-        return result;
+        return Objects.hash(
+                addresses, logicalLocations, policies, language, invocations, graphs, baselineGuid, translations,
+                newlineSequences, webResponses, externalPropertyFileReferences, defaultSourceLanguage, webRequests,
+                results, automationDetails, conversion, artifacts, originalUriBaseIds, specialLocations,
+                defaultEncoding, tool, versionControlProvenance, runAggregates, redactionTokens, taxonomies,
+                columnKind, threadFlowLocations, properties
+        );
     }
 
     @Override

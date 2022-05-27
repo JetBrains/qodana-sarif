@@ -1,20 +1,3 @@
-{
-  "runs": [
-    {
-      "language": "en-US",
-      "results": [
-        {
-          "kind": "fail",
-          "level": "warning",
-          "partialFingerprints": {
-            "idea/v1": "value"
-          }
-        }
-      ],
-      "newlineSequences": [
-        "\r\n",
-        "\n"
-      ]
-    }
-  ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:823b748d77b1b64894e26e80ef09dc7358f3b206192f4e6925db413a1fbc357a
+size 305
