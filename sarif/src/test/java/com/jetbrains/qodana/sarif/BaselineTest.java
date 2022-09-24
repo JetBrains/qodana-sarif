@@ -9,6 +9,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -116,6 +118,55 @@ public class BaselineTest {
         assertEquals(Result.BaselineState.NEW, newResult.getBaselineState());
         assertEquals(1, report.getRuns().get(0).getResults().size());
     }
+
+    @Test
+    public void testIncrementalBaselineOneNew() throws IOException {
+        SarifReport report = readReport();
+        SarifReport baseline = readReport();
+        Result newResult = new Result(new Message().withText("new result"));
+        report.getRuns().get(0).setResults(new ArrayList<>(List.of(newResult)));
+
+        BaselineCalculation.Options options = new BaselineCalculation.Options(true, true, true,
+                (result -> result == newResult));
+        doTest(report, baseline, problemsCount(baseline), 0, 1, options);
+        assertEquals(Result.BaselineState.NEW, newResult.getBaselineState());
+        assertEquals(problemsCount(baseline) + 1, report.getRuns().get(0).getResults().size());
+    }
+
+    @Test
+    public void testIncrementalBaselineOneAbsent() throws IOException {
+        SarifReport report = readReport();
+        SarifReport baseline = readReport();
+        Result newResult = new Result(new Message().withText("new result"));
+        baseline.getRuns().get(0).setResults(new ArrayList<>(List.of(newResult)));
+
+        BaselineCalculation.Options options = new BaselineCalculation.Options(true, true, true,
+                (result -> result == newResult));
+        doTest(report, baseline, 0, 1, problemsCount(report), options);
+        assertEquals(Result.BaselineState.ABSENT, newResult.getBaselineState());
+    }
+
+    @Test
+    public void testIncrementalBaselineOneAbsentOneNew() throws IOException {
+        SarifReport report = readReport();
+        SarifReport baseline = readReport();
+        Result result1 = new Result(new Message().withText("new result1"));
+        Result result2 = new Result(new Message().withText("new result2"));
+        Result result3 = new Result(new Message().withText("new result3"));
+        Result result4 = new Result(new Message().withText("new result4"));
+        baseline.getRuns().get(0).setResults(new ArrayList<>(List.of(result1, result2, result4)));
+        report.getRuns().get(0).setResults(new ArrayList<>(List.of(result2, result3)));
+
+        BaselineCalculation.Options options = new BaselineCalculation.Options(true, true, true,
+                (result -> result == result1 || result == result2 || result == result3));
+
+        doTest(report, baseline, 2, 1, 1, options);
+        assertEquals(Result.BaselineState.ABSENT, result1.getBaselineState());
+        assertEquals(Result.BaselineState.UNCHANGED, result2.getBaselineState());
+        assertEquals(Result.BaselineState.NEW, result3.getBaselineState());
+        assertEquals(Result.BaselineState.UNCHANGED, result4.getBaselineState());
+    }
+
 
     @Test
     public void testDifferentToolName() throws IOException {

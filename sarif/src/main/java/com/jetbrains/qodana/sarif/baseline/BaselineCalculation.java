@@ -3,6 +3,7 @@ package com.jetbrains.qodana.sarif.baseline;
 import com.jetbrains.qodana.sarif.model.*;
 
 import java.util.*;
+import java.util.function.Function;
 
 import static com.jetbrains.qodana.sarif.model.Result.BaselineState.*;
 
@@ -96,10 +97,25 @@ public class BaselineCalculation {
         private final boolean includeUnchanged;
         private final boolean fillBaselineState;
 
+        /**
+         * Provides information about incremental build.
+         * This function applied to baseline result and should return true
+         * if this result should be updated by current report.
+         * It means:
+         * if old result is absent and wasChecked == true -> oldResult.baselineState = ABSENT
+         * if old result is absent and wasChecked == false -> oldResult.baselineState = UNCHANGED
+         * if old result is present then current result `wasChecked` is not used.
+         *
+         * Typicaly wasChecked is true if result is in the scope of current check.
+         */
+        private static final Function<Result, Boolean> ALL_CHECKED = (result) -> true;
+        private final Function<Result, Boolean> wasChecked;
+
         public Options() {
             includeAbsent = false;
             includeUnchanged = true;
             fillBaselineState = true;
+            wasChecked = ALL_CHECKED;
         }
 
         public Options(boolean includeAbsent) {
@@ -110,6 +126,17 @@ public class BaselineCalculation {
             this.includeAbsent = includeAbsent;
             this.includeUnchanged = includeUnchanged;
             this.fillBaselineState = fillBaselineState;
+            wasChecked = ALL_CHECKED;
+        }
+
+        public Options(boolean includeAbsent,
+                       boolean includeUnchanged,
+                       boolean fillBaselineState,
+                       Function<Result, Boolean> wasChecked) {
+            this.includeAbsent = includeAbsent;
+            this.includeUnchanged = includeUnchanged;
+            this.fillBaselineState = fillBaselineState;
+            this.wasChecked = wasChecked;
         }
 
         public boolean isIncludeAbsent() {
@@ -176,7 +203,13 @@ public class BaselineCalculation {
 
             baselineHashes.forEach((hash, result) -> {
                 if (!reportHashes.containsKey(hash)) {
-                    addToDiff(result, diffBaseline);
+                    if (options.wasChecked.apply(result)) {
+                        addToDiff(result, diffBaseline);
+                    } else {
+                        result.setBaselineState(UNCHANGED);
+                        report.getResults().add(result);
+                        unchangedResults += 1;
+                    }
                 }
             });
 
@@ -194,13 +227,19 @@ public class BaselineCalculation {
                 }
             });
 
-            if (options.includeAbsent) {
-                diffBaseline.entrySet().stream().flatMap((it) -> it.getValue().stream()).forEach(result -> {
-                    setBaselineState(result, ABSENT);
-                    absentResults++;
+            diffBaseline.entrySet().stream().flatMap((it) -> it.getValue().stream()).forEach(result -> {
+                if (options.wasChecked.apply(result)) {
+                    if (options.includeAbsent) {
+                        setBaselineState(result, ABSENT);
+                        absentResults++;
+                        report.getResults().add(result);
+                    }
+                } else {
+                    result.setBaselineState(UNCHANGED);
                     report.getResults().add(result);
-                });
-            }
+                    unchangedResults += 1;
+                }
+            });
 
             if (!options.includeUnchanged) {
                 removeProblemsWithState(report, UNCHANGED);
