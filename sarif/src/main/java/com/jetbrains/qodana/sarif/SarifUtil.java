@@ -38,8 +38,12 @@ public class SarifUtil {
     }
 
     public static SarifReport readReport(Path path) throws IOException {
+        return readReport(path, true);
+    }
+
+    public static SarifReport readReport(Path path, boolean readResults) throws IOException {
         try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            return readReport(reader);
+            return readReport(reader, readResults);
         }
     }
 
