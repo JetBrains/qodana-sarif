@@ -22,6 +22,7 @@ public class SerializeTest {
         PropertyBag bag = new PropertyBag();
         bag.put("someProp", "someValue");
         bag.put("someArray", Arrays.asList("1", "2", "3"));
+        bag.getTags().add("someTag");
         SarifReport report = new SarifReport().withProperties(bag);
         doTest(targetJson, report);
     }

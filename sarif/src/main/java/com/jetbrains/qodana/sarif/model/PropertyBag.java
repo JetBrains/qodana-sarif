@@ -12,21 +12,15 @@ import java.util.*;
 
 /**
  * Key/value pairs that provide additional information about the object.
- * Additional tags  - tags provided by parent run object.
+ * Tags - reserved key for additional tags .
  */
 public class PropertyBag implements Map<String, Object> {
     private final Map<String, Object> properties = new HashMap<>();
 
-    private final Set<String> additionalTags = new LinkedHashSet<>();
+    private final Set<String> tags = new LinkedHashSet<>();
 
     public Set<String> getTags() {
-        HashSet<String> result = new HashSet<>(properties.keySet());
-        result.addAll(additionalTags);
-        return result;
-    }
-
-    public Set<String> getAdditionalTags() {
-        return additionalTags;
+        return tags;
     }
 
     @Override
@@ -94,12 +88,12 @@ public class PropertyBag implements Map<String, Object> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PropertyBag that = (PropertyBag) o;
-        return Objects.equals(properties, that.properties) && Objects.equals(additionalTags, that.additionalTags);
+        return Objects.equals(properties, that.properties) && Objects.equals(tags, that.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(properties, additionalTags);
+        return Objects.hash(properties, tags);
     }
 
 
@@ -108,7 +102,9 @@ public class PropertyBag implements Map<String, Object> {
 
         public void write(JsonWriter out, PropertyBag bag) throws IOException {
             HashMap<String, Object> toSerialize = new HashMap<>(bag);
-            toSerialize.put("tags", bag.getTags());
+            if (!bag.tags.isEmpty()) {
+                toSerialize.put("tags", bag.getTags());
+            }
             embedded.toJson(toSerialize, Map.class, out);
         }
 
@@ -120,7 +116,7 @@ public class PropertyBag implements Map<String, Object> {
             if (tags instanceof String[]) {
                 for (String tag : (String[]) tags) {
                     if (!map.containsKey(tag)) {
-                        result.additionalTags.add(tag);
+                        result.tags.add(tag);
                     }
                 }
             }
