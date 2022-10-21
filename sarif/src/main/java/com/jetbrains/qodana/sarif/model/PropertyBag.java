@@ -12,9 +12,11 @@ import java.util.*;
 
 /**
  * Key/value pairs that provide additional information about the object.
- * Tags - reserved key for additional tags .
+ * Tags - reserved key for additional tags.
  */
 public class PropertyBag implements Map<String, Object> {
+    public static final String TAGS_KEY = "tags";
+
     private final Map<String, Object> properties = new HashMap<>();
 
     private final Set<String> tags = new LinkedHashSet<>();
@@ -45,21 +47,26 @@ public class PropertyBag implements Map<String, Object> {
 
     @Override
     public Object get(Object key) {
+        if (TAGS_KEY.equals(key)) throw new IllegalArgumentException(TAGS_KEY + " is a reserved key");
         return properties.get(key);
     }
 
     @Override
     public Object put(String key, Object value) {
+        if (TAGS_KEY.equals(key)) throw new IllegalArgumentException(TAGS_KEY + " is a reserved key");
         return properties.put(key, value);
     }
 
     @Override
     public Object remove(Object key) {
+        if (TAGS_KEY.equals(key)) throw new IllegalArgumentException(TAGS_KEY + " is a reserved key");
         return properties.remove(key);
     }
 
     @Override
     public void putAll(Map<? extends String, ?> m) {
+        if (m.containsKey(TAGS_KEY)) throw new IllegalArgumentException(TAGS_KEY + " is a reserved key");
+
         properties.putAll(m);
     }
 
@@ -103,7 +110,7 @@ public class PropertyBag implements Map<String, Object> {
         public void write(JsonWriter out, PropertyBag bag) throws IOException {
             HashMap<String, Object> toSerialize = new HashMap<>(bag);
             if (!bag.tags.isEmpty()) {
-                toSerialize.put("tags", bag.getTags());
+                toSerialize.put(TAGS_KEY, bag.getTags());
             }
             embedded.toJson(toSerialize, Map.class, out);
         }
@@ -111,14 +118,10 @@ public class PropertyBag implements Map<String, Object> {
         public PropertyBag read(JsonReader reader) throws IOException {
             PropertyBag result = new PropertyBag();
             Map<String, Object> map = embedded.fromJson(reader, Map.class);
-            Object tags = map.remove("tags");
+            Object tags = map.remove(TAGS_KEY);
             result.putAll(map);
-            if (tags instanceof String[]) {
-                for (String tag : (String[]) tags) {
-                    if (!map.containsKey(tag)) {
-                        result.tags.add(tag);
-                    }
-                }
+            if (tags instanceof List) {
+                result.tags.addAll((Collection<? extends String>) tags);
             }
             return result;
         }
