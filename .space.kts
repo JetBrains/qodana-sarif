@@ -2,7 +2,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 job("Polaris Artifact") {
-    container(displayName = "Create TID", image = "amazoncorretto:17-alpine") {
+    container("registry.jetbrains.team/p/sa/public/qodana-jvm:polaris") {
         kotlinScript { api ->
             val spaceProjectKey = System.getenv("JB_SPACE_PROJECT_KEY")
             val repoName = System.getenv("JB_SPACE_GIT_REPOSITORY_NAME")
