@@ -12,12 +12,16 @@ import java.io.Reader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 abstract public class StreamParseTest {
+    protected static String sanityPath = "src/test/resources/testData/readWriteTest/qodanaReportWithSanity.json";
+
     @FunctionalInterface
     protected interface ExceptionConsumer<T> extends Consumer<T> {
         void throwingAccept(T t) throws Exception;
@@ -78,7 +82,13 @@ abstract public class StreamParseTest {
 
     protected SarifReport read(String path, boolean streaming) throws IOException {
         try (Reader reader = makeReader(path)) {
-            return SarifUtil.readReport(reader, !streaming);
+            List<String> skippedProperties;
+            if (streaming) {
+                skippedProperties = Collections.singletonList("qodana.sanity.results");
+            } else {
+                skippedProperties = Collections.emptyList();
+            }
+            return SarifUtil.readReport(reader, !streaming, skippedProperties);
         }
     }
 

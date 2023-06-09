@@ -2,13 +2,19 @@ package com.jetbrains.qodana.sarif;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.jetbrains.qodana.sarif.model.PropertyBag;
+import com.jetbrains.qodana.sarif.model.Result;
+import com.jetbrains.qodana.sarif.model.Run;
+import com.jetbrains.qodana.sarif.model.SarifReport;
+import com.jetbrains.qodana.sarif.model.Tool;
+import com.jetbrains.qodana.sarif.model.ToolComponent;
 import com.jetbrains.qodana.sarif.model.streaming.IndexedResult;
 import com.jetbrains.qodana.sarif.model.streaming.IndexedResultIterator;
 import com.jetbrains.qodana.sarif.model.streaming.ResultIterator;
+import com.jetbrains.qodana.sarif.model.streaming.ResultLocation;
 import com.jetbrains.qodana.sarif.model.streaming.StreamJsonRunsListTypeAdapter;
 import com.jetbrains.qodana.sarif.model.streaming.StreamingFieldsExclusionStrategy;
-import com.google.gson.reflect.TypeToken;
-import com.jetbrains.qodana.sarif.model.*;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -17,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,11 +36,21 @@ public class SarifUtil {
     }
 
     public static SarifReport readReport(Reader reader, boolean readResults) {
+        return readReport(reader, readResults, Collections.emptyList());
+    }
+
+    public static SarifReport readReport(Reader reader, boolean readResults, Iterable<String> skippedProperties) {
         GsonBuilder gsonBuilder = createGsonBuilder();
-        if (!readResults) {
-            gsonBuilder.addDeserializationExclusionStrategy(new StreamingFieldsExclusionStrategy());
+        Iterator<String> skippedPropertiesIterator = skippedProperties.iterator();
+        if (!readResults || skippedPropertiesIterator.hasNext()) {
             gsonBuilder.registerTypeAdapterFactory(StreamJsonRunsListTypeAdapter.makeFactory());
         }
+        if (!readResults) {
+            gsonBuilder.addDeserializationExclusionStrategy(StreamingFieldsExclusionStrategy.results());
+        }
+        skippedPropertiesIterator.forEachRemaining(property ->
+                gsonBuilder.addDeserializationExclusionStrategy(StreamingFieldsExclusionStrategy.property(property))
+        );
         return gsonBuilder.create().fromJson(reader, SarifReport.class);
     }
 
@@ -50,7 +67,18 @@ public class SarifUtil {
     public static List<Result> readResultsFromObject(Object o) {
         Gson gson = createGson();
         String json = gson.toJson(o);
-        return gson.fromJson(json, new TypeToken<List<Result>>(){}.getType());
+        return gson.fromJson(json, new TypeToken<List<Result>>() {
+        }.getType());
+    }
+
+    /**
+     *
+     * @param reader         reader in the begging of SarifReport object
+     * @param resultLocation results location in the given SarifReport
+     * @return iterator over results, that lazily reads results from reader
+     */
+    public static Iterator<Result> lazyReadResultsFromLocation(Reader reader, ResultLocation resultLocation) {
+        return new ResultIterator(reader, resultLocation);
     }
 
     public static SarifReport emptyReport(String toolName) {
@@ -87,11 +115,10 @@ public class SarifUtil {
      * @return iterator over results, that lazily reads results from reader
      */
     public static Iterator<Result> lazyReadResults(Reader reader, int runIndexInReport) {
-        return new ResultIterator(reader, runIndexInReport);
+        return lazyReadResultsFromLocation(reader, new ResultLocation.InRun(runIndexInReport));
     }
 
     /**
-     *
      * @param reader reader in the begging of SarifReport object
      * @return iterator over pairs of run's index (from runs array of sarif report) and results in that run, that
      * lazily reads pairs from reader

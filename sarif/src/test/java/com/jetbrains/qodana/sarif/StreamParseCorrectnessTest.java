@@ -1,12 +1,14 @@
 package com.jetbrains.qodana.sarif;
 
-import com.jetbrains.qodana.sarif.model.streaming.IndexedResult;
 import com.jetbrains.qodana.sarif.model.Result;
-import com.jetbrains.qodana.sarif.model.Run;
 import com.jetbrains.qodana.sarif.model.SarifReport;
+import com.jetbrains.qodana.sarif.model.streaming.IndexedResult;
+import com.jetbrains.qodana.sarif.model.streaming.ResultLocation;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.Iterator;
 
 public class StreamParseCorrectnessTest extends StreamParseTest {
@@ -32,6 +34,7 @@ public class StreamParseCorrectnessTest extends StreamParseTest {
             );
         });
     }
+
     @Test
     public void testStreamParseMakeSameAsSimpleParseReadingResultsTogether() {
         forEachInput(inputPath -> {
@@ -61,5 +64,26 @@ public class StreamParseCorrectnessTest extends StreamParseTest {
             );
             Assert.assertFalse(anyLeftAtLastRun[0]);
         });
+    }
+
+    @Test
+    public void testStreamParseReadsSanityCorrectly() throws IOException {
+        SarifReport expectedReport = read(sanityPath, false);
+        String propertyName = "qodana.sanity.results";
+
+        try (Reader reader = makeReader(sanityPath)) {
+            Iterator<Result> expectedResults = SarifUtil
+                    .readResultsFromObject(expectedReport.getRuns().get(0).getProperties().get(propertyName))
+                    .iterator();
+            Iterator<Result> actualResults = SarifUtil.lazyReadResultsFromLocation(
+                    reader,
+                    new ResultLocation.InProperties(0, propertyName)
+            );
+            while (expectedResults.hasNext()) {
+                Assert.assertTrue(actualResults.hasNext());
+                Assert.assertEquals(expectedResults.next(), actualResults.next());
+            }
+            Assert.assertFalse(actualResults.hasNext());
+        }
     }
 }

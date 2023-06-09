@@ -12,11 +12,15 @@ import java.io.Reader;
 public class ResultIterator extends GeneratingIterator<Result> {
     private Gson gson = null;
     private final JsonReader resultsReader; // expected to start in the beginning of SarifReport file
-    private final int runIndexInReport;
+    private final ResultLocation resultLocation;
 
     public ResultIterator(Reader reader, int runIndexInReport) {
-        resultsReader = new JsonReader(reader);
-        this.runIndexInReport = runIndexInReport;
+        this(reader, new ResultLocation.InRun(runIndexInReport));
+    }
+
+    public ResultIterator(Reader reader, ResultLocation resultLocation) {
+        this.resultsReader = new JsonReader(reader);
+        this.resultLocation = resultLocation;
     }
 
     private Gson getGson() {
@@ -29,12 +33,7 @@ public class ResultIterator extends GeneratingIterator<Result> {
     @Override
     protected Result makeInitial() {
         try {
-            if (!StreamingUtil.find(resultsReader, "runs")) {
-                return null;
-            }
-            resultsReader.beginArray();
-            StreamingUtil.skipObjects(resultsReader, runIndexInReport);
-            if (!StreamingUtil.find(resultsReader, "results")) {
+            if (!findResult()) {
                 return null;
             }
             resultsReader.beginArray();
@@ -58,5 +57,32 @@ public class ResultIterator extends GeneratingIterator<Result> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private boolean findResult() throws IOException {
+        if (resultLocation instanceof ResultLocation.InRun) {
+            int runIndex = ((ResultLocation.InRun) resultLocation).getRunIndex();
+
+            return findRun(runIndex)
+                    && StreamingUtil.find(resultsReader, "results");
+        } else if (resultLocation instanceof ResultLocation.InProperties) {
+            int runIndex = ((ResultLocation.InProperties) resultLocation).getRunIndex();
+            String propertyName = ((ResultLocation.InProperties) resultLocation).getPropertyName();
+
+            return findRun(runIndex)
+                    && StreamingUtil.find(resultsReader, "properties")
+                    && StreamingUtil.find(resultsReader, propertyName);
+        } else {
+            throw new UnsupportedOperationException("Unhandled ResultLocation");
+        }
+    }
+
+    private boolean findRun(int runIndex) throws IOException {
+        if (!StreamingUtil.find(resultsReader, "runs")) {
+            return false;
+        }
+        resultsReader.beginArray();
+        StreamingUtil.skipObjects(resultsReader, runIndex);
+        return true;
     }
 }
