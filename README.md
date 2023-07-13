@@ -12,6 +12,23 @@ This Java library contains classes describing the SARIF (Static Analysis Results
 
 ## Usage
 
+### Adding to your project
+
+Add the following to the `build.gradle.kts`:
+
+```kotlin
+val qodanaSarifVersion = "0.2.8"
+
+repositories {
+    maven("https://cache-redirector.jetbrains.com/intellij-dependencies")
+}
+
+dependencies {
+    implementation("com.jetbrains.qodana:qodana-sarif:$qodanaSarifVersion")
+}
+```
+
+
 ### Lazy Reading
 
 ```kotlin
