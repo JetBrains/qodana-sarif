@@ -121,6 +121,7 @@ public class PropertyBag implements Map<String, Object> {
             Object tags = map.remove(TAGS_KEY);
             result.putAll(map);
             if (tags instanceof List) {
+                //noinspection unchecked
                 result.tags.addAll((Collection<? extends String>) tags);
             }
             return result;
