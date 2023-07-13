@@ -1,5 +1,9 @@
 # qodana-sarif
 
+[![official JetBrains project](https://jb.gg/badges/official.svg)][jb:confluence-on-gh]
+[![GitHub Discussions](https://img.shields.io/github/discussions/jetbrains/qodana)][jb:discussions]
+[![Twitter Follow](https://img.shields.io/badge/follow-%40Qodana-1DA1F2?logo=twitter&style=social)][jb:twitter]
+
 This Java library contains classes describing the SARIF (Static Analysis Results Interchange Format) and utilities to work with them.
 
 ## Features
@@ -58,3 +62,11 @@ You can use one of the following `com.jetbrains.qodana.sarif.model.Result` prope
 - `com.jetbrains.qodana.sarif.model.Result#getBaselineState` Nullable baseline state - one of (new, updated, absent, unchanged)
 - `com.jetbrains.qodana.sarif.model.Result#getRuleId` Rule id that raised the problem
 - `com.jetbrains.qodana.sarif.model.Result#getLevel` Severity level of the issue
+
+[gh:qodana]: https://github.com/JetBrains/qodana-action/actions/workflows/code_scanning.yml
+[youtrack]: https://youtrack.jetbrains.com/issues/QD
+[youtrack-new-issue]: https://youtrack.jetbrains.com/newIssue?project=QD&c=Platform%20GitHub%20action
+[jb:confluence-on-gh]: https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub
+[jb:discussions]: https://jb.gg/qodana-discussions
+[jb:twitter]: https://twitter.com/Qodana
+[jb:docker]: https://hub.docker.com/r/jetbrains/qodana
