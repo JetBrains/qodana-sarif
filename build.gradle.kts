@@ -2,13 +2,13 @@ plugins {
     `java-library`
     `maven-publish`
     application
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.8.0"
 }
 
 val spaceUsername: String by project
 val spacePassword: String by project
 
-val kotlinVersion by extra("1.3.72")
+val kotlinVersion by extra("1.8.0")
 //val spaceLogin by extra(projectSettingsValue("spaceLogin", spaceUser))
 //val spacePassword by extra(projectSettingsValue("spacePassword", spacePasswordToken))
 
