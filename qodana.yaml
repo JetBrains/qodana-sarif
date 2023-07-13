@@ -1,0 +1,9 @@
+version: "1.0"
+linter: jetbrains/qodana-jvm:2023.2-eap
+profile:
+  name: empty
+include:
+  - name: CheckDependencyLicenses
+  - name: VulnerableLibrariesLocal
+  - name: VulnerableLibrariesGlobal
+  - name: VulnerableCodeUsages

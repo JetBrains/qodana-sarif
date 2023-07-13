@@ -1,11 +1,10 @@
-# qodana-sarif
+# Module sarif
 
 [![official JetBrains project](https://jb.gg/badges/official.svg)][jb:confluence-on-gh]
-[![Qodana](https://github.com/JetBrains/qodana-sarif/actions/workflows/qodana.yml/badge.svg)](https://github.com/JetBrains/qodana-sarif/actions/workflows/qodana.yml)
 [![GitHub Discussions](https://img.shields.io/github/discussions/jetbrains/qodana)][jb:discussions]
 [![Twitter Follow](https://img.shields.io/badge/follow-%40Qodana-1DA1F2?logo=twitter&style=social)][jb:twitter]
 
-This Java library contains classes describing the SARIF (Static Analysis Results Interchange Format) and utilities to work with them.
+This Java library [`qodana-sarif`](https://github.com/JetBrains/qodana-sarif) contains classes describing the SARIF (Static Analysis Results Interchange Format) and utilities to work with them.
 
 ## Features
 
