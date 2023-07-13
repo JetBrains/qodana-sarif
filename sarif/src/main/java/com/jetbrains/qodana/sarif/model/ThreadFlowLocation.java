@@ -3,10 +3,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -458,11 +455,11 @@ public class ThreadFlowLocation {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ThreadFlowLocation) == false) {
+        if (!(other instanceof ThreadFlowLocation)) {
             return false;
         }
         ThreadFlowLocation rhs = ((ThreadFlowLocation) other);
-        return (((((((((((((((this.taxa == rhs.taxa) || ((this.taxa != null) && this.taxa.equals(rhs.taxa))) && ((this.nestingLevel == rhs.nestingLevel) || ((this.nestingLevel != null) && this.nestingLevel.equals(rhs.nestingLevel)))) && ((this.stack == rhs.stack) || ((this.stack != null) && this.stack.equals(rhs.stack)))) && ((this.webRequest == rhs.webRequest) || ((this.webRequest != null) && this.webRequest.equals(rhs.webRequest)))) && ((this.importance == rhs.importance) || ((this.importance != null) && this.importance.equals(rhs.importance)))) && ((this.module == rhs.module) || ((this.module != null) && this.module.equals(rhs.module)))) && ((this.executionTimeUtc == rhs.executionTimeUtc) || ((this.executionTimeUtc != null) && this.executionTimeUtc.equals(rhs.executionTimeUtc)))) && ((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index)))) && ((this.kinds == rhs.kinds) || ((this.kinds != null) && this.kinds.equals(rhs.kinds)))) && ((this.executionOrder == rhs.executionOrder) || ((this.executionOrder != null) && this.executionOrder.equals(rhs.executionOrder)))) && ((this.webResponse == rhs.webResponse) || ((this.webResponse != null) && this.webResponse.equals(rhs.webResponse)))) && ((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location)))) && ((this.state == rhs.state) || ((this.state != null) && this.state.equals(rhs.state)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
+        return ((((((((((((((Objects.equals(this.taxa, rhs.taxa)) && (Objects.equals(this.nestingLevel, rhs.nestingLevel))) && (Objects.equals(this.stack, rhs.stack))) && (Objects.equals(this.webRequest, rhs.webRequest))) && (Objects.equals(this.importance, rhs.importance))) && (Objects.equals(this.module, rhs.module))) && (Objects.equals(this.executionTimeUtc, rhs.executionTimeUtc))) && (Objects.equals(this.index, rhs.index))) && (Objects.equals(this.kinds, rhs.kinds))) && (Objects.equals(this.executionOrder, rhs.executionOrder))) && (Objects.equals(this.webResponse, rhs.webResponse))) && (Objects.equals(this.location, rhs.location))) && (Objects.equals(this.state, rhs.state))) && (Objects.equals(this.properties, rhs.properties)));
     }
 
 
@@ -488,7 +485,7 @@ public class ThreadFlowLocation {
 
         private final String value;
 
-        private Importance(String value) {
+        Importance(String value) {
             this.value = value;
         }
 

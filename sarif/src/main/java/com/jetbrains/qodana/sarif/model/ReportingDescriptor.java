@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.net.URI;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -473,11 +474,11 @@ public class ReportingDescriptor {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ReportingDescriptor) == false) {
+        if (!(other instanceof ReportingDescriptor)) {
             return false;
         }
         ReportingDescriptor rhs = ((ReportingDescriptor) other);
-        return (((((((((((((((this.deprecatedIds == rhs.deprecatedIds) || ((this.deprecatedIds != null) && this.deprecatedIds.equals(rhs.deprecatedIds))) && ((this.deprecatedGuids == rhs.deprecatedGuids) || ((this.deprecatedGuids != null) && this.deprecatedGuids.equals(rhs.deprecatedGuids)))) && ((this.shortDescription == rhs.shortDescription) || ((this.shortDescription != null) && this.shortDescription.equals(rhs.shortDescription)))) && ((this.fullDescription == rhs.fullDescription) || ((this.fullDescription != null) && this.fullDescription.equals(rhs.fullDescription)))) && ((this.helpUri == rhs.helpUri) || ((this.helpUri != null) && this.helpUri.equals(rhs.helpUri)))) && ((this.defaultConfiguration == rhs.defaultConfiguration) || ((this.defaultConfiguration != null) && this.defaultConfiguration.equals(rhs.defaultConfiguration)))) && ((this.help == rhs.help) || ((this.help != null) && this.help.equals(rhs.help)))) && ((this.relationships == rhs.relationships) || ((this.relationships != null) && this.relationships.equals(rhs.relationships)))) && ((this.messageStrings == rhs.messageStrings) || ((this.messageStrings != null) && this.messageStrings.equals(rhs.messageStrings)))) && ((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name)))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.deprecatedNames == rhs.deprecatedNames) || ((this.deprecatedNames != null) && this.deprecatedNames.equals(rhs.deprecatedNames)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
+        return ((((((((((((((Objects.equals(this.deprecatedIds, rhs.deprecatedIds)) && (Objects.equals(this.deprecatedGuids, rhs.deprecatedGuids))) && (Objects.equals(this.shortDescription, rhs.shortDescription))) && (Objects.equals(this.fullDescription, rhs.fullDescription))) && (Objects.equals(this.helpUri, rhs.helpUri))) && (Objects.equals(this.defaultConfiguration, rhs.defaultConfiguration))) && (Objects.equals(this.help, rhs.help))) && (Objects.equals(this.relationships, rhs.relationships))) && (Objects.equals(this.messageStrings, rhs.messageStrings))) && (Objects.equals(this.name, rhs.name))) && (Objects.equals(this.guid, rhs.guid))) && (Objects.equals(this.deprecatedNames, rhs.deprecatedNames))) && (Objects.equals(this.id, rhs.id))) && (Objects.equals(this.properties, rhs.properties)));
     }
 
 }

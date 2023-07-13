@@ -30,7 +30,7 @@ public class GlobalMessageStrings {
         if (other == this) {
             return true;
         }
-        if ((other instanceof GlobalMessageStrings) == false) {
+        if (!(other instanceof GlobalMessageStrings)) {
             return false;
         }
         GlobalMessageStrings rhs = ((GlobalMessageStrings) other);

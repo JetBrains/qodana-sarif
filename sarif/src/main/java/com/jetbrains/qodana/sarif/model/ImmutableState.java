@@ -30,7 +30,7 @@ public class ImmutableState {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ImmutableState) == false) {
+        if (!(other instanceof ImmutableState)) {
             return false;
         }
         ImmutableState rhs = ((ImmutableState) other);

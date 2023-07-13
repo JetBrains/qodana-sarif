@@ -3,6 +3,8 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 
 /**
  * Contains information that enables a SARIF consumer to locate the external property file that contains the value of an externalized property associated with the run.
@@ -153,11 +155,11 @@ public class ExternalPropertyFileReference {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ExternalPropertyFileReference) == false) {
+        if (!(other instanceof ExternalPropertyFileReference)) {
             return false;
         }
         ExternalPropertyFileReference rhs = ((ExternalPropertyFileReference) other);
-        return (((((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid))) && ((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.itemCount == rhs.itemCount) || ((this.itemCount != null) && this.itemCount.equals(rhs.itemCount))));
+        return ((((Objects.equals(this.guid, rhs.guid)) && (Objects.equals(this.location, rhs.location))) && (Objects.equals(this.properties, rhs.properties))) && (Objects.equals(this.itemCount, rhs.itemCount)));
     }
 
 }

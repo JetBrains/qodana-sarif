@@ -3,6 +3,8 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 
 /**
  * A region within an artifact where a result was detected.
@@ -393,11 +395,11 @@ public class Region {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Region) == false) {
+        if (!(other instanceof Region)) {
             return false;
         }
         Region rhs = ((Region) other);
-        return (((((((((((((this.endLine == rhs.endLine) || ((this.endLine != null) && this.endLine.equals(rhs.endLine))) && ((this.snippet == rhs.snippet) || ((this.snippet != null) && this.snippet.equals(rhs.snippet)))) && ((this.charOffset == rhs.charOffset) || ((this.charOffset != null) && this.charOffset.equals(rhs.charOffset)))) && ((this.endColumn == rhs.endColumn) || ((this.endColumn != null) && this.endColumn.equals(rhs.endColumn)))) && ((this.charLength == rhs.charLength) || ((this.charLength != null) && this.charLength.equals(rhs.charLength)))) && ((this.startLine == rhs.startLine) || ((this.startLine != null) && this.startLine.equals(rhs.startLine)))) && ((this.byteLength == rhs.byteLength) || ((this.byteLength != null) && this.byteLength.equals(rhs.byteLength)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.byteOffset == rhs.byteOffset) || ((this.byteOffset != null) && this.byteOffset.equals(rhs.byteOffset)))) && ((this.startColumn == rhs.startColumn) || ((this.startColumn != null) && this.startColumn.equals(rhs.startColumn)))) && ((this.sourceLanguage == rhs.sourceLanguage) || ((this.sourceLanguage != null) && this.sourceLanguage.equals(rhs.sourceLanguage)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
+        return ((((((((((((Objects.equals(this.endLine, rhs.endLine)) && (Objects.equals(this.snippet, rhs.snippet))) && (Objects.equals(this.charOffset, rhs.charOffset))) && (Objects.equals(this.endColumn, rhs.endColumn))) && (Objects.equals(this.charLength, rhs.charLength))) && (Objects.equals(this.startLine, rhs.startLine))) && (Objects.equals(this.byteLength, rhs.byteLength))) && (Objects.equals(this.message, rhs.message))) && (Objects.equals(this.byteOffset, rhs.byteOffset))) && (Objects.equals(this.startColumn, rhs.startColumn))) && (Objects.equals(this.sourceLanguage, rhs.sourceLanguage))) && (Objects.equals(this.properties, rhs.properties)));
     }
 
 }

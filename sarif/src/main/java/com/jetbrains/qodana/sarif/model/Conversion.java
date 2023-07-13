@@ -3,6 +3,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -172,11 +173,11 @@ public class Conversion {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Conversion) == false) {
+        if (!(other instanceof Conversion)) {
             return false;
         }
         Conversion rhs = ((Conversion) other);
-        return (((((this.invocation == rhs.invocation) || ((this.invocation != null) && this.invocation.equals(rhs.invocation))) && ((this.analysisToolLogFiles == rhs.analysisToolLogFiles) || ((this.analysisToolLogFiles != null) && this.analysisToolLogFiles.equals(rhs.analysisToolLogFiles)))) && ((this.tool == rhs.tool) || ((this.tool != null) && this.tool.equals(rhs.tool)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
+        return ((((Objects.equals(this.invocation, rhs.invocation)) && (Objects.equals(this.analysisToolLogFiles, rhs.analysisToolLogFiles))) && (Objects.equals(this.tool, rhs.tool))) && (Objects.equals(this.properties, rhs.properties)));
     }
 
 }

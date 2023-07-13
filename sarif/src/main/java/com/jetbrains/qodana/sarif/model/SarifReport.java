@@ -4,10 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -213,11 +210,11 @@ public class SarifReport {
         if (other == this) {
             return true;
         }
-        if ((other instanceof SarifReport) == false) {
+        if (!(other instanceof SarifReport)) {
             return false;
         }
         SarifReport rhs = ((SarifReport) other);
-        return ((((((this.inlineExternalProperties == rhs.inlineExternalProperties) || ((this.inlineExternalProperties != null) && this.inlineExternalProperties.equals(rhs.inlineExternalProperties))) && ((this.$schema == rhs.$schema) || ((this.$schema != null) && this.$schema.equals(rhs.$schema)))) && ((this.version == rhs.version) || ((this.version != null) && this.version.equals(rhs.version)))) && ((this.runs == rhs.runs) || ((this.runs != null) && this.runs.equals(rhs.runs)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
+        return (((((Objects.equals(this.inlineExternalProperties, rhs.inlineExternalProperties)) && (Objects.equals(this.$schema, rhs.$schema))) && (Objects.equals(this.version, rhs.version))) && (Objects.equals(this.runs, rhs.runs))) && (Objects.equals(this.properties, rhs.properties)));
     }
 
 
@@ -239,7 +236,7 @@ public class SarifReport {
 
         private final String value;
 
-        private Version(String value) {
+        Version(String value) {
             this.value = value;
         }
 

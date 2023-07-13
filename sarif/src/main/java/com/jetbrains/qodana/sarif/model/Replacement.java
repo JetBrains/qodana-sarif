@@ -3,6 +3,8 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 
 /**
  * The replacement of a single region of an artifact.
@@ -140,11 +142,11 @@ public class Replacement {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Replacement) == false) {
+        if (!(other instanceof Replacement)) {
             return false;
         }
         Replacement rhs = ((Replacement) other);
-        return ((((this.insertedContent == rhs.insertedContent) || ((this.insertedContent != null) && this.insertedContent.equals(rhs.insertedContent))) && ((this.deletedRegion == rhs.deletedRegion) || ((this.deletedRegion != null) && this.deletedRegion.equals(rhs.deletedRegion)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
+        return (((Objects.equals(this.insertedContent, rhs.insertedContent)) && (Objects.equals(this.deletedRegion, rhs.deletedRegion))) && (Objects.equals(this.properties, rhs.properties)));
     }
 
 }

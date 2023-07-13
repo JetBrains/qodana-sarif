@@ -3,6 +3,8 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 
 /**
  * Describes an HTTP request.
@@ -303,11 +305,11 @@ public class WebRequest {
         if (other == this) {
             return true;
         }
-        if ((other instanceof WebRequest) == false) {
+        if (!(other instanceof WebRequest)) {
             return false;
         }
         WebRequest rhs = ((WebRequest) other);
-        return ((((((((((this.headers == rhs.headers) || ((this.headers != null) && this.headers.equals(rhs.headers))) && ((this.protocol == rhs.protocol) || ((this.protocol != null) && this.protocol.equals(rhs.protocol)))) && ((this.method == rhs.method) || ((this.method != null) && this.method.equals(rhs.method)))) && ((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index)))) && ((this.body == rhs.body) || ((this.body != null) && this.body.equals(rhs.body)))) && ((this.version == rhs.version) || ((this.version != null) && this.version.equals(rhs.version)))) && ((this.parameters == rhs.parameters) || ((this.parameters != null) && this.parameters.equals(rhs.parameters)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.target == rhs.target) || ((this.target != null) && this.target.equals(rhs.target))));
+        return (((((((((Objects.equals(this.headers, rhs.headers)) && (Objects.equals(this.protocol, rhs.protocol))) && (Objects.equals(this.method, rhs.method))) && (Objects.equals(this.index, rhs.index))) && (Objects.equals(this.body, rhs.body))) && (Objects.equals(this.version, rhs.version))) && (Objects.equals(this.parameters, rhs.parameters))) && (Objects.equals(this.properties, rhs.properties))) && (Objects.equals(this.target, rhs.target)));
     }
 
 }

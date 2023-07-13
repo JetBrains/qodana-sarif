@@ -3,6 +3,8 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 
 /**
  * Represents a directed edge in a graph.
@@ -210,11 +212,11 @@ public class Edge {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Edge) == false) {
+        if (!(other instanceof Edge)) {
             return false;
         }
         Edge rhs = ((Edge) other);
-        return ((((((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id))) && ((this.label == rhs.label) || ((this.label != null) && this.label.equals(rhs.label)))) && ((this.targetNodeId == rhs.targetNodeId) || ((this.targetNodeId != null) && this.targetNodeId.equals(rhs.targetNodeId)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.sourceNodeId == rhs.sourceNodeId) || ((this.sourceNodeId != null) && this.sourceNodeId.equals(rhs.sourceNodeId))));
+        return (((((Objects.equals(this.id, rhs.id)) && (Objects.equals(this.label, rhs.label))) && (Objects.equals(this.targetNodeId, rhs.targetNodeId))) && (Objects.equals(this.properties, rhs.properties))) && (Objects.equals(this.sourceNodeId, rhs.sourceNodeId)));
     }
 
 }

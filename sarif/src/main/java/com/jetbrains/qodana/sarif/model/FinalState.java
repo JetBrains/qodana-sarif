@@ -30,7 +30,7 @@ public class FinalState {
         if (other == this) {
             return true;
         }
-        if ((other instanceof FinalState) == false) {
+        if (!(other instanceof FinalState)) {
             return false;
         }
         FinalState rhs = ((FinalState) other);

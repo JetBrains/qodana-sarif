@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -185,11 +186,11 @@ public class Message {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Message) == false) {
+        if (!(other instanceof Message)) {
             return false;
         }
         Message rhs = ((Message) other);
-        return ((((((this.markdown == rhs.markdown) || ((this.markdown != null) && this.markdown.equals(rhs.markdown))) && ((this.arguments == rhs.arguments) || ((this.arguments != null) && this.arguments.equals(rhs.arguments)))) && ((this.text == rhs.text) || ((this.text != null) && this.text.equals(rhs.text)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
+        return (((((Objects.equals(this.markdown, rhs.markdown)) && (Objects.equals(this.arguments, rhs.arguments))) && (Objects.equals(this.text, rhs.text))) && (Objects.equals(this.id, rhs.id))) && (Objects.equals(this.properties, rhs.properties)));
     }
 
 }

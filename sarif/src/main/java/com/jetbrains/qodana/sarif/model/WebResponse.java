@@ -3,6 +3,8 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 
 /**
  * Describes the response to an HTTP request.
@@ -303,11 +305,11 @@ public class WebResponse {
         if (other == this) {
             return true;
         }
-        if ((other instanceof WebResponse) == false) {
+        if (!(other instanceof WebResponse)) {
             return false;
         }
         WebResponse rhs = ((WebResponse) other);
-        return ((((((((((this.headers == rhs.headers) || ((this.headers != null) && this.headers.equals(rhs.headers))) && ((this.protocol == rhs.protocol) || ((this.protocol != null) && this.protocol.equals(rhs.protocol)))) && ((this.reasonPhrase == rhs.reasonPhrase) || ((this.reasonPhrase != null) && this.reasonPhrase.equals(rhs.reasonPhrase)))) && ((this.noResponseReceived == rhs.noResponseReceived) || ((this.noResponseReceived != null) && this.noResponseReceived.equals(rhs.noResponseReceived)))) && ((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index)))) && ((this.body == rhs.body) || ((this.body != null) && this.body.equals(rhs.body)))) && ((this.version == rhs.version) || ((this.version != null) && this.version.equals(rhs.version)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.statusCode == rhs.statusCode) || ((this.statusCode != null) && this.statusCode.equals(rhs.statusCode))));
+        return (((((((((Objects.equals(this.headers, rhs.headers)) && (Objects.equals(this.protocol, rhs.protocol))) && (Objects.equals(this.reasonPhrase, rhs.reasonPhrase))) && (Objects.equals(this.noResponseReceived, rhs.noResponseReceived))) && (Objects.equals(this.index, rhs.index))) && (Objects.equals(this.body, rhs.body))) && (Objects.equals(this.version, rhs.version))) && (Objects.equals(this.properties, rhs.properties))) && (Objects.equals(this.statusCode, rhs.statusCode)));
     }
 
 }

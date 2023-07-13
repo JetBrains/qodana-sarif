@@ -30,7 +30,7 @@ public class Headers__1 {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Headers__1) == false) {
+        if (!(other instanceof Headers__1)) {
             return false;
         }
         Headers__1 rhs = ((Headers__1) other);

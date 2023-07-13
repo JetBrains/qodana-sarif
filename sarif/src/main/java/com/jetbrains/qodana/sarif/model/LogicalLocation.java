@@ -3,6 +3,8 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 
 /**
  * A logical location of a construct that produced a result.
@@ -243,11 +245,11 @@ public class LogicalLocation {
         if (other == this) {
             return true;
         }
-        if ((other instanceof LogicalLocation) == false) {
+        if (!(other instanceof LogicalLocation)) {
             return false;
         }
         LogicalLocation rhs = ((LogicalLocation) other);
-        return ((((((((this.parentIndex == rhs.parentIndex) || ((this.parentIndex != null) && this.parentIndex.equals(rhs.parentIndex))) && ((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind)))) && ((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name)))) && ((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index)))) && ((this.decoratedName == rhs.decoratedName) || ((this.decoratedName != null) && this.decoratedName.equals(rhs.decoratedName)))) && ((this.fullyQualifiedName == rhs.fullyQualifiedName) || ((this.fullyQualifiedName != null) && this.fullyQualifiedName.equals(rhs.fullyQualifiedName)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
+        return (((((((Objects.equals(this.parentIndex, rhs.parentIndex)) && (Objects.equals(this.kind, rhs.kind))) && (Objects.equals(this.name, rhs.name))) && (Objects.equals(this.index, rhs.index))) && (Objects.equals(this.decoratedName, rhs.decoratedName))) && (Objects.equals(this.fullyQualifiedName, rhs.fullyQualifiedName))) && (Objects.equals(this.properties, rhs.properties)));
     }
 
 }

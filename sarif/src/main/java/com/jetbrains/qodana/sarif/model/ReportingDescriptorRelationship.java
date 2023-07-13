@@ -3,9 +3,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -25,7 +23,7 @@ public class ReportingDescriptorRelationship {
      */
     @SerializedName("kinds")
     @Expose
-    private Set<String> kinds = new LinkedHashSet<String>(Arrays.asList("relevant"));
+    private Set<String> kinds = new LinkedHashSet<String>(Collections.singletonList("relevant"));
     /**
      * Encapsulates a message intended to be read by the end user.
      */
@@ -174,11 +172,11 @@ public class ReportingDescriptorRelationship {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ReportingDescriptorRelationship) == false) {
+        if (!(other instanceof ReportingDescriptorRelationship)) {
             return false;
         }
         ReportingDescriptorRelationship rhs = ((ReportingDescriptorRelationship) other);
-        return (((((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description))) && ((this.kinds == rhs.kinds) || ((this.kinds != null) && this.kinds.equals(rhs.kinds)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.target == rhs.target) || ((this.target != null) && this.target.equals(rhs.target))));
+        return ((((Objects.equals(this.description, rhs.description)) && (Objects.equals(this.kinds, rhs.kinds))) && (Objects.equals(this.properties, rhs.properties))) && (Objects.equals(this.target, rhs.target)));
     }
 
 }

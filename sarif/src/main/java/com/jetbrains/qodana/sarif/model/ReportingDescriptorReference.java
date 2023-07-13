@@ -3,6 +3,8 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 
 /**
  * Information about how to locate a relevant reporting descriptor.
@@ -183,11 +185,11 @@ public class ReportingDescriptorReference {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ReportingDescriptorReference) == false) {
+        if (!(other instanceof ReportingDescriptorReference)) {
             return false;
         }
         ReportingDescriptorReference rhs = ((ReportingDescriptorReference) other);
-        return ((((((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.toolComponent == rhs.toolComponent) || ((this.toolComponent != null) && this.toolComponent.equals(rhs.toolComponent)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
+        return (((((Objects.equals(this.index, rhs.index)) && (Objects.equals(this.guid, rhs.guid))) && (Objects.equals(this.toolComponent, rhs.toolComponent))) && (Objects.equals(this.id, rhs.id))) && (Objects.equals(this.properties, rhs.properties)));
     }
 
 }

@@ -3,6 +3,8 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 
 /**
  * Specifies the location of an artifact.
@@ -183,11 +185,11 @@ public class ArtifactLocation {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ArtifactLocation) == false) {
+        if (!(other instanceof ArtifactLocation)) {
             return false;
         }
         ArtifactLocation rhs = ((ArtifactLocation) other);
-        return ((((((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index))) && ((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description)))) && ((this.uri == rhs.uri) || ((this.uri != null) && this.uri.equals(rhs.uri)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.uriBaseId == rhs.uriBaseId) || ((this.uriBaseId != null) && this.uriBaseId.equals(rhs.uriBaseId))));
+        return (((((Objects.equals(this.index, rhs.index)) && (Objects.equals(this.description, rhs.description))) && (Objects.equals(this.uri, rhs.uri))) && (Objects.equals(this.properties, rhs.properties))) && (Objects.equals(this.uriBaseId, rhs.uriBaseId)));
     }
 
 }

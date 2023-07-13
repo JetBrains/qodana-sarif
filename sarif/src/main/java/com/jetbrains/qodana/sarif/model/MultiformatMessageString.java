@@ -3,6 +3,8 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 
 /**
  * A message string or message format string rendered in multiple formats.
@@ -140,11 +142,11 @@ public class MultiformatMessageString {
         if (other == this) {
             return true;
         }
-        if ((other instanceof MultiformatMessageString) == false) {
+        if (!(other instanceof MultiformatMessageString)) {
             return false;
         }
         MultiformatMessageString rhs = ((MultiformatMessageString) other);
-        return ((((this.markdown == rhs.markdown) || ((this.markdown != null) && this.markdown.equals(rhs.markdown))) && ((this.text == rhs.text) || ((this.text != null) && this.text.equals(rhs.text)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
+        return (((Objects.equals(this.markdown, rhs.markdown)) && (Objects.equals(this.text, rhs.text))) && (Objects.equals(this.properties, rhs.properties)));
     }
 
 }

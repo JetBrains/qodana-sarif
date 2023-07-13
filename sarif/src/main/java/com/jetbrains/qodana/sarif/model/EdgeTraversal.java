@@ -3,6 +3,8 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 
 /**
  * Represents the traversal of a single edge during a graph traversal.
@@ -200,11 +202,11 @@ public class EdgeTraversal {
         if (other == this) {
             return true;
         }
-        if ((other instanceof EdgeTraversal) == false) {
+        if (!(other instanceof EdgeTraversal)) {
             return false;
         }
         EdgeTraversal rhs = ((EdgeTraversal) other);
-        return ((((((this.edgeId == rhs.edgeId) || ((this.edgeId != null) && this.edgeId.equals(rhs.edgeId))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.stepOverEdgeCount == rhs.stepOverEdgeCount) || ((this.stepOverEdgeCount != null) && this.stepOverEdgeCount.equals(rhs.stepOverEdgeCount)))) && ((this.finalState == rhs.finalState) || ((this.finalState != null) && this.finalState.equals(rhs.finalState)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
+        return (((((Objects.equals(this.edgeId, rhs.edgeId)) && (Objects.equals(this.message, rhs.message))) && (Objects.equals(this.stepOverEdgeCount, rhs.stepOverEdgeCount))) && (Objects.equals(this.finalState, rhs.finalState))) && (Objects.equals(this.properties, rhs.properties)));
     }
 
 }

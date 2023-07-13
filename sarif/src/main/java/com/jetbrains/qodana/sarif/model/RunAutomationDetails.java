@@ -3,6 +3,8 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 
 /**
  * Information that describes a run's identity and role within an engineering system process.
@@ -183,11 +185,11 @@ public class RunAutomationDetails {
         if (other == this) {
             return true;
         }
-        if ((other instanceof RunAutomationDetails) == false) {
+        if (!(other instanceof RunAutomationDetails)) {
             return false;
         }
         RunAutomationDetails rhs = ((RunAutomationDetails) other);
-        return ((((((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.correlationGuid == rhs.correlationGuid) || ((this.correlationGuid != null) && this.correlationGuid.equals(rhs.correlationGuid)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
+        return (((((Objects.equals(this.description, rhs.description)) && (Objects.equals(this.guid, rhs.guid))) && (Objects.equals(this.id, rhs.id))) && (Objects.equals(this.correlationGuid, rhs.correlationGuid))) && (Objects.equals(this.properties, rhs.properties)));
     }
 
 }

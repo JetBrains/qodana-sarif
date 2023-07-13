@@ -3,6 +3,8 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 
 /**
  * Represents the contents of an artifact.
@@ -153,11 +155,11 @@ public class ArtifactContent {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ArtifactContent) == false) {
+        if (!(other instanceof ArtifactContent)) {
             return false;
         }
         ArtifactContent rhs = ((ArtifactContent) other);
-        return (((((this.text == rhs.text) || ((this.text != null) && this.text.equals(rhs.text))) && ((this.rendered == rhs.rendered) || ((this.rendered != null) && this.rendered.equals(rhs.rendered)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.binary == rhs.binary) || ((this.binary != null) && this.binary.equals(rhs.binary))));
+        return ((((Objects.equals(this.text, rhs.text)) && (Objects.equals(this.rendered, rhs.rendered))) && (Objects.equals(this.properties, rhs.properties))) && (Objects.equals(this.binary, rhs.binary)));
     }
 
 }

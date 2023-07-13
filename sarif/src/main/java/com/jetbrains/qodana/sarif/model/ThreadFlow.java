@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -232,11 +233,11 @@ public class ThreadFlow {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ThreadFlow) == false) {
+        if (!(other instanceof ThreadFlow)) {
             return false;
         }
         ThreadFlow rhs = ((ThreadFlow) other);
-        return (((((((this.initialState == rhs.initialState) || ((this.initialState != null) && this.initialState.equals(rhs.initialState))) && ((this.immutableState == rhs.immutableState) || ((this.immutableState != null) && this.immutableState.equals(rhs.immutableState)))) && ((this.locations == rhs.locations) || ((this.locations != null) && this.locations.equals(rhs.locations)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
+        return ((((((Objects.equals(this.initialState, rhs.initialState)) && (Objects.equals(this.immutableState, rhs.immutableState))) && (Objects.equals(this.locations, rhs.locations))) && (Objects.equals(this.id, rhs.id))) && (Objects.equals(this.message, rhs.message))) && (Objects.equals(this.properties, rhs.properties)));
     }
 
 }

@@ -3,10 +3,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -325,11 +322,11 @@ public class Notification {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Notification) == false) {
+        if (!(other instanceof Notification)) {
             return false;
         }
         Notification rhs = ((Notification) other);
-        return ((((((((((this.threadId == rhs.threadId) || ((this.threadId != null) && this.threadId.equals(rhs.threadId))) && ((this.exception == rhs.exception) || ((this.exception != null) && this.exception.equals(rhs.exception)))) && ((this.level == rhs.level) || ((this.level != null) && this.level.equals(rhs.level)))) && ((this.associatedRule == rhs.associatedRule) || ((this.associatedRule != null) && this.associatedRule.equals(rhs.associatedRule)))) && ((this.timeUtc == rhs.timeUtc) || ((this.timeUtc != null) && this.timeUtc.equals(rhs.timeUtc)))) && ((this.locations == rhs.locations) || ((this.locations != null) && this.locations.equals(rhs.locations)))) && ((this.descriptor == rhs.descriptor) || ((this.descriptor != null) && this.descriptor.equals(rhs.descriptor)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
+        return (((((((((Objects.equals(this.threadId, rhs.threadId)) && (Objects.equals(this.exception, rhs.exception))) && (Objects.equals(this.level, rhs.level))) && (Objects.equals(this.associatedRule, rhs.associatedRule))) && (Objects.equals(this.timeUtc, rhs.timeUtc))) && (Objects.equals(this.locations, rhs.locations))) && (Objects.equals(this.descriptor, rhs.descriptor))) && (Objects.equals(this.message, rhs.message))) && (Objects.equals(this.properties, rhs.properties)));
     }
 
 
@@ -357,7 +354,7 @@ public class Notification {
 
         private final String value;
 
-        private Level(String value) {
+        Level(String value) {
             this.value = value;
         }
 
