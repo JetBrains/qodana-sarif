@@ -7,3 +7,7 @@ include:
   - name: VulnerableLibrariesLocal
   - name: VulnerableLibrariesGlobal
   - name: VulnerableCodeUsages
+exclude:
+  - name: All
+    paths:
+      - sarif/src/test/resources/
