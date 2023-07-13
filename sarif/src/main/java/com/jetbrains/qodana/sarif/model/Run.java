@@ -2,11 +2,7 @@ package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.jetbrains.qodana.sarif.model.streaming.IndexedResult;
-import com.jetbrains.qodana.sarif.model.streaming.IndexedResultIterator;
-import com.jetbrains.qodana.sarif.model.streaming.ResultIterator;
 
-import java.io.Reader;
 import java.util.*;
 
 
