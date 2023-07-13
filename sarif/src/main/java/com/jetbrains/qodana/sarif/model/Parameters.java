@@ -21,8 +21,7 @@ public class Parameters {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        return result;
+        return 1;
     }
 
     @Override
