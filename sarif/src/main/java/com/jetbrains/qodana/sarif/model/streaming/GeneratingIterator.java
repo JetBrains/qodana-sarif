@@ -8,6 +8,7 @@ public abstract class GeneratingIterator<T> implements Iterator<T> {
     private State state = State.INITIAL_UNINITIALIZED;
 
     protected abstract T makeInitial();
+
     protected abstract T makeNext(T prev);
 
     @Override

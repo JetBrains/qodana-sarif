@@ -32,8 +32,9 @@ public class StreamingFieldsExclusionStrategy implements ExclusionStrategy {
     }
 
     public static StreamingFieldsExclusionStrategy results() {
-        return new StreamingFieldsExclusionStrategy(Run.class,"results");
+        return new StreamingFieldsExclusionStrategy(Run.class, "results");
     }
+
     public static StreamingFieldsExclusionStrategy property(String propertyName) {
         return new StreamingFieldsExclusionStrategy(PropertyBag.class, propertyName);
     }

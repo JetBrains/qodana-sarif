@@ -29,7 +29,7 @@ public class StreamJsonRunsListTypeAdapter extends TypeAdapter<List<Run>> {
     public List<Run> read(JsonReader in) throws IOException {
         ArrayList<Run> runs = new ArrayList<>();
         in.beginArray();
-        while (in.peek() != JsonToken.END_ARRAY)  {
+        while (in.peek() != JsonToken.END_ARRAY) {
             Run run = gson.fromJson(in, Run.class);
             runs.add(run);
         }
