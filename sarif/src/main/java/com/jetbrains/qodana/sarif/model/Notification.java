@@ -74,7 +74,7 @@ public class Notification {
     }
 
     /**
-     * @param message
+     * @param message Encapsulates a message intended to be read by the end user.
      */
     public Notification(Message message) {
         super();

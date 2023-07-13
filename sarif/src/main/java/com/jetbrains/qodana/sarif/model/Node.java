@@ -51,7 +51,7 @@ public class Node {
     }
 
     /**
-     * @param id
+     * @param id A string that uniquely identifies the node within its graph.
      */
     public Node(String id) {
         super();

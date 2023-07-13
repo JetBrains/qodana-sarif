@@ -50,7 +50,7 @@ public class EdgeTraversal {
     }
 
     /**
-     * @param edgeId
+     * @param edgeId Identifies the edge being traversed.
      */
     public EdgeTraversal(String edgeId) {
         super();

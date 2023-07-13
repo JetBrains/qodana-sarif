@@ -45,7 +45,7 @@ public class Conversion {
     }
 
     /**
-     * @param tool
+     * @param tool The analysis tool that was run.
      */
     public Conversion(Tool tool) {
         super();

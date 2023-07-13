@@ -39,8 +39,8 @@ public class ConfigurationOverride {
     }
 
     /**
-     * @param configuration
-     * @param descriptor
+     * @param configuration Information about a rule or notification that can be configured at runtime.
+     * @param descriptor Information about how to locate a relevant reporting descriptor.
      */
     public ConfigurationOverride(ReportingConfiguration configuration, ReportingDescriptorReference descriptor) {
         super();

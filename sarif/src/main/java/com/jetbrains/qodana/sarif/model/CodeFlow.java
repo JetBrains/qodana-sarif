@@ -39,7 +39,8 @@ public class CodeFlow {
     }
 
     /**
-     * @param threadFlows
+     * @param threadFlows An array of one or more unique threadFlow objects,
+     *                    each of which describes the progress of a program through a thread of execution.
      */
     public CodeFlow(List<ThreadFlow> threadFlows) {
         super();

@@ -58,7 +58,7 @@ public class Suppression {
     }
 
     /**
-     * @param kind
+     * @param kind A string that indicates where the suppression is persisted.
      */
     public Suppression(Kind kind) {
         super();

@@ -63,7 +63,7 @@ public class TranslationMetadata {
     }
 
     /**
-     * @param name
+     * @param name The name associated with the translation metadata.
      */
     public TranslationMetadata(String name) {
         super();

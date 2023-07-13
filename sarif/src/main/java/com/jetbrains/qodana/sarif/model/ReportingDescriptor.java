@@ -106,7 +106,7 @@ public class ReportingDescriptor {
     }
 
     /**
-     * @param id
+     * @param id A stable, opaque identifier for the report.
      */
     public ReportingDescriptor(String id) {
         super();

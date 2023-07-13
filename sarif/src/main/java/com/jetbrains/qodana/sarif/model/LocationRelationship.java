@@ -44,7 +44,7 @@ public class LocationRelationship {
     }
 
     /**
-     * @param target
+     * @param target A reference to the related location.
      */
     public LocationRelationship(Integer target) {
         super();

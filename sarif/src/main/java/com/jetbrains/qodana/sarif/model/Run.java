@@ -189,7 +189,7 @@ public class Run {
     }
 
     /**
-     * @param tool
+     * @param tool The analysis tool that was run.
      */
     public Run(Tool tool) {
         super();

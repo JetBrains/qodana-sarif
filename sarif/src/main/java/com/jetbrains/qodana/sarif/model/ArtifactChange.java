@@ -40,8 +40,8 @@ public class ArtifactChange {
     }
 
     /**
-     * @param replacements
-     * @param artifactLocation
+     * @param replacements An array of replacement objects, each of which represents the replacement of a single region in a single artifact specified by 'artifactLocation'.
+     * @param artifactLocation Specifies the location of an artifact.
      */
     public ArtifactChange(ArtifactLocation artifactLocation, List<Replacement> replacements) {
         super();

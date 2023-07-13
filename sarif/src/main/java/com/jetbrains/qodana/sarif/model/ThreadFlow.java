@@ -57,7 +57,8 @@ public class ThreadFlow {
     }
 
     /**
-     * @param locations
+     * @param locations A temporally ordered array of 'threadFlowLocation' objects,
+     *                  each of which describes a location visited by the tool while producing the result.
      */
     public ThreadFlow(List<ThreadFlowLocation> locations) {
         super();

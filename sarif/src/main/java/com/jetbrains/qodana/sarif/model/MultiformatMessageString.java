@@ -38,7 +38,7 @@ public class MultiformatMessageString {
     }
 
     /**
-     * @param text
+     * @param text A plain text message string or format string.
      */
     public MultiformatMessageString(String text) {
         super();

@@ -44,7 +44,7 @@ public class ReportingDescriptorRelationship {
     }
 
     /**
-     * @param target
+     * @param target Information about how to locate a relevant reporting descriptor.
      */
     public ReportingDescriptorRelationship(ReportingDescriptorReference target) {
         super();

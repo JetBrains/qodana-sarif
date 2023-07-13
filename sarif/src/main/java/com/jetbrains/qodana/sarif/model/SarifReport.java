@@ -54,8 +54,8 @@ public class SarifReport {
     }
 
     /**
-     * @param version
-     * @param runs
+     * @param version The SARIF format version of this log file.
+     * @param runs The set of runs contained in this log file.
      */
     public SarifReport(Version version, List<Run> runs) {
         super();

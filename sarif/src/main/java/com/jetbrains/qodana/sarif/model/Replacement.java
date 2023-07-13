@@ -38,7 +38,7 @@ public class Replacement {
     }
 
     /**
-     * @param deletedRegion
+     * @param deletedRegion A region within an artifact where a result was detected.
      */
     public Replacement(Region deletedRegion) {
         super();

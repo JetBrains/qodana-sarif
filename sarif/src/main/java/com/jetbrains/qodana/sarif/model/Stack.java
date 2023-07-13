@@ -39,7 +39,8 @@ public class Stack {
     }
 
     /**
-     * @param frames
+     * @param frames An array of stack frames that represents a sequence of calls,
+     *               rendered in reverse chronological order, that comprise the call stack.
      */
     public Stack(List<StackFrame> frames) {
         super();

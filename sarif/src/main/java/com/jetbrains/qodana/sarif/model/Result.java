@@ -204,7 +204,7 @@ public class Result {
     }
 
     /**
-     * @param message
+     * @param message Encapsulates a message intended to be read by the end user.
      */
     public Result(Message message) {
         super();

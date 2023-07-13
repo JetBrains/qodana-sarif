@@ -64,7 +64,7 @@ public class VersionControlDetails {
     }
 
     /**
-     * @param repositoryUri
+     * @param repositoryUri The absolute URI of the repository.
      */
     public VersionControlDetails(URI repositoryUri) {
         super();

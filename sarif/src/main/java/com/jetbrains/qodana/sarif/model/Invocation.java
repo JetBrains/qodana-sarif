@@ -179,7 +179,7 @@ public class Invocation {
     }
 
     /**
-     * @param executionSuccessful
+     * @param executionSuccessful Specifies whether the tool's execution completed successfully.
      */
     public Invocation(Boolean executionSuccessful) {
         super();

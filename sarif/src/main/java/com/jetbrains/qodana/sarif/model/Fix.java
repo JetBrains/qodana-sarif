@@ -39,7 +39,7 @@ public class Fix {
     }
 
     /**
-     * @param artifactChanges
+     * @param artifactChanges One or more artifact changes that comprise a fix for a result.
      */
     public Fix(Set<ArtifactChange> artifactChanges) {
         super();

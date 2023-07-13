@@ -39,7 +39,7 @@ public class Tool {
     }
 
     /**
-     * @param driver
+     * @param driver A component, such as a plug-in or the driver, of the analysis tool that was run.
      */
     public Tool(ToolComponent driver) {
         super();

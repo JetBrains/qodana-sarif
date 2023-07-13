@@ -51,7 +51,7 @@ public class Attachment {
     }
 
     /**
-     * @param artifactLocation
+     * @param artifactLocation Specifies the location of an artifact.
      */
     public Attachment(ArtifactLocation artifactLocation) {
         super();

@@ -52,9 +52,9 @@ public class Edge {
     }
 
     /**
-     * @param sourceNodeId
-     * @param id
-     * @param targetNodeId
+     * @param sourceNodeId Identifies the source node (the node at which the edge starts).
+     * @param id A string that uniquely identifies the edge within its graph.
+     * @param targetNodeId Identifies the target node (the node at which the edge ends).
      */
     public Edge(String id, String sourceNodeId, String targetNodeId) {
         super();

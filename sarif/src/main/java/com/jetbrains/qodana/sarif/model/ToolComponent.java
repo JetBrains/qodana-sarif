@@ -189,7 +189,7 @@ public class ToolComponent {
     }
 
     /**
-     * @param name
+     * @param name The name of the tool component.
      */
     public ToolComponent(String name) {
         super();
