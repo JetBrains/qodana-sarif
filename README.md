@@ -1,12 +1,12 @@
 # qodana-sarif
 
-This Java library contains classes describing the SARIF (Static Analysis Results Interchange Format) as well as utilities to work with them.
+This Java library contains classes describing the SARIF (Static Analysis Results Interchange Format) and utilities to work with them.
 
 ## Features
 
 - **Lazy Reading**: The library supports a lazy reading format of SARIF, which allows the report to be read and processed gradually, potentially reducing memory consumption.
 
-- **Full Report Reading**: The library also supports reading the full SARIF report at once. Be aware, this is CPU and memory intensive.
+- **Full Report Reading**: The library also supports reading the full SARIF report simultaneously. Be aware this is CPU and memory intensive.
 
 - **Flexible Result Analysis**: The `com.jetbrains.qodana.sarif.model.Result` object provides several properties which can be used to filter and analyze the issues in the report.
 
