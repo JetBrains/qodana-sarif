@@ -3,7 +3,6 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Objects;
 import java.util.Set;
 
 
@@ -546,11 +545,11 @@ public class ExternalPropertyFileReferences {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof ExternalPropertyFileReferences)) {
+        if ((other instanceof ExternalPropertyFileReferences) == false) {
             return false;
         }
         ExternalPropertyFileReferences rhs = ((ExternalPropertyFileReferences) other);
-        return (((((((((((((((((Objects.equals(this.addresses, rhs.addresses)) && (Objects.equals(this.logicalLocations, rhs.logicalLocations))) && (Objects.equals(this.policies, rhs.policies))) && (Objects.equals(this.externalizedProperties, rhs.externalizedProperties))) && (Objects.equals(this.invocations, rhs.invocations))) && (Objects.equals(this.graphs, rhs.graphs))) && (Objects.equals(this.extensions, rhs.extensions))) && (Objects.equals(this.driver, rhs.driver))) && (Objects.equals(this.taxonomies, rhs.taxonomies))) && (Objects.equals(this.translations, rhs.translations))) && (Objects.equals(this.webResponses, rhs.webResponses))) && (Objects.equals(this.webRequests, rhs.webRequests))) && (Objects.equals(this.results, rhs.results))) && (Objects.equals(this.threadFlowLocations, rhs.threadFlowLocations))) && (Objects.equals(this.properties, rhs.properties))) && (Objects.equals(this.conversion, rhs.conversion))) && (Objects.equals(this.artifacts, rhs.artifacts)));
+        return ((((((((((((((((((this.addresses == rhs.addresses) || ((this.addresses != null) && this.addresses.equals(rhs.addresses))) && ((this.logicalLocations == rhs.logicalLocations) || ((this.logicalLocations != null) && this.logicalLocations.equals(rhs.logicalLocations)))) && ((this.policies == rhs.policies) || ((this.policies != null) && this.policies.equals(rhs.policies)))) && ((this.externalizedProperties == rhs.externalizedProperties) || ((this.externalizedProperties != null) && this.externalizedProperties.equals(rhs.externalizedProperties)))) && ((this.invocations == rhs.invocations) || ((this.invocations != null) && this.invocations.equals(rhs.invocations)))) && ((this.graphs == rhs.graphs) || ((this.graphs != null) && this.graphs.equals(rhs.graphs)))) && ((this.extensions == rhs.extensions) || ((this.extensions != null) && this.extensions.equals(rhs.extensions)))) && ((this.driver == rhs.driver) || ((this.driver != null) && this.driver.equals(rhs.driver)))) && ((this.taxonomies == rhs.taxonomies) || ((this.taxonomies != null) && this.taxonomies.equals(rhs.taxonomies)))) && ((this.translations == rhs.translations) || ((this.translations != null) && this.translations.equals(rhs.translations)))) && ((this.webResponses == rhs.webResponses) || ((this.webResponses != null) && this.webResponses.equals(rhs.webResponses)))) && ((this.webRequests == rhs.webRequests) || ((this.webRequests != null) && this.webRequests.equals(rhs.webRequests)))) && ((this.results == rhs.results) || ((this.results != null) && this.results.equals(rhs.results)))) && ((this.threadFlowLocations == rhs.threadFlowLocations) || ((this.threadFlowLocations != null) && this.threadFlowLocations.equals(rhs.threadFlowLocations)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.conversion == rhs.conversion) || ((this.conversion != null) && this.conversion.equals(rhs.conversion)))) && ((this.artifacts == rhs.artifacts) || ((this.artifacts != null) && this.artifacts.equals(rhs.artifacts))));
     }
 
 }

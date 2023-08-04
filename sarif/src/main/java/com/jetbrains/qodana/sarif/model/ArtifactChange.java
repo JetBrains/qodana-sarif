@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -148,11 +147,11 @@ public class ArtifactChange {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof ArtifactChange)) {
+        if ((other instanceof ArtifactChange) == false) {
             return false;
         }
         ArtifactChange rhs = ((ArtifactChange) other);
-        return (((Objects.equals(this.replacements, rhs.replacements)) && (Objects.equals(this.artifactLocation, rhs.artifactLocation))) && (Objects.equals(this.properties, rhs.properties)));
+        return ((((this.replacements == rhs.replacements) || ((this.replacements != null) && this.replacements.equals(rhs.replacements))) && ((this.artifactLocation == rhs.artifactLocation) || ((this.artifactLocation != null) && this.artifactLocation.equals(rhs.artifactLocation)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

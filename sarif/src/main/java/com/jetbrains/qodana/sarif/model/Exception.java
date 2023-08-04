@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -186,11 +185,11 @@ public class Exception {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof Exception)) {
+        if ((other instanceof Exception) == false) {
             return false;
         }
         Exception rhs = ((Exception) other);
-        return (((((Objects.equals(this.stack, rhs.stack)) && (Objects.equals(this.innerExceptions, rhs.innerExceptions))) && (Objects.equals(this.message, rhs.message))) && (Objects.equals(this.kind, rhs.kind))) && (Objects.equals(this.properties, rhs.properties)));
+        return ((((((this.stack == rhs.stack) || ((this.stack != null) && this.stack.equals(rhs.stack))) && ((this.innerExceptions == rhs.innerExceptions) || ((this.innerExceptions != null) && this.innerExceptions.equals(rhs.innerExceptions)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

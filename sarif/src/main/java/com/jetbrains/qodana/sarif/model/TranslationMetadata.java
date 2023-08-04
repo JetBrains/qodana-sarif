@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.net.URI;
-import java.util.Objects;
 
 
 /**
@@ -263,11 +262,11 @@ public class TranslationMetadata {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof TranslationMetadata)) {
+        if ((other instanceof TranslationMetadata) == false) {
             return false;
         }
         TranslationMetadata rhs = ((TranslationMetadata) other);
-        return (((((((Objects.equals(this.name, rhs.name)) && (Objects.equals(this.fullName, rhs.fullName))) && (Objects.equals(this.shortDescription, rhs.shortDescription))) && (Objects.equals(this.downloadUri, rhs.downloadUri))) && (Objects.equals(this.fullDescription, rhs.fullDescription))) && (Objects.equals(this.informationUri, rhs.informationUri))) && (Objects.equals(this.properties, rhs.properties)));
+        return ((((((((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name))) && ((this.fullName == rhs.fullName) || ((this.fullName != null) && this.fullName.equals(rhs.fullName)))) && ((this.shortDescription == rhs.shortDescription) || ((this.shortDescription != null) && this.shortDescription.equals(rhs.shortDescription)))) && ((this.downloadUri == rhs.downloadUri) || ((this.downloadUri != null) && this.downloadUri.equals(rhs.downloadUri)))) && ((this.fullDescription == rhs.fullDescription) || ((this.fullDescription != null) && this.fullDescription.equals(rhs.fullDescription)))) && ((this.informationUri == rhs.informationUri) || ((this.informationUri != null) && this.informationUri.equals(rhs.informationUri)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

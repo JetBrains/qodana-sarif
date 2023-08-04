@@ -3,8 +3,6 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Objects;
-
 
 /**
  * Defines locations of special significance to SARIF consumers.
@@ -95,11 +93,11 @@ public class SpecialLocations {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof SpecialLocations)) {
+        if ((other instanceof SpecialLocations) == false) {
             return false;
         }
         SpecialLocations rhs = ((SpecialLocations) other);
-        return ((Objects.equals(this.displayBase, rhs.displayBase)) && (Objects.equals(this.properties, rhs.properties)));
+        return (((this.displayBase == rhs.displayBase) || ((this.displayBase != null) && this.displayBase.equals(rhs.displayBase))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

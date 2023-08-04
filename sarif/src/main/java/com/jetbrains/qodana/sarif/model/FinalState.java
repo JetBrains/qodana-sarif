@@ -29,7 +29,7 @@ public class FinalState {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof FinalState)) {
+        if ((other instanceof FinalState) == false) {
             return false;
         }
         FinalState rhs = ((FinalState) other);

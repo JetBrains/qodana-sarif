@@ -29,7 +29,7 @@ public class InitialState {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof InitialState)) {
+        if ((other instanceof InitialState) == false) {
             return false;
         }
         InitialState rhs = ((InitialState) other);

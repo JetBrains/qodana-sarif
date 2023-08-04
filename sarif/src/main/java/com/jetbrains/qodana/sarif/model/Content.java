@@ -22,7 +22,7 @@ public enum Content {
 
     private final String value;
 
-    Content(String value) {
+    private Content(String value) {
         this.value = value;
     }
 

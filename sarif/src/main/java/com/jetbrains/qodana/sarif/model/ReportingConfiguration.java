@@ -3,8 +3,6 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Objects;
-
 
 /**
  * Information about a rule or notification that can be configured at runtime.
@@ -185,10 +183,10 @@ public class ReportingConfiguration {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof ReportingConfiguration)) {
+        if ((other instanceof ReportingConfiguration) == false) {
             return false;
         }
         ReportingConfiguration rhs = ((ReportingConfiguration) other);
-        return (((((Objects.equals(this.rank, rhs.rank)) && (Objects.equals(this.level, rhs.level))) && (Objects.equals(this.parameters, rhs.parameters))) && (Objects.equals(this.enabled, rhs.enabled))) && (Objects.equals(this.properties, rhs.properties)));
+        return ((((((this.rank == rhs.rank) || ((this.rank != null) && this.rank.equals(rhs.rank))) && ((this.level == rhs.level) || ((this.level != null) && this.level.equals(rhs.level)))) && ((this.parameters == rhs.parameters) || ((this.parameters != null) && this.parameters.equals(rhs.parameters)))) && ((this.enabled == rhs.enabled) || ((this.enabled != null) && this.enabled.equals(rhs.enabled)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 }

@@ -29,7 +29,7 @@ public class State {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof State)) {
+        if ((other instanceof State) == false) {
             return false;
         }
         State rhs = ((State) other);

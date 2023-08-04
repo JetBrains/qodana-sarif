@@ -3,8 +3,6 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Objects;
-
 
 /**
  * A physical location relevant to a result. Specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.
@@ -185,11 +183,11 @@ public class PhysicalLocation {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof PhysicalLocation)) {
+        if ((other instanceof PhysicalLocation) == false) {
             return false;
         }
         PhysicalLocation rhs = ((PhysicalLocation) other);
-        return (((((Objects.equals(this.contextRegion, rhs.contextRegion)) && (Objects.equals(this.address, rhs.address))) && (Objects.equals(this.region, rhs.region))) && (Objects.equals(this.artifactLocation, rhs.artifactLocation))) && (Objects.equals(this.properties, rhs.properties)));
+        return ((((((this.contextRegion == rhs.contextRegion) || ((this.contextRegion != null) && this.contextRegion.equals(rhs.contextRegion))) && ((this.address == rhs.address) || ((this.address != null) && this.address.equals(rhs.address)))) && ((this.region == rhs.region) || ((this.region != null) && this.region.equals(rhs.region)))) && ((this.artifactLocation == rhs.artifactLocation) || ((this.artifactLocation != null) && this.artifactLocation.equals(rhs.artifactLocation)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

@@ -3,8 +3,6 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Objects;
-
 
 /**
  * A physical or virtual address, or a range of addresses, in an 'addressable region' (memory or a binary file).
@@ -335,11 +333,11 @@ public class Address {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof Address)) {
+        if ((other instanceof Address) == false) {
             return false;
         }
         Address rhs = ((Address) other);
-        return ((((((((((Objects.equals(this.offsetFromParent, rhs.offsetFromParent)) && (Objects.equals(this.parentIndex, rhs.parentIndex))) && (Objects.equals(this.relativeAddress, rhs.relativeAddress))) && (Objects.equals(this.kind, rhs.kind))) && (Objects.equals(this.length, rhs.length))) && (Objects.equals(this.name, rhs.name))) && (Objects.equals(this.index, rhs.index))) && (Objects.equals(this.fullyQualifiedName, rhs.fullyQualifiedName))) && (Objects.equals(this.properties, rhs.properties))) && (Objects.equals(this.absoluteAddress, rhs.absoluteAddress)));
+        return (((((((((((this.offsetFromParent == rhs.offsetFromParent) || ((this.offsetFromParent != null) && this.offsetFromParent.equals(rhs.offsetFromParent))) && ((this.parentIndex == rhs.parentIndex) || ((this.parentIndex != null) && this.parentIndex.equals(rhs.parentIndex)))) && ((this.relativeAddress == rhs.relativeAddress) || ((this.relativeAddress != null) && this.relativeAddress.equals(rhs.relativeAddress)))) && ((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind)))) && ((this.length == rhs.length) || ((this.length != null) && this.length.equals(rhs.length)))) && ((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name)))) && ((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index)))) && ((this.fullyQualifiedName == rhs.fullyQualifiedName) || ((this.fullyQualifiedName != null) && this.fullyQualifiedName.equals(rhs.fullyQualifiedName)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.absoluteAddress == rhs.absoluteAddress) || ((this.absoluteAddress != null) && this.absoluteAddress.equals(rhs.absoluteAddress))));
     }
 
 }

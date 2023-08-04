@@ -3,7 +3,6 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Objects;
 import java.util.Set;
 
 
@@ -203,11 +202,11 @@ public class Attachment {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof Attachment)) {
+        if ((other instanceof Attachment) == false) {
             return false;
         }
         Attachment rhs = ((Attachment) other);
-        return (((((Objects.equals(this.description, rhs.description)) && (Objects.equals(this.regions, rhs.regions))) && (Objects.equals(this.rectangles, rhs.rectangles))) && (Objects.equals(this.artifactLocation, rhs.artifactLocation))) && (Objects.equals(this.properties, rhs.properties)));
+        return ((((((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description))) && ((this.regions == rhs.regions) || ((this.regions != null) && this.regions.equals(rhs.regions)))) && ((this.rectangles == rhs.rectangles) || ((this.rectangles != null) && this.rectangles.equals(rhs.rectangles)))) && ((this.artifactLocation == rhs.artifactLocation) || ((this.artifactLocation != null) && this.artifactLocation.equals(rhs.artifactLocation)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -144,11 +143,11 @@ public class Stack {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof Stack)) {
+        if ((other instanceof Stack) == false) {
             return false;
         }
         Stack rhs = ((Stack) other);
-        return (((Objects.equals(this.message, rhs.message)) && (Objects.equals(this.frames, rhs.frames))) && (Objects.equals(this.properties, rhs.properties)));
+        return ((((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message))) && ((this.frames == rhs.frames) || ((this.frames != null) && this.frames.equals(rhs.frames)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

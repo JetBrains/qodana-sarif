@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
-import java.util.Objects;
 import java.util.Set;
 
 
@@ -427,11 +426,11 @@ public class Artifact {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof Artifact)) {
+        if ((other instanceof Artifact) == false) {
             return false;
         }
         Artifact rhs = ((Artifact) other);
-        return (((((((((((((Objects.equals(this.parentIndex, rhs.parentIndex)) && (Objects.equals(this.offset, rhs.offset))) && (Objects.equals(this.roles, rhs.roles))) && (Objects.equals(this.lastModifiedTimeUtc, rhs.lastModifiedTimeUtc))) && (Objects.equals(this.length, rhs.length))) && (Objects.equals(this.description, rhs.description))) && (Objects.equals(this.mimeType, rhs.mimeType))) && (Objects.equals(this.encoding, rhs.encoding))) && (Objects.equals(this.contents, rhs.contents))) && (Objects.equals(this.hashes, rhs.hashes))) && (Objects.equals(this.location, rhs.location))) && (Objects.equals(this.sourceLanguage, rhs.sourceLanguage))) && (Objects.equals(this.properties, rhs.properties)));
+        return ((((((((((((((this.parentIndex == rhs.parentIndex) || ((this.parentIndex != null) && this.parentIndex.equals(rhs.parentIndex))) && ((this.offset == rhs.offset) || ((this.offset != null) && this.offset.equals(rhs.offset)))) && ((this.roles == rhs.roles) || ((this.roles != null) && this.roles.equals(rhs.roles)))) && ((this.lastModifiedTimeUtc == rhs.lastModifiedTimeUtc) || ((this.lastModifiedTimeUtc != null) && this.lastModifiedTimeUtc.equals(rhs.lastModifiedTimeUtc)))) && ((this.length == rhs.length) || ((this.length != null) && this.length.equals(rhs.length)))) && ((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description)))) && ((this.mimeType == rhs.mimeType) || ((this.mimeType != null) && this.mimeType.equals(rhs.mimeType)))) && ((this.encoding == rhs.encoding) || ((this.encoding != null) && this.encoding.equals(rhs.encoding)))) && ((this.contents == rhs.contents) || ((this.contents != null) && this.contents.equals(rhs.contents)))) && ((this.hashes == rhs.hashes) || ((this.hashes != null) && this.hashes.equals(rhs.hashes)))) && ((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location)))) && ((this.sourceLanguage == rhs.sourceLanguage) || ((this.sourceLanguage != null) && this.sourceLanguage.equals(rhs.sourceLanguage)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

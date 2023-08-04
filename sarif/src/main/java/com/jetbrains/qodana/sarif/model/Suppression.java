@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 
 /**
@@ -234,11 +233,11 @@ public class Suppression {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof Suppression)) {
+        if ((other instanceof Suppression) == false) {
             return false;
         }
         Suppression rhs = ((Suppression) other);
-        return ((((((Objects.equals(this.kind, rhs.kind)) && (Objects.equals(this.guid, rhs.guid))) && (Objects.equals(this.location, rhs.location))) && (Objects.equals(this.justification, rhs.justification))) && (Objects.equals(this.properties, rhs.properties))) && (Objects.equals(this.status, rhs.status)));
+        return (((((((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location)))) && ((this.justification == rhs.justification) || ((this.justification != null) && this.justification.equals(rhs.justification)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.status == rhs.status) || ((this.status != null) && this.status.equals(rhs.status))));
     }
 
 
@@ -262,7 +261,7 @@ public class Suppression {
 
         private final String value;
 
-        Kind(String value) {
+        private Kind(String value) {
             this.value = value;
         }
 
@@ -309,7 +308,7 @@ public class Suppression {
 
         private final String value;
 
-        Status(String value) {
+        private Status(String value) {
             this.value = value;
         }
 

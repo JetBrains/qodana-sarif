@@ -28,7 +28,7 @@ public enum Level {
 
     private final String value;
 
-    Level(String value) {
+    private Level(String value) {
         this.value = value;
     }
 

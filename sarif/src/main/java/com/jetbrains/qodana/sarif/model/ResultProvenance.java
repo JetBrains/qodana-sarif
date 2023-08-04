@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
-import java.util.Objects;
 import java.util.Set;
 
 
@@ -247,11 +246,11 @@ public class ResultProvenance {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof ResultProvenance)) {
+        if ((other instanceof ResultProvenance) == false) {
             return false;
         }
         ResultProvenance rhs = ((ResultProvenance) other);
-        return (((((((Objects.equals(this.firstDetectionRunGuid, rhs.firstDetectionRunGuid)) && (Objects.equals(this.lastDetectionTimeUtc, rhs.lastDetectionTimeUtc))) && (Objects.equals(this.invocationIndex, rhs.invocationIndex))) && (Objects.equals(this.lastDetectionRunGuid, rhs.lastDetectionRunGuid))) && (Objects.equals(this.conversionSources, rhs.conversionSources))) && (Objects.equals(this.firstDetectionTimeUtc, rhs.firstDetectionTimeUtc))) && (Objects.equals(this.properties, rhs.properties)));
+        return ((((((((this.firstDetectionRunGuid == rhs.firstDetectionRunGuid) || ((this.firstDetectionRunGuid != null) && this.firstDetectionRunGuid.equals(rhs.firstDetectionRunGuid))) && ((this.lastDetectionTimeUtc == rhs.lastDetectionTimeUtc) || ((this.lastDetectionTimeUtc != null) && this.lastDetectionTimeUtc.equals(rhs.lastDetectionTimeUtc)))) && ((this.invocationIndex == rhs.invocationIndex) || ((this.invocationIndex != null) && this.invocationIndex.equals(rhs.invocationIndex)))) && ((this.lastDetectionRunGuid == rhs.lastDetectionRunGuid) || ((this.lastDetectionRunGuid != null) && this.lastDetectionRunGuid.equals(rhs.lastDetectionRunGuid)))) && ((this.conversionSources == rhs.conversionSources) || ((this.conversionSources != null) && this.conversionSources.equals(rhs.conversionSources)))) && ((this.firstDetectionTimeUtc == rhs.firstDetectionTimeUtc) || ((this.firstDetectionTimeUtc != null) && this.firstDetectionTimeUtc.equals(rhs.firstDetectionTimeUtc)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

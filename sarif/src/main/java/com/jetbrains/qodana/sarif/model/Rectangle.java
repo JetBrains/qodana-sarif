@@ -3,8 +3,6 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Objects;
-
 
 /**
  * An area within an image.
@@ -215,11 +213,11 @@ public class Rectangle {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof Rectangle)) {
+        if ((other instanceof Rectangle) == false) {
             return false;
         }
         Rectangle rhs = ((Rectangle) other);
-        return ((((((Objects.equals(this.top, rhs.top)) && (Objects.equals(this.left, rhs.left))) && (Objects.equals(this.bottom, rhs.bottom))) && (Objects.equals(this.right, rhs.right))) && (Objects.equals(this.message, rhs.message))) && (Objects.equals(this.properties, rhs.properties)));
+        return (((((((this.top == rhs.top) || ((this.top != null) && this.top.equals(rhs.top))) && ((this.left == rhs.left) || ((this.left != null) && this.left.equals(rhs.left)))) && ((this.bottom == rhs.bottom) || ((this.bottom != null) && this.bottom.equals(rhs.bottom)))) && ((this.right == rhs.right) || ((this.right != null) && this.right.equals(rhs.right)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -144,11 +143,11 @@ public class CodeFlow {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof CodeFlow)) {
+        if ((other instanceof CodeFlow) == false) {
             return false;
         }
         CodeFlow rhs = ((CodeFlow) other);
-        return (((Objects.equals(this.message, rhs.message)) && (Objects.equals(this.threadFlows, rhs.threadFlows))) && (Objects.equals(this.properties, rhs.properties)));
+        return ((((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message))) && ((this.threadFlows == rhs.threadFlows) || ((this.threadFlows != null) && this.threadFlows.equals(rhs.threadFlows)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

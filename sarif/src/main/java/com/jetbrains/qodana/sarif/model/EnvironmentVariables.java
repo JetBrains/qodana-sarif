@@ -29,7 +29,7 @@ public class EnvironmentVariables {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof EnvironmentVariables)) {
+        if ((other instanceof EnvironmentVariables) == false) {
             return false;
         }
         EnvironmentVariables rhs = ((EnvironmentVariables) other);

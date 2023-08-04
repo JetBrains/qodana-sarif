@@ -3,7 +3,6 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Objects;
 import java.util.Set;
 
 
@@ -246,11 +245,11 @@ public class Location {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof Location)) {
+        if ((other instanceof Location) == false) {
             return false;
         }
         Location rhs = ((Location) other);
-        return (((((((Objects.equals(this.relationships, rhs.relationships)) && (Objects.equals(this.physicalLocation, rhs.physicalLocation))) && (Objects.equals(this.logicalLocations, rhs.logicalLocations))) && (Objects.equals(this.annotations, rhs.annotations))) && (Objects.equals(this.id, rhs.id))) && (Objects.equals(this.message, rhs.message))) && (Objects.equals(this.properties, rhs.properties)));
+        return ((((((((this.relationships == rhs.relationships) || ((this.relationships != null) && this.relationships.equals(rhs.relationships))) && ((this.physicalLocation == rhs.physicalLocation) || ((this.physicalLocation != null) && this.physicalLocation.equals(rhs.physicalLocation)))) && ((this.logicalLocations == rhs.logicalLocations) || ((this.logicalLocations != null) && this.logicalLocations.equals(rhs.logicalLocations)))) && ((this.annotations == rhs.annotations) || ((this.annotations != null) && this.annotations.equals(rhs.annotations)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

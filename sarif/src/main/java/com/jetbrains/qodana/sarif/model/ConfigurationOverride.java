@@ -3,8 +3,6 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Objects;
-
 
 /**
  * Information about how a specific rule or notification was reconfigured at runtime.
@@ -147,11 +145,11 @@ public class ConfigurationOverride {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof ConfigurationOverride)) {
+        if ((other instanceof ConfigurationOverride) == false) {
             return false;
         }
         ConfigurationOverride rhs = ((ConfigurationOverride) other);
-        return (((Objects.equals(this.descriptor, rhs.descriptor)) && (Objects.equals(this.configuration, rhs.configuration))) && (Objects.equals(this.properties, rhs.properties)));
+        return ((((this.descriptor == rhs.descriptor) || ((this.descriptor != null) && this.descriptor.equals(rhs.descriptor))) && ((this.configuration == rhs.configuration) || ((this.configuration != null) && this.configuration.equals(rhs.configuration)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

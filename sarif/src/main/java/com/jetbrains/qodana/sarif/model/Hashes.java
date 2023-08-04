@@ -29,7 +29,7 @@ public class Hashes {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof Hashes)) {
+        if ((other instanceof Hashes) == false) {
             return false;
         }
         Hashes rhs = ((Hashes) other);

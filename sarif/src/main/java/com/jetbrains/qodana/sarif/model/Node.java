@@ -3,7 +3,6 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Objects;
 import java.util.Set;
 
 
@@ -203,11 +202,11 @@ public class Node {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof Node)) {
+        if ((other instanceof Node) == false) {
             return false;
         }
         Node rhs = ((Node) other);
-        return (((((Objects.equals(this.location, rhs.location)) && (Objects.equals(this.id, rhs.id))) && (Objects.equals(this.label, rhs.label))) && (Objects.equals(this.children, rhs.children))) && (Objects.equals(this.properties, rhs.properties)));
+        return ((((((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.label == rhs.label) || ((this.label != null) && this.label.equals(rhs.label)))) && ((this.children == rhs.children) || ((this.children != null) && this.children.equals(rhs.children)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

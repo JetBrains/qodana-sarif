@@ -29,7 +29,7 @@ public class OriginalUriBaseIds {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof OriginalUriBaseIds)) {
+        if ((other instanceof OriginalUriBaseIds) == false) {
             return false;
         }
         OriginalUriBaseIds rhs = ((OriginalUriBaseIds) other);

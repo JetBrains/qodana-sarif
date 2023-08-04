@@ -3,7 +3,6 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Objects;
 import java.util.Set;
 
 
@@ -143,11 +142,11 @@ public class Tool {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof Tool)) {
+        if ((other instanceof Tool) == false) {
             return false;
         }
         Tool rhs = ((Tool) other);
-        return (((Objects.equals(this.extensions, rhs.extensions)) && (Objects.equals(this.driver, rhs.driver))) && (Objects.equals(this.properties, rhs.properties)));
+        return ((((this.extensions == rhs.extensions) || ((this.extensions != null) && this.extensions.equals(rhs.extensions))) && ((this.driver == rhs.driver) || ((this.driver != null) && this.driver.equals(rhs.driver)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

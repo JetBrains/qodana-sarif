@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -246,11 +245,11 @@ public class GraphTraversal {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof GraphTraversal)) {
+        if ((other instanceof GraphTraversal) == false) {
             return false;
         }
         GraphTraversal rhs = ((GraphTraversal) other);
-        return (((((((Objects.equals(this.initialState, rhs.initialState)) && (Objects.equals(this.description, rhs.description))) && (Objects.equals(this.immutableState, rhs.immutableState))) && (Objects.equals(this.runGraphIndex, rhs.runGraphIndex))) && (Objects.equals(this.resultGraphIndex, rhs.resultGraphIndex))) && (Objects.equals(this.edgeTraversals, rhs.edgeTraversals))) && (Objects.equals(this.properties, rhs.properties)));
+        return ((((((((this.initialState == rhs.initialState) || ((this.initialState != null) && this.initialState.equals(rhs.initialState))) && ((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description)))) && ((this.immutableState == rhs.immutableState) || ((this.immutableState != null) && this.immutableState.equals(rhs.immutableState)))) && ((this.runGraphIndex == rhs.runGraphIndex) || ((this.runGraphIndex != null) && this.runGraphIndex.equals(rhs.runGraphIndex)))) && ((this.resultGraphIndex == rhs.resultGraphIndex) || ((this.resultGraphIndex != null) && this.resultGraphIndex.equals(rhs.resultGraphIndex)))) && ((this.edgeTraversals == rhs.edgeTraversals) || ((this.edgeTraversals != null) && this.edgeTraversals.equals(rhs.edgeTraversals)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 }

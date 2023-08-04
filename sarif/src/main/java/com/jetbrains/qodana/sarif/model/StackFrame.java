@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -186,11 +185,11 @@ public class StackFrame {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof StackFrame)) {
+        if ((other instanceof StackFrame) == false) {
             return false;
         }
         StackFrame rhs = ((StackFrame) other);
-        return (((((Objects.equals(this.threadId, rhs.threadId)) && (Objects.equals(this.location, rhs.location))) && (Objects.equals(this.parameters, rhs.parameters))) && (Objects.equals(this.properties, rhs.properties))) && (Objects.equals(this.module, rhs.module)));
+        return ((((((this.threadId == rhs.threadId) || ((this.threadId != null) && this.threadId.equals(rhs.threadId))) && ((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location)))) && ((this.parameters == rhs.parameters) || ((this.parameters != null) && this.parameters.equals(rhs.parameters)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.module == rhs.module) || ((this.module != null) && this.module.equals(rhs.module))));
     }
 
 }
