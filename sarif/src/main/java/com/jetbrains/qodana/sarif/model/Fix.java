@@ -9,6 +9,7 @@ import java.util.Set;
 /**
  * A proposed fix for the problem represented by a result object. A fix specifies a set of artifacts to modify. For each artifact, it specifies a set of bytes to remove, and provides a set of new bytes to replace them.
  */
+@SuppressWarnings("DuplicatedCode")
 public class Fix {
 
     /**
@@ -142,10 +143,11 @@ public class Fix {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Fix) == false) {
+        if (!(other instanceof Fix)) {
             return false;
         }
         Fix rhs = ((Fix) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return ((((this.artifactChanges == rhs.artifactChanges) || ((this.artifactChanges != null) && this.artifactChanges.equals(rhs.artifactChanges))) && ((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

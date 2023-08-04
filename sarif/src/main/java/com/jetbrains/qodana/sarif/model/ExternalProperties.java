@@ -669,7 +669,7 @@ public class ExternalProperties {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ExternalProperties) == false) {
+        if (!(other instanceof ExternalProperties)) {
             return false;
         }
         ExternalProperties rhs = ((ExternalProperties) other);
@@ -684,7 +684,7 @@ public class ExternalProperties {
     public enum Version {
 
         @SerializedName("2.1.0")
-        _2_1_0("2.1.0");
+        _2_1_0();
         private final static Map<String, Version> CONSTANTS = new HashMap<String, Version>();
 
         static {
@@ -695,8 +695,8 @@ public class ExternalProperties {
 
         private final String value;
 
-        private Version(String value) {
-            this.value = value;
+        Version() {
+            this.value = "2.1.0";
         }
 
         public static Version fromValue(String value) {

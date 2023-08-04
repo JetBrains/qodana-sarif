@@ -54,7 +54,7 @@ public enum Role {
     TOOL_SPECIFIED_CONFIGURATION("toolSpecifiedConfiguration"),
     @SerializedName("debugOutputFile")
     DEBUG_OUTPUT_FILE("debugOutputFile");
-    private final static Map<String, Role> CONSTANTS = new HashMap<String, Role>();
+    private final static Map<String, Role> CONSTANTS = new HashMap<>();
 
     static {
         for (Role c : values()) {
@@ -64,7 +64,7 @@ public enum Role {
 
     private final String value;
 
-    private Role(String value) {
+    Role(String value) {
         this.value = value;
     }
 

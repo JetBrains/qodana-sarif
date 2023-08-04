@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Describes the response to an HTTP request.
  */
+@SuppressWarnings("DuplicatedCode")
 public class WebResponse {
 
     /**
@@ -303,10 +304,11 @@ public class WebResponse {
         if (other == this) {
             return true;
         }
-        if ((other instanceof WebResponse) == false) {
+        if (!(other instanceof WebResponse)) {
             return false;
         }
         WebResponse rhs = ((WebResponse) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return ((((((((((this.headers == rhs.headers) || ((this.headers != null) && this.headers.equals(rhs.headers))) && ((this.protocol == rhs.protocol) || ((this.protocol != null) && this.protocol.equals(rhs.protocol)))) && ((this.reasonPhrase == rhs.reasonPhrase) || ((this.reasonPhrase != null) && this.reasonPhrase.equals(rhs.reasonPhrase)))) && ((this.noResponseReceived == rhs.noResponseReceived) || ((this.noResponseReceived != null) && this.noResponseReceived.equals(rhs.noResponseReceived)))) && ((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index)))) && ((this.body == rhs.body) || ((this.body != null) && this.body.equals(rhs.body)))) && ((this.version == rhs.version) || ((this.version != null) && this.version.equals(rhs.version)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.statusCode == rhs.statusCode) || ((this.statusCode != null) && this.statusCode.equals(rhs.statusCode))));
     }
 

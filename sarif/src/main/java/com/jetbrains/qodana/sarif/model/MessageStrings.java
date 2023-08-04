@@ -29,7 +29,7 @@ public class MessageStrings {
         if (other == this) {
             return true;
         }
-        if ((other instanceof MessageStrings) == false) {
+        if (!(other instanceof MessageStrings)) {
             return false;
         }
         MessageStrings rhs = ((MessageStrings) other);

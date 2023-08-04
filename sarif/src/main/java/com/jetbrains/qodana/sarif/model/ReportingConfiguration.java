@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Information about a rule or notification that can be configured at runtime.
  */
+@SuppressWarnings("DuplicatedCode")
 public class ReportingConfiguration {
 
     /**
@@ -183,10 +184,11 @@ public class ReportingConfiguration {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ReportingConfiguration) == false) {
+        if (!(other instanceof ReportingConfiguration)) {
             return false;
         }
         ReportingConfiguration rhs = ((ReportingConfiguration) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall
         return ((((((this.rank == rhs.rank) || ((this.rank != null) && this.rank.equals(rhs.rank))) && ((this.level == rhs.level) || ((this.level != null) && this.level.equals(rhs.level)))) && ((this.parameters == rhs.parameters) || ((this.parameters != null) && this.parameters.equals(rhs.parameters)))) && ((this.enabled == rhs.enabled) || ((this.enabled != null) && this.enabled.equals(rhs.enabled)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 }

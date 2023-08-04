@@ -29,7 +29,7 @@ public class Headers {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Headers) == false) {
+        if (!(other instanceof Headers)) {
             return false;
         }
         Headers rhs = ((Headers) other);

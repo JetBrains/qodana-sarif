@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Identifies a particular toolComponent object, either the driver or an extension.
  */
+@SuppressWarnings("DuplicatedCode")
 public class ToolComponentReference {
 
     /**
@@ -153,10 +154,11 @@ public class ToolComponentReference {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ToolComponentReference) == false) {
+        if (!(other instanceof ToolComponentReference)) {
             return false;
         }
         ToolComponentReference rhs = ((ToolComponentReference) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return (((((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name))) && ((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index)))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

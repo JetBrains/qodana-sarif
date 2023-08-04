@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * A physical location relevant to a result. Specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.
  */
+@SuppressWarnings("DuplicatedCode")
 public class PhysicalLocation {
 
     /**
@@ -183,10 +184,11 @@ public class PhysicalLocation {
         if (other == this) {
             return true;
         }
-        if ((other instanceof PhysicalLocation) == false) {
+        if (!(other instanceof PhysicalLocation)) {
             return false;
         }
         PhysicalLocation rhs = ((PhysicalLocation) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return ((((((this.contextRegion == rhs.contextRegion) || ((this.contextRegion != null) && this.contextRegion.equals(rhs.contextRegion))) && ((this.address == rhs.address) || ((this.address != null) && this.address.equals(rhs.address)))) && ((this.region == rhs.region) || ((this.region != null) && this.region.equals(rhs.region)))) && ((this.artifactLocation == rhs.artifactLocation) || ((this.artifactLocation != null) && this.artifactLocation.equals(rhs.artifactLocation)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

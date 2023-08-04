@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Represents the traversal of a single edge during a graph traversal.
  */
+@SuppressWarnings("DuplicatedCode")
 public class EdgeTraversal {
 
     /**
@@ -200,10 +201,11 @@ public class EdgeTraversal {
         if (other == this) {
             return true;
         }
-        if ((other instanceof EdgeTraversal) == false) {
+        if (!(other instanceof EdgeTraversal)) {
             return false;
         }
         EdgeTraversal rhs = ((EdgeTraversal) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return ((((((this.edgeId == rhs.edgeId) || ((this.edgeId != null) && this.edgeId.equals(rhs.edgeId))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.stepOverEdgeCount == rhs.stepOverEdgeCount) || ((this.stepOverEdgeCount != null) && this.stepOverEdgeCount.equals(rhs.stepOverEdgeCount)))) && ((this.finalState == rhs.finalState) || ((this.finalState != null) && this.finalState.equals(rhs.finalState)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

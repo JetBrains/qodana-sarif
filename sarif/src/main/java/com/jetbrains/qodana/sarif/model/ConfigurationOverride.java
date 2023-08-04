@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Information about how a specific rule or notification was reconfigured at runtime.
  */
+@SuppressWarnings("DuplicatedCode")
 public class ConfigurationOverride {
 
     /**
@@ -145,10 +146,11 @@ public class ConfigurationOverride {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ConfigurationOverride) == false) {
+        if (!(other instanceof ConfigurationOverride)) {
             return false;
         }
         ConfigurationOverride rhs = ((ConfigurationOverride) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return ((((this.descriptor == rhs.descriptor) || ((this.descriptor != null) && this.descriptor.equals(rhs.descriptor))) && ((this.configuration == rhs.configuration) || ((this.configuration != null) && this.configuration.equals(rhs.configuration)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

@@ -9,6 +9,7 @@ import java.util.Set;
 /**
  * The analysis tool that was run.
  */
+@SuppressWarnings("DuplicatedCode")
 public class Tool {
 
     /**
@@ -142,10 +143,11 @@ public class Tool {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Tool) == false) {
+        if (!(other instanceof Tool)) {
             return false;
         }
         Tool rhs = ((Tool) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return ((((this.extensions == rhs.extensions) || ((this.extensions != null) && this.extensions.equals(rhs.extensions))) && ((this.driver == rhs.driver) || ((this.driver != null) && this.driver.equals(rhs.driver)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

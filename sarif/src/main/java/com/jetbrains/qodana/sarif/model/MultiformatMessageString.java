@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * A message string or message format string rendered in multiple formats.
  */
+@SuppressWarnings("DuplicatedCode")
 public class MultiformatMessageString {
 
     /**
@@ -140,10 +141,11 @@ public class MultiformatMessageString {
         if (other == this) {
             return true;
         }
-        if ((other instanceof MultiformatMessageString) == false) {
+        if (!(other instanceof MultiformatMessageString)) {
             return false;
         }
         MultiformatMessageString rhs = ((MultiformatMessageString) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return ((((this.markdown == rhs.markdown) || ((this.markdown != null) && this.markdown.equals(rhs.markdown))) && ((this.text == rhs.text) || ((this.text != null) && this.text.equals(rhs.text)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

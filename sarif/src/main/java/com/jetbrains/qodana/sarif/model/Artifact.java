@@ -10,6 +10,7 @@ import java.util.Set;
 /**
  * A single artifact. In some cases, this artifact might be nested within another artifact.
  */
+@SuppressWarnings("DuplicatedCode")
 public class Artifact {
 
     /**
@@ -426,10 +427,11 @@ public class Artifact {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Artifact) == false) {
+        if (!(other instanceof Artifact)) {
             return false;
         }
         Artifact rhs = ((Artifact) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return ((((((((((((((this.parentIndex == rhs.parentIndex) || ((this.parentIndex != null) && this.parentIndex.equals(rhs.parentIndex))) && ((this.offset == rhs.offset) || ((this.offset != null) && this.offset.equals(rhs.offset)))) && ((this.roles == rhs.roles) || ((this.roles != null) && this.roles.equals(rhs.roles)))) && ((this.lastModifiedTimeUtc == rhs.lastModifiedTimeUtc) || ((this.lastModifiedTimeUtc != null) && this.lastModifiedTimeUtc.equals(rhs.lastModifiedTimeUtc)))) && ((this.length == rhs.length) || ((this.length != null) && this.length.equals(rhs.length)))) && ((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description)))) && ((this.mimeType == rhs.mimeType) || ((this.mimeType != null) && this.mimeType.equals(rhs.mimeType)))) && ((this.encoding == rhs.encoding) || ((this.encoding != null) && this.encoding.equals(rhs.encoding)))) && ((this.contents == rhs.contents) || ((this.contents != null) && this.contents.equals(rhs.contents)))) && ((this.hashes == rhs.hashes) || ((this.hashes != null) && this.hashes.equals(rhs.hashes)))) && ((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location)))) && ((this.sourceLanguage == rhs.sourceLanguage) || ((this.sourceLanguage != null) && this.sourceLanguage.equals(rhs.sourceLanguage)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

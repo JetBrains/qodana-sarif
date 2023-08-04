@@ -9,6 +9,7 @@ import java.util.Set;
 /**
  * Describes how a converter transformed the output of a static analysis tool from the analysis tool's native output format into the SARIF format.
  */
+@SuppressWarnings("DuplicatedCode")
 public class Conversion {
 
     /**
@@ -172,10 +173,11 @@ public class Conversion {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Conversion) == false) {
+        if (!(other instanceof Conversion)) {
             return false;
         }
         Conversion rhs = ((Conversion) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return (((((this.invocation == rhs.invocation) || ((this.invocation != null) && this.invocation.equals(rhs.invocation))) && ((this.analysisToolLogFiles == rhs.analysisToolLogFiles) || ((this.analysisToolLogFiles != null) && this.analysisToolLogFiles.equals(rhs.analysisToolLogFiles)))) && ((this.tool == rhs.tool) || ((this.tool != null) && this.tool.equals(rhs.tool)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

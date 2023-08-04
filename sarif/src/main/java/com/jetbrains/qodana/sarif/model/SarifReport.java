@@ -213,7 +213,7 @@ public class SarifReport {
         if (other == this) {
             return true;
         }
-        if ((other instanceof SarifReport) == false) {
+        if (!(other instanceof SarifReport)) {
             return false;
         }
         SarifReport rhs = ((SarifReport) other);
@@ -228,7 +228,7 @@ public class SarifReport {
     public enum Version {
 
         @SerializedName("2.1.0")
-        _2_1_0("2.1.0");
+        _2_1_0();
         private final static Map<String, Version> CONSTANTS = new HashMap<String, Version>();
 
         static {
@@ -239,8 +239,8 @@ public class SarifReport {
 
         private final String value;
 
-        private Version(String value) {
-            this.value = value;
+        Version() {
+            this.value = "2.1.0";
         }
 
         public static Version fromValue(String value) {

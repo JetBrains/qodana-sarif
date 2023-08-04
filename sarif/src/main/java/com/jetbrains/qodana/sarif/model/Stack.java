@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * A call stack that is relevant to a result.
  */
+@SuppressWarnings("DuplicatedCode")
 public class Stack {
 
     /**
@@ -143,10 +144,11 @@ public class Stack {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Stack) == false) {
+        if (!(other instanceof Stack)) {
             return false;
         }
         Stack rhs = ((Stack) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return ((((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message))) && ((this.frames == rhs.frames) || ((this.frames != null) && this.frames.equals(rhs.frames)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

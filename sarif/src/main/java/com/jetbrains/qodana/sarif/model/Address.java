@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * A physical or virtual address, or a range of addresses, in an 'addressable region' (memory or a binary file).
  */
+@SuppressWarnings({"DuplicatedCode", "unused"})
 public class Address {
 
     /**
@@ -73,6 +74,7 @@ public class Address {
     /**
      * The address expressed as a byte offset from the start of the addressable region.
      */
+    @SuppressWarnings("unused")
     public Integer getAbsoluteAddress() {
         return absoluteAddress;
     }
@@ -80,10 +82,12 @@ public class Address {
     /**
      * The address expressed as a byte offset from the start of the addressable region.
      */
+    @SuppressWarnings("unused")
     public void setAbsoluteAddress(Integer absoluteAddress) {
         this.absoluteAddress = absoluteAddress;
     }
 
+    @SuppressWarnings("unused")
     public Address withAbsoluteAddress(Integer absoluteAddress) {
         this.absoluteAddress = absoluteAddress;
         return this;
@@ -92,6 +96,7 @@ public class Address {
     /**
      * The address expressed as a byte offset from the absolute address of the top-most parent object.
      */
+    @SuppressWarnings("unused")
     public Integer getRelativeAddress() {
         return relativeAddress;
     }
@@ -99,10 +104,12 @@ public class Address {
     /**
      * The address expressed as a byte offset from the absolute address of the top-most parent object.
      */
+    @SuppressWarnings("unused")
     public void setRelativeAddress(Integer relativeAddress) {
         this.relativeAddress = relativeAddress;
     }
 
+    @SuppressWarnings("unused")
     public Address withRelativeAddress(Integer relativeAddress) {
         this.relativeAddress = relativeAddress;
         return this;
@@ -111,6 +118,7 @@ public class Address {
     /**
      * The number of bytes in this range of addresses.
      */
+    @SuppressWarnings("unused")
     public Integer getLength() {
         return length;
     }
@@ -118,10 +126,12 @@ public class Address {
     /**
      * The number of bytes in this range of addresses.
      */
+    @SuppressWarnings("unused")
     public void setLength(Integer length) {
         this.length = length;
     }
 
+    @SuppressWarnings("unused")
     public Address withLength(Integer length) {
         this.length = length;
         return this;
@@ -130,6 +140,7 @@ public class Address {
     /**
      * An open-ended string that identifies the address kind. 'data', 'function', 'header','instruction', 'module', 'page', 'section', 'segment', 'stack', 'stackFrame', 'table' are well-known values.
      */
+    @SuppressWarnings("unused")
     public String getKind() {
         return kind;
     }
@@ -137,10 +148,12 @@ public class Address {
     /**
      * An open-ended string that identifies the address kind. 'data', 'function', 'header','instruction', 'module', 'page', 'section', 'segment', 'stack', 'stackFrame', 'table' are well-known values.
      */
+    @SuppressWarnings("unused")
     public void setKind(String kind) {
         this.kind = kind;
     }
 
+    @SuppressWarnings("unused")
     public Address withKind(String kind) {
         this.kind = kind;
         return this;
@@ -149,6 +162,7 @@ public class Address {
     /**
      * A name that is associated with the address, e.g., '.text'.
      */
+    @SuppressWarnings("unused")
     public String getName() {
         return name;
     }
@@ -156,10 +170,12 @@ public class Address {
     /**
      * A name that is associated with the address, e.g., '.text'.
      */
+    @SuppressWarnings("unused")
     public void setName(String name) {
         this.name = name;
     }
 
+    @SuppressWarnings("unused")
     public Address withName(String name) {
         this.name = name;
         return this;
@@ -168,6 +184,7 @@ public class Address {
     /**
      * A human-readable fully qualified name that is associated with the address.
      */
+    @SuppressWarnings("unused")
     public String getFullyQualifiedName() {
         return fullyQualifiedName;
     }
@@ -175,10 +192,12 @@ public class Address {
     /**
      * A human-readable fully qualified name that is associated with the address.
      */
+    @SuppressWarnings("unused")
     public void setFullyQualifiedName(String fullyQualifiedName) {
         this.fullyQualifiedName = fullyQualifiedName;
     }
 
+    @SuppressWarnings("unused")
     public Address withFullyQualifiedName(String fullyQualifiedName) {
         this.fullyQualifiedName = fullyQualifiedName;
         return this;
@@ -187,6 +206,7 @@ public class Address {
     /**
      * The byte offset of this address from the absolute or relative address of the parent object.
      */
+    @SuppressWarnings("unused")
     public Integer getOffsetFromParent() {
         return offsetFromParent;
     }
@@ -194,10 +214,12 @@ public class Address {
     /**
      * The byte offset of this address from the absolute or relative address of the parent object.
      */
+    @SuppressWarnings("unused")
     public void setOffsetFromParent(Integer offsetFromParent) {
         this.offsetFromParent = offsetFromParent;
     }
 
+    @SuppressWarnings("unused")
     public Address withOffsetFromParent(Integer offsetFromParent) {
         this.offsetFromParent = offsetFromParent;
         return this;
@@ -206,6 +228,7 @@ public class Address {
     /**
      * The index within run.addresses of the cached object for this address.
      */
+    @SuppressWarnings("unused")
     public Integer getIndex() {
         return index;
     }
@@ -213,10 +236,12 @@ public class Address {
     /**
      * The index within run.addresses of the cached object for this address.
      */
+    @SuppressWarnings("unused")
     public void setIndex(Integer index) {
         this.index = index;
     }
 
+    @SuppressWarnings("unused")
     public Address withIndex(Integer index) {
         this.index = index;
         return this;
@@ -225,6 +250,7 @@ public class Address {
     /**
      * The index within run.addresses of the parent object.
      */
+    @SuppressWarnings("unused")
     public Integer getParentIndex() {
         return parentIndex;
     }
@@ -232,10 +258,12 @@ public class Address {
     /**
      * The index within run.addresses of the parent object.
      */
+    @SuppressWarnings("unused")
     public void setParentIndex(Integer parentIndex) {
         this.parentIndex = parentIndex;
     }
 
+    @SuppressWarnings("unused")
     public Address withParentIndex(Integer parentIndex) {
         this.parentIndex = parentIndex;
         return this;
@@ -244,6 +272,7 @@ public class Address {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @SuppressWarnings("unused")
     public PropertyBag getProperties() {
         return properties;
     }
@@ -251,10 +280,12 @@ public class Address {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @SuppressWarnings("unused")
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }
 
+    @SuppressWarnings("unused")
     public Address withProperties(PropertyBag properties) {
         this.properties = properties;
         return this;
@@ -333,10 +364,11 @@ public class Address {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Address) == false) {
+        if (!(other instanceof Address)) {
             return false;
         }
         Address rhs = ((Address) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return (((((((((((this.offsetFromParent == rhs.offsetFromParent) || ((this.offsetFromParent != null) && this.offsetFromParent.equals(rhs.offsetFromParent))) && ((this.parentIndex == rhs.parentIndex) || ((this.parentIndex != null) && this.parentIndex.equals(rhs.parentIndex)))) && ((this.relativeAddress == rhs.relativeAddress) || ((this.relativeAddress != null) && this.relativeAddress.equals(rhs.relativeAddress)))) && ((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind)))) && ((this.length == rhs.length) || ((this.length != null) && this.length.equals(rhs.length)))) && ((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name)))) && ((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index)))) && ((this.fullyQualifiedName == rhs.fullyQualifiedName) || ((this.fullyQualifiedName != null) && this.fullyQualifiedName.equals(rhs.fullyQualifiedName)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.absoluteAddress == rhs.absoluteAddress) || ((this.absoluteAddress != null) && this.absoluteAddress.equals(rhs.absoluteAddress))));
     }
 

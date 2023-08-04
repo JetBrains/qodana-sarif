@@ -105,7 +105,7 @@ public class BaselineCalculation {
          * if old result is absent and wasChecked == true -> oldResult.baselineState = ABSENT
          * if old result is absent and wasChecked == false -> oldResult.baselineState = UNCHANGED
          * if old result is present then current result `wasChecked` is not used.
-         *
+         * <p>
          * Typicaly wasChecked is true if result is in the scope of current check.
          */
         private static final Function<Result, Boolean> ALL_CHECKED = (result) -> true;

@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Defines locations of special significance to SARIF consumers.
  */
+@SuppressWarnings("DuplicatedCode")
 public class SpecialLocations {
 
     /**
@@ -93,10 +94,11 @@ public class SpecialLocations {
         if (other == this) {
             return true;
         }
-        if ((other instanceof SpecialLocations) == false) {
+        if (!(other instanceof SpecialLocations)) {
             return false;
         }
         SpecialLocations rhs = ((SpecialLocations) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return (((this.displayBase == rhs.displayBase) || ((this.displayBase != null) && this.displayBase.equals(rhs.displayBase))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

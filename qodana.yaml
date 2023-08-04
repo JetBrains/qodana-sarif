@@ -9,4 +9,3 @@ exclude:
   - name: All
     paths:
       - sarif/src/test/resources/
-  - name: DuplicatedCode

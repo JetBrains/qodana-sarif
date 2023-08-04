@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Contains information that enables a SARIF consumer to locate the external property file that contains the value of an externalized property associated with the run.
  */
+@SuppressWarnings("DuplicatedCode")
 public class ExternalPropertyFileReference {
 
     /**
@@ -153,10 +154,11 @@ public class ExternalPropertyFileReference {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ExternalPropertyFileReference) == false) {
+        if (!(other instanceof ExternalPropertyFileReference)) {
             return false;
         }
         ExternalPropertyFileReference rhs = ((ExternalPropertyFileReference) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return (((((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid))) && ((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.itemCount == rhs.itemCount) || ((this.itemCount != null) && this.itemCount.equals(rhs.itemCount))));
     }
 

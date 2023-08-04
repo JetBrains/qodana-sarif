@@ -9,6 +9,7 @@ import java.util.Set;
 /**
  * A network of nodes and directed edges that describes some aspect of the structure of the code (for example, a call graph).
  */
+@SuppressWarnings("DuplicatedCode")
 public class Graph {
 
     /**
@@ -155,10 +156,11 @@ public class Graph {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Graph) == false) {
+        if (!(other instanceof Graph)) {
             return false;
         }
         Graph rhs = ((Graph) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return (((((this.edges == rhs.edges) || ((this.edges != null) && this.edges.equals(rhs.edges))) && ((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description)))) && ((this.nodes == rhs.nodes) || ((this.nodes != null) && this.nodes.equals(rhs.nodes)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

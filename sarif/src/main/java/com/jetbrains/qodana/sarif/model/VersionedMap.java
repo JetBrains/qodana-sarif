@@ -7,7 +7,6 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -47,9 +46,7 @@ public class VersionedMap<V> {
 
     public Map<String, V> getHierarchyStringsMap() {
         HashMap<String, V> result = new HashMap<>();
-        map.forEach((key, versions) -> {
-            versions.forEach((version, value) -> result.put(key + "/v" + version, value));
-        });
+        map.forEach((key, versions) -> versions.forEach((version, value) -> result.put(key + "/v" + version, value)));
         return result;
     }
 
@@ -73,7 +70,7 @@ public class VersionedMap<V> {
             embedded.toJson(map.getHierarchyStringsMap(), Map.class, out);
         }
 
-        public VersionedMap<V> read(JsonReader reader) throws IOException {
+        public VersionedMap<V> read(JsonReader reader) {
             VersionedMap<V> result = new VersionedMap<>();
             Map<String, V> map = embedded.fromJson(reader, Map.class);
             map.forEach((key, value) -> {

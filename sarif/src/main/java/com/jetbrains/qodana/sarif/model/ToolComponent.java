@@ -13,6 +13,7 @@ import java.util.Set;
 /**
  * A component, such as a plug-in or the driver, of the analysis tool that was run.
  */
+@SuppressWarnings("DuplicatedCode")
 public class ToolComponent {
 
     /**
@@ -141,7 +142,7 @@ public class ToolComponent {
      */
     @SerializedName("contents")
     @Expose
-    private Set<Content> contents = new LinkedHashSet<Content>(Arrays.asList(Content.fromValue("localizedData"), Content.fromValue("nonLocalizedData")));
+    private Set<Content> contents = new LinkedHashSet<>(Arrays.asList(Content.fromValue("localizedData"), Content.fromValue("nonLocalizedData")));
     /**
      * Specifies whether this object contains a complete definition of the localizable and/or non-localizable data for this component, as opposed to including only data that is relevant to the results persisted to this log file.
      */
@@ -896,10 +897,11 @@ public class ToolComponent {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ToolComponent) == false) {
+        if (!(other instanceof ToolComponent)) {
             return false;
         }
         ToolComponent rhs = ((ToolComponent) other);
+        //noinspection EqualsReplaceableByObjectsCall
         return (((((((((((((((((((((((((((((this.releaseDateUtc == rhs.releaseDateUtc) || ((this.releaseDateUtc != null) && this.releaseDateUtc.equals(rhs.releaseDateUtc))) && ((this.rules == rhs.rules) || ((this.rules != null) && this.rules.equals(rhs.rules)))) && ((this.language == rhs.language) || ((this.language != null) && this.language.equals(rhs.language)))) && ((this.downloadUri == rhs.downloadUri) || ((this.downloadUri != null) && this.downloadUri.equals(rhs.downloadUri)))) && ((this.supportedTaxonomies == rhs.supportedTaxonomies) || ((this.supportedTaxonomies != null) && this.supportedTaxonomies.equals(rhs.supportedTaxonomies)))) && ((this.fullDescription == rhs.fullDescription) || ((this.fullDescription != null) && this.fullDescription.equals(rhs.fullDescription)))) && ((this.informationUri == rhs.informationUri) || ((this.informationUri != null) && this.informationUri.equals(rhs.informationUri)))) && ((this.associatedComponent == rhs.associatedComponent) || ((this.associatedComponent != null) && this.associatedComponent.equals(rhs.associatedComponent)))) && ((this.translationMetadata == rhs.translationMetadata) || ((this.translationMetadata != null) && this.translationMetadata.equals(rhs.translationMetadata)))) && ((this.productSuite == rhs.productSuite) || ((this.productSuite != null) && this.productSuite.equals(rhs.productSuite)))) && ((this.taxa == rhs.taxa) || ((this.taxa != null) && this.taxa.equals(rhs.taxa)))) && ((this.product == rhs.product) || ((this.product != null) && this.product.equals(rhs.product)))) && ((this.isComprehensive == rhs.isComprehensive) || ((this.isComprehensive != null) && this.isComprehensive.equals(rhs.isComprehensive)))) && ((this.minimumRequiredLocalizedDataSemanticVersion == rhs.minimumRequiredLocalizedDataSemanticVersion) || ((this.minimumRequiredLocalizedDataSemanticVersion != null) && this.minimumRequiredLocalizedDataSemanticVersion.equals(rhs.minimumRequiredLocalizedDataSemanticVersion)))) && ((this.fullName == rhs.fullName) || ((this.fullName != null) && this.fullName.equals(rhs.fullName)))) && ((this.shortDescription == rhs.shortDescription) || ((this.shortDescription != null) && this.shortDescription.equals(rhs.shortDescription)))) && ((this.version == rhs.version) || ((this.version != null) && this.version.equals(rhs.version)))) && ((this.globalMessageStrings == rhs.globalMessageStrings) || ((this.globalMessageStrings != null) && this.globalMessageStrings.equals(rhs.globalMessageStrings)))) && ((this.localizedDataSemanticVersion == rhs.localizedDataSemanticVersion) || ((this.localizedDataSemanticVersion != null) && this.localizedDataSemanticVersion.equals(rhs.localizedDataSemanticVersion)))) && ((this.dottedQuadFileVersion == rhs.dottedQuadFileVersion) || ((this.dottedQuadFileVersion != null) && this.dottedQuadFileVersion.equals(rhs.dottedQuadFileVersion)))) && ((this.contents == rhs.contents) || ((this.contents != null) && this.contents.equals(rhs.contents)))) && ((this.organization == rhs.organization) || ((this.organization != null) && this.organization.equals(rhs.organization)))) && ((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name)))) && ((this.semanticVersion == rhs.semanticVersion) || ((this.semanticVersion != null) && this.semanticVersion.equals(rhs.semanticVersion)))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.locations == rhs.locations) || ((this.locations != null) && this.locations.equals(rhs.locations)))) && ((this.notifications == rhs.notifications) || ((this.notifications != null) && this.notifications.equals(rhs.notifications)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
