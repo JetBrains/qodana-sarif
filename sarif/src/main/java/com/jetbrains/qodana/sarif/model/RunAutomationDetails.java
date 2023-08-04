@@ -188,7 +188,7 @@ public class RunAutomationDetails {
             return false;
         }
         RunAutomationDetails rhs = ((RunAutomationDetails) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.correlationGuid == rhs.correlationGuid) || ((this.correlationGuid != null) && this.correlationGuid.equals(rhs.correlationGuid)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

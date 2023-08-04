@@ -268,7 +268,7 @@ public class VersionControlDetails {
             return false;
         }
         VersionControlDetails rhs = ((VersionControlDetails) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((((this.revisionId == rhs.revisionId) || ((this.revisionId != null) && this.revisionId.equals(rhs.revisionId))) && ((this.repositoryUri == rhs.repositoryUri) || ((this.repositoryUri != null) && this.repositoryUri.equals(rhs.repositoryUri)))) && ((this.mappedTo == rhs.mappedTo) || ((this.mappedTo != null) && this.mappedTo.equals(rhs.mappedTo)))) && ((this.branch == rhs.branch) || ((this.branch != null) && this.branch.equals(rhs.branch)))) && ((this.asOfTimeUtc == rhs.asOfTimeUtc) || ((this.asOfTimeUtc != null) && this.asOfTimeUtc.equals(rhs.asOfTimeUtc)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.revisionTag == rhs.revisionTag) || ((this.revisionTag != null) && this.revisionTag.equals(rhs.revisionTag))));
     }
 

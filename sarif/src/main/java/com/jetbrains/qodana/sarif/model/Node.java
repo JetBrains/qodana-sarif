@@ -207,7 +207,7 @@ public class Node {
             return false;
         }
         Node rhs = ((Node) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.label == rhs.label) || ((this.label != null) && this.label.equals(rhs.label)))) && ((this.children == rhs.children) || ((this.children != null) && this.children.equals(rhs.children)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

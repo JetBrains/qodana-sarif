@@ -158,7 +158,7 @@ public class ExternalPropertyFileReference {
             return false;
         }
         ExternalPropertyFileReference rhs = ((ExternalPropertyFileReference) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid))) && ((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.itemCount == rhs.itemCount) || ((this.itemCount != null) && this.itemCount.equals(rhs.itemCount))));
     }
 

@@ -238,7 +238,7 @@ public class Suppression {
             return false;
         }
         Suppression rhs = ((Suppression) other);
-        //noinspection ConstantValue,EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((((((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location)))) && ((this.justification == rhs.justification) || ((this.justification != null) && this.justification.equals(rhs.justification)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.status == rhs.status) || ((this.status != null) && this.status.equals(rhs.status))));
     }
 

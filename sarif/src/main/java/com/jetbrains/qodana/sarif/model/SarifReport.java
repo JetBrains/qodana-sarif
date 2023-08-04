@@ -217,6 +217,7 @@ public class SarifReport {
             return false;
         }
         SarifReport rhs = ((SarifReport) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.inlineExternalProperties == rhs.inlineExternalProperties) || ((this.inlineExternalProperties != null) && this.inlineExternalProperties.equals(rhs.inlineExternalProperties))) && ((this.$schema == rhs.$schema) || ((this.$schema != null) && this.$schema.equals(rhs.$schema)))) && ((this.version == rhs.version) || ((this.version != null) && this.version.equals(rhs.version)))) && ((this.runs == rhs.runs) || ((this.runs != null) && this.runs.equals(rhs.runs)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

@@ -308,7 +308,7 @@ public class WebRequest {
             return false;
         }
         WebRequest rhs = ((WebRequest) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((((((this.headers == rhs.headers) || ((this.headers != null) && this.headers.equals(rhs.headers))) && ((this.protocol == rhs.protocol) || ((this.protocol != null) && this.protocol.equals(rhs.protocol)))) && ((this.method == rhs.method) || ((this.method != null) && this.method.equals(rhs.method)))) && ((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index)))) && ((this.body == rhs.body) || ((this.body != null) && this.body.equals(rhs.body)))) && ((this.version == rhs.version) || ((this.version != null) && this.version.equals(rhs.version)))) && ((this.parameters == rhs.parameters) || ((this.parameters != null) && this.parameters.equals(rhs.parameters)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.target == rhs.target) || ((this.target != null) && this.target.equals(rhs.target))));
     }
 

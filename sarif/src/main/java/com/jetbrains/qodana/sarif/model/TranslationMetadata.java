@@ -267,7 +267,7 @@ public class TranslationMetadata {
             return false;
         }
         TranslationMetadata rhs = ((TranslationMetadata) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name))) && ((this.fullName == rhs.fullName) || ((this.fullName != null) && this.fullName.equals(rhs.fullName)))) && ((this.shortDescription == rhs.shortDescription) || ((this.shortDescription != null) && this.shortDescription.equals(rhs.shortDescription)))) && ((this.downloadUri == rhs.downloadUri) || ((this.downloadUri != null) && this.downloadUri.equals(rhs.downloadUri)))) && ((this.fullDescription == rhs.fullDescription) || ((this.fullDescription != null) && this.fullDescription.equals(rhs.fullDescription)))) && ((this.informationUri == rhs.informationUri) || ((this.informationUri != null) && this.informationUri.equals(rhs.informationUri)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

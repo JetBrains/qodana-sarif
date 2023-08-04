@@ -188,7 +188,7 @@ public class ReportingDescriptorReference {
             return false;
         }
         ReportingDescriptorReference rhs = ((ReportingDescriptorReference) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.toolComponent == rhs.toolComponent) || ((this.toolComponent != null) && this.toolComponent.equals(rhs.toolComponent)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

@@ -145,7 +145,7 @@ public class MultiformatMessageString {
             return false;
         }
         MultiformatMessageString rhs = ((MultiformatMessageString) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((this.markdown == rhs.markdown) || ((this.markdown != null) && this.markdown.equals(rhs.markdown))) && ((this.text == rhs.text) || ((this.text != null) && this.text.equals(rhs.text)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

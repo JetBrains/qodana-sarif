@@ -330,7 +330,7 @@ public class Notification {
             return false;
         }
         Notification rhs = ((Notification) other);
-        //noinspection ConstantValue,EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((((((this.threadId == rhs.threadId) || ((this.threadId != null) && this.threadId.equals(rhs.threadId))) && ((this.exception == rhs.exception) || ((this.exception != null) && this.exception.equals(rhs.exception)))) && ((this.level == rhs.level) || ((this.level != null) && this.level.equals(rhs.level)))) && ((this.associatedRule == rhs.associatedRule) || ((this.associatedRule != null) && this.associatedRule.equals(rhs.associatedRule)))) && ((this.timeUtc == rhs.timeUtc) || ((this.timeUtc != null) && this.timeUtc.equals(rhs.timeUtc)))) && ((this.locations == rhs.locations) || ((this.locations != null) && this.locations.equals(rhs.locations)))) && ((this.descriptor == rhs.descriptor) || ((this.descriptor != null) && this.descriptor.equals(rhs.descriptor)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

@@ -147,7 +147,7 @@ public class Fix {
             return false;
         }
         Fix rhs = ((Fix) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((this.artifactChanges == rhs.artifactChanges) || ((this.artifactChanges != null) && this.artifactChanges.equals(rhs.artifactChanges))) && ((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

@@ -179,7 +179,7 @@ public class ReportingDescriptorRelationship {
             return false;
         }
         ReportingDescriptorRelationship rhs = ((ReportingDescriptorRelationship) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description))) && ((this.kinds == rhs.kinds) || ((this.kinds != null) && this.kinds.equals(rhs.kinds)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.target == rhs.target) || ((this.target != null) && this.target.equals(rhs.target))));
     }
 

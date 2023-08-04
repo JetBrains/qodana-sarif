@@ -248,7 +248,7 @@ public class LogicalLocation {
             return false;
         }
         LogicalLocation rhs = ((LogicalLocation) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((((this.parentIndex == rhs.parentIndex) || ((this.parentIndex != null) && this.parentIndex.equals(rhs.parentIndex))) && ((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind)))) && ((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name)))) && ((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index)))) && ((this.decoratedName == rhs.decoratedName) || ((this.decoratedName != null) && this.decoratedName.equals(rhs.decoratedName)))) && ((this.fullyQualifiedName == rhs.fullyQualifiedName) || ((this.fullyQualifiedName != null) && this.fullyQualifiedName.equals(rhs.fullyQualifiedName)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

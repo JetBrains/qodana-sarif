@@ -177,7 +177,7 @@ public class Conversion {
             return false;
         }
         Conversion rhs = ((Conversion) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((((this.invocation == rhs.invocation) || ((this.invocation != null) && this.invocation.equals(rhs.invocation))) && ((this.analysisToolLogFiles == rhs.analysisToolLogFiles) || ((this.analysisToolLogFiles != null) && this.analysisToolLogFiles.equals(rhs.analysisToolLogFiles)))) && ((this.tool == rhs.tool) || ((this.tool != null) && this.tool.equals(rhs.tool)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

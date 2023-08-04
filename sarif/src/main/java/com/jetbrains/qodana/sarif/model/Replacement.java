@@ -145,7 +145,7 @@ public class Replacement {
             return false;
         }
         Replacement rhs = ((Replacement) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((this.insertedContent == rhs.insertedContent) || ((this.insertedContent != null) && this.insertedContent.equals(rhs.insertedContent))) && ((this.deletedRegion == rhs.deletedRegion) || ((this.deletedRegion != null) && this.deletedRegion.equals(rhs.deletedRegion)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

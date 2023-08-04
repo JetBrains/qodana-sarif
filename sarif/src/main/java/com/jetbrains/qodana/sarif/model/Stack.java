@@ -148,7 +148,7 @@ public class Stack {
             return false;
         }
         Stack rhs = ((Stack) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message))) && ((this.frames == rhs.frames) || ((this.frames != null) && this.frames.equals(rhs.frames)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

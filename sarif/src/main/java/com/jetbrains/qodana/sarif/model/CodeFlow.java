@@ -148,7 +148,7 @@ public class CodeFlow {
             return false;
         }
         CodeFlow rhs = ((CodeFlow) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message))) && ((this.threadFlows == rhs.threadFlows) || ((this.threadFlows != null) && this.threadFlows.equals(rhs.threadFlows)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

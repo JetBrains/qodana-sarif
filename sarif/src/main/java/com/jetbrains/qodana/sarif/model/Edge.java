@@ -215,7 +215,7 @@ public class Edge {
             return false;
         }
         Edge rhs = ((Edge) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id))) && ((this.label == rhs.label) || ((this.label != null) && this.label.equals(rhs.label)))) && ((this.targetNodeId == rhs.targetNodeId) || ((this.targetNodeId != null) && this.targetNodeId.equals(rhs.targetNodeId)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.sourceNodeId == rhs.sourceNodeId) || ((this.sourceNodeId != null) && this.sourceNodeId.equals(rhs.sourceNodeId))));
     }
 

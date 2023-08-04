@@ -150,7 +150,7 @@ public class ConfigurationOverride {
             return false;
         }
         ConfigurationOverride rhs = ((ConfigurationOverride) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((this.descriptor == rhs.descriptor) || ((this.descriptor != null) && this.descriptor.equals(rhs.descriptor))) && ((this.configuration == rhs.configuration) || ((this.configuration != null) && this.configuration.equals(rhs.configuration)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

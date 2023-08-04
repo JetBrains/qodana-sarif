@@ -188,7 +188,7 @@ public class ReportingConfiguration {
             return false;
         }
         ReportingConfiguration rhs = ((ReportingConfiguration) other);
-        //noinspection ConstantValue,EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.rank == rhs.rank) || ((this.rank != null) && this.rank.equals(rhs.rank))) && ((this.level == rhs.level) || ((this.level != null) && this.level.equals(rhs.level)))) && ((this.parameters == rhs.parameters) || ((this.parameters != null) && this.parameters.equals(rhs.parameters)))) && ((this.enabled == rhs.enabled) || ((this.enabled != null) && this.enabled.equals(rhs.enabled)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 }

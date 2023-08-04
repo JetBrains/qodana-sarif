@@ -207,7 +207,7 @@ public class Attachment {
             return false;
         }
         Attachment rhs = ((Attachment) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description))) && ((this.regions == rhs.regions) || ((this.regions != null) && this.regions.equals(rhs.regions)))) && ((this.rectangles == rhs.rectangles) || ((this.rectangles != null) && this.rectangles.equals(rhs.rectangles)))) && ((this.artifactLocation == rhs.artifactLocation) || ((this.artifactLocation != null) && this.artifactLocation.equals(rhs.artifactLocation)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

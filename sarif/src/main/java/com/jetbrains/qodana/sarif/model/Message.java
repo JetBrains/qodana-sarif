@@ -190,7 +190,7 @@ public class Message {
             return false;
         }
         Message rhs = ((Message) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.markdown == rhs.markdown) || ((this.markdown != null) && this.markdown.equals(rhs.markdown))) && ((this.arguments == rhs.arguments) || ((this.arguments != null) && this.arguments.equals(rhs.arguments)))) && ((this.text == rhs.text) || ((this.text != null) && this.text.equals(rhs.text)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

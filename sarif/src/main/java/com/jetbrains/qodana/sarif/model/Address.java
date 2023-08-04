@@ -368,7 +368,7 @@ public class Address {
             return false;
         }
         Address rhs = ((Address) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((((((((((this.offsetFromParent == rhs.offsetFromParent) || ((this.offsetFromParent != null) && this.offsetFromParent.equals(rhs.offsetFromParent))) && ((this.parentIndex == rhs.parentIndex) || ((this.parentIndex != null) && this.parentIndex.equals(rhs.parentIndex)))) && ((this.relativeAddress == rhs.relativeAddress) || ((this.relativeAddress != null) && this.relativeAddress.equals(rhs.relativeAddress)))) && ((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind)))) && ((this.length == rhs.length) || ((this.length != null) && this.length.equals(rhs.length)))) && ((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name)))) && ((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index)))) && ((this.fullyQualifiedName == rhs.fullyQualifiedName) || ((this.fullyQualifiedName != null) && this.fullyQualifiedName.equals(rhs.fullyQualifiedName)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.absoluteAddress == rhs.absoluteAddress) || ((this.absoluteAddress != null) && this.absoluteAddress.equals(rhs.absoluteAddress))));
     }
 

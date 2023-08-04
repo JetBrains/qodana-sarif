@@ -158,7 +158,7 @@ public class ArtifactContent {
             return false;
         }
         ArtifactContent rhs = ((ArtifactContent) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((((this.text == rhs.text) || ((this.text != null) && this.text.equals(rhs.text))) && ((this.rendered == rhs.rendered) || ((this.rendered != null) && this.rendered.equals(rhs.rendered)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.binary == rhs.binary) || ((this.binary != null) && this.binary.equals(rhs.binary))));
     }
 

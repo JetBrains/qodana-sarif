@@ -160,7 +160,7 @@ public class Graph {
             return false;
         }
         Graph rhs = ((Graph) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((((this.edges == rhs.edges) || ((this.edges != null) && this.edges.equals(rhs.edges))) && ((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description)))) && ((this.nodes == rhs.nodes) || ((this.nodes != null) && this.nodes.equals(rhs.nodes)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

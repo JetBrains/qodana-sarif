@@ -190,7 +190,7 @@ public class Exception {
             return false;
         }
         Exception rhs = ((Exception) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.stack == rhs.stack) || ((this.stack != null) && this.stack.equals(rhs.stack))) && ((this.innerExceptions == rhs.innerExceptions) || ((this.innerExceptions != null) && this.innerExceptions.equals(rhs.innerExceptions)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

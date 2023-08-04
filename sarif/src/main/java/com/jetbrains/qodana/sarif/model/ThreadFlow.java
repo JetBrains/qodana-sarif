@@ -238,7 +238,7 @@ public class ThreadFlow {
             return false;
         }
         ThreadFlow rhs = ((ThreadFlow) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((((((this.initialState == rhs.initialState) || ((this.initialState != null) && this.initialState.equals(rhs.initialState))) && ((this.immutableState == rhs.immutableState) || ((this.immutableState != null) && this.immutableState.equals(rhs.immutableState)))) && ((this.locations == rhs.locations) || ((this.locations != null) && this.locations.equals(rhs.locations)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

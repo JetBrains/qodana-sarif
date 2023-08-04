@@ -250,7 +250,7 @@ public class Location {
             return false;
         }
         Location rhs = ((Location) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((((this.relationships == rhs.relationships) || ((this.relationships != null) && this.relationships.equals(rhs.relationships))) && ((this.physicalLocation == rhs.physicalLocation) || ((this.physicalLocation != null) && this.physicalLocation.equals(rhs.physicalLocation)))) && ((this.logicalLocations == rhs.logicalLocations) || ((this.logicalLocations != null) && this.logicalLocations.equals(rhs.logicalLocations)))) && ((this.annotations == rhs.annotations) || ((this.annotations != null) && this.annotations.equals(rhs.annotations)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

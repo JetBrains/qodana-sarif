@@ -188,7 +188,7 @@ public class PhysicalLocation {
             return false;
         }
         PhysicalLocation rhs = ((PhysicalLocation) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.contextRegion == rhs.contextRegion) || ((this.contextRegion != null) && this.contextRegion.equals(rhs.contextRegion))) && ((this.address == rhs.address) || ((this.address != null) && this.address.equals(rhs.address)))) && ((this.region == rhs.region) || ((this.region != null) && this.region.equals(rhs.region)))) && ((this.artifactLocation == rhs.artifactLocation) || ((this.artifactLocation != null) && this.artifactLocation.equals(rhs.artifactLocation)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

@@ -98,7 +98,7 @@ public class SpecialLocations {
             return false;
         }
         SpecialLocations rhs = ((SpecialLocations) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((this.displayBase == rhs.displayBase) || ((this.displayBase != null) && this.displayBase.equals(rhs.displayBase))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

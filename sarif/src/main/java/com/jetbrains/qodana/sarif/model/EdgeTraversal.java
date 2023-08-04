@@ -205,7 +205,7 @@ public class EdgeTraversal {
             return false;
         }
         EdgeTraversal rhs = ((EdgeTraversal) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.edgeId == rhs.edgeId) || ((this.edgeId != null) && this.edgeId.equals(rhs.edgeId))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.stepOverEdgeCount == rhs.stepOverEdgeCount) || ((this.stepOverEdgeCount != null) && this.stepOverEdgeCount.equals(rhs.stepOverEdgeCount)))) && ((this.finalState == rhs.finalState) || ((this.finalState != null) && this.finalState.equals(rhs.finalState)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

@@ -250,7 +250,7 @@ public class GraphTraversal {
             return false;
         }
         GraphTraversal rhs = ((GraphTraversal) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((((this.initialState == rhs.initialState) || ((this.initialState != null) && this.initialState.equals(rhs.initialState))) && ((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description)))) && ((this.immutableState == rhs.immutableState) || ((this.immutableState != null) && this.immutableState.equals(rhs.immutableState)))) && ((this.runGraphIndex == rhs.runGraphIndex) || ((this.runGraphIndex != null) && this.runGraphIndex.equals(rhs.runGraphIndex)))) && ((this.resultGraphIndex == rhs.resultGraphIndex) || ((this.resultGraphIndex != null) && this.resultGraphIndex.equals(rhs.resultGraphIndex)))) && ((this.edgeTraversals == rhs.edgeTraversals) || ((this.edgeTraversals != null) && this.edgeTraversals.equals(rhs.edgeTraversals)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

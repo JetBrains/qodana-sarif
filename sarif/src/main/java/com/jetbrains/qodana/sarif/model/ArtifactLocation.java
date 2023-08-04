@@ -188,7 +188,7 @@ public class ArtifactLocation {
             return false;
         }
         ArtifactLocation rhs = ((ArtifactLocation) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index))) && ((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description)))) && ((this.uri == rhs.uri) || ((this.uri != null) && this.uri.equals(rhs.uri)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.uriBaseId == rhs.uriBaseId) || ((this.uriBaseId != null) && this.uriBaseId.equals(rhs.uriBaseId))));
     }
 

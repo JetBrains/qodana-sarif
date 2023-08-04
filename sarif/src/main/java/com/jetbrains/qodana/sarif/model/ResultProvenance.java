@@ -251,7 +251,7 @@ public class ResultProvenance {
             return false;
         }
         ResultProvenance rhs = ((ResultProvenance) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((((this.firstDetectionRunGuid == rhs.firstDetectionRunGuid) || ((this.firstDetectionRunGuid != null) && this.firstDetectionRunGuid.equals(rhs.firstDetectionRunGuid))) && ((this.lastDetectionTimeUtc == rhs.lastDetectionTimeUtc) || ((this.lastDetectionTimeUtc != null) && this.lastDetectionTimeUtc.equals(rhs.lastDetectionTimeUtc)))) && ((this.invocationIndex == rhs.invocationIndex) || ((this.invocationIndex != null) && this.invocationIndex.equals(rhs.invocationIndex)))) && ((this.lastDetectionRunGuid == rhs.lastDetectionRunGuid) || ((this.lastDetectionRunGuid != null) && this.lastDetectionRunGuid.equals(rhs.lastDetectionRunGuid)))) && ((this.conversionSources == rhs.conversionSources) || ((this.conversionSources != null) && this.conversionSources.equals(rhs.conversionSources)))) && ((this.firstDetectionTimeUtc == rhs.firstDetectionTimeUtc) || ((this.firstDetectionTimeUtc != null) && this.firstDetectionTimeUtc.equals(rhs.firstDetectionTimeUtc)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

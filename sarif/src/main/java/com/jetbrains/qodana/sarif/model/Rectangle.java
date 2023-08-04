@@ -218,7 +218,7 @@ public class Rectangle {
             return false;
         }
         Rectangle rhs = ((Rectangle) other);
-        //noinspection EqualsReplaceableByObjectsCall
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((((((this.top == rhs.top) || ((this.top != null) && this.top.equals(rhs.top))) && ((this.left == rhs.left) || ((this.left != null) && this.left.equals(rhs.left)))) && ((this.bottom == rhs.bottom) || ((this.bottom != null) && this.bottom.equals(rhs.bottom)))) && ((this.right == rhs.right) || ((this.right != null) && this.right.equals(rhs.right)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
