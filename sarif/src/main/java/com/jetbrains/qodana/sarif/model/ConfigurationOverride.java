@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Information about how a specific rule or notification was reconfigured at runtime.
  */
+@SuppressWarnings("DuplicatedCode")
 public class ConfigurationOverride {
 
     /**
@@ -37,8 +38,8 @@ public class ConfigurationOverride {
     }
 
     /**
-     * @param configuration
-     * @param descriptor
+     * @param configuration Information about a rule or notification that can be configured at runtime.
+     * @param descriptor Information about how to locate a relevant reporting descriptor.
      */
     public ConfigurationOverride(ReportingConfiguration configuration, ReportingDescriptorReference descriptor) {
         super();
@@ -145,10 +146,11 @@ public class ConfigurationOverride {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ConfigurationOverride) == false) {
+        if (!(other instanceof ConfigurationOverride)) {
             return false;
         }
         ConfigurationOverride rhs = ((ConfigurationOverride) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((this.descriptor == rhs.descriptor) || ((this.descriptor != null) && this.descriptor.equals(rhs.descriptor))) && ((this.configuration == rhs.configuration) || ((this.configuration != null) && this.configuration.equals(rhs.configuration)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

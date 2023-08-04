@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Information that describes a run's identity and role within an engineering system process.
  */
+@SuppressWarnings("DuplicatedCode")
 public class RunAutomationDetails {
 
     /**
@@ -183,10 +184,11 @@ public class RunAutomationDetails {
         if (other == this) {
             return true;
         }
-        if ((other instanceof RunAutomationDetails) == false) {
+        if (!(other instanceof RunAutomationDetails)) {
             return false;
         }
         RunAutomationDetails rhs = ((RunAutomationDetails) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.correlationGuid == rhs.correlationGuid) || ((this.correlationGuid != null) && this.correlationGuid.equals(rhs.correlationGuid)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

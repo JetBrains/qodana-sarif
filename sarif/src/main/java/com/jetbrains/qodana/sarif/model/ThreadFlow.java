@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * Describes a sequence of code locations that specify a path through a single thread of execution such as an operating system or fiber.
  */
+@SuppressWarnings("DuplicatedCode")
 public class ThreadFlow {
 
     /**
@@ -56,7 +57,8 @@ public class ThreadFlow {
     }
 
     /**
-     * @param locations
+     * @param locations A temporally ordered array of 'threadFlowLocation' objects,
+     *                  each of which describes a location visited by the tool while producing the result.
      */
     public ThreadFlow(List<ThreadFlowLocation> locations) {
         super();
@@ -232,10 +234,11 @@ public class ThreadFlow {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ThreadFlow) == false) {
+        if (!(other instanceof ThreadFlow)) {
             return false;
         }
         ThreadFlow rhs = ((ThreadFlow) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((((((this.initialState == rhs.initialState) || ((this.initialState != null) && this.initialState.equals(rhs.initialState))) && ((this.immutableState == rhs.immutableState) || ((this.immutableState != null) && this.immutableState.equals(rhs.immutableState)))) && ((this.locations == rhs.locations) || ((this.locations != null) && this.locations.equals(rhs.locations)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

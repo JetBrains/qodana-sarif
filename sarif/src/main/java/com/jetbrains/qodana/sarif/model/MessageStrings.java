@@ -21,8 +21,7 @@ public class MessageStrings {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        return result;
+        return 1;
     }
 
     @Override
@@ -30,7 +29,7 @@ public class MessageStrings {
         if (other == this) {
             return true;
         }
-        if ((other instanceof MessageStrings) == false) {
+        if (!(other instanceof MessageStrings)) {
             return false;
         }
         MessageStrings rhs = ((MessageStrings) other);

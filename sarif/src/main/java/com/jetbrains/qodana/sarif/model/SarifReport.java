@@ -57,8 +57,8 @@ public class SarifReport {
     }
 
     /**
-     * @param version
-     * @param runs
+     * @param version The SARIF format version of this log file.
+     * @param runs The set of runs contained in this log file.
      */
     public SarifReport(Version version, List<Run> runs) {
         super();
@@ -213,10 +213,11 @@ public class SarifReport {
         if (other == this) {
             return true;
         }
-        if ((other instanceof SarifReport) == false) {
+        if (!(other instanceof SarifReport)) {
             return false;
         }
         SarifReport rhs = ((SarifReport) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.inlineExternalProperties == rhs.inlineExternalProperties) || ((this.inlineExternalProperties != null) && this.inlineExternalProperties.equals(rhs.inlineExternalProperties))) && ((this.$schema == rhs.$schema) || ((this.$schema != null) && this.$schema.equals(rhs.$schema)))) && ((this.version == rhs.version) || ((this.version != null) && this.version.equals(rhs.version)))) && ((this.runs == rhs.runs) || ((this.runs != null) && this.runs.equals(rhs.runs)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
@@ -228,7 +229,7 @@ public class SarifReport {
     public enum Version {
 
         @SerializedName("2.1.0")
-        _2_1_0("2.1.0");
+        _2_1_0();
         private final static Map<String, Version> CONSTANTS = new HashMap<String, Version>();
 
         static {
@@ -239,8 +240,8 @@ public class SarifReport {
 
         private final String value;
 
-        private Version(String value) {
-            this.value = value;
+        Version() {
+            this.value = "2.1.0";
         }
 
         public static Version fromValue(String value) {

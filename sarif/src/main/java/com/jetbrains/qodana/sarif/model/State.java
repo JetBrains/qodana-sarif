@@ -21,8 +21,7 @@ public class State {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        return result;
+        return 1;
     }
 
     @Override
@@ -30,7 +29,7 @@ public class State {
         if (other == this) {
             return true;
         }
-        if ((other instanceof State) == false) {
+        if (!(other instanceof State)) {
             return false;
         }
         State rhs = ((State) other);

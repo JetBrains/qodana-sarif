@@ -6,7 +6,6 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-import java.io.IOException;
 import java.util.*;
 
 
@@ -107,7 +106,7 @@ public class PropertyBag implements Map<String, Object> {
     public static class PropertyBagTypeAdapter extends TypeAdapter<PropertyBag> {
         private static final Gson embedded = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
-        public void write(JsonWriter out, PropertyBag bag) throws IOException {
+        public void write(JsonWriter out, PropertyBag bag) {
             HashMap<String, Object> toSerialize = new HashMap<>(bag);
             if (!bag.tags.isEmpty()) {
                 toSerialize.put(TAGS_KEY, bag.getTags());
@@ -115,12 +114,13 @@ public class PropertyBag implements Map<String, Object> {
             embedded.toJson(toSerialize, Map.class, out);
         }
 
-        public PropertyBag read(JsonReader reader) throws IOException {
+        public PropertyBag read(JsonReader reader) {
             PropertyBag result = new PropertyBag();
             Map<String, Object> map = embedded.fromJson(reader, Map.class);
             Object tags = map.remove(TAGS_KEY);
             result.putAll(map);
             if (tags instanceof List) {
+                //noinspection unchecked
                 result.tags.addAll((Collection<? extends String>) tags);
             }
             return result;

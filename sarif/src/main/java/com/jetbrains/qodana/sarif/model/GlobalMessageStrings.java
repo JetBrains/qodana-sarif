@@ -21,8 +21,7 @@ public class GlobalMessageStrings {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        return result;
+        return 1;
     }
 
     @Override
@@ -30,7 +29,7 @@ public class GlobalMessageStrings {
         if (other == this) {
             return true;
         }
-        if ((other instanceof GlobalMessageStrings) == false) {
+        if (!(other instanceof GlobalMessageStrings)) {
             return false;
         }
         GlobalMessageStrings rhs = ((GlobalMessageStrings) other);

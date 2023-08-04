@@ -12,6 +12,7 @@ import java.util.Set;
 /**
  * Describes a condition relevant to the tool itself, as opposed to being relevant to a target being analyzed by the tool.
  */
+@SuppressWarnings("DuplicatedCode")
 public class Notification {
 
     /**
@@ -77,7 +78,7 @@ public class Notification {
     }
 
     /**
-     * @param message
+     * @param message Encapsulates a message intended to be read by the end user.
      */
     public Notification(Message message) {
         super();
@@ -325,10 +326,11 @@ public class Notification {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Notification) == false) {
+        if (!(other instanceof Notification)) {
             return false;
         }
         Notification rhs = ((Notification) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((((((this.threadId == rhs.threadId) || ((this.threadId != null) && this.threadId.equals(rhs.threadId))) && ((this.exception == rhs.exception) || ((this.exception != null) && this.exception.equals(rhs.exception)))) && ((this.level == rhs.level) || ((this.level != null) && this.level.equals(rhs.level)))) && ((this.associatedRule == rhs.associatedRule) || ((this.associatedRule != null) && this.associatedRule.equals(rhs.associatedRule)))) && ((this.timeUtc == rhs.timeUtc) || ((this.timeUtc != null) && this.timeUtc.equals(rhs.timeUtc)))) && ((this.locations == rhs.locations) || ((this.locations != null) && this.locations.equals(rhs.locations)))) && ((this.descriptor == rhs.descriptor) || ((this.descriptor != null) && this.descriptor.equals(rhs.descriptor)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
@@ -347,7 +349,7 @@ public class Notification {
         WARNING("warning"),
         @SerializedName("error")
         ERROR("error");
-        private final static Map<String, Level> CONSTANTS = new HashMap<String, Level>();
+        private final static Map<String, Level> CONSTANTS = new HashMap<>();
 
         static {
             for (Level c : values()) {
@@ -357,7 +359,7 @@ public class Notification {
 
         private final String value;
 
-        private Level(String value) {
+        Level(String value) {
             this.value = value;
         }
 

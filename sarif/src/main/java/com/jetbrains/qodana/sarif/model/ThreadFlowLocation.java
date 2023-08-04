@@ -12,6 +12,7 @@ import java.util.Set;
 /**
  * A location visited by an analysis tool while simulating or monitoring the execution of a program.
  */
+@SuppressWarnings("DuplicatedCode")
 public class ThreadFlowLocation {
 
     /**
@@ -458,10 +459,11 @@ public class ThreadFlowLocation {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ThreadFlowLocation) == false) {
+        if (!(other instanceof ThreadFlowLocation)) {
             return false;
         }
         ThreadFlowLocation rhs = ((ThreadFlowLocation) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((((((((((((((this.taxa == rhs.taxa) || ((this.taxa != null) && this.taxa.equals(rhs.taxa))) && ((this.nestingLevel == rhs.nestingLevel) || ((this.nestingLevel != null) && this.nestingLevel.equals(rhs.nestingLevel)))) && ((this.stack == rhs.stack) || ((this.stack != null) && this.stack.equals(rhs.stack)))) && ((this.webRequest == rhs.webRequest) || ((this.webRequest != null) && this.webRequest.equals(rhs.webRequest)))) && ((this.importance == rhs.importance) || ((this.importance != null) && this.importance.equals(rhs.importance)))) && ((this.module == rhs.module) || ((this.module != null) && this.module.equals(rhs.module)))) && ((this.executionTimeUtc == rhs.executionTimeUtc) || ((this.executionTimeUtc != null) && this.executionTimeUtc.equals(rhs.executionTimeUtc)))) && ((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index)))) && ((this.kinds == rhs.kinds) || ((this.kinds != null) && this.kinds.equals(rhs.kinds)))) && ((this.executionOrder == rhs.executionOrder) || ((this.executionOrder != null) && this.executionOrder.equals(rhs.executionOrder)))) && ((this.webResponse == rhs.webResponse) || ((this.webResponse != null) && this.webResponse.equals(rhs.webResponse)))) && ((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location)))) && ((this.state == rhs.state) || ((this.state != null) && this.state.equals(rhs.state)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
@@ -478,7 +480,7 @@ public class ThreadFlowLocation {
         ESSENTIAL("essential"),
         @SerializedName("unimportant")
         UNIMPORTANT("unimportant");
-        private final static Map<String, Importance> CONSTANTS = new HashMap<String, Importance>();
+        private final static Map<String, Importance> CONSTANTS = new HashMap<>();
 
         static {
             for (Importance c : values()) {
@@ -488,7 +490,7 @@ public class ThreadFlowLocation {
 
         private final String value;
 
-        private Importance(String value) {
+        Importance(String value) {
             this.value = value;
         }
 

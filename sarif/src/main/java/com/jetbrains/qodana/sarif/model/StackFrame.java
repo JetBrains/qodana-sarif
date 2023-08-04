@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * A function call within a stack trace.
  */
+@SuppressWarnings("DuplicatedCode")
 public class StackFrame {
 
     /**
@@ -185,10 +186,11 @@ public class StackFrame {
         if (other == this) {
             return true;
         }
-        if ((other instanceof StackFrame) == false) {
+        if (!(other instanceof StackFrame)) {
             return false;
         }
         StackFrame rhs = ((StackFrame) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.threadId == rhs.threadId) || ((this.threadId != null) && this.threadId.equals(rhs.threadId))) && ((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location)))) && ((this.parameters == rhs.parameters) || ((this.parameters != null) && this.parameters.equals(rhs.parameters)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.module == rhs.module) || ((this.module != null) && this.module.equals(rhs.module))));
     }
 

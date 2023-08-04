@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * A change to a single artifact.
  */
+@SuppressWarnings("DuplicatedCode")
 public class ArtifactChange {
 
     /**
@@ -39,8 +40,8 @@ public class ArtifactChange {
     }
 
     /**
-     * @param replacements
-     * @param artifactLocation
+     * @param replacements An array of replacement objects, each of which represents the replacement of a single region in a single artifact specified by 'artifactLocation'.
+     * @param artifactLocation Specifies the location of an artifact.
      */
     public ArtifactChange(ArtifactLocation artifactLocation, List<Replacement> replacements) {
         super();
@@ -147,10 +148,11 @@ public class ArtifactChange {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ArtifactChange) == false) {
+        if (!(other instanceof ArtifactChange)) {
             return false;
         }
         ArtifactChange rhs = ((ArtifactChange) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((this.replacements == rhs.replacements) || ((this.replacements != null) && this.replacements.equals(rhs.replacements))) && ((this.artifactLocation == rhs.artifactLocation) || ((this.artifactLocation != null) && this.artifactLocation.equals(rhs.artifactLocation)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

@@ -21,8 +21,7 @@ public class FinalState {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        return result;
+        return 1;
     }
 
     @Override
@@ -30,7 +29,7 @@ public class FinalState {
         if (other == this) {
             return true;
         }
-        if ((other instanceof FinalState) == false) {
+        if (!(other instanceof FinalState)) {
             return false;
         }
         FinalState rhs = ((FinalState) other);

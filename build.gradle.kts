@@ -37,7 +37,6 @@ allprojects {
 
     repositories {
         mavenLocal()
-        jcenter()
         mavenCentral()
         maven(url = "https://repo.labs.intellij.net/thirdparty")
 

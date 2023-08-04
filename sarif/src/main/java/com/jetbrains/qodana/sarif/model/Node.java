@@ -9,6 +9,7 @@ import java.util.Set;
 /**
  * Represents a node in a graph.
  */
+@SuppressWarnings("DuplicatedCode")
 public class Node {
 
     /**
@@ -50,7 +51,7 @@ public class Node {
     }
 
     /**
-     * @param id
+     * @param id A string that uniquely identifies the node within its graph.
      */
     public Node(String id) {
         super();
@@ -202,10 +203,11 @@ public class Node {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Node) == false) {
+        if (!(other instanceof Node)) {
             return false;
         }
         Node rhs = ((Node) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.label == rhs.label) || ((this.label != null) && this.label.equals(rhs.label)))) && ((this.children == rhs.children) || ((this.children != null) && this.children.equals(rhs.children)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

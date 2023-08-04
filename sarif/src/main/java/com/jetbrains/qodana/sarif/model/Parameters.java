@@ -21,8 +21,7 @@ public class Parameters {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        return result;
+        return 1;
     }
 
     @Override
@@ -30,7 +29,7 @@ public class Parameters {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Parameters) == false) {
+        if (!(other instanceof Parameters)) {
             return false;
         }
         Parameters rhs = ((Parameters) other);

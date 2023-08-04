@@ -3,7 +3,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -11,6 +11,7 @@ import java.util.Set;
 /**
  * Information about the relation of one location to another.
  */
+@SuppressWarnings("DuplicatedCode")
 public class LocationRelationship {
 
     /**
@@ -25,7 +26,7 @@ public class LocationRelationship {
      */
     @SerializedName("kinds")
     @Expose
-    private Set<String> kinds = new LinkedHashSet<String>(Arrays.asList("relevant"));
+    private Set<String> kinds = new LinkedHashSet<>(Collections.singletonList("relevant"));
     /**
      * Encapsulates a message intended to be read by the end user.
      */
@@ -46,7 +47,7 @@ public class LocationRelationship {
     }
 
     /**
-     * @param target
+     * @param target A reference to the related location.
      */
     public LocationRelationship(Integer target) {
         super();
@@ -174,10 +175,11 @@ public class LocationRelationship {
         if (other == this) {
             return true;
         }
-        if ((other instanceof LocationRelationship) == false) {
+        if (!(other instanceof LocationRelationship)) {
             return false;
         }
         LocationRelationship rhs = ((LocationRelationship) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description))) && ((this.kinds == rhs.kinds) || ((this.kinds != null) && this.kinds.equals(rhs.kinds)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.target == rhs.target) || ((this.target != null) && this.target.equals(rhs.target))));
     }
 

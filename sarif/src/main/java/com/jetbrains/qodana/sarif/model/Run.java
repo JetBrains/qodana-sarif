@@ -2,17 +2,14 @@ package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.jetbrains.qodana.sarif.model.streaming.IndexedResult;
-import com.jetbrains.qodana.sarif.model.streaming.IndexedResultIterator;
-import com.jetbrains.qodana.sarif.model.streaming.ResultIterator;
 
-import java.io.Reader;
 import java.util.*;
 
 
 /**
  * Describes a single run of an analysis tool, and contains the reported output of that run.
  */
+@SuppressWarnings("DuplicatedCode")
 public class Run {
 
     /**
@@ -118,7 +115,7 @@ public class Run {
      */
     @SerializedName("newlineSequences")
     @Expose
-    private Set<String> newlineSequences = new LinkedHashSet<String>(Arrays.asList("\r\n", "\n"));
+    private Set<String> newlineSequences = new LinkedHashSet<>(Arrays.asList("\r\n", "\n"));
     /**
      * Specifies the unit in which the tool measures columns.
      */
@@ -193,7 +190,7 @@ public class Run {
     }
 
     /**
-     * @param tool
+     * @param tool The analysis tool that was run.
      */
     public Run(Tool tool) {
         super();
@@ -875,10 +872,11 @@ public class Run {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Run) == false) {
+        if (!(other instanceof Run)) {
             return false;
         }
         Run rhs = ((Run) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((((((((((((((((((((((((((((this.addresses == rhs.addresses) || ((this.addresses != null) && this.addresses.equals(rhs.addresses))) && ((this.logicalLocations == rhs.logicalLocations) || ((this.logicalLocations != null) && this.logicalLocations.equals(rhs.logicalLocations)))) && ((this.policies == rhs.policies) || ((this.policies != null) && this.policies.equals(rhs.policies)))) && ((this.language == rhs.language) || ((this.language != null) && this.language.equals(rhs.language)))) && ((this.invocations == rhs.invocations) || ((this.invocations != null) && this.invocations.equals(rhs.invocations)))) && ((this.graphs == rhs.graphs) || ((this.graphs != null) && this.graphs.equals(rhs.graphs)))) && ((this.baselineGuid == rhs.baselineGuid) || ((this.baselineGuid != null) && this.baselineGuid.equals(rhs.baselineGuid)))) && ((this.translations == rhs.translations) || ((this.translations != null) && this.translations.equals(rhs.translations)))) && ((this.newlineSequences == rhs.newlineSequences) || ((this.newlineSequences != null) && this.newlineSequences.equals(rhs.newlineSequences)))) && ((this.webResponses == rhs.webResponses) || ((this.webResponses != null) && this.webResponses.equals(rhs.webResponses)))) && ((this.externalPropertyFileReferences == rhs.externalPropertyFileReferences) || ((this.externalPropertyFileReferences != null) && this.externalPropertyFileReferences.equals(rhs.externalPropertyFileReferences)))) && ((this.defaultSourceLanguage == rhs.defaultSourceLanguage) || ((this.defaultSourceLanguage != null) && this.defaultSourceLanguage.equals(rhs.defaultSourceLanguage)))) && ((this.webRequests == rhs.webRequests) || ((this.webRequests != null) && this.webRequests.equals(rhs.webRequests)))) && ((this.results == rhs.results) || ((this.results != null) && this.results.equals(rhs.results)))) && ((this.automationDetails == rhs.automationDetails) || ((this.automationDetails != null) && this.automationDetails.equals(rhs.automationDetails)))) && ((this.conversion == rhs.conversion) || ((this.conversion != null) && this.conversion.equals(rhs.conversion)))) && ((this.artifacts == rhs.artifacts) || ((this.artifacts != null) && this.artifacts.equals(rhs.artifacts)))) && ((this.originalUriBaseIds == rhs.originalUriBaseIds) || ((this.originalUriBaseIds != null) && this.originalUriBaseIds.equals(rhs.originalUriBaseIds)))) && ((this.specialLocations == rhs.specialLocations) || ((this.specialLocations != null) && this.specialLocations.equals(rhs.specialLocations)))) && ((this.defaultEncoding == rhs.defaultEncoding) || ((this.defaultEncoding != null) && this.defaultEncoding.equals(rhs.defaultEncoding)))) && ((this.tool == rhs.tool) || ((this.tool != null) && this.tool.equals(rhs.tool)))) && ((this.versionControlProvenance == rhs.versionControlProvenance) || ((this.versionControlProvenance != null) && this.versionControlProvenance.equals(rhs.versionControlProvenance)))) && ((this.runAggregates == rhs.runAggregates) || ((this.runAggregates != null) && this.runAggregates.equals(rhs.runAggregates)))) && ((this.redactionTokens == rhs.redactionTokens) || ((this.redactionTokens != null) && this.redactionTokens.equals(rhs.redactionTokens)))) && ((this.taxonomies == rhs.taxonomies) || ((this.taxonomies != null) && this.taxonomies.equals(rhs.taxonomies)))) && ((this.columnKind == rhs.columnKind) || ((this.columnKind != null) && this.columnKind.equals(rhs.columnKind)))) && ((this.threadFlowLocations == rhs.threadFlowLocations) || ((this.threadFlowLocations != null) && this.threadFlowLocations.equals(rhs.threadFlowLocations)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
@@ -893,7 +891,7 @@ public class Run {
         UTF_16_CODE_UNITS("utf16CodeUnits"),
         @SerializedName("unicodeCodePoints")
         UNICODE_CODE_POINTS("unicodeCodePoints");
-        private final static Map<String, ColumnKind> CONSTANTS = new HashMap<String, ColumnKind>();
+        private final static Map<String, ColumnKind> CONSTANTS = new HashMap<>();
 
         static {
             for (ColumnKind c : values()) {
@@ -903,7 +901,7 @@ public class Run {
 
         private final String value;
 
-        private ColumnKind(String value) {
+        ColumnKind(String value) {
             this.value = value;
         }
 

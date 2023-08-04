@@ -12,7 +12,7 @@ public enum Content {
     LOCALIZED_DATA("localizedData"),
     @SerializedName("nonLocalizedData")
     NON_LOCALIZED_DATA("nonLocalizedData");
-    private final static Map<String, Content> CONSTANTS = new HashMap<String, Content>();
+    private final static Map<String, Content> CONSTANTS = new HashMap<>();
 
     static {
         for (Content c : values()) {
@@ -22,7 +22,7 @@ public enum Content {
 
     private final String value;
 
-    private Content(String value) {
+    Content(String value) {
         this.value = value;
     }
 

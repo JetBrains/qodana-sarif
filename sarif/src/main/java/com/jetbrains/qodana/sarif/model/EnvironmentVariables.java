@@ -21,8 +21,7 @@ public class EnvironmentVariables {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        return result;
+        return 1;
     }
 
     @Override
@@ -30,7 +29,7 @@ public class EnvironmentVariables {
         if (other == this) {
             return true;
         }
-        if ((other instanceof EnvironmentVariables) == false) {
+        if (!(other instanceof EnvironmentVariables)) {
             return false;
         }
         EnvironmentVariables rhs = ((EnvironmentVariables) other);

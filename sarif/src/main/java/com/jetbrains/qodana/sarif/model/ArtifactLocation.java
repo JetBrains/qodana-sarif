@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Specifies the location of an artifact.
  */
+@SuppressWarnings("DuplicatedCode")
 public class ArtifactLocation {
 
     /**
@@ -183,10 +184,11 @@ public class ArtifactLocation {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ArtifactLocation) == false) {
+        if (!(other instanceof ArtifactLocation)) {
             return false;
         }
         ArtifactLocation rhs = ((ArtifactLocation) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.index == rhs.index) || ((this.index != null) && this.index.equals(rhs.index))) && ((this.description == rhs.description) || ((this.description != null) && this.description.equals(rhs.description)))) && ((this.uri == rhs.uri) || ((this.uri != null) && this.uri.equals(rhs.uri)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.uriBaseId == rhs.uriBaseId) || ((this.uriBaseId != null) && this.uriBaseId.equals(rhs.uriBaseId))));
     }
 

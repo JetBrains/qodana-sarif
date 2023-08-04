@@ -10,6 +10,7 @@ import java.util.Date;
 /**
  * Specifies the information necessary to retrieve a desired revision from a version control system.
  */
+@SuppressWarnings("DuplicatedCode")
 public class VersionControlDetails {
 
     /**
@@ -63,7 +64,7 @@ public class VersionControlDetails {
     }
 
     /**
-     * @param repositoryUri
+     * @param repositoryUri The absolute URI of the repository.
      */
     public VersionControlDetails(URI repositoryUri) {
         super();
@@ -263,10 +264,11 @@ public class VersionControlDetails {
         if (other == this) {
             return true;
         }
-        if ((other instanceof VersionControlDetails) == false) {
+        if (!(other instanceof VersionControlDetails)) {
             return false;
         }
         VersionControlDetails rhs = ((VersionControlDetails) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((((this.revisionId == rhs.revisionId) || ((this.revisionId != null) && this.revisionId.equals(rhs.revisionId))) && ((this.repositoryUri == rhs.repositoryUri) || ((this.repositoryUri != null) && this.repositoryUri.equals(rhs.repositoryUri)))) && ((this.mappedTo == rhs.mappedTo) || ((this.mappedTo != null) && this.mappedTo.equals(rhs.mappedTo)))) && ((this.branch == rhs.branch) || ((this.branch != null) && this.branch.equals(rhs.branch)))) && ((this.asOfTimeUtc == rhs.asOfTimeUtc) || ((this.asOfTimeUtc != null) && this.asOfTimeUtc.equals(rhs.asOfTimeUtc)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.revisionTag == rhs.revisionTag) || ((this.revisionTag != null) && this.revisionTag.equals(rhs.revisionTag))));
     }
 

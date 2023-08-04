@@ -21,8 +21,7 @@ public class ImmutableState {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        return result;
+        return 1;
     }
 
     @Override
@@ -30,7 +29,7 @@ public class ImmutableState {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ImmutableState) == false) {
+        if (!(other instanceof ImmutableState)) {
             return false;
         }
         ImmutableState rhs = ((ImmutableState) other);

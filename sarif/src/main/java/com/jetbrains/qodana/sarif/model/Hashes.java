@@ -21,8 +21,7 @@ public class Hashes {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        return result;
+        return 1;
     }
 
     @Override
@@ -30,7 +29,7 @@ public class Hashes {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Hashes) == false) {
+        if (!(other instanceof Hashes)) {
             return false;
         }
         Hashes rhs = ((Hashes) other);

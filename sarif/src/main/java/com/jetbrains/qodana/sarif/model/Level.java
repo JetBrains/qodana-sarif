@@ -18,7 +18,7 @@ public enum Level {
     WARNING("warning"),
     @SerializedName("error")
     ERROR("error");
-    private final static Map<String, Level> CONSTANTS = new HashMap<String, Level>();
+    private final static Map<String, Level> CONSTANTS = new HashMap<>();
 
     static {
         for (Level c : values()) {
@@ -28,7 +28,7 @@ public enum Level {
 
     private final String value;
 
-    private Level(String value) {
+    Level(String value) {
         this.value = value;
     }
 

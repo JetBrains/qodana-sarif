@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * The replacement of a single region of an artifact.
  */
+@SuppressWarnings("DuplicatedCode")
 public class Replacement {
 
     /**
@@ -36,7 +37,7 @@ public class Replacement {
     }
 
     /**
-     * @param deletedRegion
+     * @param deletedRegion A region within an artifact where a result was detected.
      */
     public Replacement(Region deletedRegion) {
         super();
@@ -140,10 +141,11 @@ public class Replacement {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Replacement) == false) {
+        if (!(other instanceof Replacement)) {
             return false;
         }
         Replacement rhs = ((Replacement) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((this.insertedContent == rhs.insertedContent) || ((this.insertedContent != null) && this.insertedContent.equals(rhs.insertedContent))) && ((this.deletedRegion == rhs.deletedRegion) || ((this.deletedRegion != null) && this.deletedRegion.equals(rhs.deletedRegion)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

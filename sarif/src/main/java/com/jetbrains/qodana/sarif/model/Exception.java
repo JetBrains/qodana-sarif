@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * Describes a runtime exception encountered during the execution of an analysis tool.
  */
+@SuppressWarnings("DuplicatedCode")
 public class Exception {
 
     /**
@@ -185,10 +186,11 @@ public class Exception {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Exception) == false) {
+        if (!(other instanceof Exception)) {
             return false;
         }
         Exception rhs = ((Exception) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((this.stack == rhs.stack) || ((this.stack != null) && this.stack.equals(rhs.stack))) && ((this.innerExceptions == rhs.innerExceptions) || ((this.innerExceptions != null) && this.innerExceptions.equals(rhs.innerExceptions)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

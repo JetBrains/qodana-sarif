@@ -21,8 +21,7 @@ public class InitialState__1 {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        return result;
+        return 1;
     }
 
     @Override
@@ -30,7 +29,7 @@ public class InitialState__1 {
         if (other == this) {
             return true;
         }
-        if ((other instanceof InitialState__1) == false) {
+        if (!(other instanceof InitialState__1)) {
             return false;
         }
         InitialState__1 rhs = ((InitialState__1) other);

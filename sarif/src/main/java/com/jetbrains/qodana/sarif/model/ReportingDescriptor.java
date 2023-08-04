@@ -10,6 +10,7 @@ import java.util.Set;
 /**
  * Metadata that describes a specific report produced by the tool, as part of the analysis it provides or its runtime reporting.
  */
+@SuppressWarnings("DuplicatedCode")
 public class ReportingDescriptor {
 
     /**
@@ -105,7 +106,7 @@ public class ReportingDescriptor {
     }
 
     /**
-     * @param id
+     * @param id A stable, opaque identifier for the report.
      */
     public ReportingDescriptor(String id) {
         super();
@@ -473,10 +474,11 @@ public class ReportingDescriptor {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ReportingDescriptor) == false) {
+        if (!(other instanceof ReportingDescriptor)) {
             return false;
         }
         ReportingDescriptor rhs = ((ReportingDescriptor) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((((((((((((((this.deprecatedIds == rhs.deprecatedIds) || ((this.deprecatedIds != null) && this.deprecatedIds.equals(rhs.deprecatedIds))) && ((this.deprecatedGuids == rhs.deprecatedGuids) || ((this.deprecatedGuids != null) && this.deprecatedGuids.equals(rhs.deprecatedGuids)))) && ((this.shortDescription == rhs.shortDescription) || ((this.shortDescription != null) && this.shortDescription.equals(rhs.shortDescription)))) && ((this.fullDescription == rhs.fullDescription) || ((this.fullDescription != null) && this.fullDescription.equals(rhs.fullDescription)))) && ((this.helpUri == rhs.helpUri) || ((this.helpUri != null) && this.helpUri.equals(rhs.helpUri)))) && ((this.defaultConfiguration == rhs.defaultConfiguration) || ((this.defaultConfiguration != null) && this.defaultConfiguration.equals(rhs.defaultConfiguration)))) && ((this.help == rhs.help) || ((this.help != null) && this.help.equals(rhs.help)))) && ((this.relationships == rhs.relationships) || ((this.relationships != null) && this.relationships.equals(rhs.relationships)))) && ((this.messageStrings == rhs.messageStrings) || ((this.messageStrings != null) && this.messageStrings.equals(rhs.messageStrings)))) && ((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name)))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.deprecatedNames == rhs.deprecatedNames) || ((this.deprecatedNames != null) && this.deprecatedNames.equals(rhs.deprecatedNames)))) && ((this.id == rhs.id) || ((this.id != null) && this.id.equals(rhs.id)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

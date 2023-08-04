@@ -21,8 +21,7 @@ public class OriginalUriBaseIds {
 
     @Override
     public int hashCode() {
-        int result = 1;
-        return result;
+        return 1;
     }
 
     @Override
@@ -30,7 +29,7 @@ public class OriginalUriBaseIds {
         if (other == this) {
             return true;
         }
-        if ((other instanceof OriginalUriBaseIds) == false) {
+        if (!(other instanceof OriginalUriBaseIds)) {
             return false;
         }
         OriginalUriBaseIds rhs = ((OriginalUriBaseIds) other);

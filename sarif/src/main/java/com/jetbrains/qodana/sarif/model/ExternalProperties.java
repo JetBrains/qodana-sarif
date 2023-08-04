@@ -669,10 +669,11 @@ public class ExternalProperties {
         if (other == this) {
             return true;
         }
-        if ((other instanceof ExternalProperties) == false) {
+        if (!(other instanceof ExternalProperties)) {
             return false;
         }
         ExternalProperties rhs = ((ExternalProperties) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality
         return ((((((((((((((((((((((this.schema == rhs.schema) || ((this.schema != null) && this.schema.equals(rhs.schema))) && ((this.addresses == rhs.addresses) || ((this.addresses != null) && this.addresses.equals(rhs.addresses)))) && ((this.logicalLocations == rhs.logicalLocations) || ((this.logicalLocations != null) && this.logicalLocations.equals(rhs.logicalLocations)))) && ((this.policies == rhs.policies) || ((this.policies != null) && this.policies.equals(rhs.policies)))) && ((this.runGuid == rhs.runGuid) || ((this.runGuid != null) && this.runGuid.equals(rhs.runGuid)))) && ((this.version == rhs.version) || ((this.version != null) && this.version.equals(rhs.version)))) && ((this.externalizedProperties == rhs.externalizedProperties) || ((this.externalizedProperties != null) && this.externalizedProperties.equals(rhs.externalizedProperties)))) && ((this.invocations == rhs.invocations) || ((this.invocations != null) && this.invocations.equals(rhs.invocations)))) && ((this.graphs == rhs.graphs) || ((this.graphs != null) && this.graphs.equals(rhs.graphs)))) && ((this.extensions == rhs.extensions) || ((this.extensions != null) && this.extensions.equals(rhs.extensions)))) && ((this.driver == rhs.driver) || ((this.driver != null) && this.driver.equals(rhs.driver)))) && ((this.taxonomies == rhs.taxonomies) || ((this.taxonomies != null) && this.taxonomies.equals(rhs.taxonomies)))) && ((this.translations == rhs.translations) || ((this.translations != null) && this.translations.equals(rhs.translations)))) && ((this.webResponses == rhs.webResponses) || ((this.webResponses != null) && this.webResponses.equals(rhs.webResponses)))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.webRequests == rhs.webRequests) || ((this.webRequests != null) && this.webRequests.equals(rhs.webRequests)))) && ((this.results == rhs.results) || ((this.results != null) && this.results.equals(rhs.results)))) && ((this.threadFlowLocations == rhs.threadFlowLocations) || ((this.threadFlowLocations != null) && this.threadFlowLocations.equals(rhs.threadFlowLocations)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.conversion == rhs.conversion) || ((this.conversion != null) && this.conversion.equals(rhs.conversion)))) && ((this.artifacts == rhs.artifacts) || ((this.artifacts != null) && this.artifacts.equals(rhs.artifacts))));
     }
 
@@ -684,7 +685,7 @@ public class ExternalProperties {
     public enum Version {
 
         @SerializedName("2.1.0")
-        _2_1_0("2.1.0");
+        _2_1_0();
         private final static Map<String, Version> CONSTANTS = new HashMap<String, Version>();
 
         static {
@@ -695,8 +696,8 @@ public class ExternalProperties {
 
         private final String value;
 
-        private Version(String value) {
-            this.value = value;
+        Version() {
+            this.value = "2.1.0";
         }
 
         public static Version fromValue(String value) {

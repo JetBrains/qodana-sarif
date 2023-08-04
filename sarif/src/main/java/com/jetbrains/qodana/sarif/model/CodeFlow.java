@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * A set of threadFlows which together describe a pattern of code execution relevant to detecting a result.
  */
+@SuppressWarnings("DuplicatedCode")
 public class CodeFlow {
 
     /**
@@ -38,7 +39,8 @@ public class CodeFlow {
     }
 
     /**
-     * @param threadFlows
+     * @param threadFlows An array of one or more unique threadFlow objects,
+     *                    each of which describes the progress of a program through a thread of execution.
      */
     public CodeFlow(List<ThreadFlow> threadFlows) {
         super();
@@ -142,10 +144,11 @@ public class CodeFlow {
         if (other == this) {
             return true;
         }
-        if ((other instanceof CodeFlow) == false) {
+        if (!(other instanceof CodeFlow)) {
             return false;
         }
         CodeFlow rhs = ((CodeFlow) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message))) && ((this.threadFlows == rhs.threadFlows) || ((this.threadFlows != null) && this.threadFlows.equals(rhs.threadFlows)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

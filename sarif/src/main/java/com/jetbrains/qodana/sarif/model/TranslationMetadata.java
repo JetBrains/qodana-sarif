@@ -9,6 +9,7 @@ import java.net.URI;
 /**
  * Provides additional metadata related to translation.
  */
+@SuppressWarnings("DuplicatedCode")
 public class TranslationMetadata {
 
     /**
@@ -62,7 +63,7 @@ public class TranslationMetadata {
     }
 
     /**
-     * @param name
+     * @param name The name associated with the translation metadata.
      */
     public TranslationMetadata(String name) {
         super();
@@ -262,10 +263,11 @@ public class TranslationMetadata {
         if (other == this) {
             return true;
         }
-        if ((other instanceof TranslationMetadata) == false) {
+        if (!(other instanceof TranslationMetadata)) {
             return false;
         }
         TranslationMetadata rhs = ((TranslationMetadata) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return ((((((((this.name == rhs.name) || ((this.name != null) && this.name.equals(rhs.name))) && ((this.fullName == rhs.fullName) || ((this.fullName != null) && this.fullName.equals(rhs.fullName)))) && ((this.shortDescription == rhs.shortDescription) || ((this.shortDescription != null) && this.shortDescription.equals(rhs.shortDescription)))) && ((this.downloadUri == rhs.downloadUri) || ((this.downloadUri != null) && this.downloadUri.equals(rhs.downloadUri)))) && ((this.fullDescription == rhs.fullDescription) || ((this.fullDescription != null) && this.fullDescription.equals(rhs.fullDescription)))) && ((this.informationUri == rhs.informationUri) || ((this.informationUri != null) && this.informationUri.equals(rhs.informationUri)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 

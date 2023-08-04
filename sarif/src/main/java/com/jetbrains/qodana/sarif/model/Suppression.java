@@ -10,6 +10,7 @@ import java.util.Map;
 /**
  * A suppression that is relevant to a result.
  */
+@SuppressWarnings("DuplicatedCode")
 public class Suppression {
 
     /**
@@ -57,7 +58,7 @@ public class Suppression {
     }
 
     /**
-     * @param kind
+     * @param kind A string that indicates where the suppression is persisted.
      */
     public Suppression(Kind kind) {
         super();
@@ -233,10 +234,11 @@ public class Suppression {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Suppression) == false) {
+        if (!(other instanceof Suppression)) {
             return false;
         }
         Suppression rhs = ((Suppression) other);
+        //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
         return (((((((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.location == rhs.location) || ((this.location != null) && this.location.equals(rhs.location)))) && ((this.justification == rhs.justification) || ((this.justification != null) && this.justification.equals(rhs.justification)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties)))) && ((this.status == rhs.status) || ((this.status != null) && this.status.equals(rhs.status))));
     }
 
@@ -251,7 +253,7 @@ public class Suppression {
         IN_SOURCE("inSource"),
         @SerializedName("external")
         EXTERNAL("external");
-        private final static Map<String, Kind> CONSTANTS = new HashMap<String, Kind>();
+        private final static Map<String, Kind> CONSTANTS = new HashMap<>();
 
         static {
             for (Kind c : values()) {
@@ -261,7 +263,7 @@ public class Suppression {
 
         private final String value;
 
-        private Kind(String value) {
+        Kind(String value) {
             this.value = value;
         }
 
@@ -298,7 +300,7 @@ public class Suppression {
         UNDER_REVIEW("underReview"),
         @SerializedName("rejected")
         REJECTED("rejected");
-        private final static Map<String, Status> CONSTANTS = new HashMap<String, Status>();
+        private final static Map<String, Status> CONSTANTS = new HashMap<>();
 
         static {
             for (Status c : values()) {
@@ -308,7 +310,7 @@ public class Suppression {
 
         private final String value;
 
-        private Status(String value) {
+        Status(String value) {
             this.value = value;
         }
 
