@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ public class BaselineTest {
         SarifReport report = readReport();
         SarifReport baseline = readReport();
 
-        doTest(report, baseline, problemsCount(report), 0);
+        doTest(report, baseline, problemsCount(report), 0, 0);
     }
 
     @Test
@@ -51,7 +52,7 @@ public class BaselineTest {
         SarifReport report = readReport();
         SarifReport baseline = new SarifReport();
 
-        doTest(report, baseline, 0, problemsCount(report));
+        doTest(report, baseline, 0, 0, problemsCount(report));
     }
 
     @Test
@@ -102,7 +103,7 @@ public class BaselineTest {
         Result newResult = new Result(new Message().withText("new result"));
         report.getRuns().get(0).getResults().add(newResult);
 
-        doTest(report, baseline, problemsCount(report) - 1, 1);
+        doTest(report, baseline, problemsCount(report) - 1, 0, 1);
         assertEquals(Result.BaselineState.NEW, newResult.getBaselineState());
     }
 
@@ -211,9 +212,10 @@ public class BaselineTest {
     private void doTest(SarifReport report,
                         SarifReport baseline,
                         int expectedUnchanged,
+                        int expectedAbsent,
                         int expectedNew
     ) {
-        doTest(report, baseline, expectedUnchanged, 0, expectedNew, DEFAULT);
+        doTest(report, baseline, expectedUnchanged, expectedAbsent, expectedNew, DEFAULT);
     }
 
     private static int problemsCount(SarifReport report) {

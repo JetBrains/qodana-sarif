@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 abstract public class StreamParseTest {
-    protected static final String sanityPath = "src/test/resources/testData/readWriteTest/qodanaReportWithSanity.json";
+    protected static String sanityPath = "src/test/resources/testData/readWriteTest/qodanaReportWithSanity.json";
 
     @FunctionalInterface
     protected interface ExceptionConsumer<T> extends Consumer<T> {

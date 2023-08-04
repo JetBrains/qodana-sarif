@@ -1,9 +1,13 @@
 package com.jetbrains.qodana.sarif;
 
+import com.jetbrains.qodana.sarif.model.Result;
 import com.jetbrains.qodana.sarif.model.Run;
 import com.jetbrains.qodana.sarif.model.SarifReport;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.Reader;
+import java.lang.reflect.Field;
 
 public class StreamParseStateTest extends StreamParseTest {
     @Test

@@ -8,6 +8,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -28,7 +30,7 @@ public class DeserializeTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testPropertyBagThrows() {
+    public void testPropertyBagThrows() throws IOException {
         new PropertyBag().put("tags", Arrays.asList("1", "2", "3"));
     }
 
