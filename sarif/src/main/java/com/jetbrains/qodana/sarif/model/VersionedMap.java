@@ -2,7 +2,6 @@ package com.jetbrains.qodana.sarif.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -46,8 +45,13 @@ public class VersionedMap<V> {
 
     public Map<String, V> getHierarchyStringsMap() {
         HashMap<String, V> result = new HashMap<>();
-        map.forEach((key, versions) -> versions.forEach((version, value) -> result.put(key + "/v" + version, value)));
+        map.forEach((key, versions) -> versions.forEach((version, value) -> result.put(key + toHierarchy(version), value)));
         return result;
+    }
+
+    private String toHierarchy(Integer version) {
+        if (version == Integer.MAX_VALUE) return "";
+        else return "/v" + version;
     }
 
     @Override
@@ -75,10 +79,12 @@ public class VersionedMap<V> {
             Map<String, V> map = embedded.fromJson(reader, Map.class);
             map.forEach((key, value) -> {
                 String[] split = key.split("/v");
-                if (split.length != 2)
-                    throw new JsonParseException("VersionedMap key should be formatted like '%key/v%number%'. Actual value : " + key);
-                Integer version = Integer.valueOf(split[1]);
-                result.put(split[0], version, value);
+                if (split.length == 2) {
+                    Integer version = Integer.valueOf(split[1]);
+                    result.put(split[0], version, value);
+                } else {
+                    result.put(split[0], Integer.MAX_VALUE, value);
+                }
             });
             return result;
         }
