@@ -1,0 +1,12 @@
+{
+  "runs": [
+    {
+      "language": "en-US",
+      "results": [ ],
+      "newlineSequences": [
+        "\r\n",
+        "\n"
+      ]
+    }
+  ]
+}
