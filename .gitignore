@@ -13,3 +13,4 @@ build/
 #sarif converter
 sarif-converter/ui/**
 /out/
+/baseline-cli/lib/

@@ -1,2 +1,3 @@
 rootProject.name = "qodana-sarif"
 include(':sarif')
+include('baseline-cli')

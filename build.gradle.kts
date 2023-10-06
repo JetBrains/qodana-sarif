@@ -8,7 +8,7 @@ plugins {
     `maven-publish`
     jacoco
     application
-    kotlin("jvm") version "1.8.0"
+    kotlin("jvm") version "1.9.0"
     id("org.jetbrains.dokka") version "1.8.20"
 }
 
@@ -77,22 +77,24 @@ allprojects {
 }
 
 subprojects {
-    apply(plugin = "org.jetbrains.dokka")
-    tasks.withType<DokkaTaskPartial>().configureEach {
-        dokkaSourceSets.configureEach {
-            moduleName.set(project.name)
-            sourceRoots.from(file("src"))
-            includes.from("README.md")
-            sourceLink {
-                localDirectory.set(projectDir.resolve("src"))
-                remoteUrl.set(URL("https://github.com/JetBrains/qodana-sarif/tree/main/sarif/src"))
-                remoteLineSuffix.set("#L")
-            }
-            sourceSets {
-                skipEmptyPackages.set(true)
-            }
-            pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
-                footerMessage = "(c) 2023 JetBrains s.r.o."
+    if (name != "baseline-cli") {
+        apply(plugin = "org.jetbrains.dokka")
+        tasks.withType<DokkaTaskPartial>().configureEach {
+            dokkaSourceSets.configureEach {
+                moduleName.set(project.name)
+                sourceRoots.from(file("src"))
+                includes.from("README.md")
+                sourceLink {
+                    localDirectory.set(projectDir.resolve("src"))
+                    remoteUrl.set(URL("https://github.com/JetBrains/qodana-sarif/tree/main/sarif/src"))
+                    remoteLineSuffix.set("#L")
+                }
+                sourceSets {
+                    skipEmptyPackages.set(true)
+                }
+                pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
+                    footerMessage = "(c) 2023 JetBrains s.r.o."
+                }
             }
         }
     }
