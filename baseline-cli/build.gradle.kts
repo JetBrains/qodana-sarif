@@ -14,12 +14,12 @@ tasks.test {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(8)
 }
 
 application {
@@ -32,6 +32,5 @@ tasks {
         archiveVersion.set("0.1.0")
         archiveClassifier.set("")
         destinationDirectory.set(file("lib"))
-        manifest.attributes["Multi-Release"] = "true"
     }
 }
