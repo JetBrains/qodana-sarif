@@ -1,7 +1,7 @@
 import BaselineCli.process
 import kotlin.system.exitProcess
 
-const val THRESHOLD_EXIT = 2
+const val THRESHOLD_EXIT = 255
 const val ERROR_EXIT = 1
 
 fun main(args: Array<String>) {
