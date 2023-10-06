@@ -19,7 +19,7 @@ class BaselineCliTest {
 
         // Act
         val exitCode = assertDoesNotThrow {
-            BaselineCli.process(map, testCliPrinter)
+            BaselineCli.process(map, testCliPrinter, testCliPrinter)
         }
 
         // Assert
@@ -40,7 +40,7 @@ class BaselineCliTest {
 
         // Act
         val exitCode = assertDoesNotThrow {
-            BaselineCli.process(map, testCliPrinter)
+            BaselineCli.process(map, testCliPrinter, testCliPrinter)
         }
 
         // Assert
@@ -63,7 +63,7 @@ class BaselineCliTest {
 
         // Act
         val exitCode = assertDoesNotThrow {
-            BaselineCli.process(map, testCliPrinter)
+            BaselineCli.process(map, testCliPrinter, testCliPrinter)
         }
 
         // Assert
@@ -85,7 +85,7 @@ class BaselineCliTest {
 
         // Act
         val exitCode = assertDoesNotThrow {
-            BaselineCli.process(map, testCliPrinter)
+            BaselineCli.process(map, testCliPrinter, testCliPrinter)
         }
 
         // Assert
@@ -107,7 +107,7 @@ class BaselineCliTest {
 
         // Act
         val exitCode = assertDoesNotThrow {
-            BaselineCli.process(map, testCliPrinter)
+            BaselineCli.process(map, testCliPrinter, testCliPrinter)
         }
 
         // Assert
@@ -129,7 +129,7 @@ class BaselineCliTest {
 
         // Act
         val exitCode = assertDoesNotThrow {
-            BaselineCli.process(map, testCliPrinter)
+            BaselineCli.process(map, testCliPrinter, testCliPrinter)
         }
 
         // Assert
@@ -155,7 +155,7 @@ class BaselineCliTest {
 
         // Act
         val exitCode = assertDoesNotThrow {
-            BaselineCli.process(map, testCliPrinter)
+            BaselineCli.process(map, testCliPrinter, testCliPrinter)
         }
 
         // Assert
@@ -180,7 +180,7 @@ class BaselineCliTest {
 
         // Act
         val exitCode = assertDoesNotThrow {
-            BaselineCli.process(map, testCliPrinter)
+            BaselineCli.process(map, testCliPrinter, testCliPrinter)
         }
 
         // Assert

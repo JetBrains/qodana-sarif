@@ -6,19 +6,19 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 object BaselineCli {
-    fun process(map: Map<String, String>, cliPrinter: (String) -> Unit): Int {
+    fun process(map: Map<String, String>, cliPrinter: (String) -> Unit, errPrinter: (String) -> Unit): Int {
         val sarifPath = map["sarifReport"]!!
         val baselinePath = map["baselineReport"]
         val failThreshold = map["failThreshold"]?.toIntOrNull()
         if (!Files.exists(Paths.get(sarifPath))) {
-            cliPrinter("Please provide a valid SARIF report path")
+            errPrinter("Please provide a valid SARIF report path")
             return ERROR_EXIT
         }
         val sarifReport: SarifReport
         try {
             sarifReport = SarifUtil.readReport(Paths.get(sarifPath))
         } catch (e: Exception) {
-            cliPrinter("Error reading SARIF report: ${e.message}")
+            errPrinter("Error reading SARIF report: ${e.message}")
             return ERROR_EXIT
         }
         val printer = CommandLineResultsPrinter({ it }, cliPrinter)
@@ -29,26 +29,42 @@ object BaselineCli {
                 Paths.get(baselinePath),
                 failThreshold,
                 printer,
-                cliPrinter
+                cliPrinter,
+                errPrinter
             )
         } else {
-            compareThreshold(sarifReport, failThreshold, printer, cliPrinter)
+            compareThreshold(sarifReport, failThreshold, printer, cliPrinter, errPrinter)
         }
+    }
+
+    private fun processResultCount(
+        size: Int,
+        failThreshold: Int?,
+        cliPrinter: (String) -> Unit,
+        errPrinter: (String) -> Unit
+    ): Int {
+        if (size > 0) {
+            errPrinter("Found $size new problems according to the checks applied")
+        } else {
+            cliPrinter("It seems all right \uD83D\uDC4C No new problems found according to the checks applied")
+        }
+        if (failThreshold != null && size > failThreshold) {
+            errPrinter("New problems count $size is greater than the threshold $failThreshold")
+            return THRESHOLD_EXIT
+        }
+        return 0
     }
 
     private fun compareThreshold(
         sarifReport: SarifReport,
         failThreshold: Int?,
         printer: CommandLineResultsPrinter,
-        cliPrinter: (String) -> Unit
+        cliPrinter: (String) -> Unit,
+        errPrinter: (String) -> Unit
     ): Int {
         val results = sarifReport.runs.first().results
         printer.printResults(results, "Qodana - Detailed summary")
-        if (failThreshold != null && results.size > failThreshold) {
-            cliPrinter("New problems count ${results.size} is greater than the threshold $failThreshold")
-            return THRESHOLD_EXIT
-        }
-        return 0
+        return processResultCount(results.size, failThreshold, cliPrinter, errPrinter)
     }
 
     private fun compareBaselineThreshold(
@@ -57,26 +73,23 @@ object BaselineCli {
         baselinePath: Path,
         failThreshold: Int?,
         printer: CommandLineResultsPrinter,
-        cliPrinter: (String) -> Unit
+        cliPrinter: (String) -> Unit,
+        errPrinter: (String) -> Unit
     ): Int {
         if (!Files.exists(baselinePath)) {
-            cliPrinter("Please provide valid baseline report path")
+            errPrinter("Please provide valid baseline report path")
             return ERROR_EXIT
         }
         val baseline: SarifReport
         try {
             baseline = SarifUtil.readReport(baselinePath)
         } catch (e: Exception) {
-            cliPrinter("Error reading baseline report: ${e.message}")
+            errPrinter("Error reading baseline report: ${e.message}")
             return ERROR_EXIT
         }
         val baselineCalculation = BaselineCalculation.compare(sarifReport, baseline, BaselineCalculation.Options())
         SarifUtil.writeReport(sarifPath, sarifReport)
         printer.printResultsWithBaselineState(sarifReport.runs.first().results, false)
-        if (failThreshold != null && baselineCalculation.newResults > failThreshold) {
-            cliPrinter("New problems count ${baselineCalculation.newResults} is greater than the threshold $failThreshold")
-            return THRESHOLD_EXIT
-        }
-        return 0
+        return processResultCount(baselineCalculation.newResults, failThreshold, cliPrinter, errPrinter)
     }
 }

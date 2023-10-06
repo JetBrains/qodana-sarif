@@ -21,11 +21,7 @@ fun main(args: Array<String>) {
         printUsageAndExit()
     }
 
-    println("SARIF report: ${map["sarifReport"]!!}") // !! operator can be used here because we are sure that sarifReport is not null
-    println("Baseline report: ${map["baselineReport"]}")
-    println("Fail threshold: ${map["failThreshold"]}")
-
-    val ret = process(map) { println(it) }
+    val ret = process(map, { println(it) }, { System.err.println(it) })
     exitProcess(ret)
 }
 
