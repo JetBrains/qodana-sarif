@@ -11,7 +11,8 @@ class CommandLineResultsPrinter(
         val unchanged = resultsCountByBaselineState[Result.BaselineState.UNCHANGED] ?: 0
         val new = resultsCountByBaselineState[Result.BaselineState.NEW] ?: 0
         val absent = resultsCountByBaselineState[Result.BaselineState.ABSENT] ?: 0
-        val groupingMessage = "Grouping problems according to baseline: UNCHANGED: $unchanged, NEW: $new, ABSENT: $absent"
+        val groupingMessage =
+            "Grouping problems according to baseline: UNCHANGED: $unchanged, NEW: $new, ABSENT: $absent"
 
         val countedProblems = (
                 results
@@ -52,7 +53,8 @@ class CommandLineResultsPrinter(
 
     fun printResults(results: List<Result>, sectionTitle: String, message: String? = null) {
         val countedByLevels = results.groupingBy { it.level }.eachCount().toSortedMap(compareByDescending { it })
-        val groupingMessage = message ?: "By severity: ${countedByLevels.map { "${it.key} - ${it.value}" }.joinToString(", ")}"
+        val groupingMessage =
+            message ?: "By severity: ${countedByLevels.map { "${it.key} - ${it.value}" }.joinToString(", ")}"
 
         val countedProblems = results.groupingBy { inspectionIdToName(it.ruleId) to it.level }.eachCount()
 
@@ -92,7 +94,8 @@ class CommandLineResultsPrinter(
             return
         }
 
-        val rows = countedProblems.entries.sortedWith(comparator).map { tableRowSelector.invoke(it.key) + it.value.toString() }
+        val rows =
+            countedProblems.entries.sortedWith(comparator).map { tableRowSelector.invoke(it.key) + it.value.toString() }
         val commandLineTable = CommandLineTable(
             title + "Problems count",
             rows,

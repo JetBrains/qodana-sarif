@@ -21,14 +21,27 @@ object BaselineCli {
             cliPrinter("Error reading SARIF report: ${e.message}")
             return ERROR_EXIT
         }
-        val printer = CommandLineResultsPrinter( { it }, cliPrinter)
+        val printer = CommandLineResultsPrinter({ it }, cliPrinter)
         return if (baselinePath != null) {
-            compareBaselineThreshold(sarifReport, Paths.get(sarifPath), Paths.get(baselinePath), failThreshold, printer, cliPrinter)
+            compareBaselineThreshold(
+                sarifReport,
+                Paths.get(sarifPath),
+                Paths.get(baselinePath),
+                failThreshold,
+                printer,
+                cliPrinter
+            )
         } else {
             compareThreshold(sarifReport, failThreshold, printer, cliPrinter)
         }
     }
-    private fun compareThreshold(sarifReport: SarifReport, failThreshold: Int?, printer: CommandLineResultsPrinter, cliPrinter: (String) -> Unit): Int {
+
+    private fun compareThreshold(
+        sarifReport: SarifReport,
+        failThreshold: Int?,
+        printer: CommandLineResultsPrinter,
+        cliPrinter: (String) -> Unit
+    ): Int {
         val results = sarifReport.runs.first().results
         printer.printResults(results, "Qodana - Detailed summary")
         if (failThreshold != null && results.size > failThreshold) {
@@ -38,7 +51,14 @@ object BaselineCli {
         return 0
     }
 
-    private fun compareBaselineThreshold(sarifReport: SarifReport, sarifPath: Path, baselinePath: Path, failThreshold: Int?, printer: CommandLineResultsPrinter, cliPrinter: (String) -> Unit): Int {
+    private fun compareBaselineThreshold(
+        sarifReport: SarifReport,
+        sarifPath: Path,
+        baselinePath: Path,
+        failThreshold: Int?,
+        printer: CommandLineResultsPrinter,
+        cliPrinter: (String) -> Unit
+    ): Int {
         if (!Files.exists(baselinePath)) {
             cliPrinter("Please provide valid baseline report path")
             return ERROR_EXIT

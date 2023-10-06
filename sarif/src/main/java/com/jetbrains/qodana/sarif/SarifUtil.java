@@ -83,7 +83,7 @@ public class SarifUtil {
 
     public static SarifReport emptyReport(String toolName) {
         Run run = new Run(new Tool(new ToolComponent(toolName))).withResults(new ArrayList<>());
-        return new SarifReport().withRuns(List.of(run));
+        return new SarifReport().withRuns(Collections.singletonList(run));
     }
 
     public static void writeReport(Writer writer, SarifReport report) {
