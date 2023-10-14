@@ -5,7 +5,6 @@ profile:
   name: qodana.recommended
 include:
   - name: CheckDependencyLicenses
-  - name: IncorrectFormatting
 exclude:
   - name: All
     paths:
