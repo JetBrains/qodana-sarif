@@ -1,6 +1,7 @@
 import com.google.gson.JsonSyntaxException
 import com.jetbrains.qodana.sarif.SarifUtil
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation
+import com.jetbrains.qodana.sarif.model.Invocation
 import com.jetbrains.qodana.sarif.model.Run
 import com.jetbrains.qodana.sarif.model.SarifReport
 import java.net.URI
@@ -36,7 +37,7 @@ object BaselineCli {
                 errPrinter
             )
         } else {
-            compareThreshold(sarifReport, failThreshold, printer, cliPrinter, errPrinter)
+            compareThreshold(sarifReport, Paths.get(sarifPath), failThreshold, printer, cliPrinter, errPrinter)
         }
     }
 
@@ -45,7 +46,7 @@ object BaselineCli {
         failThreshold: Int?,
         cliPrinter: (String) -> Unit,
         errPrinter: (String) -> Unit
-    ): Int {
+    ): Invocation {
         if (size > 0) {
             errPrinter("Found $size new problems according to the checks applied")
         } else {
@@ -53,13 +54,19 @@ object BaselineCli {
         }
         if (failThreshold != null && size > failThreshold) {
             errPrinter("New problems count $size is greater than the threshold $failThreshold")
-            return THRESHOLD_EXIT
+            return Invocation().apply {
+                exitCode = THRESHOLD_EXIT
+                exitCodeDescription = "Qodana reached failThreshold"
+            }
         }
-        return 0
+        return Invocation().apply {
+            exitCode = 0
+        }
     }
 
     private fun compareThreshold(
         sarifReport: SarifReport,
+        sarifPath: Path,
         failThreshold: Int?,
         printer: CommandLineResultsPrinter,
         cliPrinter: (String) -> Unit,
@@ -67,7 +74,10 @@ object BaselineCli {
     ): Int {
         val results = sarifReport.runs.first().results
         printer.printResults(results, "Qodana - Detailed summary")
-        return processResultCount(results.size, failThreshold, cliPrinter, errPrinter)
+        val invocation = processResultCount(results.size, failThreshold, cliPrinter, errPrinter)
+        sarifReport.runs.first().invocations = listOf(invocation)
+        SarifUtil.writeReport(sarifPath, sarifReport)
+        return invocation.exitCode
     }
 
     private fun compareBaselineThreshold(
@@ -91,9 +101,11 @@ object BaselineCli {
             return ERROR_EXIT
         }
         val baselineCalculation = BaselineCalculation.compare(sarifReport, baseline, BaselineCalculation.Options())
-        SarifUtil.writeReport(sarifPath, sarifReport)
         printer.printResultsWithBaselineState(sarifReport.runs.first().results, false)
-        return processResultCount(baselineCalculation.newResults, failThreshold, cliPrinter, errPrinter)
+        val invocation = processResultCount(baselineCalculation.newResults, failThreshold, cliPrinter, errPrinter)
+        sarifReport.runs.first().invocations = listOf(invocation)
+        SarifUtil.writeReport(sarifPath, sarifReport)
+        return invocation.exitCode
     }
 
     private fun createSarifReport(runs: List<Run>): SarifReport {
