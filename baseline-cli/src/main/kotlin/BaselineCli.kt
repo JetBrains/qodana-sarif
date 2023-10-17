@@ -57,10 +57,12 @@ object BaselineCli {
             return Invocation().apply {
                 exitCode = THRESHOLD_EXIT
                 exitCodeDescription = "Qodana reached failThreshold"
+                executionSuccessful = true
             }
         }
         return Invocation().apply {
             exitCode = 0
+            executionSuccessful = true
         }
     }
 
