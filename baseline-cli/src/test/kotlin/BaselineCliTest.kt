@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import java.io.File
@@ -6,6 +7,17 @@ import kotlin.io.path.Path
 import kotlin.io.path.readText
 
 class BaselineCliTest {
+
+    private lateinit var sarif: File
+
+    @BeforeEach
+    fun setup() {
+        sarif = File.createTempFile("temp", ".sarif")
+        sarif.writeText(Path("src/test/resources/report.equal.sarif.json").readText())
+        sarif.deleteOnExit()
+    }
+
+
     @Test
     fun `test when sarifReport does not exist in the provided path`() {
         // Arrange
@@ -53,7 +65,7 @@ class BaselineCliTest {
     fun `test when baselineReport path is provided and file does not exist`() {
         // Arrange
         val map = mutableMapOf<String, String>().apply {
-            this["sarifReport"] =  Path("src/test/resources/report.equal.sarif.json").toString()
+            this["sarifReport"] = sarif.absolutePath.toString()
             this["baselineReport"] = "nonExistentBaselineReport.sarif"
         }
         var printedMessage: String? = null
@@ -75,7 +87,7 @@ class BaselineCliTest {
     fun `test when there is a error reading baselineReport`() {
         // Arrange
         val map = mutableMapOf<String, String>().apply{
-            this["sarifReport"] = Path("src/test/resources/report.equal.sarif.json").toString()
+            this["sarifReport"] = sarif.absolutePath.toString()
             this["baselineReport"] = Path("src/test/resources/corrupted.sarif.json").toString()
         }
         var printedMessage: String? = null
@@ -98,7 +110,7 @@ class BaselineCliTest {
     fun `test when failThreshold is not present and results count is less than the failThreshold default value`() {
         // Arrange
         val map = mutableMapOf<String, String>().apply {
-            this["sarifReport"] = Path("src/test/resources/report.equal.sarif.json").toString()
+            this["sarifReport"] = sarif.absolutePath.toString()
         }
         var printedMessage: String? = null
         val testCliPrinter: (String) -> Unit = {
@@ -119,7 +131,7 @@ class BaselineCliTest {
     fun `test when failThreshold is provided and results count in sarifReport is more than failThreshold`() {
         // Arrange
         val map = mutableMapOf<String, String>().apply {
-            this["sarifReport"] = Path("src/test/resources/report.equal.sarif.json").toString()
+            this["sarifReport"] = sarif.absolutePath.toString()
             this["failThreshold"] = "0"
         }
         var printedMessage: String? = null
