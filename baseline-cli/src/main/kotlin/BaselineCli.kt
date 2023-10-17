@@ -1,6 +1,9 @@
+import com.google.gson.JsonSyntaxException
 import com.jetbrains.qodana.sarif.SarifUtil
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation
+import com.jetbrains.qodana.sarif.model.Run
 import com.jetbrains.qodana.sarif.model.SarifReport
+import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -82,8 +85,8 @@ object BaselineCli {
         }
         val baseline: SarifReport
         try {
-            baseline = SarifUtil.readReport(baselinePath)
-        } catch (e: Exception) {
+            baseline = SarifUtil.readReport(baselinePath) ?: createSarifReport(emptyList())
+        } catch (e: JsonSyntaxException) {
             errPrinter("Error reading baseline report: ${e.message}")
             return ERROR_EXIT
         }
@@ -91,5 +94,11 @@ object BaselineCli {
         SarifUtil.writeReport(sarifPath, sarifReport)
         printer.printResultsWithBaselineState(sarifReport.runs.first().results, false)
         return processResultCount(baselineCalculation.newResults, failThreshold, cliPrinter, errPrinter)
+    }
+
+    private fun createSarifReport(runs: List<Run>): SarifReport {
+        val schema =
+            URI("https://raw.githubusercontent.com/schemastore/schemastore/master/src/schemas/json/sarif-2.1.0-rtm.5.json")
+        return SarifReport(SarifReport.Version._2_1_0, runs).`with$schema`(schema)
     }
 }

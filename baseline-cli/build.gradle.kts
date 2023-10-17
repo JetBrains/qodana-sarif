@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     implementation(project(mapOf("path" to ":sarif")))
+    implementation("com.google.code.gson:gson:2.8.9")
     testImplementation(kotlin("test"))
 }
 
