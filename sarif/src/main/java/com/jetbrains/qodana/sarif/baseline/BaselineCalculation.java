@@ -106,7 +106,7 @@ public class BaselineCalculation {
          * if old result is absent and wasChecked == false -> oldResult.baselineState = UNCHANGED
          * if old result is present then current result `wasChecked` is not used.
          * <p>
-         * Typicaly wasChecked is true if result is in the scope of current check.
+         * Typically, wasChecked is true if result is in the scope of current check.
          */
         private static final Function<Result, Boolean> ALL_CHECKED = (result) -> true;
         private final Function<Result, Boolean> wasChecked;
@@ -153,8 +153,8 @@ public class BaselineCalculation {
     }
 
     private class RunResultGroup {
-        private final Map<String, Result> baselineHashes = new HashMap<>();
-        private final Map<String, Result> reportHashes = new HashMap<>();
+        private final Map<String, List<Result>> baselineHashes = new HashMap<>();
+        private final Map<String, List<Result>> reportHashes = new HashMap<>();
         private final Map<ResultKey, List<Result>> diffBaseline = new HashMap<>();
         private final Map<ResultKey, List<Result>> diffReport = new HashMap<>();
         private final Run report;
@@ -170,13 +170,16 @@ public class BaselineCalculation {
             report.getResults().removeIf(result -> result.getBaselineState() == state);
         }
 
-        private void buildMap(Run run, Map<String, Result> map, Map<ResultKey, List<Result>> diffSet) {
+        private void buildMap(Run run, Map<String, List<Result>> map, Map<ResultKey, List<Result>> diffSet) {
             for (Result result : run.getResults()) {
                 if (result.getBaselineState() == ABSENT) continue;
                 VersionedMap<String> fingerprints = result.getPartialFingerprints();
                 String equalIndicator = fingerprints != null ? fingerprints.getLastValue(EQUAL_INDICATOR) : null;
                 if (equalIndicator != null) {
-                    map.put(equalIndicator, result);
+                    List<Result> resultBucket = map.compute(
+                            equalIndicator,
+                            (key, value) -> value != null ? value : new ArrayList<>());
+                    resultBucket.add(result);
                 } else {
                     addToDiff(result, diffSet);
                 }
@@ -192,23 +195,25 @@ public class BaselineCalculation {
         }
 
         public void build() {
-            reportHashes.forEach((hash, result) -> {
+            reportHashes.forEach((hash, results) -> {
                 if (baselineHashes.containsKey(hash)) {
-                    setBaselineState(result, UNCHANGED);
-                    unchangedResults++;
+                    results.forEach((it) -> setBaselineState(it, UNCHANGED));
+                    unchangedResults += results.size();
                 } else {
-                    addToDiff(result, diffReport);
+                    results.forEach((it) -> addToDiff(it, diffReport));
                 }
             });
 
-            baselineHashes.forEach((hash, result) -> {
+            baselineHashes.forEach((hash, results) -> {
                 if (!reportHashes.containsKey(hash)) {
-                    if (options.wasChecked.apply(result)) {
-                        addToDiff(result, diffBaseline);
-                    } else {
-                        result.setBaselineState(UNCHANGED);
-                        report.getResults().add(result);
-                        unchangedResults += 1;
+                    for (Result result : results) {
+                        if (options.wasChecked.apply(result)) {
+                            addToDiff(result, diffBaseline);
+                        } else {
+                            result.setBaselineState(UNCHANGED);
+                            report.getResults().add(result);
+                            unchangedResults += 1;
+                        }
                     }
                 }
             });
