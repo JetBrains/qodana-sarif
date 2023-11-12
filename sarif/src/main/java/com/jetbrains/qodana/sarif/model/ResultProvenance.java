@@ -3,6 +3,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.Set;
 
@@ -18,13 +19,13 @@ public class ResultProvenance {
      */
     @SerializedName("firstDetectionTimeUtc")
     @Expose
-    private Date firstDetectionTimeUtc;
+    private Instant firstDetectionTimeUtc;
     /**
      * The Coordinated Universal Time (UTC) date and time at which the result was most recently detected. See "Date/time properties" in the SARIF spec for the required format.
      */
     @SerializedName("lastDetectionTimeUtc")
     @Expose
-    private Date lastDetectionTimeUtc;
+    private Instant lastDetectionTimeUtc;
     /**
      * A GUID-valued string equal to the automationDetails.guid property of the run in which the result was first detected.
      */
@@ -59,18 +60,18 @@ public class ResultProvenance {
     /**
      * The Coordinated Universal Time (UTC) date and time at which the result was first detected. See "Date/time properties" in the SARIF spec for the required format.
      */
-    public Date getFirstDetectionTimeUtc() {
+    public Instant getFirstDetectionTimeUtc() {
         return firstDetectionTimeUtc;
     }
 
     /**
      * The Coordinated Universal Time (UTC) date and time at which the result was first detected. See "Date/time properties" in the SARIF spec for the required format.
      */
-    public void setFirstDetectionTimeUtc(Date firstDetectionTimeUtc) {
+    public void setFirstDetectionTimeUtc(Instant firstDetectionTimeUtc) {
         this.firstDetectionTimeUtc = firstDetectionTimeUtc;
     }
 
-    public ResultProvenance withFirstDetectionTimeUtc(Date firstDetectionTimeUtc) {
+    public ResultProvenance withFirstDetectionTimeUtc(Instant firstDetectionTimeUtc) {
         this.firstDetectionTimeUtc = firstDetectionTimeUtc;
         return this;
     }
@@ -78,18 +79,18 @@ public class ResultProvenance {
     /**
      * The Coordinated Universal Time (UTC) date and time at which the result was most recently detected. See "Date/time properties" in the SARIF spec for the required format.
      */
-    public Date getLastDetectionTimeUtc() {
+    public Instant getLastDetectionTimeUtc() {
         return lastDetectionTimeUtc;
     }
 
     /**
      * The Coordinated Universal Time (UTC) date and time at which the result was most recently detected. See "Date/time properties" in the SARIF spec for the required format.
      */
-    public void setLastDetectionTimeUtc(Date lastDetectionTimeUtc) {
+    public void setLastDetectionTimeUtc(Instant lastDetectionTimeUtc) {
         this.lastDetectionTimeUtc = lastDetectionTimeUtc;
     }
 
-    public ResultProvenance withLastDetectionTimeUtc(Date lastDetectionTimeUtc) {
+    public ResultProvenance withLastDetectionTimeUtc(Instant lastDetectionTimeUtc) {
         this.lastDetectionTimeUtc = lastDetectionTimeUtc;
         return this;
     }

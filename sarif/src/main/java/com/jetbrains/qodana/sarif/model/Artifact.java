@@ -3,6 +3,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.Set;
 
@@ -84,7 +85,7 @@ public class Artifact {
      */
     @SerializedName("lastModifiedTimeUtc")
     @Expose
-    private Date lastModifiedTimeUtc;
+    private Instant lastModifiedTimeUtc;
     /**
      * Key/value pairs that provide additional information about the object.
      */
@@ -304,18 +305,18 @@ public class Artifact {
     /**
      * The Coordinated Universal Time (UTC) date and time at which the artifact was most recently modified. See "Date/time properties" in the SARIF spec for the required format.
      */
-    public Date getLastModifiedTimeUtc() {
+    public Instant getLastModifiedTimeUtc() {
         return lastModifiedTimeUtc;
     }
 
     /**
      * The Coordinated Universal Time (UTC) date and time at which the artifact was most recently modified. See "Date/time properties" in the SARIF spec for the required format.
      */
-    public void setLastModifiedTimeUtc(Date lastModifiedTimeUtc) {
+    public void setLastModifiedTimeUtc(Instant lastModifiedTimeUtc) {
         this.lastModifiedTimeUtc = lastModifiedTimeUtc;
     }
 
-    public Artifact withLastModifiedTimeUtc(Date lastModifiedTimeUtc) {
+    public Artifact withLastModifiedTimeUtc(Instant lastModifiedTimeUtc) {
         this.lastModifiedTimeUtc = lastModifiedTimeUtc;
         return this;
     }

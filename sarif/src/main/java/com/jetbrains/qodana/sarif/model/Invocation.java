@@ -3,6 +3,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -37,13 +38,13 @@ public class Invocation {
      */
     @SerializedName("startTimeUtc")
     @Expose
-    private Date startTimeUtc;
+    private Instant startTimeUtc;
     /**
      * The Coordinated Universal Time (UTC) date and time at which the invocation ended. See "Date/time properties" in the SARIF spec for the required format.
      */
     @SerializedName("endTimeUtc")
     @Expose
-    private Date endTimeUtc;
+    private Instant endTimeUtc;
     /**
      * The process exit code.
      */
@@ -246,18 +247,18 @@ public class Invocation {
     /**
      * The Coordinated Universal Time (UTC) date and time at which the invocation started. See "Date/time properties" in the SARIF spec for the required format.
      */
-    public Date getStartTimeUtc() {
+    public Instant getStartTimeUtc() {
         return startTimeUtc;
     }
 
     /**
      * The Coordinated Universal Time (UTC) date and time at which the invocation started. See "Date/time properties" in the SARIF spec for the required format.
      */
-    public void setStartTimeUtc(Date startTimeUtc) {
+    public void setStartTimeUtc(Instant startTimeUtc) {
         this.startTimeUtc = startTimeUtc;
     }
 
-    public Invocation withStartTimeUtc(Date startTimeUtc) {
+    public Invocation withStartTimeUtc(Instant startTimeUtc) {
         this.startTimeUtc = startTimeUtc;
         return this;
     }
@@ -265,18 +266,18 @@ public class Invocation {
     /**
      * The Coordinated Universal Time (UTC) date and time at which the invocation ended. See "Date/time properties" in the SARIF spec for the required format.
      */
-    public Date getEndTimeUtc() {
+    public Instant getEndTimeUtc() {
         return endTimeUtc;
     }
 
     /**
      * The Coordinated Universal Time (UTC) date and time at which the invocation ended. See "Date/time properties" in the SARIF spec for the required format.
      */
-    public void setEndTimeUtc(Date endTimeUtc) {
+    public void setEndTimeUtc(Instant endTimeUtc) {
         this.endTimeUtc = endTimeUtc;
     }
 
-    public Invocation withEndTimeUtc(Date endTimeUtc) {
+    public Invocation withEndTimeUtc(Instant endTimeUtc) {
         this.endTimeUtc = endTimeUtc;
         return this;
     }

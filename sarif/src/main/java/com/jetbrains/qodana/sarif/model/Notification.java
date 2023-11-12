@@ -3,6 +3,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +46,7 @@ public class Notification {
      */
     @SerializedName("timeUtc")
     @Expose
-    private Date timeUtc;
+    private Instant timeUtc;
     /**
      * Describes a runtime exception encountered during the execution of an analysis tool.
      */
@@ -166,18 +167,18 @@ public class Notification {
     /**
      * The Coordinated Universal Time (UTC) date and time at which the analysis tool generated the notification.
      */
-    public Date getTimeUtc() {
+    public Instant getTimeUtc() {
         return timeUtc;
     }
 
     /**
      * The Coordinated Universal Time (UTC) date and time at which the analysis tool generated the notification.
      */
-    public void setTimeUtc(Date timeUtc) {
+    public void setTimeUtc(Instant timeUtc) {
         this.timeUtc = timeUtc;
     }
 
-    public Notification withTimeUtc(Date timeUtc) {
+    public Notification withTimeUtc(Instant timeUtc) {
         this.timeUtc = timeUtc;
         return this;
     }

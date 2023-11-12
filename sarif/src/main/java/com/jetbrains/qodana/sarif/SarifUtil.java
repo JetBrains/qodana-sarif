@@ -22,6 +22,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -105,7 +106,8 @@ public class SarifUtil {
         return new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
-                .registerTypeAdapter(PropertyBag.class, new PropertyBag.PropertyBagTypeAdapter().nullSafe());
+                .registerTypeAdapter(PropertyBag.class, new PropertyBag.PropertyBagTypeAdapter().nullSafe())
+                .registerTypeAdapter(Instant.class, new IsoInstantTypeAdapter().nullSafe());
     }
 
     /**
