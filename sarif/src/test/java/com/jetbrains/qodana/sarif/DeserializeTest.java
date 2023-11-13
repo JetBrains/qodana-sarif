@@ -1,17 +1,14 @@
 package com.jetbrains.qodana.sarif;
 
-import com.jetbrains.qodana.sarif.model.PropertyBag;
-import com.jetbrains.qodana.sarif.model.Result;
-import com.jetbrains.qodana.sarif.model.SarifReport;
-import com.jetbrains.qodana.sarif.model.VersionedMap;
+import com.jetbrains.qodana.sarif.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,6 +51,24 @@ public class DeserializeTest {
 
         Assert.assertEquals(7, promo.size());
         Assert.assertEquals(2, sanity.size());
+    }
+
+    @Test
+    public void testDateFormat() throws IOException {
+        Path target = Paths.get("src/test/resources/testData/serializeTest/isoDates.json");
+        List<Invocation> invocations = SarifUtil.readReport(target).getRuns().get(0).getInvocations();
+
+        OffsetDateTime expect = LocalDate.of(2016, 2, 8).atStartOfDay().atOffset(ZoneOffset.UTC);
+        Assert.assertEquals(expect.toInstant(), invocations.get(0).getStartTimeUtc());
+
+        expect = expect.plusHours(16).plusMinutes(8);
+        Assert.assertEquals(expect.toInstant(), invocations.get(0).getEndTimeUtc());
+
+        expect = expect.plusSeconds(25);
+        Assert.assertEquals(expect.toInstant(), invocations.get(1).getStartTimeUtc());
+
+        expect = expect.plus(943, ChronoUnit.MILLIS);
+        Assert.assertEquals(expect.toInstant(), invocations.get(1).getEndTimeUtc());
     }
 
 

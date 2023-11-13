@@ -3,6 +3,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,7 +75,7 @@ public class ThreadFlowLocation {
      */
     @SerializedName("executionTimeUtc")
     @Expose
-    private Date executionTimeUtc;
+    private Instant executionTimeUtc;
     /**
      * Specifies the importance of this location in understanding the code flow in which it occurs. The order from most to least important is "essential", "important", "unimportant". Default: "important".
      */
@@ -274,18 +275,18 @@ public class ThreadFlowLocation {
     /**
      * The Coordinated Universal Time (UTC) date and time at which this location was executed.
      */
-    public Date getExecutionTimeUtc() {
+    public Instant getExecutionTimeUtc() {
         return executionTimeUtc;
     }
 
     /**
      * The Coordinated Universal Time (UTC) date and time at which this location was executed.
      */
-    public void setExecutionTimeUtc(Date executionTimeUtc) {
+    public void setExecutionTimeUtc(Instant executionTimeUtc) {
         this.executionTimeUtc = executionTimeUtc;
     }
 
-    public ThreadFlowLocation withExecutionTimeUtc(Date executionTimeUtc) {
+    public ThreadFlowLocation withExecutionTimeUtc(Instant executionTimeUtc) {
         this.executionTimeUtc = executionTimeUtc;
         return this;
     }

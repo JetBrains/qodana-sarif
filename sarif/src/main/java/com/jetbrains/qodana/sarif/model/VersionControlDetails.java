@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.Date;
 
 
@@ -43,7 +44,7 @@ public class VersionControlDetails {
      */
     @SerializedName("asOfTimeUtc")
     @Expose
-    private Date asOfTimeUtc;
+    private Instant asOfTimeUtc;
     /**
      * Specifies the location of an artifact.
      */
@@ -152,18 +153,18 @@ public class VersionControlDetails {
     /**
      * A Coordinated Universal Time (UTC) date and time that can be used to synchronize an enlistment to the state of the repository at that time.
      */
-    public Date getAsOfTimeUtc() {
+    public Instant getAsOfTimeUtc() {
         return asOfTimeUtc;
     }
 
     /**
      * A Coordinated Universal Time (UTC) date and time that can be used to synchronize an enlistment to the state of the repository at that time.
      */
-    public void setAsOfTimeUtc(Date asOfTimeUtc) {
+    public void setAsOfTimeUtc(Instant asOfTimeUtc) {
         this.asOfTimeUtc = asOfTimeUtc;
     }
 
-    public VersionControlDetails withAsOfTimeUtc(Date asOfTimeUtc) {
+    public VersionControlDetails withAsOfTimeUtc(Instant asOfTimeUtc) {
         this.asOfTimeUtc = asOfTimeUtc;
         return this;
     }
