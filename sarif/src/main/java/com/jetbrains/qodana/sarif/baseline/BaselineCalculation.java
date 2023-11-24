@@ -158,9 +158,13 @@ public class BaselineCalculation {
         private final Map<ResultKey, List<Result>> diffBaseline = new HashMap<>();
         private final Map<ResultKey, List<Result>> diffReport = new HashMap<>();
         private final Run report;
+        private final DescriptorLookup reportLookup;
+        private final DescriptorLookup baselineLookup;
 
         public RunResultGroup(Run report, Run baseline) {
             this.report = report;
+            this.reportLookup = new DescriptorLookup(report);
+            this.baselineLookup = new DescriptorLookup(baseline);
             buildMap(baseline, baselineHashes, diffBaseline);
             removeProblemsWithState(report, ABSENT);
             buildMap(report, reportHashes, diffReport);
@@ -238,6 +242,10 @@ public class BaselineCalculation {
                         setBaselineState(result, ABSENT);
                         absentResults++;
                         report.getResults().add(result);
+                        if (reportLookup.findById(result.getRuleId()) == null) {
+                            DescriptorWithLocation descriptor = baselineLookup.findById(result.getRuleId());
+                            if (descriptor != null) descriptor.addTo(report);
+                        }
                     }
                 } else {
                     result.setBaselineState(UNCHANGED);
@@ -263,6 +271,3 @@ public class BaselineCalculation {
         result.setBaselineState(state);
     }
 }
-
-
-
