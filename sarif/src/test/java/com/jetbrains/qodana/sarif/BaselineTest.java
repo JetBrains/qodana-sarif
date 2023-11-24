@@ -1,19 +1,15 @@
 package com.jetbrains.qodana.sarif;
 
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation;
-import com.jetbrains.qodana.sarif.model.Message;
-import com.jetbrains.qodana.sarif.model.Result;
-import com.jetbrains.qodana.sarif.model.SarifReport;
+import com.jetbrains.qodana.sarif.model.*;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.jetbrains.qodana.sarif.baseline.BaselineCalculation.Options.DEFAULT;
 import static org.junit.Assert.assertEquals;
@@ -176,6 +172,67 @@ public class BaselineTest {
         doTest(report, baseline, problemsCount, 1, 0, new BaselineCalculation.Options(true));
         //assertEquals(Result.BaselineState.NEW, newResult.getBaselineState());
     }
+
+    @Test
+    public void testAbsentResultWithChangedIdAndSameVersion() throws IOException {
+        SarifReport report = readReport("src/test/resources/testData/AbsentBaselineTest/report.json");
+        SarifReport baseline = readReport("src/test/resources/testData/AbsentBaselineTest/baseline.json");
+
+        doTest(report, baseline, 17, 1, 1, new BaselineCalculation.Options(true));
+
+        Set<String> knownDescriptorIds = report.getRuns().stream()
+                .map(Run::getTool)
+                .flatMap(tool -> {
+                    Stream<ReportingDescriptor> driverRules = tool.getDriver().getRules().stream();
+                    Stream<ReportingDescriptor> extRules = tool.getExtensions().stream()
+                            .map(ToolComponent::getRules)
+                            .flatMap(Collection::stream);
+
+                   return Stream.concat(driverRules, extRules);
+                })
+                .map(ReportingDescriptor::getId)
+                .collect(Collectors.toSet());
+
+        List<String> withoutDescriptor = report.getRuns()
+                .stream()
+                .flatMap(r -> r.getResults().stream())
+                .map(Result::getRuleId)
+                .filter(id -> !knownDescriptorIds.contains(id))
+                .collect(Collectors.toList());
+
+        assertEquals(new ArrayList<String>(), withoutDescriptor);
+    }
+
+    @Test
+    public void testAbsentResultWithChangedIdAndOldVersion() throws IOException {
+        SarifReport report = readReport("src/test/resources/testData/AbsentBaselineTest/report.json");
+        SarifReport baseline = readReport("src/test/resources/testData/AbsentBaselineTest/baseline_old.json");
+
+        doTest(report, baseline, 17, 1, 1, new BaselineCalculation.Options(true));
+
+        Set<String> knownDescriptorIds = report.getRuns().stream()
+                .map(Run::getTool)
+                .flatMap(tool -> {
+                    Stream<ReportingDescriptor> driverRules = tool.getDriver().getRules().stream();
+                    Stream<ReportingDescriptor> extRules = tool.getExtensions().stream()
+                            .map(ToolComponent::getRules)
+                            .flatMap(Collection::stream);
+
+                    return Stream.concat(driverRules, extRules);
+                })
+                .map(ReportingDescriptor::getId)
+                .collect(Collectors.toSet());
+
+        List<String> withoutDescriptor = report.getRuns()
+                .stream()
+                .flatMap(r -> r.getResults().stream())
+                .map(Result::getRuleId)
+                .filter(id -> !knownDescriptorIds.contains(id))
+                .collect(Collectors.toList());
+
+        assertEquals(new ArrayList<String>(), withoutDescriptor);
+    }
+
 
     private void doTest(SarifReport report,
                         SarifReport baseline,

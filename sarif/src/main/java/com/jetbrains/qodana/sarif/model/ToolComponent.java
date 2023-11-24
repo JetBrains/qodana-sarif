@@ -200,6 +200,42 @@ public class ToolComponent {
         this.name = name;
     }
 
+
+    private ToolComponent(ToolComponent that) {
+        this.guid = that.guid;
+        this.name = that.name;
+        this.organization = that.organization;
+        this.product = that.product;
+        this.productSuite = that.productSuite;
+        this.shortDescription = that.shortDescription;
+        this.fullDescription = that.fullDescription;
+        this.fullName = that.fullName;
+        this.version = that.version;
+        this.semanticVersion = that.semanticVersion;
+        this.dottedQuadFileVersion = that.dottedQuadFileVersion;
+        this.releaseDateUtc = that.releaseDateUtc;
+        this.downloadUri = that.downloadUri;
+        this.informationUri = that.informationUri;
+        this.globalMessageStrings = that.globalMessageStrings;
+        this.notifications = that.notifications;
+        this.rules = that.rules;
+        this.taxa = that.taxa;
+        this.locations = that.locations;
+        this.language = that.language;
+        this.contents = that.contents;
+        this.isComprehensive = that.isComprehensive;
+        this.localizedDataSemanticVersion = that.localizedDataSemanticVersion;
+        this.minimumRequiredLocalizedDataSemanticVersion = that.minimumRequiredLocalizedDataSemanticVersion;
+        this.associatedComponent = that.associatedComponent;
+        this.translationMetadata = that.translationMetadata;
+        this.supportedTaxonomies = that.supportedTaxonomies;
+        this.properties = that.properties;
+    }
+
+    public ToolComponent shallowCopy() {
+        return new ToolComponent(this);
+    }
+
     /**
      * A unique identifer for the tool component in the form of a GUID.
      */
