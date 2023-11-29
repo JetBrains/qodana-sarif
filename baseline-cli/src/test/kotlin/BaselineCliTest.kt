@@ -159,4 +159,19 @@ class BaselineCliTest {
         assertFalse(stdout.contains("New problems count") && stdout.contains("is greater than the threshold"))
     }
 
+    @Test
+    fun `test when rule description is available`() {
+        // Arrange
+        val map = mutableMapOf<String, String>().apply {
+            this["sarifReport"] = Path("src/test/resources/report.with-description.sarif.json").toString()
+        }
+
+        // Act
+        assertDoesNotThrow { BaselineCli.process(map, stdout::append, stderr::append) }
+
+        // Assert
+        assertTrue(stdout.contains("Result of method call ignored")) // the unresolved ID
+        assertFalse(stdout.contains("ResultOfMethodCallIgnored")) // the unresolved ID
+    }
+
 }
