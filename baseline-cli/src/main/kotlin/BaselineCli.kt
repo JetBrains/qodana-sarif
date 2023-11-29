@@ -1,4 +1,5 @@
 import com.google.gson.JsonSyntaxException
+import com.jetbrains.qodana.sarif.RuleUtil
 import com.jetbrains.qodana.sarif.SarifUtil
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation
 import com.jetbrains.qodana.sarif.model.Invocation
@@ -18,14 +19,17 @@ object BaselineCli {
             errPrinter("Please provide a valid SARIF report path")
             return ERROR_EXIT
         }
-        val sarifReport: SarifReport
-        try {
-            sarifReport = SarifUtil.readReport(Paths.get(sarifPath))
+        val sarifReport = try {
+            SarifUtil.readReport(Paths.get(sarifPath))
         } catch (e: Exception) {
             errPrinter("Error reading SARIF report: ${e.message}")
             return ERROR_EXIT
         }
-        val printer = CommandLineResultsPrinter({ it }, cliPrinter)
+
+        val resolveInspectionName: (String) -> String = { id ->
+            RuleUtil.findRuleDescriptor(sarifReport, id)?.shortDescription?.text ?: id
+        }
+        val printer = CommandLineResultsPrinter(simpleMemoize(resolveInspectionName), cliPrinter)
         return if (baselinePath != null) {
             compareBaselineThreshold(
                 sarifReport,
@@ -114,5 +118,11 @@ object BaselineCli {
         val schema =
             URI("https://raw.githubusercontent.com/schemastore/schemastore/master/src/schemas/json/sarif-2.1.0-rtm.5.json")
         return SarifReport(SarifReport.Version._2_1_0, runs).`with$schema`(schema)
+    }
+
+    private fun <T : Any, R : Any> simpleMemoize(f: (T) -> R): (T) -> R {
+        val state = mutableMapOf<T, R>()
+
+        return { state.computeIfAbsent(it, f) }
     }
 }

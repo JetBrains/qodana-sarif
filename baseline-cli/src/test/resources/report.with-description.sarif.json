@@ -1,0 +1,173 @@
+{
+  "runs": [
+    {
+      "tool": {
+        "extensions": [
+          {
+            "name": "Manually Added",
+            "rules": [
+              {
+                "id": "IgnoreResultOfCall",
+                "shortDescription": {
+                  "text": "Result of method call ignored"
+                },
+                "fullDescription": {
+                  "text": "Reports method calls whose result is ignored. For many methods, ignoring the result is perfectly legitimate, but for some it is almost certainly an error. Examples of methods where ignoring the result is likely an error include 'java.io.inputStream.read()', which returns the number of bytes actually read, and any method on 'java.lang.String' or 'java.math.BigInteger'. These methods do not produce side-effects and thus pointless if their result is ignored. The calls to the following methods are inspected: Simple getters (which do nothing except return a field) Methods specified in the settings of this inspection Methods annotated with 'org.jetbrains.annotations.Contract(pure=true)' Methods annotated with .*.'CheckReturnValue' Methods in a class or package annotated with 'javax.annotation.CheckReturnValue' Optionally, all non-library methods Calls to methods annotated with Error Prone's or AssertJ's '@CanIgnoreReturnValue' annotation are not reported. Use the inspection settings to specify the classes to check. Methods are matched by name or name pattern using Java regular expression syntax. For classes, use fully-qualified names. Each entry applies to both the class and all its inheritors.",
+                  "markdown": "Reports method calls whose result is ignored.\n\nFor many methods, ignoring the result is perfectly\nlegitimate, but for some it is almost certainly an error. Examples of methods where ignoring\nthe result is likely an error include `java.io.inputStream.read()`,\nwhich returns the number of bytes actually read, and any method on\n`java.lang.String` or `java.math.BigInteger`. These methods do not produce side-effects and thus pointless\nif their result is ignored.\n\nThe calls to the following methods are inspected:\n\n* Simple getters (which do nothing except return a field)\n* Methods specified in the settings of this inspection\n* Methods annotated with `org.jetbrains.annotations.Contract(pure=true)`\n* Methods annotated with .\\*.`CheckReturnValue`\n* Methods in a class or package annotated with `javax.annotation.CheckReturnValue`\n* Optionally, all non-library methods\n\nCalls to methods annotated with Error Prone's or AssertJ's `@CanIgnoreReturnValue` annotation are not reported.\n\n\nUse the inspection settings to specify the classes to check.\nMethods are matched by name or name pattern using Java regular expression syntax.\nFor classes, use fully-qualified names. Each entry applies to both the class and all its inheritors."
+                },
+                "defaultConfiguration": {
+                  "enabled": true,
+                  "level": "warning",
+                  "parameters": {
+                    "suppressToolId": "ResultOfMethodCallIgnored",
+                    "cweIds": [
+                      252.0,
+                      563.0
+                    ],
+                    "ideaSeverity": "WARNING",
+                    "qodanaSeverity": "High"
+                  }
+                },
+                "relationships": [
+                  {
+                    "target": {
+                      "id": "Java/Probable bugs",
+                      "index": 14,
+                      "toolComponent": {
+                        "name": "QDJVM"
+                      }
+                    },
+                    "kinds": [
+                      "superset"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en-US",
+            "contents": [
+              "localizedData",
+              "nonLocalizedData"
+            ],
+            "isComprehensive": false
+          }
+        ]
+      },
+      "invocations": [
+        {
+          "exitCode": 0,
+          "executionSuccessful": true
+        }
+      ],
+      "language": "en-US",
+      "results": [
+        {
+          "ruleId": "IgnoreResultOfCall",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "Result of 'A.unusedResult()' is ignored",
+            "markdown": "Result of `A.unusedResult()` is ignored"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "test-module/A.java",
+                  "uriBaseId": "SRCROOT"
+                },
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 5,
+                  "charOffset": 143,
+                  "charLength": 12,
+                  "snippet": {
+                    "text": "unusedResult"
+                  },
+                  "sourceLanguage": "JAVA"
+                },
+                "contextRegion": {
+                  "startLine": 5,
+                  "startColumn": 1,
+                  "charOffset": 96,
+                  "charLength": 86,
+                  "snippet": {
+                    "text": "      System.out.println(\"Another\");\n    }\n    unusedResult();\n    unusedResult();\n  }"
+                  }
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "testBaseline_ SARIF only",
+                  "kind": "module"
+                }
+              ]
+            }
+          ],
+          "partialFingerprints": {
+            "equalIndicator/v1": "16fa6aa4d9855b018a1bc04f35baf801a7a60108d14a0dba053f77ae1d55f621"
+          },
+          "properties": {
+            "ideaSeverity": "WARNING",
+            "qodanaSeverity": "High"
+          }
+        },
+        {
+          "ruleId": "IgnoreResultOfCall",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "Result of 'A.unusedResult()' is ignored",
+            "markdown": "Result of `A.unusedResult()` is ignored"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "test-module/A.java",
+                  "uriBaseId": "SRCROOT"
+                },
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 5,
+                  "charOffset": 163,
+                  "charLength": 12,
+                  "snippet": {
+                    "text": "unusedResult"
+                  },
+                  "sourceLanguage": "JAVA"
+                },
+                "contextRegion": {
+                  "startLine": 6,
+                  "startColumn": 1,
+                  "charOffset": 133,
+                  "charLength": 50,
+                  "snippet": {
+                    "text": "    }\n    unusedResult();\n    unusedResult();\n  }\n"
+                  }
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "testBaseline_ SARIF only",
+                  "kind": "module"
+                }
+              ]
+            }
+          ],
+          "partialFingerprints": {
+            "equalIndicator/v1": "9ac736b5dae7725e30bdcce141bc6b126bb32f7c9ea9af7678910adc32180a55"
+          },
+          "properties": {
+            "ideaSeverity": "WARNING",
+            "qodanaSeverity": "High"
+          }
+        }
+      ],
+      "newlineSequences": [
+        "\r\n",
+        "\n"
+      ]
+    }
+  ]
+}

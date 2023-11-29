@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.jetbrains.qodana.sarif.baseline.BaselineCalculation.Options.DEFAULT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -180,16 +179,7 @@ public class BaselineTest {
 
         doTest(report, baseline, 17, 1, 1, new BaselineCalculation.Options(true));
 
-        Set<String> knownDescriptorIds = report.getRuns().stream()
-                .map(Run::getTool)
-                .flatMap(tool -> {
-                    Stream<ReportingDescriptor> driverRules = tool.getDriver().getRules().stream();
-                    Stream<ReportingDescriptor> extRules = tool.getExtensions().stream()
-                            .map(ToolComponent::getRules)
-                            .flatMap(Collection::stream);
-
-                    return Stream.concat(driverRules, extRules);
-                })
+        Set<String> knownDescriptorIds = RuleUtil.allRules(report)
                 .map(ReportingDescriptor::getId)
                 .collect(Collectors.toSet());
 
@@ -210,16 +200,7 @@ public class BaselineTest {
 
         doTest(report, baseline, 17, 1, 1, new BaselineCalculation.Options(true));
 
-        Set<String> knownDescriptorIds = report.getRuns().stream()
-                .map(Run::getTool)
-                .flatMap(tool -> {
-                    Stream<ReportingDescriptor> driverRules = tool.getDriver().getRules().stream();
-                    Stream<ReportingDescriptor> extRules = tool.getExtensions().stream()
-                            .map(ToolComponent::getRules)
-                            .flatMap(Collection::stream);
-
-                    return Stream.concat(driverRules, extRules);
-                })
+        Set<String> knownDescriptorIds = RuleUtil.allRules(report)
                 .map(ReportingDescriptor::getId)
                 .collect(Collectors.toSet());
 
