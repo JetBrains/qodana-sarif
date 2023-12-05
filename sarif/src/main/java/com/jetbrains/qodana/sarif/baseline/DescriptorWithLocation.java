@@ -51,13 +51,11 @@ final class DescriptorWithLocation {
             getOrCreate(e::getRules, e::setRules, ArrayList::new)
                     .add(descriptor);
         } else {
-            // Collections.singletonList() is immutable
-            //noinspection ArraysAsListWithZeroOrOneArgument
             getOrCreate(tool::getExtensions, tool::setExtensions, HashSet::new)
                     // we don't want to copy all rules from the source AND not override them
                     .add(location.shallowCopy()
                             .withIsComprehensive(false)
-                            .withRules(Arrays.asList(descriptor))
+                            .withRules(new ArrayList<>(Collections.singletonList(descriptor)))
                     );
         }
 

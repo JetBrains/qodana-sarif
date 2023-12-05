@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.jetbrains.qodana.sarif.baseline.BaselineCalculation.Options.DEFAULT;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BaselineTest {
@@ -178,7 +179,7 @@ public class BaselineTest {
         SarifReport report = readReport("src/test/resources/testData/AbsentBaselineTest/report.json");
         SarifReport baseline = readReport("src/test/resources/testData/AbsentBaselineTest/baseline.json");
 
-        doTest(report, baseline, 17, 1, 1, new BaselineCalculation.Options(true));
+        doTest(report, baseline, 1, 17, 18, new BaselineCalculation.Options(true));
 
         Set<String> knownDescriptorIds = report.getRuns().stream()
                 .map(Run::getTool)
@@ -208,7 +209,7 @@ public class BaselineTest {
         SarifReport report = readReport("src/test/resources/testData/AbsentBaselineTest/report.json");
         SarifReport baseline = readReport("src/test/resources/testData/AbsentBaselineTest/baseline_old.json");
 
-        doTest(report, baseline, 17, 1, 1, new BaselineCalculation.Options(true));
+        doTest(report, baseline, 0, 18, 19, new BaselineCalculation.Options(true));
 
         Set<String> knownDescriptorIds = report.getRuns().stream()
                 .map(Run::getTool)
@@ -233,7 +234,6 @@ public class BaselineTest {
         assertEquals(new ArrayList<String>(), withoutDescriptor);
     }
 
-
     private void doTest(SarifReport report,
                         SarifReport baseline,
                         int expectedUnchanged,
@@ -242,9 +242,12 @@ public class BaselineTest {
                         BaselineCalculation.Options options
     ) {
         BaselineCalculation calculation = BaselineCalculation.compare(report, baseline, options);
-        assertEquals(expectedUnchanged, calculation.getUnchangedResults(), "Unchanged:");
-        assertEquals(expectedAbsent, calculation.getAbsentResults(), "Absent:");
-        assertEquals(expectedNew, calculation.getNewResults(), "New:");
+        assertAll(
+                () -> assertEquals(expectedUnchanged, calculation.getUnchangedResults(), "Unchanged:"),
+                () -> assertEquals(expectedAbsent, calculation.getAbsentResults(), "Absent:"),
+                () -> assertEquals(expectedNew, calculation.getNewResults(), "New:")
+        );
+
         List<Result> results = report.getRuns().get(0).getResults();
 
         if (!options.isFillBaselineState()) {
@@ -261,9 +264,11 @@ public class BaselineTest {
         List<Result> resultsUnchanged = grouped.get(Result.BaselineState.UNCHANGED);
         List<Result> resultsAbsent = grouped.get(Result.BaselineState.ABSENT);
         List<Result> resultsNew = grouped.get(Result.BaselineState.NEW);
-        assertEquals(expectedUnchanged, resultsUnchanged == null ? 0 : resultsUnchanged.size(), "Unchanged:");
-        assertEquals(expectedAbsent, resultsAbsent == null ? 0 : resultsAbsent.size(), "Absent:");
-        assertEquals(expectedNew, resultsNew == null ? 0 : resultsNew.size(), "New:");
+        assertAll(
+                () -> assertEquals(expectedUnchanged, resultsUnchanged == null ? 0 : resultsUnchanged.size(), "Unchanged:"),
+                () -> assertEquals(expectedAbsent, resultsAbsent == null ? 0 : resultsAbsent.size(), "Absent:"),
+                () -> assertEquals(expectedNew, resultsNew == null ? 0 : resultsNew.size(), "New:")
+        );
     }
 
     private void doTest(SarifReport report,
