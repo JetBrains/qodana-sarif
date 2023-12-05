@@ -1,0 +1,13 @@
+# Due to technical limitations kotlin and JUnit versions are managed via the conventions plugin
+[versions]
+dokka = "1.9.10"
+shadow = "8.1.1"
+gson = "2.8.9"
+
+[plugins]
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+
+[libraries]
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+dokkaBase = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokka" }
