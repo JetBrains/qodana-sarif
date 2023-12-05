@@ -1,6 +1,50 @@
+import org.jetbrains.dokka.base.DokkaBase
+import org.jetbrains.dokka.base.DokkaBaseConfiguration
+import org.jetbrains.dokka.gradle.DokkaTaskPartial
+import java.net.URL
+
+plugins {
+    id("qodana-sarif.common-conventions")
+    alias(libs.plugins.dokka)
+}
+
+buildscript {
+    dependencies {
+        classpath(libs.dokkaBase)
+    }
+}
+
 dependencies {
-    implementation("com.google.code.gson:gson:2.8.9")
-    testImplementation("junit:junit:4.13.1")
+    implementation(libs.gson)
+}
+
+tasks {
+    withType<DokkaTaskPartial> {
+        dokkaSourceSets.configureEach {
+            moduleName.set(project.name)
+            sourceRoots.from(file("src"))
+            includes.from("README.md")
+            sourceLink {
+                localDirectory.set(projectDir.resolve("src"))
+                remoteUrl.set(URL("https://github.com/JetBrains/qodana-sarif/tree/main/sarif/src"))
+                remoteLineSuffix.set("#L")
+            }
+            sourceSets {
+                skipEmptyPackages.set(true)
+            }
+            pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
+                footerMessage = "(c) 2023 JetBrains s.r.o."
+            }
+        }
+    }
+
+    withType<AbstractPublishToMaven> {
+        dependsOn(test)
+    }
+
+    test {
+        finalizedBy(jacocoTestReport)
+    }
 }
 
 publishing {
@@ -39,43 +83,6 @@ publishing {
                 password = deployPassword
             }
         }
-        maven {
-            name = "Space"
-            val spaceUsername: String by project
-            val spacePassword: String by project
-            val spaceArtifactoryUrl: String by project
-
-            url = uri(spaceArtifactoryUrl)
-            credentials {
-
-                username = spaceUsername
-                password = spacePassword
-            }
-        }
-
+        space(project)
     }
-}
-
-tasks.test {
-    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
-}
-
-tasks.jacocoTestReport {
-    dependsOn(tasks.test) // tests are required to run before generating the report
-}
-
-tasks.named("publishAllPublicationsToIntellij-dependenciesRepository") {
-    dependsOn(tasks.test)
-}
-
-tasks.named("publishAllPublicationsToSpaceRepository") {
-    dependsOn(tasks.test)
-}
-
-tasks.named("publishSarifPublicationToIntellij-dependenciesRepository") {
-    dependsOn(tasks.test)
-}
-
-tasks.named("publishSarifPublicationToSpaceRepository") {
-    dependsOn(tasks.test)
 }
