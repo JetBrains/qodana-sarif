@@ -2,22 +2,15 @@ package com.jetbrains.qodana.sarif;
 
 import com.jetbrains.qodana.sarif.model.Run;
 import com.jetbrains.qodana.sarif.model.SarifReport;
-import org.junit.Assert;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 abstract public class StreamParseTest {
     protected static String sanityPath = "src/test/resources/testData/readWriteTest/qodanaReportWithSanity.json";
@@ -66,7 +59,7 @@ abstract public class StreamParseTest {
         Iterator<Run> actualRuns = actual.getSarifReport().getRuns().iterator();
         int currentIndex = 0;
         while (expectedRuns.hasNext()) {
-            Assert.assertTrue(actualRuns.hasNext());
+            assertTrue(actualRuns.hasNext());
             try (Reader reader = actual.getMakeReader().get()) {
                 assertEqualRunContents.accept(
                     expectedRuns.next(),
@@ -76,8 +69,8 @@ abstract public class StreamParseTest {
             }
             currentIndex++;
         }
-        Assert.assertEquals(expected.withRuns(null), actual.getSarifReport().withRuns(null));
-        Assert.assertFalse(actualRuns.hasNext());
+        assertEquals(expected.withRuns(null), actual.getSarifReport().withRuns(null));
+        assertFalse(actualRuns.hasNext());
     }
 
     protected SarifReport read(String path, boolean streaming) throws IOException {

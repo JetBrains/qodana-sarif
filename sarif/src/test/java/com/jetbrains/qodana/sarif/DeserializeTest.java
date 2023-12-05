@@ -1,18 +1,21 @@
 package com.jetbrains.qodana.sarif;
 
 import com.jetbrains.qodana.sarif.model.*;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 public class DeserializeTest {
     @Test
@@ -26,9 +29,12 @@ public class DeserializeTest {
         doTest(target, report);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testPropertyBagThrows() throws IOException {
-        new PropertyBag().put("tags", Arrays.asList("1", "2", "3"));
+    @Test
+    public void testPropertyBagThrows() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new PropertyBag().put("tags", Arrays.asList("1", "2", "3"))
+        );
     }
 
     @Test
@@ -49,8 +55,8 @@ public class DeserializeTest {
         List<Result> promo = SarifUtil.readResultsFromObject(properties.get("qodana.promo.results"));
         List<Result> sanity = SarifUtil.readResultsFromObject(properties.get("qodana.sanity.results"));
 
-        Assert.assertEquals(7, promo.size());
-        Assert.assertEquals(2, sanity.size());
+        assertEquals(7, promo.size());
+        assertEquals(2, sanity.size());
     }
 
     @Test
@@ -59,16 +65,16 @@ public class DeserializeTest {
         List<Invocation> invocations = SarifUtil.readReport(target).getRuns().get(0).getInvocations();
 
         OffsetDateTime expect = LocalDate.of(2016, 2, 8).atStartOfDay().atOffset(ZoneOffset.UTC);
-        Assert.assertEquals(expect.toInstant(), invocations.get(0).getStartTimeUtc());
+        assertEquals(expect.toInstant(), invocations.get(0).getStartTimeUtc());
 
         expect = expect.plusHours(16).plusMinutes(8);
-        Assert.assertEquals(expect.toInstant(), invocations.get(0).getEndTimeUtc());
+        assertEquals(expect.toInstant(), invocations.get(0).getEndTimeUtc());
 
         expect = expect.plusSeconds(25);
-        Assert.assertEquals(expect.toInstant(), invocations.get(1).getStartTimeUtc());
+        assertEquals(expect.toInstant(), invocations.get(1).getStartTimeUtc());
 
         expect = expect.plus(943, ChronoUnit.MILLIS);
-        Assert.assertEquals(expect.toInstant(), invocations.get(1).getEndTimeUtc());
+        assertEquals(expect.toInstant(), invocations.get(1).getEndTimeUtc());
     }
 
 

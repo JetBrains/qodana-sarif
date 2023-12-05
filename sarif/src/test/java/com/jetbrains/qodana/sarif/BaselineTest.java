@@ -2,7 +2,7 @@ package com.jetbrains.qodana.sarif;
 
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation;
 import com.jetbrains.qodana.sarif.model.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.jetbrains.qodana.sarif.baseline.BaselineCalculation.Options.DEFAULT;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BaselineTest {
 
@@ -120,7 +120,7 @@ public class BaselineTest {
         SarifReport report = readReport();
         SarifReport baseline = readReport();
         Result newResult = new Result(new Message().withText("new result"));
-        report.getRuns().get(0).setResults(new ArrayList<>(List.of(newResult)));
+        report.getRuns().get(0).setResults(TestUtils.mutableList(newResult));
 
         BaselineCalculation.Options options = new BaselineCalculation.Options(true, true, true,
                 (result -> result == newResult));
@@ -134,7 +134,7 @@ public class BaselineTest {
         SarifReport report = readReport();
         SarifReport baseline = readReport();
         Result newResult = new Result(new Message().withText("new result"));
-        baseline.getRuns().get(0).setResults(new ArrayList<>(List.of(newResult)));
+        baseline.getRuns().get(0).setResults(TestUtils.mutableList(newResult));
 
         BaselineCalculation.Options options = new BaselineCalculation.Options(true, true, true,
                 (result -> result == newResult));
@@ -150,8 +150,8 @@ public class BaselineTest {
         Result result2 = new Result(new Message().withText("new result2"));
         Result result3 = new Result(new Message().withText("new result3"));
         Result result4 = new Result(new Message().withText("new result4"));
-        baseline.getRuns().get(0).setResults(new ArrayList<>(List.of(result1, result2, result4)));
-        report.getRuns().get(0).setResults(new ArrayList<>(List.of(result2, result3)));
+        baseline.getRuns().get(0).setResults(TestUtils.mutableList(result1, result2, result4));
+        report.getRuns().get(0).setResults(TestUtils.mutableList(result2, result3));
 
         BaselineCalculation.Options options = new BaselineCalculation.Options(true, true, true,
                 (result -> result == result1 || result == result2 || result == result3));
@@ -188,7 +188,7 @@ public class BaselineTest {
                             .map(ToolComponent::getRules)
                             .flatMap(Collection::stream);
 
-                   return Stream.concat(driverRules, extRules);
+                    return Stream.concat(driverRules, extRules);
                 })
                 .map(ReportingDescriptor::getId)
                 .collect(Collectors.toSet());
@@ -242,9 +242,9 @@ public class BaselineTest {
                         BaselineCalculation.Options options
     ) {
         BaselineCalculation calculation = BaselineCalculation.compare(report, baseline, options);
-        assertEquals("Unchanged:", expectedUnchanged, calculation.getUnchangedResults());
-        assertEquals("Absent:", expectedAbsent, calculation.getAbsentResults());
-        assertEquals("New:", expectedNew, calculation.getNewResults());
+        assertEquals(expectedUnchanged, calculation.getUnchangedResults(), "Unchanged:");
+        assertEquals(expectedAbsent, calculation.getAbsentResults(), "Absent:");
+        assertEquals(expectedNew, calculation.getNewResults(), "New:");
         List<Result> results = report.getRuns().get(0).getResults();
 
         if (!options.isFillBaselineState()) {
@@ -261,9 +261,9 @@ public class BaselineTest {
         List<Result> resultsUnchanged = grouped.get(Result.BaselineState.UNCHANGED);
         List<Result> resultsAbsent = grouped.get(Result.BaselineState.ABSENT);
         List<Result> resultsNew = grouped.get(Result.BaselineState.NEW);
-        assertEquals("Unchanged:", expectedUnchanged, resultsUnchanged == null ? 0 : resultsUnchanged.size());
-        assertEquals("Absent:", expectedAbsent, resultsAbsent == null ? 0 : resultsAbsent.size());
-        assertEquals("New:", expectedNew, resultsNew == null ? 0 : resultsNew.size());
+        assertEquals(expectedUnchanged, resultsUnchanged == null ? 0 : resultsUnchanged.size(), "Unchanged:");
+        assertEquals(expectedAbsent, resultsAbsent == null ? 0 : resultsAbsent.size(), "Absent:");
+        assertEquals(expectedNew, resultsNew == null ? 0 : resultsNew.size(), "New:");
     }
 
     private void doTest(SarifReport report,
