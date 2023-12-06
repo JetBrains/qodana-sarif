@@ -1,9 +1,11 @@
 package com.jetbrains.qodana.sarif.baseline;
 
 import com.jetbrains.qodana.sarif.model.*;
+import kotlin.Pair;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.StreamSupport;
 
 import static com.jetbrains.qodana.sarif.model.Result.BaselineState.*;
 
@@ -153,10 +155,10 @@ public class BaselineCalculation {
     }
 
     private class RunResultGroup {
-        private final Map<String, List<Result>> baselineHashes = new HashMap<>();
-        private final Map<String, List<Result>> reportHashes = new HashMap<>();
-        private final Map<ResultKey, List<Result>> diffBaseline = new HashMap<>();
-        private final Map<ResultKey, List<Result>> diffReport = new HashMap<>();
+        private final MultiMap<String, Result> baselineHashes;
+        private final MultiMap<String, Result> reportHashes;
+        private final MultiMap<ResultKey, Result> diffBaseline;
+        private final MultiMap<ResultKey, Result> diffReport;
         private final Run report;
         private final DescriptorLookup reportLookup;
         private final DescriptorLookup baselineLookup;
@@ -165,54 +167,38 @@ public class BaselineCalculation {
             this.report = report;
             this.reportLookup = new DescriptorLookup(report);
             this.baselineLookup = new DescriptorLookup(baseline);
-            buildMap(baseline, baselineHashes, diffBaseline);
+
             removeProblemsWithState(report, ABSENT);
-            buildMap(report, reportHashes, diffReport);
+            Pair<MultiMap<String, Result>, MultiMap<ResultKey, Result>> reportIndices =
+                    BaselineKt.createIndices(report, m -> Collections.singletonList(m.getLastValue(EQUAL_INDICATOR)));
+
+            Pair<MultiMap<String, Result>, MultiMap<ResultKey, Result>> baselineIndices =
+                    BaselineKt.createIndices(baseline, m -> Collections.singletonList(m.getLastValue(EQUAL_INDICATOR)));
+            this.reportHashes = reportIndices.getFirst();
+            this.diffReport = reportIndices.getSecond();
+            this.baselineHashes = baselineIndices.getFirst();
+            this.diffBaseline = baselineIndices.getSecond();
         }
 
         private void removeProblemsWithState(Run report, Result.BaselineState state) {
             report.getResults().removeIf(result -> result.getBaselineState() == state);
         }
 
-        private void buildMap(Run run, Map<String, List<Result>> map, Map<ResultKey, List<Result>> diffSet) {
-            for (Result result : run.getResults()) {
-                if (result.getBaselineState() == ABSENT) continue;
-                VersionedMap<String> fingerprints = result.getPartialFingerprints();
-                String equalIndicator = fingerprints != null ? fingerprints.getLastValue(EQUAL_INDICATOR) : null;
-                if (equalIndicator != null) {
-                    List<Result> resultBucket = map.compute(
-                            equalIndicator,
-                            (key, value) -> value != null ? value : new ArrayList<>());
-                    resultBucket.add(result);
-                } else {
-                    addToDiff(result, diffSet);
-                }
-            }
-        }
-
-        public void addToDiff(Result result, Map<ResultKey, List<Result>> diffSet) {
-            List<Result> resultBucket = diffSet.compute(
-                    new ResultKey(result),
-                    (key, value) -> value != null ? value : new ArrayList<>()
-            );
-            resultBucket.add(result);
-        }
-
         public void build() {
-            reportHashes.forEach((hash, results) -> {
-                if (baselineHashes.containsKey(hash)) {
-                    results.forEach((it) -> setBaselineState(it, UNCHANGED));
-                    unchangedResults += results.size();
+            reportHashes.forEach(e -> {
+                if (baselineHashes.containsKey(e.getKey())) {
+                    e.getValue().forEach((it) -> setBaselineState(it, UNCHANGED));
+                    unchangedResults += e.getValue().size();
                 } else {
-                    results.forEach((it) -> addToDiff(it, diffReport));
+                    e.getValue().forEach((it) -> diffReport.add(new ResultKey(it), it));
                 }
             });
 
-            baselineHashes.forEach((hash, results) -> {
-                if (!reportHashes.containsKey(hash)) {
-                    for (Result result : results) {
+            baselineHashes.forEach(e -> {
+                if (!reportHashes.containsKey(e.getKey())) {
+                    for (Result result : e.getValue()) {
                         if (options.wasChecked.apply(result)) {
-                            addToDiff(result, diffBaseline);
+                            diffBaseline.add(new ResultKey(result), result);
                         } else {
                             result.setBaselineState(UNCHANGED);
                             report.getResults().add(result);
@@ -222,9 +208,9 @@ public class BaselineCalculation {
                 }
             });
 
-            diffReport.forEach((key, reportDiffBucket) -> {
-                List<Result> baselineDiffBucket = diffBaseline.getOrDefault(key, Collections.emptyList());
-                for (Result result : reportDiffBucket) {
+            diffReport.forEach(e -> {
+                List<Result> baselineDiffBucket = diffBaseline.getOrEmpty(e.getKey());
+                for (Result result : e.getValue()) {
                     if (baselineDiffBucket.isEmpty()) {
                         setBaselineState(result, NEW);
                         newResults++;
@@ -236,23 +222,25 @@ public class BaselineCalculation {
                 }
             });
 
-            diffBaseline.entrySet().stream().flatMap((it) -> it.getValue().stream()).forEach(result -> {
-                if (options.wasChecked.apply(result)) {
-                    if (options.includeAbsent) {
-                        setBaselineState(result, ABSENT);
-                        absentResults++;
-                        report.getResults().add(result);
-                        if (reportLookup.findById(result.getRuleId()) == null) {
-                            DescriptorWithLocation descriptor = baselineLookup.findById(result.getRuleId());
-                            if (descriptor != null) descriptor.addTo(report);
+            StreamSupport.stream(diffBaseline.spliterator(), false)
+                    .flatMap((it) -> it.getValue().stream())
+                    .forEach(result -> {
+                        if (options.wasChecked.apply(result)) {
+                            if (options.includeAbsent) {
+                                setBaselineState(result, ABSENT);
+                                absentResults++;
+                                report.getResults().add(result);
+                                if (reportLookup.findById(result.getRuleId()) == null) {
+                                    DescriptorWithLocation descriptor = baselineLookup.findById(result.getRuleId());
+                                    if (descriptor != null) descriptor.addTo(report);
+                                }
+                            }
+                        } else {
+                            result.setBaselineState(UNCHANGED);
+                            report.getResults().add(result);
+                            unchangedResults += 1;
                         }
-                    }
-                } else {
-                    result.setBaselineState(UNCHANGED);
-                    report.getResults().add(result);
-                    unchangedResults += 1;
-                }
-            });
+                    });
 
             if (!options.includeUnchanged) {
                 removeProblemsWithState(report, UNCHANGED);
