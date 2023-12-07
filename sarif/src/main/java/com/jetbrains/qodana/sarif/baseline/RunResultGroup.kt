@@ -55,21 +55,33 @@ internal class RunResultGroup(
     }
 
     fun build() {
+        // STEP 1
         reportHashes.forEach { (fingerprint, results) ->
             if (baselineHashes.containsKey(fingerprint)) {
+                // UNCHANGED and already in report
                 results.forEach { it.baselineState = BaselineState.UNCHANGED }
                 baselineCalculation.unchangedResults += results.size
             } else {
+                /*
+                results in the report, but their hash is not in baseline
+                either baseline doesn't have hashes OR it just doesn't have this hash
+                */
                 results.forEach { diffReport.add(ResultKey(it), it) }
             }
         }
 
+        // STEP 2
         baselineHashes.forEach { (fingerprint, results) ->
             if (!reportHashes.containsKey(fingerprint)) {
                 for (result in results) {
                     if (baselineCalculation.options.wasChecked.apply(result)) {
+                        /*
+                        results which have hashes in baseline, were checked, but their hash is NOT in report
+                        either fixed OR report was generated with an older version than baseline
+                        */
                         diffBaseline.add(ResultKey(result), result)
                     } else {
+                        // not checked -> UNCHANGED and has to be added to report if include unchanged
                         result.baselineState = BaselineState.UNCHANGED
                         report.results.add(result)
                         baselineCalculation.unchangedResults += 1
@@ -78,8 +90,20 @@ internal class RunResultGroup(
             }
         }
 
+
+        /*
+        STEP 3
+        results either without print, or their print is not in baseline
+        compare by lossy "key" comparison
+        */
         diffReport.forEach { (key, results) ->
             val baselineDiffBucket = diffBaseline.getOrEmpty(key)
+            /*
+            essentially compares sizes:
+            inBaseline == inReport -> all UNCHANGED, done
+            inBaseline > inReport -> inReport UNCHANGED, leftover for step below
+            inBaseline < inReport -> inBaseline UNCHANGED, leftover NEW, done
+            */
             for (result in results) {
                 if (baselineDiffBucket.isEmpty()) {
                     result.baselineState = BaselineState.NEW
@@ -92,9 +116,15 @@ internal class RunResultGroup(
             }
         }
 
+        /*
+        STEP 4
+        Remaining results:
+        (from baseline, no hash) + (from baseline, has hash, hash not in report) - (lossy comparison result)
+        */
         diffBaseline.asSequence()
             .flatMap { (_, v) -> v }
             .forEach { result ->
+                // if checked -> for sure absent
                 if (baselineCalculation.options.wasChecked.apply(result)) {
                     if (baselineCalculation.options.includeAbsent) {
                         result.baselineState = BaselineState.ABSENT
@@ -106,6 +136,7 @@ internal class RunResultGroup(
                         }
                     }
                 } else {
+                    // not checked, for sure unchanged
                     result.baselineState = BaselineState.UNCHANGED
                     report.results.add(result)
                     baselineCalculation.unchangedResults += 1
