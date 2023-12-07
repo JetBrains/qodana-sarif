@@ -6,38 +6,23 @@ import com.jetbrains.qodana.sarif.model.Run
 import com.jetbrains.qodana.sarif.model.VersionedMap
 
 private typealias Fingerprint = String
-private typealias FingerprintIndex = MultiMap<Fingerprint, Result>
-private typealias KeyIndex = MultiMap<ResultKey, Result>
+private typealias StrictIndex = MultiMap<Fingerprint, Result>
+private typealias LaxIndex = MultiMap<ResultKey, Result>
 
 internal class RunResultGroup(
     private val baselineCalculation: BaselineCalculation,
     private val report: Run,
-    baseline: Run
+    private val baseline: Run
 ) {
-    private val baselineHashes: FingerprintIndex
-    private val reportHashes: FingerprintIndex
-    private val diffBaseline: KeyIndex
-    private val diffReport: KeyIndex
     private val reportLookup = DescriptorLookup(report)
     private val baselineLookup = DescriptorLookup(baseline)
 
-
-    init {
-        removeProblemsWithState(report, BaselineState.ABSENT)
-        val (rHash, rDiff) = createIndices(report) { listOf(it.getLastValue(BaselineCalculation.EQUAL_INDICATOR)) }
-        val (bHash, bDiff) = createIndices(baseline) { listOf(it.getLastValue(BaselineCalculation.EQUAL_INDICATOR)) }
-        reportHashes = rHash
-        diffReport = rDiff
-        baselineHashes = bHash
-        diffBaseline = bDiff
-    }
-
     private fun createIndices(
         run: Run,
-        selectPrints: (VersionedMap<String>) -> List<Fingerprint?>
-    ): Pair<FingerprintIndex, KeyIndex> {
-        val printIndex = FingerprintIndex()
-        val keyIndex = KeyIndex()
+        selectPrints: (VersionedMap<String>) -> Collection<Fingerprint?>
+    ): Pair<StrictIndex, LaxIndex> {
+        val printIndex = StrictIndex()
+        val keyIndex = LaxIndex()
         run.results.noNulls()
             .filterNot { it.baselineState == BaselineState.ABSENT }
             .forEach { result ->
@@ -49,110 +34,91 @@ internal class RunResultGroup(
         return printIndex to keyIndex
     }
 
+    private fun Iterable<Result>.withBaselineState(state: BaselineState) =
+        if (baselineCalculation.options.fillBaselineState) onEach { it.baselineState = state } else this
 
-    private fun removeProblemsWithState(report: Run, state: BaselineState) {
-        report.results.removeIf { result: Result -> result.baselineState == state }
-    }
+    private fun wasChecked(result: Result) = baselineCalculation.options.wasChecked.apply(result)
+
+    private inline fun <T> MutableIterable<T>.each(crossinline f: MutableIterator<T>.(T) -> Unit) =
+        with(iterator()) { forEachRemaining { f(it) } }
 
     fun build() {
-        // STEP 1
-        reportHashes.forEach { (fingerprint, results) ->
-            if (baselineHashes.containsKey(fingerprint)) {
-                // UNCHANGED and already in report
-                results.forEach { it.baselineState = BaselineState.UNCHANGED }
-                baselineCalculation.unchangedResults += results.size
+        // shallow copies, to not mess with the underlying reports
+        val undecidedFromReport = report.results.noNulls()
+            .filterNotTo(mutableSetOf()) { it.baselineState == BaselineState.ABSENT }
+        val undecidedFromBaseline = baseline.results.noNulls()
+            .filterNotTo(mutableSetOf()) { it.baselineState == BaselineState.ABSENT }
+
+        val (strictReportIndex, lossyReportIndex) = createIndices(report) {
+            it.getValues(BaselineCalculation.EQUAL_INDICATOR).values
+        }
+        val (strictBaselineIndex, lossyBaselineIndex) = createIndices(baseline) {
+            listOf(it.getLastValue(BaselineCalculation.EQUAL_INDICATOR))
+        }
+
+        val unchanged = mutableSetOf<Result>()
+        val notChecked = mutableSetOf<Result>()
+        val added = mutableSetOf<Result>()
+        val absent = mutableSetOf<Result>()
+
+        undecidedFromBaseline.each { result ->
+            val foundInReport = result.fingerprints?.getValues(BaselineCalculation.EQUAL_INDICATOR)
+                .orEmpty()
+                .asSequence()
+                .flatMap { (_, print) -> strictReportIndex.getOrEmpty(print) }
+                .onEach(undecidedFromReport::remove)
+                .onEach(unchanged::add)
+                .count() != 0
+
+            when {
+                foundInReport -> remove()
+                !wasChecked(result) -> {
+                    notChecked.add(result)
+                    remove()
+                }
+            }
+        }
+
+        undecidedFromReport.each { result ->
+            val inBaseline = lossyBaselineIndex.getOrEmpty(ResultKey(result))
+            if (inBaseline.isEmpty()) {
+                added.add(result)
             } else {
-                /*
-                results in the report, but their hash is not in baseline
-                either baseline doesn't have hashes OR it just doesn't have this hash
-                */
-                results.forEach { diffReport.add(ResultKey(it), it) }
+                unchanged.add(result)
+                undecidedFromBaseline.remove(inBaseline.removeFirst())
             }
         }
 
-        // STEP 2
-        baselineHashes.forEach { (fingerprint, results) ->
-            if (!reportHashes.containsKey(fingerprint)) {
-                for (result in results) {
-                    if (baselineCalculation.options.wasChecked.apply(result)) {
-                        /*
-                        results which have hashes in baseline, were checked, but their hash is NOT in report
-                        either fixed OR report was generated with an older version than baseline
-                        */
-                        diffBaseline.add(ResultKey(result), result)
-                    } else {
-                        // not checked -> UNCHANGED and has to be added to report if include unchanged
-                        result.baselineState = BaselineState.UNCHANGED
-                        report.results.add(result)
-                        baselineCalculation.unchangedResults += 1
-                    }
-                }
+        undecidedFromBaseline.each { result ->
+            if (wasChecked(result)) {
+                absent.add(result)
+            } else {
+                unchanged.add(result)
             }
         }
 
+        if (baselineCalculation.options.includeAbsent) {
+            absent.asSequence()
+                .filter { reportLookup.findById(it.ruleId) == null }
+                .mapNotNull { baselineLookup.findById(it.ruleId) }
+                .forEach { it.addTo(report) }
+        }
 
-        /*
-        STEP 3
-        results either without print, or their print is not in baseline
-        compare by lossy "key" comparison
-        */
-        diffReport.forEach { (key, results) ->
-            val baselineDiffBucket = diffBaseline.getOrEmpty(key)
-            /*
-            essentially compares sizes:
-            inBaseline == inReport -> all UNCHANGED, done
-            inBaseline > inReport -> inReport UNCHANGED, leftover for step below
-            inBaseline < inReport -> inBaseline UNCHANGED, leftover NEW, done
-            */
-            for (result in results) {
-                if (baselineDiffBucket.isEmpty()) {
-                    result.baselineState = BaselineState.NEW
-                    baselineCalculation.newResults++
-                } else {
-                    result.baselineState = BaselineState.UNCHANGED
-                    baselineDiffBucket.removeAt(baselineDiffBucket.size - 1)
-                    baselineCalculation.unchangedResults++
-                }
+        val theDiff = mutableListOf<Result>().apply {
+            addAll(added.withBaselineState(BaselineState.NEW))
+            baselineCalculation.newResults += added.size
+            if (baselineCalculation.options.includeUnchanged) {
+                addAll(unchanged.withBaselineState(BaselineState.UNCHANGED))
+                addAll(notChecked.withBaselineState(BaselineState.UNCHANGED))
+                baselineCalculation.unchangedResults += unchanged.size + notChecked.size
+            }
+            if (baselineCalculation.options.includeAbsent) {
+                addAll(absent.withBaselineState(BaselineState.ABSENT))
+                baselineCalculation.absentResults += absent.size
             }
         }
 
-        /*
-        STEP 4
-        Remaining results:
-        (from baseline, no hash) + (from baseline, has hash, hash not in report) - (lossy comparison result)
-        */
-        diffBaseline.asSequence()
-            .flatMap { (_, v) -> v }
-            .forEach { result ->
-                // if checked -> for sure absent
-                if (baselineCalculation.options.wasChecked.apply(result)) {
-                    if (baselineCalculation.options.includeAbsent) {
-                        result.baselineState = BaselineState.ABSENT
-                        baselineCalculation.absentResults++
-                        report.results.add(result)
-                        if (reportLookup.findById(result.ruleId) == null) {
-                            val descriptor = baselineLookup.findById(result.ruleId)
-                            descriptor?.addTo(report)
-                        }
-                    }
-                } else {
-                    // not checked, for sure unchanged
-                    result.baselineState = BaselineState.UNCHANGED
-                    report.results.add(result)
-                    baselineCalculation.unchangedResults += 1
-                }
-            }
-
-        if (!baselineCalculation.options.includeUnchanged) {
-            removeProblemsWithState(report, BaselineState.UNCHANGED)
-            baselineCalculation.unchangedResults = 0
-        }
-
-        if (!baselineCalculation.options.fillBaselineState) {
-            for (result in report.results) {
-                result.baselineState = null
-            }
-        }
+        report.withResults(theDiff)
     }
 
     private fun <T : Any> Iterable<T?>?.noNulls(): Sequence<T> =
