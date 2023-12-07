@@ -91,8 +91,6 @@ public class BaselineCalculation {
     }
 
     public static class Options {
-        public static final Options DEFAULT = new Options();
-
         final boolean includeAbsent;
         final boolean includeUnchanged;
         final boolean fillBaselineState;
@@ -110,6 +108,8 @@ public class BaselineCalculation {
          */
         private static final Function<Result, Boolean> ALL_CHECKED = (result) -> true;
         final Function<Result, Boolean> wasChecked;
+
+        public static final Options DEFAULT = new Options();
 
         public Options() {
             includeAbsent = false;
