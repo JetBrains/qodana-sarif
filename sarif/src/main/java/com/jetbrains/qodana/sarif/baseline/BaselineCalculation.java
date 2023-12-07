@@ -13,10 +13,10 @@ import static com.jetbrains.qodana.sarif.model.Result.BaselineState.*;
 public class BaselineCalculation {
     public static final String EQUAL_INDICATOR = "equalIndicator";
 
-    int newResults = 0;
-    int absentResults = 0;
-    int unchangedResults = 0;
-    final Options options;
+    private int newResults = 0;
+    private int absentResults = 0;
+    private int unchangedResults = 0;
+    private final Options options;
 
     private BaselineCalculation(Options options) {
         this.options = options;
@@ -57,7 +57,7 @@ public class BaselineCalculation {
 
             if (first.isPresent()) {
                 Run baselineRun = first.get();
-                new RunResultGroup(this, run, baselineRun).build();
+                applyBaseline(run, baselineRun);
                 baselineRuns.remove(baselineRun);
             } else {
                 unmatched.add(run);
@@ -71,8 +71,15 @@ public class BaselineCalculation {
                 markRunAsNew(run);
                 continue;
             }
-            new RunResultGroup(this, run, baselineRun).build();
+            applyBaseline(run, baselineRun);
         }
+    }
+
+    private void applyBaseline(Run run, Run baseline) {
+        BaselineSummary summary = BaselineKt.applyBaseline(run, baseline, options);
+        unchangedResults += summary.getUnchanged();
+        newResults += summary.getAdded();
+        absentResults += summary.getAbsent();
     }
 
     private void markRunAsNew(Run run) {

@@ -175,7 +175,6 @@ public class BaselineTest {
     }
 
     @Test
-    @Disabled("Testdata was artificial: Same results with different hashes - need new testdata")
     public void testAbsentResultWithChangedIdAndSameVersion() throws IOException {
         SarifReport report = readReport("src/test/resources/testData/AbsentBaselineTest/report.json");
         SarifReport baseline = readReport("src/test/resources/testData/AbsentBaselineTest/baseline.json");
