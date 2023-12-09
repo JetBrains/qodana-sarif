@@ -8,8 +8,6 @@ internal data class MultiMap<K, V> @JvmOverloads constructor(
         underlying.compute(key) { _, old -> old?.apply { add(value) } ?: mutableListOf(value) }
     }
 
-    fun containsKey(key: K) = underlying.containsKey(key)
-
     fun getOrEmpty(key: K): MutableList<V> = underlying[key] ?: mutableListOf()
 
     override fun iterator(): Iterator<Map.Entry<K, List<V>>> = underlying.iterator()

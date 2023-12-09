@@ -76,10 +76,10 @@ public class BaselineCalculation {
     }
 
     private void applyBaseline(Run run, Run baseline) {
-        BaselineSummary summary = BaselineKt.applyBaseline(run, baseline, options);
-        unchangedResults += summary.getUnchanged();
-        newResults += summary.getAdded();
-        absentResults += summary.getAbsent();
+        DiffState state = BaselineKt.applyBaseline(run, baseline, options);
+        unchangedResults += state.getUnchanged();
+        newResults += state.getNew();
+        absentResults += state.getAbsent();
     }
 
     private void markRunAsNew(Run run) {
