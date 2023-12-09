@@ -15,13 +15,36 @@ private inline fun <T> MutableIterable<T>.each(crossinline f: MutableIterator<T>
 private fun <T : Any> Iterable<T?>?.noNulls(): Sequence<T> =
     this?.asSequence().orEmpty().filterNotNull()
 
-internal data class BaselineSummary(val added: Int, val unchanged: Int, val absent: Int)
+internal class DiffState(private val options: Options) {
+    var new = 0
+        private set
+    var unchanged = 0
+        private set
+    var absent = 0
+        private set
+
+    val results = mutableSetOf<Result>()
+
+    fun put(result: Result, state: BaselineState): Boolean {
+        if (state == BaselineState.UNCHANGED && !options.includeUnchanged) return false
+        if (state == BaselineState.ABSENT && !options.includeAbsent) return false
+        val added = results.add(
+            result.withBaselineState(if (options.fillBaselineState) state else null)
+        )
+        if (added) {
+            when (state) {
+                BaselineState.NEW -> new++
+                BaselineState.UNCHANGED -> unchanged++
+                BaselineState.ABSENT -> absent++
+                BaselineState.UPDATED -> Unit
+            }
+        }
+        return added
+    }
+}
 
 /** CAUTION: This mutates results in report and baseline **/
-internal fun applyBaseline(report: Run, baseline: Run, options: Options): BaselineSummary {
-    fun Iterable<Result>.withBaselineState(state: BaselineState) =
-        if (options.fillBaselineState) onEach { it.baselineState = state } else this
-
+internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffState {
     val reportDescriptors = DescriptorLookup(report)
     val baselineDescriptors = DescriptorLookup(baseline)
     val reportIndex = StrictIndex()
@@ -44,10 +67,7 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): Baseli
         .onEach { result -> baselineIndex.add(ResultKey(result), result) }
         .toMutableSet()
 
-    val unchanged = mutableSetOf<Result>()
-    val notChecked = mutableSetOf<Result>()
-    val added = mutableSetOf<Result>()
-    val absent = mutableSetOf<Result>()
+    val state = DiffState(options)
 
     undecidedFromBaseline.each { result ->
         val foundInReport = result.partialFingerprints?.getValues(BaselineCalculation.EQUAL_INDICATOR)
@@ -55,14 +75,14 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): Baseli
             .asSequence()
             .flatMap { (_, print) -> reportIndex.getOrEmpty(print) }
             .onEach(undecidedFromReport::remove)
-            .onEach(unchanged::add)
+            .onEach { state.put(it, BaselineState.UNCHANGED) }
             .count() != 0
 
         when {
             foundInReport -> remove()
             !options.wasChecked.apply(result) -> {
-                notChecked.add(result)
                 remove()
+                state.put(result, BaselineState.UNCHANGED)
             }
         }
     }
@@ -70,44 +90,24 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): Baseli
     undecidedFromReport.each { result ->
         val inBaseline = baselineIndex.getOrEmpty(ResultKey(result))
         if (inBaseline.isEmpty()) {
-            added.add(result)
+            state.put(result, BaselineState.NEW)
         } else {
-            unchanged.add(result)
             undecidedFromBaseline.remove(inBaseline.removeFirst())
+            state.put(result, BaselineState.UNCHANGED)
         }
     }
 
     undecidedFromBaseline.each { result ->
-        if (options.wasChecked.apply(result)) {
-            absent.add(result)
-        } else {
-            unchanged.add(result)
+        if (!options.wasChecked.apply(result)) {
+            state.put(result, BaselineState.UNCHANGED)
+            return@each
+        }
+        if (state.put(result, BaselineState.ABSENT) && reportDescriptors.findById(result.ruleId) == null) {
+            baselineDescriptors.findById(result.ruleId)?.addTo(report)
         }
     }
 
-    if (options.includeAbsent) {
-        absent.asSequence()
-            .filter { reportDescriptors.findById(it.ruleId) == null }
-            .mapNotNull { baselineDescriptors.findById(it.ruleId) }
-            .forEach { it.addTo(report) }
-    }
+    report.withResults(state.results.toMutableList())
 
-    val theDiff = mutableListOf<Result>().apply {
-        addAll(added.withBaselineState(BaselineState.NEW))
-        if (options.includeUnchanged) {
-            addAll(unchanged.withBaselineState(BaselineState.UNCHANGED))
-            addAll(notChecked.withBaselineState(BaselineState.UNCHANGED))
-        }
-        if (options.includeAbsent) {
-            addAll(absent.withBaselineState(BaselineState.ABSENT))
-        }
-    }
-
-    report.withResults(theDiff)
-
-    return BaselineSummary(
-        added = added.size,
-        unchanged = if (options.includeUnchanged) unchanged.size + notChecked.size else 0,
-        absent = if (options.includeAbsent) absent.size else 0
-    )
+    return state
 }
