@@ -15,6 +15,9 @@ private inline fun <T> MutableIterable<T>.each(crossinline f: MutableIterator<T>
 private fun <T : Any> Iterable<T?>?.noNulls(): Sequence<T> =
     this?.asSequence().orEmpty().filterNotNull()
 
+private val Result.equalIndicators: Sequence<String>
+    get() = partialFingerprints?.getValues(BaselineCalculation.EQUAL_INDICATOR)?.values.noNulls()
+
 internal class DiffState(private val options: Options) {
     var new = 0
         private set
@@ -23,7 +26,7 @@ internal class DiffState(private val options: Options) {
     var absent = 0
         private set
 
-    val results = mutableSetOf<Result>()
+    val results = mutableListOf<Result>()
 
     fun put(result: Result, state: BaselineState): Boolean {
         if (state == BaselineState.UNCHANGED && !options.includeUnchanged) return false
@@ -54,13 +57,9 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     val undecidedFromReport = report.results.noNulls()
         .filterNot { it.baselineState == BaselineState.ABSENT }
         .onEach { result ->
-            result.partialFingerprints
-                ?.getValues(BaselineCalculation.EQUAL_INDICATOR)
-                ?.values
-                .noNulls()
-                .forEach { print -> reportIndex.add(print, result) }
+            result.equalIndicators.forEach { print -> reportIndex.add(print, result) }
         }
-        .toMutableSet()
+        .toMutableList()
 
     val undecidedFromBaseline = baseline.results.noNulls()
         .filterNot { it.baselineState == BaselineState.ABSENT }
@@ -70,13 +69,11 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     val state = DiffState(options)
 
     undecidedFromBaseline.each { result ->
-        val foundInReport = result.partialFingerprints?.getValues(BaselineCalculation.EQUAL_INDICATOR)
-            .orEmpty()
-            .asSequence()
-            .flatMap { (_, print) -> reportIndex.getOrEmpty(print) }
-            .onEach(undecidedFromReport::remove)
+        val foundInReport = result.equalIndicators
+            .flatMap(reportIndex::getOrEmpty)
+            .filter(undecidedFromReport::remove)
             .onEach { state.put(it, BaselineState.UNCHANGED) }
-            .count() != 0
+            .firstOrNull() != null
 
         when {
             foundInReport -> remove()
@@ -107,7 +104,7 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
         }
     }
 
-    report.withResults(state.results.toMutableList())
+    report.withResults(state.results)
 
     return state
 }
