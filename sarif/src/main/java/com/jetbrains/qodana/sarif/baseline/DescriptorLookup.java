@@ -36,7 +36,7 @@ final class DescriptorLookup {
                 })
                 .orElseGet(Stream::empty);
 
-        Stream<DescriptorWithLocation> extRules = Optional.of(run.getTool())
+        Stream<DescriptorWithLocation> extRules = Optional.ofNullable(run.getTool())
                 .map(Tool::getExtensions)
                 .orElseGet(HashSet::new)
                 .stream()
