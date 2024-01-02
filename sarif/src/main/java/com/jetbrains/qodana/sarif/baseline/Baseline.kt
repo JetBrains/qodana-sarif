@@ -7,20 +7,6 @@ import com.jetbrains.qodana.sarif.model.Run
 
 private typealias FingerprintIndex = MultiMap<String, Result>
 
-private class Counter<T>(private val underlying: MutableMap<T, Int> = mutableMapOf()) {
-    operator fun get(key: T) = underlying.getOrDefault(key, 0)
-    fun increment(key: T) = underlying.compute(key) { _, o -> (o ?: 0).inc() }!!
-    fun decrement(key: T) = underlying.compute(key) { _, o -> (o ?: 0).dec() }!!
-}
-
-private inline fun <T> MutableIterable<T>.each(crossinline f: MutableIterator<T>.(T) -> Unit) {
-    val iter = iterator()
-    // don't use `iter.forEachRemaining` as that is incompatible with `iter.remove`
-    while (iter.hasNext()) {
-        iter.f(iter.next())
-    }
-}
-
 private fun <T : Any> Iterable<T?>?.noNulls(): Sequence<T> =
     this?.asSequence().orEmpty().filterNotNull()
 
@@ -54,41 +40,41 @@ internal class DiffState(private val options: Options) {
 
 /** CAUTION: This mutates results in report and baseline **/
 internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffState {
+    val state = DiffState(options)
+
     val reportDescriptors = DescriptorLookup(report)
     val baselineDescriptors = DescriptorLookup(baseline)
     val reportIndex = FingerprintIndex()
     val baselineCounter = Counter<ResultKey>()
 
-    // shallow copies, to not mess with the underlying reports
     val undecidedFromReport = report.results.noNulls()
         .filterNot { it.baselineState == BaselineState.ABSENT }
         .onEach { result ->
-            result.equalIndicators.forEach { print -> reportIndex.add(print, result) }
+            result.equalIndicators
+                .forEach { print -> reportIndex.add(print, result) }
         }
-        .toMutableList()
+        .toCollection(IdentitySet(report.results?.size ?: 0))
 
     val undecidedFromBaseline = baseline.results.noNulls()
         .filterNot { it.baselineState == BaselineState.ABSENT }
         .onEach { result -> baselineCounter.increment(ResultKey(result)) }
-        .toMutableList()
+        .filter { result ->
+            val foundInReport = result.equalIndicators
+                .flatMap(reportIndex::getOrEmpty)
+                .filter(undecidedFromReport::remove)
+                .onEach { state.put(it, BaselineState.UNCHANGED) }
+                .firstOrNull() != null
 
-    val state = DiffState(options)
-
-    undecidedFromBaseline.each { result ->
-        val foundInReport = result.equalIndicators
-            .flatMap(reportIndex::getOrEmpty)
-            .filter(undecidedFromReport::remove)
-            .onEach { state.put(it, BaselineState.UNCHANGED) }
-            .firstOrNull() != null
-
-        when {
-            foundInReport -> remove()
-            !options.wasChecked.apply(result) -> {
-                remove()
-                state.put(result, BaselineState.UNCHANGED)
+            if (foundInReport) {
+                return@filter false
             }
+            if (!options.wasChecked.apply(result)) {
+                state.put(result, BaselineState.UNCHANGED)
+                return@filter false
+            }
+            true
         }
-    }
+        .toMutableList()
 
     undecidedFromReport.forEach { result ->
         val key = ResultKey(result)
