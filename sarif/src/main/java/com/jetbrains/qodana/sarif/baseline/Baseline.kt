@@ -90,15 +90,9 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     undecidedFromBaseline
         .asSequence()
         .filter { baselineCounter.decrement(ResultKey(it)) >= 0 }
-        .forEach { result ->
-            if (!options.wasChecked.apply(result)) {
-                state.put(result, BaselineState.UNCHANGED)
-                return@forEach
-            }
-            if (state.put(result, BaselineState.ABSENT) && reportDescriptors.findById(result.ruleId) == null) {
-                baselineDescriptors.findById(result.ruleId)?.addTo(report)
-            }
-        }
+        .filter { state.put(it, BaselineState.ABSENT) }
+        .filter { reportDescriptors.findById(it.ruleId) == null }
+        .forEach { baselineDescriptors.findById(it.ruleId)?.addTo(report) }
 
     report.withResults(state.results)
 
