@@ -11,7 +11,10 @@ private fun <T : Any> Iterable<T?>?.noNulls(): Sequence<T> =
     this?.asSequence().orEmpty().filterNotNull()
 
 private val Result.equalIndicators: Sequence<String>
-    get() = partialFingerprints?.getValues(BaselineCalculation.EQUAL_INDICATOR)?.values.noNulls()
+    get() = partialFingerprints?.getValues(BaselineCalculation.EQUAL_INDICATOR)?.entries
+        .noNulls()
+        .map { (k, v) -> "$k:$v" }
+        .sortedDescending() // higher versions should have higher priority
 
 internal class DiffState(private val options: Options) {
     var new = 0
