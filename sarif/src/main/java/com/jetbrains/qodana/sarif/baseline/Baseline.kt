@@ -55,26 +55,23 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
         }
         .toCollection(IdentitySet(report.results?.size ?: 0))
 
-    val undecidedFromBaseline = baseline.results.noNulls()
-        .filterNot { it.baselineState == BaselineState.ABSENT }
-        .onEach { result -> baselineCounter.increment(ResultKey(result)) }
-        .filter { result ->
-            val foundInReport = result.equalIndicators
-                .flatMap(reportIndex::getOrEmpty)
-                .filter(undecidedFromReport::remove)
-                .onEach { state.put(it, BaselineState.UNCHANGED) }
-                .firstOrNull() != null
+    val undecidedFromBaseline = buildList {
+        baseline.results.noNulls()
+            .filterNot { it.baselineState == BaselineState.ABSENT }
+            .onEach { result -> baselineCounter.increment(ResultKey(result)) }
+            .forEach { result ->
+                val removedFromReport = result.equalIndicators
+                    .flatMap(reportIndex::getOrEmpty)
+                    .any(undecidedFromReport::remove)
 
-            if (foundInReport) {
-                return@filter false
+                if (removedFromReport || !options.wasChecked.apply(result)) {
+                    state.put(result, BaselineState.UNCHANGED)
+                } else {
+                    add(result)
+                }
             }
-            if (!options.wasChecked.apply(result)) {
-                state.put(result, BaselineState.UNCHANGED)
-                return@filter false
-            }
-            true
-        }
-        .toMutableList()
+    }
+
 
     undecidedFromReport.forEach { result ->
         val key = ResultKey(result)
@@ -90,9 +87,12 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     undecidedFromBaseline
         .asSequence()
         .filter { baselineCounter.decrement(ResultKey(it)) >= 0 }
-        .filter { state.put(it, BaselineState.ABSENT) }
-        .filter { reportDescriptors.findById(it.ruleId) == null }
-        .forEach { baselineDescriptors.findById(it.ruleId)?.addTo(report) }
+        .forEach { result ->
+            val added = state.put(result, BaselineState.ABSENT)
+            if (added && reportDescriptors.findById(result.ruleId) == null) {
+                baselineDescriptors.findById(result.ruleId)?.addTo(report)
+            }
+        }
 
     report.withResults(state.results)
 
