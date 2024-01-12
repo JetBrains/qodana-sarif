@@ -2,6 +2,7 @@ package com.jetbrains.qodana.sarif;
 
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation;
 import com.jetbrains.qodana.sarif.model.*;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class BaselineTest {
     private static final String QODANA_REPORT_JSON = "src/test/resources/testData/readWriteTest/qodanaReport.json";
     private static final String QODANA_REPORT_JSON_2 = "src/test/resources/testData/readWriteTest/qodanaReport2.json";
 
+    private static final BaselineCalculation.Options INCLUDE_ABSENT = new BaselineCalculation.Options(true);
     @Test
     public void testSameReport() throws IOException {
         SarifReport report = readReport();
@@ -58,7 +60,7 @@ public class BaselineTest {
         Result newResult = new Result(new Message().withText("new result"));
         baseline.getRuns().get(0).getResults().add(newResult);
 
-        doTest(report, baseline, problemsCount(report), 1, 0, new BaselineCalculation.Options(true));
+        doTest(report, baseline, problemsCount(report), 1, 0, INCLUDE_ABSENT);
         assertEquals(Result.BaselineState.ABSENT, newResult.getBaselineState());
     }
 
@@ -69,11 +71,11 @@ public class BaselineTest {
         Result newResult = new Result(new Message().withText("new result"));
         baseline.getRuns().get(0).getResults().add(newResult);
 
-        BaselineCalculation.compare(report, baseline, new BaselineCalculation.Options(true));
+        BaselineCalculation.compare(report, baseline, INCLUDE_ABSENT);
 
         SarifReport newReport = readReport();
 
-        doTest(newReport, report, problemsCount(newReport), 0, 0, new BaselineCalculation.Options(true));
+        doTest(newReport, report, problemsCount(newReport), 0, 0, INCLUDE_ABSENT);
     }
 
     @Test
@@ -85,11 +87,11 @@ public class BaselineTest {
         baseline.getRuns().get(0).getResults().add(newResult);
 
 
-        doTest(report, baseline, 0, problemsCount(baseline), 0, new BaselineCalculation.Options(true));
+        doTest(report, baseline, 0, problemsCount(baseline), 0, INCLUDE_ABSENT);
 
         SarifReport newBaseline = SarifUtil.emptyReport(toolName);
 
-        doTest(report, newBaseline, 0, 0, 0, new BaselineCalculation.Options(true));
+        doTest(report, newBaseline, 0, 0, 0, INCLUDE_ABSENT);
     }
 
     @Test
@@ -169,7 +171,7 @@ public class BaselineTest {
         SarifReport report = readReport();
         SarifReport baseline = readReport(QODANA_REPORT_JSON_2);
         int problemsCount = problemsCount(report);
-        doTest(report, baseline, problemsCount, 1, 0, new BaselineCalculation.Options(true));
+        doTest(report, baseline, problemsCount, 1, 0, INCLUDE_ABSENT);
         //assertEquals(Result.BaselineState.NEW, newResult.getBaselineState());
     }
 
@@ -178,7 +180,7 @@ public class BaselineTest {
         SarifReport report = readReport("src/test/resources/testData/AbsentBaselineTest/report.json");
         SarifReport baseline = readReport("src/test/resources/testData/AbsentBaselineTest/baseline.json");
 
-        doTest(report, baseline, 1, 17, 18, new BaselineCalculation.Options(true));
+        doTest(report, baseline, 1, 17, 18, INCLUDE_ABSENT);
 
         Set<String> knownDescriptorIds = RuleUtil.allRules(report)
                 .map(ReportingDescriptor::getId)
@@ -199,7 +201,7 @@ public class BaselineTest {
         SarifReport report = readReport("src/test/resources/testData/AbsentBaselineTest/report.json");
         SarifReport baseline = readReport("src/test/resources/testData/AbsentBaselineTest/baseline_old.json");
 
-        doTest(report, baseline, 0, 18, 19, new BaselineCalculation.Options(true));
+        doTest(report, baseline, 0, 18, 19, INCLUDE_ABSENT);
 
         Set<String> knownDescriptorIds = RuleUtil.allRules(report)
                 .map(ReportingDescriptor::getId)
