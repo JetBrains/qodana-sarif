@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Defines locations of special significance to SARIF consumers.
  */
 @SuppressWarnings("DuplicatedCode")
-public class SpecialLocations {
+public class SpecialLocations implements PropertyOwner {
 
     /**
      * Specifies the location of an artifact.
@@ -45,6 +45,7 @@ public class SpecialLocations {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -52,6 +53,7 @@ public class SpecialLocations {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

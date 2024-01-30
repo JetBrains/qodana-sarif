@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Contains information that enables a SARIF consumer to locate the external property file that contains the value of an externalized property associated with the run.
  */
 @SuppressWarnings("DuplicatedCode")
-public class ExternalPropertyFileReference {
+public class ExternalPropertyFileReference implements PropertyOwner {
 
     /**
      * Specifies the location of an artifact.
@@ -95,6 +95,7 @@ public class ExternalPropertyFileReference {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -102,6 +103,7 @@ public class ExternalPropertyFileReference {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

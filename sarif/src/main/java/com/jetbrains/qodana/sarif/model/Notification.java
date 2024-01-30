@@ -13,7 +13,7 @@ import java.util.Set;
  * Describes a condition relevant to the tool itself, as opposed to being relevant to a target being analyzed by the tool.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Notification {
+public class Notification implements PropertyOwner {
 
     /**
      * The locations relevant to this notification.
@@ -242,6 +242,7 @@ public class Notification {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -249,6 +250,7 @@ public class Notification {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

@@ -10,7 +10,7 @@ import java.util.List;
  * Encapsulates a message intended to be read by the end user.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Message {
+public class Message implements PropertyOwner {
 
     /**
      * A plain text message string.
@@ -122,6 +122,7 @@ public class Message {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -129,6 +130,7 @@ public class Message {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

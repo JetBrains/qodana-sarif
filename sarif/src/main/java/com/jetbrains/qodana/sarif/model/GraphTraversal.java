@@ -10,7 +10,7 @@ import java.util.List;
  * Represents a path through a graph.
  */
 @SuppressWarnings("DuplicatedCode")
-public class GraphTraversal {
+public class GraphTraversal implements PropertyOwner {
 
     /**
      * The index within the run.graphs to be associated with the result.
@@ -172,6 +172,7 @@ public class GraphTraversal {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -179,6 +180,7 @@ public class GraphTraversal {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

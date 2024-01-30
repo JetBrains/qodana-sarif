@@ -10,7 +10,7 @@ import java.util.List;
  * A change to a single artifact.
  */
 @SuppressWarnings("DuplicatedCode")
-public class ArtifactChange {
+public class ArtifactChange implements PropertyOwner {
 
     /**
      * Specifies the location of an artifact.
@@ -94,6 +94,7 @@ public class ArtifactChange {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -101,6 +102,7 @@ public class ArtifactChange {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

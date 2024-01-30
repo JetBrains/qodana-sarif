@@ -10,7 +10,7 @@ import java.util.Set;
  * References to external property files that should be inlined with the content of a root log file.
  */
 @SuppressWarnings("DuplicatedCode")
-public class ExternalPropertyFileReferences {
+public class ExternalPropertyFileReferences implements PropertyOwner {
 
     /**
      * Contains information that enables a SARIF consumer to locate the external property file that contains the value of an externalized property associated with the run.
@@ -422,6 +422,7 @@ public class ExternalPropertyFileReferences {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -429,6 +430,7 @@ public class ExternalPropertyFileReferences {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

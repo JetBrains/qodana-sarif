@@ -11,7 +11,7 @@ import java.util.Set;
  * A single artifact. In some cases, this artifact might be nested within another artifact.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Artifact {
+public class Artifact implements PropertyOwner {
 
     /**
      * Encapsulates a message intended to be read by the end user.
@@ -323,6 +323,7 @@ public class Artifact {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -330,6 +331,7 @@ public class Artifact {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

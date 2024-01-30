@@ -10,7 +10,7 @@ import java.util.Set;
  * The analysis tool that was run.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Tool {
+public class Tool implements PropertyOwner {
 
     /**
      * A component, such as a plug-in or the driver, of the analysis tool that was run.
@@ -89,6 +89,7 @@ public class Tool {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -96,6 +97,7 @@ public class Tool {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

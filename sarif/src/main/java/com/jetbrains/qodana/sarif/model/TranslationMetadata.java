@@ -10,7 +10,7 @@ import java.net.URI;
  * Provides additional metadata related to translation.
  */
 @SuppressWarnings("DuplicatedCode")
-public class TranslationMetadata {
+public class TranslationMetadata implements PropertyOwner {
 
     /**
      * The name associated with the translation metadata.
@@ -189,6 +189,7 @@ public class TranslationMetadata {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -196,6 +197,7 @@ public class TranslationMetadata {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

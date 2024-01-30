@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Identifies a particular toolComponent object, either the driver or an extension.
  */
 @SuppressWarnings("DuplicatedCode")
-public class ToolComponentReference {
+public class ToolComponentReference implements PropertyOwner {
 
     /**
      * The 'name' property of the referenced toolComponent.
@@ -95,6 +95,7 @@ public class ToolComponentReference {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -102,6 +103,7 @@ public class ToolComponentReference {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

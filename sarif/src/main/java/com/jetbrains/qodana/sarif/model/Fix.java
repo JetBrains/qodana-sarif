@@ -10,7 +10,7 @@ import java.util.Set;
  * A proposed fix for the problem represented by a result object. A fix specifies a set of artifacts to modify. For each artifact, it specifies a set of bytes to remove, and provides a set of new bytes to replace them.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Fix {
+public class Fix implements PropertyOwner {
 
     /**
      * Encapsulates a message intended to be read by the end user.
@@ -89,6 +89,7 @@ public class Fix {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -96,6 +97,7 @@ public class Fix {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

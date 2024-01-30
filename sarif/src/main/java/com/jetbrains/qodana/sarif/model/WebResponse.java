@@ -3,12 +3,11 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-
 /**
  * Describes the response to an HTTP request.
  */
 @SuppressWarnings("DuplicatedCode")
-public class WebResponse {
+public class WebResponse implements PropertyOwner {
 
     /**
      * The index within the run.webResponses array of the response object associated with this result.
@@ -220,6 +219,7 @@ public class WebResponse {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -227,6 +227,7 @@ public class WebResponse {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

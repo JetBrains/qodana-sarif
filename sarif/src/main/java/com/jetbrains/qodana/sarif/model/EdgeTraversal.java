@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Represents the traversal of a single edge during a graph traversal.
  */
 @SuppressWarnings("DuplicatedCode")
-public class EdgeTraversal {
+public class EdgeTraversal implements PropertyOwner {
 
     /**
      * Identifies the edge being traversed.
@@ -137,6 +137,7 @@ public class EdgeTraversal {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -144,6 +145,7 @@ public class EdgeTraversal {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

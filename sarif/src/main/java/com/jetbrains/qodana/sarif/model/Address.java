@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * A physical or virtual address, or a range of addresses, in an 'addressable region' (memory or a binary file).
  */
 @SuppressWarnings({"DuplicatedCode", "unused"})
-public class Address {
+public class Address implements PropertyOwner {
 
     /**
      * The address expressed as a byte offset from the start of the addressable region.
@@ -273,6 +273,7 @@ public class Address {
      * Key/value pairs that provide additional information about the object.
      */
     @SuppressWarnings("unused")
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -281,6 +282,7 @@ public class Address {
      * Key/value pairs that provide additional information about the object.
      */
     @SuppressWarnings("unused")
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

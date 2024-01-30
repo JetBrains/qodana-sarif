@@ -11,7 +11,7 @@ import java.time.Instant;
  * Specifies the information necessary to retrieve a desired revision from a version control system.
  */
 @SuppressWarnings("DuplicatedCode")
-public class VersionControlDetails {
+public class VersionControlDetails implements PropertyOwner {
 
     /**
      * The absolute URI of the repository.
@@ -190,6 +190,7 @@ public class VersionControlDetails {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -197,6 +198,7 @@ public class VersionControlDetails {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

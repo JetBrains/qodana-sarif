@@ -12,7 +12,7 @@ import java.util.Set;
  * Information about the relation of one location to another.
  */
 @SuppressWarnings("DuplicatedCode")
-public class LocationRelationship {
+public class LocationRelationship implements PropertyOwner {
 
     /**
      * A reference to the related location.
@@ -116,6 +116,7 @@ public class LocationRelationship {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -123,6 +124,7 @@ public class LocationRelationship {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

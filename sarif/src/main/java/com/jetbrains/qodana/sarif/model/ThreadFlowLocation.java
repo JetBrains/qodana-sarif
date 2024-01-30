@@ -13,7 +13,7 @@ import java.util.Set;
  * A location visited by an analysis tool while simulating or monitoring the execution of a program.
  */
 @SuppressWarnings("DuplicatedCode")
-public class ThreadFlowLocation {
+public class ThreadFlowLocation implements PropertyOwner {
 
     /**
      * The index within the run threadFlowLocations array.
@@ -350,6 +350,7 @@ public class ThreadFlowLocation {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -357,6 +358,7 @@ public class ThreadFlowLocation {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

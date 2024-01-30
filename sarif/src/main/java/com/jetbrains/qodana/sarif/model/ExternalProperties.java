@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * The top-level element of an external property file.
  */
-public class ExternalProperties {
+public class ExternalProperties implements PropertyOwner {
 
     /**
      * The URI of the JSON schema corresponding to the version of the external property file format.
@@ -525,6 +525,7 @@ public class ExternalProperties {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -532,6 +533,7 @@ public class ExternalProperties {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

@@ -10,7 +10,7 @@ import java.util.Set;
  * A location within a programming artifact.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Location {
+public class Location implements PropertyOwner {
 
     /**
      * Value that distinguishes this location from all other locations within a single result object.
@@ -172,6 +172,7 @@ public class Location {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -179,6 +180,7 @@ public class Location {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

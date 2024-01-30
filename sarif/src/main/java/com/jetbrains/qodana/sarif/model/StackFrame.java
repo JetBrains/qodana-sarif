@@ -10,7 +10,7 @@ import java.util.List;
  * A function call within a stack trace.
  */
 @SuppressWarnings("DuplicatedCode")
-public class StackFrame {
+public class StackFrame implements PropertyOwner {
 
     /**
      * A location within a programming artifact.
@@ -122,6 +122,7 @@ public class StackFrame {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -129,6 +130,7 @@ public class StackFrame {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

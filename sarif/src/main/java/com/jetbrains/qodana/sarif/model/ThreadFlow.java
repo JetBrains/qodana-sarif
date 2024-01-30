@@ -10,7 +10,7 @@ import java.util.List;
  * Describes a sequence of code locations that specify a path through a single thread of execution such as an operating system or fiber.
  */
 @SuppressWarnings("DuplicatedCode")
-public class ThreadFlow {
+public class ThreadFlow implements PropertyOwner {
 
     /**
      * An string that uniquely identifies the threadFlow within the codeFlow in which it occurs.
@@ -165,6 +165,7 @@ public class ThreadFlow {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -172,6 +173,7 @@ public class ThreadFlow {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

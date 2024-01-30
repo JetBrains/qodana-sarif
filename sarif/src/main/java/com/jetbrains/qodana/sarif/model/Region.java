@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * A region within an artifact where a result was detected.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Region {
+public class Region implements PropertyOwner {
 
     /**
      * The line number of the first character in the region.
@@ -295,6 +295,7 @@ public class Region {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -302,6 +303,7 @@ public class Region {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

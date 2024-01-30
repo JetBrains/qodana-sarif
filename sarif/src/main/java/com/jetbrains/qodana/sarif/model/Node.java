@@ -10,7 +10,7 @@ import java.util.Set;
  * Represents a node in a graph.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Node {
+public class Node implements PropertyOwner {
 
     /**
      * A string that uniquely identifies the node within its graph.
@@ -139,6 +139,7 @@ public class Node {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -146,6 +147,7 @@ public class Node {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

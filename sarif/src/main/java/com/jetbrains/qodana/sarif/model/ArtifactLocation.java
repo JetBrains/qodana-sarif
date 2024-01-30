@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Specifies the location of an artifact.
  */
 @SuppressWarnings("DuplicatedCode")
-public class ArtifactLocation {
+public class ArtifactLocation implements PropertyOwner {
 
     /**
      * A string containing a valid relative or absolute URI.
@@ -120,6 +120,7 @@ public class ArtifactLocation {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -127,6 +128,7 @@ public class ArtifactLocation {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Information about how a specific rule or notification was reconfigured at runtime.
  */
 @SuppressWarnings("DuplicatedCode")
-public class ConfigurationOverride {
+public class ConfigurationOverride implements PropertyOwner {
 
     /**
      * Information about a rule or notification that can be configured at runtime.
@@ -92,6 +92,7 @@ public class ConfigurationOverride {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -99,6 +100,7 @@ public class ConfigurationOverride {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

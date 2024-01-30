@@ -15,7 +15,7 @@ import java.util.Set;
  * <p>
  * Static Analysis Results Format (SARIF) Version 2.1.0 JSON Schema: a standard format for the output of static analysis tools.
  */
-public class SarifReport {
+public class SarifReport implements PropertyOwner {
 
     /**
      * The URI of the JSON schema corresponding to the version.
@@ -149,6 +149,7 @@ public class SarifReport {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -156,6 +157,7 @@ public class SarifReport {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

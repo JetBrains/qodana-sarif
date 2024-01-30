@@ -38,6 +38,11 @@ tasks {
         }
     }
 
+    kotlin {
+        compilerOptions {
+            freeCompilerArgs.add("-Xjvm-default=all")
+        }
+    }
     withType<AbstractPublishToMaven> {
         dependsOn(test)
     }

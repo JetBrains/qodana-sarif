@@ -10,7 +10,7 @@ import java.util.List;
  * Describes a runtime exception encountered during the execution of an analysis tool.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Exception {
+public class Exception implements PropertyOwner {
 
     /**
      * A string that identifies the kind of exception, for example, the fully qualified type name of an object that was thrown, or the symbolic name of a signal.
@@ -122,6 +122,7 @@ public class Exception {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -129,6 +130,7 @@ public class Exception {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

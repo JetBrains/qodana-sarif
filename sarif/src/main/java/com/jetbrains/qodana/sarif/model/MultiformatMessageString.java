@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * A message string or message format string rendered in multiple formats.
  */
 @SuppressWarnings("DuplicatedCode")
-public class MultiformatMessageString {
+public class MultiformatMessageString implements PropertyOwner {
 
     /**
      * A plain text message string or format string.
@@ -87,6 +87,7 @@ public class MultiformatMessageString {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -94,6 +95,7 @@ public class MultiformatMessageString {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

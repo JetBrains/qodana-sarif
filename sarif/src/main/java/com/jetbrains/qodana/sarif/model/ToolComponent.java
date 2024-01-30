@@ -14,7 +14,7 @@ import java.util.Set;
  * A component, such as a plug-in or the driver, of the analysis tool that was run.
  */
 @SuppressWarnings("DuplicatedCode")
-public class ToolComponent {
+public class ToolComponent implements PropertyOwner {
 
     /**
      * A unique identifer for the tool component in the form of a GUID.
@@ -754,6 +754,7 @@ public class ToolComponent {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -761,6 +762,7 @@ public class ToolComponent {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

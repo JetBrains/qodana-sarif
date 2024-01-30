@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Information about a rule or notification that can be configured at runtime.
  */
 @SuppressWarnings("DuplicatedCode")
-public class ReportingConfiguration {
+public class ReportingConfiguration implements PropertyOwner {
 
     /**
      * Specifies whether the report may be produced during the scan.
@@ -120,6 +120,7 @@ public class ReportingConfiguration {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -127,6 +128,7 @@ public class ReportingConfiguration {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }
