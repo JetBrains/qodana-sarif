@@ -10,7 +10,7 @@ import java.util.Set;
  * An artifact relevant to a result.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Attachment {
+public class Attachment implements PropertyOwner {
 
     /**
      * Encapsulates a message intended to be read by the end user.
@@ -139,6 +139,7 @@ public class Attachment {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -146,6 +147,7 @@ public class Attachment {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

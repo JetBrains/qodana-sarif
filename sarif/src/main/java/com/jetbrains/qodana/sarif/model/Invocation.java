@@ -12,7 +12,7 @@ import java.util.Set;
  * The runtime environment of the analysis tool run.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Invocation {
+public class Invocation implements PropertyOwner {
 
     /**
      * The command line used to invoke the tool.
@@ -666,6 +666,7 @@ public class Invocation {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -673,6 +674,7 @@ public class Invocation {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * A physical location relevant to a result. Specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.
  */
 @SuppressWarnings("DuplicatedCode")
-public class PhysicalLocation {
+public class PhysicalLocation implements PropertyOwner {
 
     /**
      * A physical or virtual address, or a range of addresses, in an 'addressable region' (memory or a binary file).
@@ -120,6 +120,7 @@ public class PhysicalLocation {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -127,6 +128,7 @@ public class PhysicalLocation {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

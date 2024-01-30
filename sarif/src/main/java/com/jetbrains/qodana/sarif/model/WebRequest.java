@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Describes an HTTP request.
  */
 @SuppressWarnings("DuplicatedCode")
-public class WebRequest {
+public class WebRequest implements PropertyOwner {
 
     /**
      * The index within the run.webRequests array of the request object associated with this result.
@@ -220,6 +220,7 @@ public class WebRequest {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -227,6 +228,7 @@ public class WebRequest {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

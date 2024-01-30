@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Information that describes a run's identity and role within an engineering system process.
  */
 @SuppressWarnings("DuplicatedCode")
-public class RunAutomationDetails {
+public class RunAutomationDetails implements PropertyOwner {
 
     /**
      * Encapsulates a message intended to be read by the end user.
@@ -120,6 +120,7 @@ public class RunAutomationDetails {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -127,6 +128,7 @@ public class RunAutomationDetails {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

@@ -10,7 +10,7 @@ import java.util.Set;
  * A network of nodes and directed edges that describes some aspect of the structure of the code (for example, a call graph).
  */
 @SuppressWarnings("DuplicatedCode")
-public class Graph {
+public class Graph implements PropertyOwner {
 
     /**
      * Encapsulates a message intended to be read by the end user.
@@ -97,6 +97,7 @@ public class Graph {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -104,6 +105,7 @@ public class Graph {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

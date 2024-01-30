@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Represents a directed edge in a graph.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Edge {
+public class Edge implements PropertyOwner {
 
     /**
      * A string that uniquely identifies the edge within its graph.
@@ -147,6 +147,7 @@ public class Edge {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -154,6 +155,7 @@ public class Edge {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

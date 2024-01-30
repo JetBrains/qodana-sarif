@@ -10,7 +10,7 @@ import java.util.Set;
  * Describes how a converter transformed the output of a static analysis tool from the analysis tool's native output format into the SARIF format.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Conversion {
+public class Conversion implements PropertyOwner {
 
     /**
      * The analysis tool that was run.
@@ -114,6 +114,7 @@ public class Conversion {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -121,6 +122,7 @@ public class Conversion {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

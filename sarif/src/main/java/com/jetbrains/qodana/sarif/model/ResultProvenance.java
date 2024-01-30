@@ -11,7 +11,7 @@ import java.util.Set;
  * Contains information about how and when a result was detected.
  */
 @SuppressWarnings("DuplicatedCode")
-public class ResultProvenance {
+public class ResultProvenance implements PropertyOwner {
 
     /**
      * The Coordinated Universal Time (UTC) date and time at which the result was first detected. See "Date/time properties" in the SARIF spec for the required format.
@@ -173,6 +173,7 @@ public class ResultProvenance {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -180,6 +181,7 @@ public class ResultProvenance {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

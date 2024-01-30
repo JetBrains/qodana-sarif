@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Represents the contents of an artifact.
  */
 @SuppressWarnings("DuplicatedCode")
-public class ArtifactContent {
+public class ArtifactContent implements PropertyOwner {
 
     /**
      * UTF-8-encoded content from a text artifact.
@@ -95,6 +95,7 @@ public class ArtifactContent {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -102,6 +103,7 @@ public class ArtifactContent {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

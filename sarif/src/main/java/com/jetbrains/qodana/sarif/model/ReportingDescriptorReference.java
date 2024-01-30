@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Information about how to locate a relevant reporting descriptor.
  */
 @SuppressWarnings("DuplicatedCode")
-public class ReportingDescriptorReference {
+public class ReportingDescriptorReference implements PropertyOwner {
 
     /**
      * The id of the descriptor.
@@ -120,6 +120,7 @@ public class ReportingDescriptorReference {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -127,6 +128,7 @@ public class ReportingDescriptorReference {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

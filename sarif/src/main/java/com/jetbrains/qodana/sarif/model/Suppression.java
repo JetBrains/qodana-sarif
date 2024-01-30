@@ -11,7 +11,7 @@ import java.util.Map;
  * A suppression that is relevant to a result.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Suppression {
+public class Suppression implements PropertyOwner {
 
     /**
      * A stable, unique identifer for the suprression in the form of a GUID.
@@ -165,6 +165,7 @@ public class Suppression {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -172,6 +173,7 @@ public class Suppression {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * A logical location of a construct that produced a result.
  */
 @SuppressWarnings("DuplicatedCode")
-public class LogicalLocation {
+public class LogicalLocation implements PropertyOwner {
 
     /**
      * Identifies the construct in which the result occurred. For example, this property might contain the name of a class or a method.
@@ -170,6 +170,7 @@ public class LogicalLocation {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -177,6 +178,7 @@ public class LogicalLocation {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }
