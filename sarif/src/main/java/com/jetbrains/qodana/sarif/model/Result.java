@@ -15,7 +15,7 @@ import java.util.Set;
  * A result produced by an analysis tool.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Result {
+public class Result implements PropertyOwner {
 
     /**
      * The stable, unique identifier of the rule, if any, to which this result is relevant.
@@ -771,6 +771,7 @@ public class Result {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -778,6 +779,7 @@ public class Result {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

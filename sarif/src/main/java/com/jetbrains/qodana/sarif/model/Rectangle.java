@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * An area within an image.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Rectangle {
+public class Rectangle implements PropertyOwner {
 
     /**
      * The Y coordinate of the top edge of the rectangle, measured in the image's natural units.
@@ -145,6 +145,7 @@ public class Rectangle {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -152,6 +153,7 @@ public class Rectangle {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

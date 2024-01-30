@@ -10,7 +10,7 @@ import java.util.List;
  * A set of threadFlows which together describe a pattern of code execution relevant to detecting a result.
  */
 @SuppressWarnings("DuplicatedCode")
-public class CodeFlow {
+public class CodeFlow implements PropertyOwner {
 
     /**
      * Encapsulates a message intended to be read by the end user.
@@ -90,6 +90,7 @@ public class CodeFlow {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -97,6 +98,7 @@ public class CodeFlow {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

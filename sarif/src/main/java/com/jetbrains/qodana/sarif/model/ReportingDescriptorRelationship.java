@@ -12,7 +12,7 @@ import java.util.Set;
  * Information about the relation of one reporting descriptor to another.
  */
 @SuppressWarnings("DuplicatedCode")
-public class ReportingDescriptorRelationship {
+public class ReportingDescriptorRelationship implements PropertyOwner {
 
     /**
      * Information about how to locate a relevant reporting descriptor.
@@ -116,6 +116,7 @@ public class ReportingDescriptorRelationship {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -123,6 +124,7 @@ public class ReportingDescriptorRelationship {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

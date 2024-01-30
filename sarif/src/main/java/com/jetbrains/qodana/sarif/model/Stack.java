@@ -10,7 +10,7 @@ import java.util.List;
  * A call stack that is relevant to a result.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Stack {
+public class Stack implements PropertyOwner {
 
     /**
      * Encapsulates a message intended to be read by the end user.
@@ -90,6 +90,7 @@ public class Stack {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -97,6 +98,7 @@ public class Stack {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

@@ -11,7 +11,7 @@ import java.util.Set;
  * Metadata that describes a specific report produced by the tool, as part of the analysis it provides or its runtime reporting.
  */
 @SuppressWarnings("DuplicatedCode")
-public class ReportingDescriptor {
+public class ReportingDescriptor implements PropertyOwner {
 
     /**
      * A stable, opaque identifier for the report.
@@ -365,6 +365,7 @@ public class ReportingDescriptor {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -372,6 +373,7 @@ public class ReportingDescriptor {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }

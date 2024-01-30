@@ -10,7 +10,7 @@ import java.util.*;
  * Describes a single run of an analysis tool, and contains the reported output of that run.
  */
 @SuppressWarnings("DuplicatedCode")
-public class Run {
+public class Run implements PropertyOwner {
 
     /**
      * The analysis tool that was run.
@@ -716,6 +716,7 @@ public class Run {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public PropertyBag getProperties() {
         return properties;
     }
@@ -723,6 +724,7 @@ public class Run {
     /**
      * Key/value pairs that provide additional information about the object.
      */
+    @Override
     public void setProperties(PropertyBag properties) {
         this.properties = properties;
     }
