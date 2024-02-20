@@ -8,19 +8,22 @@ import com.jetbrains.qodana.sarif.model.SarifReport
 import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
+import kotlin.io.path.notExists
 
 object BaselineCli {
-    fun process(map: Map<String, String>, cliPrinter: (String) -> Unit, errPrinter: (String) -> Unit): Int {
-        val sarifPath = map["sarifReport"]!!
-        val baselinePath = map["baselineReport"]
-        val failThreshold = map["failThreshold"]?.toIntOrNull()
-        if (!Files.exists(Paths.get(sarifPath))) {
+    fun process(
+        reportPath: Path,
+        baselinePath: Path?,
+        failThreshold: Int?,
+        cliPrinter: (String) -> Unit,
+        errPrinter: (String) -> Unit
+    ): Int {
+        if (reportPath.notExists()) {
             errPrinter("Please provide a valid SARIF report path")
             return ERROR_EXIT
         }
         val sarifReport = try {
-            SarifUtil.readReport(Paths.get(sarifPath))
+            SarifUtil.readReport(reportPath)
         } catch (e: Exception) {
             errPrinter("Error reading SARIF report: ${e.message}")
             return ERROR_EXIT
@@ -33,15 +36,15 @@ object BaselineCli {
         return if (baselinePath != null) {
             compareBaselineThreshold(
                 sarifReport,
-                Paths.get(sarifPath),
-                Paths.get(baselinePath),
+                reportPath,
+                baselinePath,
                 failThreshold,
                 printer,
                 cliPrinter,
                 errPrinter
             )
         } else {
-            compareThreshold(sarifReport, Paths.get(sarifPath), failThreshold, printer, cliPrinter, errPrinter)
+            compareThreshold(sarifReport, reportPath, failThreshold, printer, cliPrinter, errPrinter)
         }
     }
 
