@@ -8,13 +8,16 @@ import com.jetbrains.qodana.sarif.model.SarifReport
 import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.io.path.Path
 import kotlin.io.path.notExists
+import kotlin.io.path.useLines
 
 object BaselineCli {
     fun process(
         reportPath: Path,
         baselinePath: Path?,
         failThreshold: Int?,
+        scopePath: Path?,
         cliPrinter: (String) -> Unit,
         errPrinter: (String) -> Unit
     ): Int {
@@ -34,10 +37,12 @@ object BaselineCli {
         }
         val printer = CommandLineResultsPrinter(simpleMemoize(resolveInspectionName), cliPrinter)
         return if (baselinePath != null) {
+            val options = scopePath?.let(::baselineOptions) ?: BaselineCalculation.Options()
             compareBaselineThreshold(
                 sarifReport,
                 reportPath,
                 baselinePath,
+                options,
                 failThreshold,
                 printer,
                 cliPrinter,
@@ -93,6 +98,7 @@ object BaselineCli {
         sarifReport: SarifReport,
         sarifPath: Path,
         baselinePath: Path,
+        options: BaselineCalculation.Options,
         failThreshold: Int?,
         printer: CommandLineResultsPrinter,
         cliPrinter: (String) -> Unit,
@@ -102,14 +108,13 @@ object BaselineCli {
             errPrinter("Please provide valid baseline report path")
             return ERROR_EXIT
         }
-        val baseline: SarifReport
-        try {
-            baseline = SarifUtil.readReport(baselinePath) ?: createSarifReport(emptyList())
+        val baseline: SarifReport = try {
+            SarifUtil.readReport(baselinePath) ?: createSarifReport(emptyList())
         } catch (e: JsonSyntaxException) {
             errPrinter("Error reading baseline report: ${e.message}")
             return ERROR_EXIT
         }
-        val baselineCalculation = BaselineCalculation.compare(sarifReport, baseline, BaselineCalculation.Options())
+        val baselineCalculation = BaselineCalculation.compare(sarifReport, baseline, options)
         printer.printResultsWithBaselineState(sarifReport.runs.first().results, false)
         val invocation = processResultCount(baselineCalculation.newResults, failThreshold, cliPrinter, errPrinter)
         sarifReport.runs.first().invocations = listOf(invocation)
@@ -127,5 +132,21 @@ object BaselineCli {
         val state = mutableMapOf<T, R>()
 
         return { state.computeIfAbsent(it, f) }
+    }
+
+    private fun baselineOptions(scopePath: Path): BaselineCalculation.Options {
+        val scope = scopePath.useLines { lines ->
+            lines.map(::Path)
+                .map(Path::normalize)
+                .toHashSet()
+        }
+        return BaselineCalculation.Options(false, true, true) { result ->
+            result.locations.orEmpty()
+                .asSequence()
+                .mapNotNull { it?.physicalLocation?.artifactLocation?.uri }
+                .map(::Path)
+                .map(Path::normalize)
+                .any(scope::contains)
+        }
     }
 }
