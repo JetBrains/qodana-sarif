@@ -23,10 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class SarifUtil {
     private SarifUtil() {
@@ -41,7 +38,7 @@ public class SarifUtil {
     }
 
     public static SarifReport readReport(Reader reader, boolean readResults, Iterable<String> skippedProperties) {
-        GsonBuilder gsonBuilder = createGsonBuilder();
+        GsonBuilder gsonBuilder = createGsonBuilder(skippedProperties);
         Iterator<String> skippedPropertiesIterator = skippedProperties.iterator();
         if (!readResults || skippedPropertiesIterator.hasNext()) {
             gsonBuilder.registerTypeAdapterFactory(StreamJsonRunsListTypeAdapter.makeFactory());
@@ -49,9 +46,6 @@ public class SarifUtil {
         if (!readResults) {
             gsonBuilder.addDeserializationExclusionStrategy(StreamingFieldsExclusionStrategy.results());
         }
-        skippedPropertiesIterator.forEachRemaining(property ->
-                gsonBuilder.addDeserializationExclusionStrategy(StreamingFieldsExclusionStrategy.property(property))
-        );
         return gsonBuilder.create().fromJson(reader, SarifReport.class);
     }
 
@@ -103,11 +97,7 @@ public class SarifUtil {
     }
 
     public static GsonBuilder createGsonBuilder() {
-        return new GsonBuilder()
-                .setPrettyPrinting()
-                .disableHtmlEscaping()
-                .registerTypeAdapter(PropertyBag.class, new PropertyBag.PropertyBagTypeAdapter().nullSafe())
-                .registerTypeAdapter(Instant.class, new IsoInstantTypeAdapter().nullSafe());
+        return createGsonBuilder(Collections.emptyList());
     }
 
     /**
@@ -127,5 +117,15 @@ public class SarifUtil {
      */
     public static Iterator<IndexedResult> lazyReadIndexedResults(Reader reader) {
         return new IndexedResultIterator(reader);
+    }
+
+    private static GsonBuilder createGsonBuilder(Iterable<String> ignoreKeys) {
+        Collection<String> ignoreKeysArray = new ArrayList<>();
+        ignoreKeys.iterator().forEachRemaining(ignoreKeysArray::add);
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
+                .registerTypeAdapter(PropertyBag.class, new PropertyBag.PropertyBagTypeAdapter(ignoreKeysArray).nullSafe())
+                .registerTypeAdapter(Instant.class, new IsoInstantTypeAdapter().nullSafe());
     }
 }

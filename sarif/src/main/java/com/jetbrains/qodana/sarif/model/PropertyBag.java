@@ -3,6 +3,7 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
@@ -104,19 +105,31 @@ public class PropertyBag implements Map<String, Object> {
 
 
     public static class PropertyBagTypeAdapter extends TypeAdapter<PropertyBag> {
-        private static final Gson embedded = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        private final Gson embedded;
+
+        public PropertyBagTypeAdapter() {
+            embedded = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        }
+
+        public PropertyBagTypeAdapter(Collection<String> ignoreKeys) {
+            GsonBuilder builder = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping();
+            if (!ignoreKeys.isEmpty()) {
+                builder.registerTypeAdapter(new TypeToken<Map<String, Object>>(){}.getType(), new MapIgnoreKeysAdapter(ignoreKeys));
+            }
+            embedded = builder.create();
+        }
 
         public void write(JsonWriter out, PropertyBag bag) {
             HashMap<String, Object> toSerialize = new HashMap<>(bag);
             if (!bag.tags.isEmpty()) {
                 toSerialize.put(TAGS_KEY, bag.getTags());
             }
-            embedded.toJson(toSerialize, Map.class, out);
+            embedded.toJson(toSerialize, new TypeToken<Map<String, Object>>(){}.getType(), out);
         }
 
         public PropertyBag read(JsonReader reader) {
             PropertyBag result = new PropertyBag();
-            Map<String, Object> map = embedded.fromJson(reader, Map.class);
+            Map<String, Object> map = embedded.fromJson(reader, new TypeToken<Map<String, Object>>(){}.getType());
             Object tags = map.remove(TAGS_KEY);
             result.putAll(map);
             if (tags instanceof List) {
