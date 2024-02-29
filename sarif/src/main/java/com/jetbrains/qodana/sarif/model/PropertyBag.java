@@ -1,12 +1,12 @@
 package com.jetbrains.qodana.sarif.model;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -103,40 +103,93 @@ public class PropertyBag implements Map<String, Object> {
         return Objects.hash(properties, tags);
     }
 
+    public static class PropertyBagTypeAdapterFactory implements TypeAdapterFactory {
 
-    public static class PropertyBagTypeAdapter extends TypeAdapter<PropertyBag> {
-        private final Gson embedded;
+        private final Set<String> ignoreKeys;
 
-        public PropertyBagTypeAdapter() {
-            embedded = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        public PropertyBagTypeAdapterFactory(Collection<String> ignoreKeys) {
+            this.ignoreKeys = new HashSet<>(ignoreKeys);
         }
 
-        public PropertyBagTypeAdapter(Collection<String> ignoreKeys) {
-            GsonBuilder builder = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping();
-            if (!ignoreKeys.isEmpty()) {
-                builder.registerTypeAdapter(new TypeToken<Map<String, Object>>(){}.getType(), new MapIgnoreKeysAdapter(ignoreKeys));
+        @Override
+        public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
+            Class<? super T> rawType = typeToken.getRawType();
+            if (!PropertyBag.class.equals(rawType)) {
+                return null;
+            } else {
+                return (TypeAdapter<T>) new PropertyBag.PropertyBagTypeAdapterFactory.PropertyBagTypeAdapter(ignoreKeys, gson);
             }
-            embedded = builder.create();
         }
 
-        public void write(JsonWriter out, PropertyBag bag) {
-            HashMap<String, Object> toSerialize = new HashMap<>(bag);
-            if (!bag.tags.isEmpty()) {
-                toSerialize.put(TAGS_KEY, bag.getTags());
-            }
-            embedded.toJson(toSerialize, new TypeToken<Map<String, Object>>(){}.getType(), out);
-        }
+        public static class PropertyBagTypeAdapter extends TypeAdapter<PropertyBag> {
+            private final Gson gson;
+            private final Set<String> ignoreKeys;
 
-        public PropertyBag read(JsonReader reader) {
-            PropertyBag result = new PropertyBag();
-            Map<String, Object> map = embedded.fromJson(reader, new TypeToken<Map<String, Object>>(){}.getType());
-            Object tags = map.remove(TAGS_KEY);
-            result.putAll(map);
-            if (tags instanceof List) {
-                //noinspection unchecked
-                result.tags.addAll((Collection<? extends String>) tags);
+            public PropertyBagTypeAdapter(Set<String> ignoreKeys, Gson gson) {
+                this.ignoreKeys = ignoreKeys;
+                this.gson = gson;
             }
-            return result;
+
+            public void write(JsonWriter out, PropertyBag bag) throws IOException {
+                if (bag == null) {
+                    out.nullValue();
+                    return;
+                }
+                HashMap<String, Object> toSerialize = new HashMap<>(bag);
+
+                if (!bag.tags.isEmpty()) {
+                    toSerialize.put(TAGS_KEY, bag.getTags());
+                }
+
+                TypeAdapter<Object> objectTypeAdapter = gson.getAdapter(Object.class);
+
+                out.beginObject();
+
+                for (Map.Entry<String, Object> entry : toSerialize.entrySet()) {
+                    if (!ignoreKeys.contains(entry.getKey())) {
+                        out.name(String.valueOf(entry.getKey()));
+                        objectTypeAdapter.write(out, entry.getValue());
+                    }
+                }
+
+                out.endObject();
+            }
+
+            public PropertyBag read(JsonReader in) throws IOException {
+                JsonToken peek = in.peek();
+                if (peek == JsonToken.NULL) {
+                    in.nextNull();
+                    return null;
+                }
+                PropertyBag result = new PropertyBag();
+                Map<String, Object> serializedMap = new HashMap<>();
+                TypeAdapter<Object> objectTypeAdapter = gson.getAdapter(Object.class);
+                in.beginObject();
+
+                while (in.hasNext()) {
+                    String key = in.nextName();
+                    if (!ignoreKeys.contains(key)) {
+                        Object value = objectTypeAdapter.read(in);
+                        Object replaced = serializedMap.put(key, value);
+                        if (replaced != null) {
+                            throw new JsonSyntaxException("Duplicate key: " + key);
+                        }
+                    } else {
+                        in.skipValue();
+                    }
+                }
+
+                in.endObject();
+
+                Object tags = serializedMap.remove(TAGS_KEY);
+                result.putAll(serializedMap);
+                if (tags instanceof List) {
+                    //noinspection unchecked
+                    result.tags.addAll((Collection<? extends String>) tags);
+                }
+                return result;
+            }
         }
     }
+
 }

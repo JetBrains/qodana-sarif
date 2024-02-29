@@ -3,7 +3,6 @@ package com.jetbrains.qodana.sarif.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.jetbrains.qodana.sarif.TestUtils;
 import org.junit.jupiter.api.Assertions;
@@ -11,40 +10,28 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
-class MapIgnoreKeysAdapterTest {
+class PropertyBagAdapterTest {
 
     private String jsonString;
     private Map<String, Object> jsonMap;
+    private static final Gson defaultGson = new Gson();
 
     @BeforeEach
     void setUp() throws IOException {
         jsonString = TestUtils.readStringFromPath("src/test/resources/testData/serializeTest/ignoringKeys.json").replaceAll("\\s", "");
-
-        Map<String, Object> nestedK1 = new LinkedTreeMap<>();
-        nestedK1.put("k1_k1_k1", "v1");
-
-        Map<String, Object> k1 = new LinkedTreeMap<>();
-        k1.put("k1_k1", nestedK1);
-        k1.put("k1_k2", 2.0);
-        k1.put("k1_k3", "v3");
-
-        Collection<Object> k2 = new ArrayList<>();
-        Collections.addAll(k2, 1.0, 2.0);
-
-        jsonMap = new HashMap<>();
-        jsonMap.put("k1", k1);
-        jsonMap.put("k2", k2);
-        jsonMap.put("k3", "v3");
-        jsonMap.put("k4", 4.0);
+        jsonMap = defaultGson.fromJson(jsonString, new TypeToken<Map<String, Object>>(){}.getType());
     }
 
     @Test
     void shouldDeserializeNotIgnoringKeys() {
         Gson gson = createGsonIgnoringKeys(Collections.emptyList());
 
-        Map<String, Object> result = gson.fromJson(jsonString, new TypeToken<Map<String, Object>>(){}.getType());
+        Map<String, Object> result = gson.fromJson(jsonString, PropertyBag.class);
 
         Assertions.assertEquals(jsonMap, result);
     }
@@ -56,7 +43,7 @@ class MapIgnoreKeysAdapterTest {
 
         Gson gson = createGsonIgnoringKeys(ignoreKeys);
 
-        Map<String, Object> result = gson.fromJson(jsonString, new TypeToken<Map<String, Object>>(){}.getType());
+        Map<String, Object> result = gson.fromJson(jsonString, PropertyBag.class);
 
         Assertions.assertEquals(2, result.size());
         Assertions.assertNull(result.get("k2"));
@@ -68,10 +55,12 @@ class MapIgnoreKeysAdapterTest {
     @Test
     void shouldSerializeNotIgnoringKeys() {
         Gson gson = createGsonIgnoringKeys(Collections.emptyList());
+        PropertyBag propertyBag = new PropertyBag();
+        propertyBag.putAll(jsonMap);
 
-        String result = gson.toJson(jsonMap, new TypeToken<Map<String, Object>>(){}.getType());
+        String result = gson.toJson(propertyBag, PropertyBag.class);
 
-        Assertions.assertEquals(jsonString, result);
+        assertJson(jsonString, result);
     }
 
     @Test
@@ -79,11 +68,13 @@ class MapIgnoreKeysAdapterTest {
         Collection<String> ignoreKeys = new ArrayList<>();
         Collections.addAll(ignoreKeys, "k2", "k3");
         Gson gson = createGsonIgnoringKeys(ignoreKeys);
+        PropertyBag propertyBag = new PropertyBag();
+        propertyBag.putAll(jsonMap);
         String expectedResult = "{\"k1\":{\"k1_k1\":{\"k1_k1_k1\":\"v1\"},\"k1_k2\":2.0,\"k1_k3\":\"v3\"},\"k4\":4.0}";
 
-        String result = gson.toJson(jsonMap, new TypeToken<Map<String, Object>>(){}.getType());
+        String result = gson.toJson(propertyBag, PropertyBag.class);
 
-        Assertions.assertEquals(expectedResult, result);
+        assertJson(expectedResult, result);
     }
 
     @Test
@@ -91,7 +82,7 @@ class MapIgnoreKeysAdapterTest {
         Gson gson = createGsonIgnoringKeys(Collections.emptyList());
 
         Assertions.assertThrows(JsonSyntaxException.class, () ->
-                gson.fromJson("[]", new TypeToken<Map<String, Object>>(){}.getType())
+                gson.fromJson("[]", PropertyBag.class)
         );
     }
 
@@ -100,7 +91,7 @@ class MapIgnoreKeysAdapterTest {
         Gson gson = createGsonIgnoringKeys(Collections.emptyList());
 
         Assertions.assertThrows(JsonSyntaxException.class, () ->
-            gson.fromJson("{\"a\":1,\"a\":1}", new TypeToken<Map<String, Object>>(){}.getType())
+            gson.fromJson("{\"a\":1,\"a\":1}", PropertyBag.class)
         );
     }
 
@@ -108,7 +99,7 @@ class MapIgnoreKeysAdapterTest {
     void shouldSerializeNull() {
         Gson gson = createGsonIgnoringKeys(Collections.emptyList());
 
-        String result = gson.toJson(null, new TypeToken<Map<String, Object>>(){}.getType());
+        String result = gson.toJson(null, PropertyBag.class);
 
         Assertions.assertEquals("null", result);
     }
@@ -117,18 +108,18 @@ class MapIgnoreKeysAdapterTest {
     void shouldDeserializeNull() {
         Gson gson = createGsonIgnoringKeys(Collections.emptyList());
 
-        Map<String, Object> result = gson.fromJson("null", new TypeToken<Map<String, Object>>(){}.getType());
+        Map<String, Object> result = gson.fromJson("null", PropertyBag.class);
 
         Assertions.assertNull(result);
     }
 
     private Gson createGsonIgnoringKeys(Collection<String> ignoreKeys) {
         return new GsonBuilder()
-                .registerTypeAdapter(
-                        new TypeToken<Map<String, Object>>(){}.getType(),
-                        new MapIgnoreKeysAdapter(ignoreKeys)
-                )
+                .registerTypeAdapterFactory(new PropertyBag.PropertyBagTypeAdapterFactory(ignoreKeys))
                 .create();
     }
 
+    private void assertJson(String expected, String actual) {
+        Assertions.assertEquals(defaultGson.fromJson(expected, Map.class), defaultGson.fromJson(actual, Map.class));
+    }
 }

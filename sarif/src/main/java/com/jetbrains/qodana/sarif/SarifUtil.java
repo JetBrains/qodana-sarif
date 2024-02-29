@@ -125,7 +125,7 @@ public class SarifUtil {
         return new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
-                .registerTypeAdapter(PropertyBag.class, new PropertyBag.PropertyBagTypeAdapter(ignoreKeysArray).nullSafe())
+                .registerTypeAdapterFactory(new PropertyBag.PropertyBagTypeAdapterFactory(ignoreKeysArray))
                 .registerTypeAdapter(Instant.class, new IsoInstantTypeAdapter().nullSafe());
     }
 }
