@@ -8,6 +8,7 @@ import com.jetbrains.qodana.sarif.TestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sun.security.ec.point.ProjectivePoint;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,26 +25,27 @@ class PropertyBagAdapterTest {
     @BeforeEach
     void setUp() throws IOException {
         jsonString = TestUtils.readStringFromPath("src/test/resources/testData/serializeTest/ignoringKeys.json").replaceAll("\\s", "");
-        jsonMap = defaultGson.fromJson(jsonString, new TypeToken<Map<String, Object>>(){}.getType());
+        jsonMap = defaultGson.fromJson(jsonString, new TypeToken<Map<String, Object>>() {
+        }.getType());
     }
 
     @Test
     void shouldDeserializeNotIgnoringKeys() {
         Gson gson = createGsonIgnoringKeys(Collections.emptyList());
 
-        Map<String, Object> result = gson.fromJson(jsonString, PropertyBag.class);
+        PropertyBag result = gson.fromJson(jsonString, PropertyBag.class);
 
         Assertions.assertEquals(jsonMap, result);
     }
 
     @Test
     void shouldDeserializeIgnoringKeys() {
-       Collection<String> ignoreKeys = new ArrayList<>();
-       Collections.addAll(ignoreKeys, "k2", "k3");
+        Collection<String> ignoreKeys = new ArrayList<>();
+        Collections.addAll(ignoreKeys, "k2", "k3");
 
         Gson gson = createGsonIgnoringKeys(ignoreKeys);
 
-        Map<String, Object> result = gson.fromJson(jsonString, PropertyBag.class);
+        PropertyBag result = gson.fromJson(jsonString, PropertyBag.class);
 
         Assertions.assertEquals(2, result.size());
         Assertions.assertNull(result.get("k2"));
@@ -91,7 +93,7 @@ class PropertyBagAdapterTest {
         Gson gson = createGsonIgnoringKeys(Collections.emptyList());
 
         Assertions.assertThrows(JsonSyntaxException.class, () ->
-            gson.fromJson("{\"a\":1,\"a\":1}", PropertyBag.class)
+                gson.fromJson("{\"a\":1,\"a\":1}", PropertyBag.class)
         );
     }
 
