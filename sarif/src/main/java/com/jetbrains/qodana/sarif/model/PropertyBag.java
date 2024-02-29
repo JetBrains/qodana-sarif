@@ -112,6 +112,7 @@ public class PropertyBag implements Map<String, Object> {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
             Class<? super T> rawType = typeToken.getRawType();
             if (!PropertyBag.class.equals(rawType)) {
