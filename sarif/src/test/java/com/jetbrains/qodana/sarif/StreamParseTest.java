@@ -60,13 +60,11 @@ abstract public class StreamParseTest {
         int currentIndex = 0;
         while (expectedRuns.hasNext()) {
             assertTrue(actualRuns.hasNext());
-            try (Reader reader = actual.getMakeReader().get()) {
-                assertEqualRunContents.accept(
-                    expectedRuns.next(),
-                    new StreamingRun(actualRuns.next(), reader),
-                    currentIndex
-                );
-            }
+            assertEqualRunContents.accept(
+                expectedRuns.next(),
+                new StreamingRun(actualRuns.next(), actual.makeReader),
+                currentIndex
+            );
             currentIndex++;
         }
         assertEquals(expected.withRuns(null), actual.getSarifReport().withRuns(null));
@@ -92,7 +90,7 @@ abstract public class StreamParseTest {
 
     @FunctionalInterface
     protected interface TriConsumer<A, B, C> {
-        void accept(A a, B b, C c);
+        void accept(A a, B b, C c) throws IOException;
     }
 
     protected static class StreamingSarifReport {
@@ -115,19 +113,21 @@ abstract public class StreamParseTest {
 
     protected static class StreamingRun {
         private final Run run;
-        private final Reader reader;
+        private final ExceptionSupplier<Reader> makeReader;
 
-        public StreamingRun(Run run, Reader reader) {
+        public StreamingRun(Run run,  ExceptionSupplier<Reader> makeReader) {
             this.run = run;
-            this.reader = reader;
+            this.makeReader = makeReader;
         }
 
         public Run getRun() {
             return run;
         }
 
-        public Reader getReader() {
-            return reader;
+        public void getReader(Consumer<Reader> withReader) throws IOException {
+            try (Reader reader = makeReader.get()) {
+                withReader.accept(reader);
+            }
         }
     }
 }
