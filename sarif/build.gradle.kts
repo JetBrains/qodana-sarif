@@ -65,11 +65,35 @@ publishing {
             from(components["java"])
 
             pom {
-                developers {
+                url.set("https://github.com/JetBrains/qodana-sarif")
+
+                licenses {
+                    license {
+                        name.set("Apache-2.0")
+                        url.set("https://github.com/JetBrains/qodana-sarif/blob/main/LICENSE")
+                    }
+                }
+
+                developers {  // https://github.com/JetBrains/qodana-sarif/graphs/contributors
                     developer {
-                        id.set("alexeyAfanasiev")
+                        id.set("avafanasiev")
                         name.set("Alexey Afanasiev")
                         email.set("Alexey.Afanasiev@jetbrains.com")
+                    }
+                    developer {
+                        id.set("hybloid")
+                        name.set("Dmitry Golovinov")
+                        email.set("Dmitry.Golovinov@jetbrains.com")
+                    }
+                    developer {
+                        id.set("jckoenen")
+                        name.set("Johannes Koenen")
+                        email.set("Johannes.Koenen@jetbrains.com")
+                    }
+                    developer {
+                        id.set("tiulpin")
+                        name.set("Viktor Tiulpin")
+                        email.set("Viktor.Tiulpin@jetbrains.com")
                     }
                 }
             }
