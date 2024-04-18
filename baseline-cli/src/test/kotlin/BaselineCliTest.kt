@@ -135,10 +135,11 @@ class BaselineCliTest {
     @Test
     fun `test include absent false`() {
         // Act
-        assertDoesNotThrow { BaselineCli.process(BaselineOptions(emptySarif, sarif, includeAbsent = false), stdout::append, stderr::append) }
+        assertDoesNotThrow { BaselineCli.process(BaselineOptions(Path("src/test/resources/single.sarif.json").toString(), sarif, includeAbsent = false), stdout::append, stderr::append) }
 
         // Assert
-        assertFalse(stdout.contains("ABSENT: 2"))
+        assertFalse(stdout.contains("ABSENT:"))
+        assertTrue(stdout.contains("UNCHANGED: 1"))
         val content = File(emptySarif).readText(charset("UTF-8"))
         assertFalse(content.contains("absent"))
     }

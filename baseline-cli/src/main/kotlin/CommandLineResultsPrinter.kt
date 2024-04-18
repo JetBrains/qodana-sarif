@@ -11,8 +11,9 @@ class CommandLineResultsPrinter(
         val unchanged = resultsCountByBaselineState[Result.BaselineState.UNCHANGED] ?: 0
         val new = resultsCountByBaselineState[Result.BaselineState.NEW] ?: 0
         val absent = resultsCountByBaselineState[Result.BaselineState.ABSENT] ?: 0
+        val absentLine = if (includeAbsent) ", ABSENT: $absent" else ""
         val groupingMessage =
-            "Grouping problems according to baseline: UNCHANGED: $unchanged, NEW: $new, ABSENT: $absent"
+            "Grouping problems according to baseline: UNCHANGED: $unchanged, NEW: $new$absentLine"
 
         val countedProblems = (
                 results
