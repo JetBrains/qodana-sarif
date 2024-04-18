@@ -135,7 +135,7 @@ class BaselineCliTest {
     @Test
     fun `test include absent false`() {
         // Act
-        assertDoesNotThrow { BaselineCli.process(BaselineOptions(Path("src/test/resources/single.sarif.json").toString(), sarif, includeAbsent = false), stdout::append, stderr::append) }
+        assertDoesNotThrow { BaselineCli.process(BaselineOptions(copySarifFromResources("single.sarif.json"), sarif, includeAbsent = false), stdout::append, stderr::append) }
 
         // Assert
         assertFalse(stdout.contains("ABSENT:"))

@@ -55,7 +55,6 @@
           "partialFingerprints": {
             "equalIndicator/v1": "9ac736b5dae7725e30bdcce141bc6b126bb32f7c9ea9af7678910adc32180a55"
           },
-          "baselineState": "unchanged",
           "properties": {
             "ideaSeverity": "WARNING",
             "qodanaSeverity": "High"
