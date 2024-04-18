@@ -11,16 +11,13 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 object BaselineCli {
-    fun process(map: Map<String, String>, cliPrinter: (String) -> Unit, errPrinter: (String) -> Unit): Int {
-        val sarifPath = map["sarifReport"]!!
-        val baselinePath = map["baselineReport"]
-        val failThreshold = map["failThreshold"]?.toIntOrNull()
-        if (!Files.exists(Paths.get(sarifPath))) {
+    fun process(options: BaselineOptions, cliPrinter: (String) -> Unit, errPrinter: (String) -> Unit): Int {
+        if (!Files.exists(Paths.get(options.sarifPath))) {
             errPrinter("Please provide a valid SARIF report path")
             return ERROR_EXIT
         }
         val sarifReport = try {
-            SarifUtil.readReport(Paths.get(sarifPath))
+            SarifUtil.readReport(Paths.get(options.sarifPath))
         } catch (e: Exception) {
             errPrinter("Error reading SARIF report: ${e.message}")
             return ERROR_EXIT
@@ -30,18 +27,19 @@ object BaselineCli {
             RuleUtil.findRuleDescriptor(sarifReport, id)?.shortDescription?.text ?: id
         }
         val printer = CommandLineResultsPrinter(simpleMemoize(resolveInspectionName), cliPrinter)
-        return if (baselinePath != null) {
+        return if (options.baselinePath != null) {
             compareBaselineThreshold(
                 sarifReport,
-                Paths.get(sarifPath),
-                Paths.get(baselinePath),
-                failThreshold,
+                Paths.get(options.sarifPath),
+                Paths.get(options.baselinePath),
+                options.failThreshold,
+                options.includeAbsent,
                 printer,
                 cliPrinter,
                 errPrinter
             )
         } else {
-            compareThreshold(sarifReport, Paths.get(sarifPath), failThreshold, printer, cliPrinter, errPrinter)
+            compareThreshold(sarifReport, Paths.get(options.sarifPath), options.failThreshold, printer, cliPrinter, errPrinter)
         }
     }
 
@@ -91,6 +89,7 @@ object BaselineCli {
         sarifPath: Path,
         baselinePath: Path,
         failThreshold: Int?,
+        includeAbsent: Boolean,
         printer: CommandLineResultsPrinter,
         cliPrinter: (String) -> Unit,
         errPrinter: (String) -> Unit
@@ -106,8 +105,8 @@ object BaselineCli {
             errPrinter("Error reading baseline report: ${e.message}")
             return ERROR_EXIT
         }
-        val baselineCalculation = BaselineCalculation.compare(sarifReport, baseline, BaselineCalculation.Options())
-        printer.printResultsWithBaselineState(sarifReport.runs.first().results, false)
+        val baselineCalculation = BaselineCalculation.compare(sarifReport, baseline, BaselineCalculation.Options(includeAbsent))
+        printer.printResultsWithBaselineState(sarifReport.runs.first().results, includeAbsent)
         val invocation = processResultCount(baselineCalculation.newResults, failThreshold, cliPrinter, errPrinter)
         sarifReport.runs.first().invocations = listOf(invocation)
         SarifUtil.writeReport(sarifPath, sarifReport)

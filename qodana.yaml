@@ -9,3 +9,5 @@ exclude:
   - name: All
     paths:
       - sarif/src/test/resources/
+dependencyIgnores:
+  - name: "colormath-jvm"

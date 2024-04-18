@@ -3,9 +3,14 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     implementation(projects.sarif)
     implementation(libs.gson)
+    implementation("com.github.ajalt.clikt:clikt:4.3.0")
 }
 
 application {
