@@ -5,19 +5,15 @@ class CommandLineTable(private val header: List<String>, private val rows: List<
         const val DEFAULT_COLUMN_SIZE = 50
     }
 
-    private val columnSize: List<Int>
-
-    init {
-        this.columnSize = columnSize.mapIndexed { ind, size ->
-            if (size != 0 || rows.isEmpty()) {
-                return@mapIndexed size
-            }
-
-            max(
-                rows.maxOfOrNull { if (ind < it.size) it[ind].length else 0 } ?: DEFAULT_COLUMN_SIZE,
-                if (ind < header.size) header[ind].length else DEFAULT_COLUMN_SIZE
-            )
+    private val columnSize: List<Int> = columnSize.mapIndexed { ind, size ->
+        if (size != 0 || rows.isEmpty()) {
+            return@mapIndexed size
         }
+
+        max(
+            rows.maxOfOrNull { if (ind < it.size) it[ind].length else 0 } ?: DEFAULT_COLUMN_SIZE,
+            if (ind < header.size) header[ind].length else DEFAULT_COLUMN_SIZE
+        )
     }
 
     fun buildTable(): String {
