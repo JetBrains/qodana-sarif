@@ -1,5 +1,5 @@
 version: "1.0"
-linter: jetbrains/qodana-jvm:2023.2
+linter: jetbrains/qodana-jvm:2024.1
 projectJDK: "1.8"
 profile:
   name: qodana.recommended
@@ -9,5 +9,3 @@ exclude:
   - name: All
     paths:
       - sarif/src/test/resources/
-dependencyIgnores:
-  - name: "colormath-jvm"
