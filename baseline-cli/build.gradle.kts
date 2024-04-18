@@ -6,6 +6,7 @@ plugins {
 dependencies {
     implementation(projects.sarif)
     implementation(libs.gson)
+    implementation(libs.clikt)
 }
 
 application {
