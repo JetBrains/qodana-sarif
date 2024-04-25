@@ -64,39 +64,62 @@ class BaselineCliTest {
     }
 
     @Test
-    fun `test when failThreshold is not present and results count is less than the failThreshold default value`() {
-        // Act
-        val exitCode = assertDoesNotThrow {
-            BaselineCli.process(BaselineOptions(sarif), stdout::append, stderr::append)
-        }
-
-        // Assert
-        assertEquals(0, exitCode)
-        assertTrue(!stdout.contains("is greater than the threshold"))
-    }
-
-    @Test
     fun `test when failThreshold is provided and results count in sarifReport is more than failThreshold`() {
         // Act
         val exitCode = assertDoesNotThrow {
-            BaselineCli.process(BaselineOptions(sarif, failThreshold = 0), stdout::append, stderr::append)
+            BaselineCli.process(BaselineOptions(sarif, thresholds = SeverityThresholds(any = 0)), stdout::append, stderr::append)
         }
 
         // Assert
         assertEquals(THRESHOLD_EXIT, exitCode)
-        assertTrue(stderr.contains("New problems count") && stderr.contains("is greater than the threshold"))
+        assertTrue(stderr.contains("Detected 2 problems across all severities, fail threshold 0"))
+    }
+
+    @Test
+    fun `test when failThreshold is provided and results count in sarifReport is equal to failThreshold`() {
+        // Act
+        val exitCode = assertDoesNotThrow {
+            BaselineCli.process(BaselineOptions(sarif, thresholds = SeverityThresholds(any = 2)), stdout::append, stderr::append)
+        }
+
+        // Assert
+        assertEquals(0, exitCode)
+        assertTrue(stderr.contains("Found 2 new problems according to the checks applied"))
+    }
+
+    @Test
+    fun `test when fail threshold for severity is provided and results count exceeds threshold`() {
+        val exitCode = assertDoesNotThrow {
+            BaselineCli.process(BaselineOptions(sarif, thresholds = SeverityThresholds(high = 1)), stdout::append, stderr::append)
+        }
+
+        // Assert
+        assertEquals(THRESHOLD_EXIT, exitCode)
+        assertTrue(stderr.contains("Detected 2 problems for severity HIGH, fail threshold 1"))
+    }
+
+    @Test
+    fun `test when fail threshold for severity is provided and results count does not exceed threshold`() {
+        val exitCode = assertDoesNotThrow {
+            BaselineCli.process(BaselineOptions(sarif, thresholds = SeverityThresholds(low = 2)), stdout::append, stderr::append)
+        }
+
+        // Assert
+        assertEquals(0, exitCode)
+        assertFalse(stderr.contains("LOW"))
+        assertTrue(stderr.contains("Found 2 new problems according to the checks applied"))
     }
 
     @Test
     fun `test when failThreshold is provided and newResults count in baselineCalculation is more than failThreshold`() {
         // Act
         val exitCode = assertDoesNotThrow {
-            BaselineCli.process(BaselineOptions(sarif, emptySarif, failThreshold = 1), stdout::append, stderr::append)
+            BaselineCli.process(BaselineOptions(sarif, emptySarif, thresholds = SeverityThresholds(any = 1)), stdout::append, stderr::append)
         }
 
         // Assert
         assertEquals(THRESHOLD_EXIT, exitCode)
-        assertTrue(stderr.contains("New problems count") && stderr.contains("is greater than the threshold"))
+        assertTrue(stderr.contains("Detected 2 problems across all severities, fail threshold 1"))
     }
 
     @Test
