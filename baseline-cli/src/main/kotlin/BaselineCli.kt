@@ -112,13 +112,14 @@ internal object BaselineCli {
         cliPrinter: (String) -> Unit,
         errPrinter: (String) -> Unit
     ): Int {
-        if (!Files.exists(baselinePath)) {
-            errPrinter("Please provide valid baseline report path")
-            return ERROR_EXIT
-        }
         val baseline: SarifReport
         try {
-            baseline = SarifUtil.readReport(baselinePath) ?: createSarifReport(emptyList())
+            if (!Files.exists(baselinePath)) {
+                cliPrinter("Can't find baseline report file: $baselinePath. Baseline will be calculated against empty report.")
+                baseline = createSarifReport(emptyList())
+            } else {
+                baseline = SarifUtil.readReport(baselinePath) ?: createSarifReport(emptyList())
+            }
         } catch (e: JsonSyntaxException) {
             errPrinter("Error reading baseline report: ${e.message}")
             return ERROR_EXIT
