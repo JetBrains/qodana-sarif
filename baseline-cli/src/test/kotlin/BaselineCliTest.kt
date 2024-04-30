@@ -47,8 +47,9 @@ class BaselineCliTest {
         }
 
         // Assert
-        assertEquals(ERROR_EXIT, exitCode)
-        assertEquals("Please provide valid baseline report path", stderr.toString())
+        assertEquals(0, exitCode)
+        assertTrue(stdout.contains("Can't find baseline report file: nonExistentBaselineReport.sarif."))
+        assertTrue(stderr.contains("Found 2 new problems according to the checks applied"))
     }
 
     @Test
