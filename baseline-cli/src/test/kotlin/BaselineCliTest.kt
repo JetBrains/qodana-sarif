@@ -9,6 +9,8 @@ import kotlin.io.path.Path
 class BaselineCliTest {
 
     private val sarif = copySarifFromResources("report.equal.sarif.json")
+    private val sarifTwoIssues = copySarifFromResources("twoissues.sarif.json")
+    private val sarifSingleIssue = copySarifFromResources("single.sarif.json")
     private val emptySarif = copySarifFromResources("empty.sarif.json")
     private val corruptedSarif = Path("src/test/resources/corrupted.sarif.json").toString()
 
@@ -159,13 +161,24 @@ class BaselineCliTest {
     @Test
     fun `test include absent false`() {
         // Act
-        assertDoesNotThrow { BaselineCli.process(BaselineOptions(copySarifFromResources("single.sarif.json"), sarif, includeAbsent = false), stdout::append, stderr::append) }
+        assertDoesNotThrow { BaselineCli.process(BaselineOptions(sarifSingleIssue, sarif, includeAbsent = false), stdout::append, stderr::append) }
 
         // Assert
         assertFalse(stdout.contains("ABSENT:"))
         assertTrue(stdout.contains("UNCHANGED: 1"))
         val content = File(emptySarif).readText(charset("UTF-8"))
         assertFalse(content.contains("absent"))
+    }
+
+    @Test
+    fun `test new result count contains only new issues`() {
+        // Act
+        assertDoesNotThrow { BaselineCli.process(BaselineOptions(sarifTwoIssues, sarifSingleIssue, includeAbsent = false), stdout::append, stderr::append) }
+
+        // Assert
+        assertTrue(stdout.contains("UNCHANGED: 1"))
+        assertTrue(stdout.contains("NEW: 1"))
+        assertTrue(stderr.contains("Found 1 new problems according to the checks applied"))
     }
 
 
