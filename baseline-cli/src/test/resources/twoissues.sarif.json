@@ -8,8 +8,8 @@
           "kind": "fail",
           "level": "warning",
           "message": {
-            "text": "Result of \u0027A.unusedResult()\u0027 is ignored",
-            "markdown": "Result of `A.unusedResult()` is ignored"
+            "text": "Result of \u0027A.unusedResult123()\u0027 is ignored",
+            "markdown": "Result of `A.unusedResult123()` is ignored"
           },
           "locations": [
             {
@@ -24,7 +24,7 @@
                   "charOffset": 143,
                   "charLength": 12,
                   "snippet": {
-                    "text": "unusedResult"
+                    "text": "unusedResult123"
                   },
                   "sourceLanguage": "JAVA"
                 },
@@ -34,7 +34,7 @@
                   "charOffset": 96,
                   "charLength": 86,
                   "snippet": {
-                    "text": "      System.out.println(\"Another\");\n    }\n    unusedResult();\n    unusedResult();\n  }"
+                    "text": "      System.out.println(\"Another\");\n    }\n    unusedResult123();\n    unusedResult();\n  }"
                   }
                 }
               },

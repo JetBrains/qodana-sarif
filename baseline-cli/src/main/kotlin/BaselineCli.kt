@@ -59,7 +59,11 @@ internal object BaselineCli {
         cliPrinter: (String) -> Unit,
         errPrinter: (String) -> Unit
     ): Invocation {
-        val size = results?.size ?: 0
+        val size = results.orEmpty()
+            .asSequence()
+            .filter(baselineFilter(hasBaseline))
+            .count()
+
         if (size > 0) {
             errPrinter("Found $size new problems according to the checks applied")
         } else {
@@ -138,14 +142,9 @@ internal object BaselineCli {
         hasBaseline: Boolean,
         thresholds: SeverityThresholds
     ): List<String> {
-        val baselineFilter: (Result) -> Boolean = when {
-            !hasBaseline -> { _ -> true }
-            else -> { x -> x.baselineState == Result.BaselineState.NEW }
-        }
-
         val resultsBySeverity = results.orEmpty()
             .asSequence()
-            .filter(baselineFilter)
+            .filter(baselineFilter(hasBaseline))
             .groupingBy { it.severity() }
             .eachCount()
 
@@ -186,4 +185,8 @@ internal object BaselineCli {
         return { state.computeIfAbsent(it, f) }
     }
 
+    private fun baselineFilter(hasBaseline: Boolean): (Result) -> Boolean = when {
+        !hasBaseline -> { _ -> true }
+        else -> { x -> x.baselineState == Result.BaselineState.NEW }
+    }
 }
