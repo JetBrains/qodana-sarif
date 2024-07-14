@@ -63,14 +63,19 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
             .filterNot { it.baselineState == BaselineState.ABSENT }
             .onEach { result -> baselineCounter.increment(ResultKey(result)) }
             .forEach { result ->
-                val removedFromReport = result.equalIndicators
-                    .flatMap(reportIndex::getOrEmpty)
-                    .any(undecidedFromReport::remove)
+                //compare with all equal indicators
+                val matchedResults = result.equalIndicators.flatMap(reportIndex::getOrEmpty).toSet()
+                val removed = undecidedFromReport.removeAll(matchedResults)
 
-                if (removedFromReport || !options.wasChecked.apply(result)) {
-                    state.put(result, BaselineState.UNCHANGED)
+                if (removed) {
+                    //leads to eliminating problems with the same hash
+                    state.put(matchedResults.first(), BaselineState.UNCHANGED)
                 } else {
-                    add(result)
+                    if (!options.wasChecked.apply(result)) {
+                        state.put(result, BaselineState.UNCHANGED)
+                    } else {
+                        add(result)
+                    }
                 }
             }
     }

@@ -73,7 +73,13 @@ class BaselineFingerprintTest {
     @Test
     fun `backward compat -- report v1_v2 - baseline v1`() {
         // we can only compare v1 because baseline doesn't have v2
-        test(readReport("v1_v2"), readBaseline("v1"), expectBaselineMismatch)
+        val report = readReport("v1_v2")
+        test(report, readBaseline("v1"), expectBaselineMismatch)
+        // final report should contain results from report, baseline results only with ABSENT state
+        report.runs?.get(0)?.results?.forEach {
+            val expectedSize = if (it.baselineState == BaselineState.ABSENT) 1 else 2
+            Assertions.assertEquals(expectedSize, it.partialFingerprints.getValues(BaselineCalculation.EQUAL_INDICATOR)?.size)
+        }
     }
 
     @Test
