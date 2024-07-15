@@ -53,6 +53,7 @@ public class ResultKey {
         if (location == null || oLocation == null) return location == oLocation;
 
         if (!equalsPhysicalLocation(location.getPhysicalLocation(), oLocation.getPhysicalLocation())) return false;
+        if (location.getPhysicalLocation() != null) return true;
         Set<LogicalLocation> locations = location.getLogicalLocations();
         Set<LogicalLocation> oLocations = oLocation.getLogicalLocations();
         if (locations == null || oLocations == null) return locations == oLocations;
@@ -104,11 +105,15 @@ public class ResultKey {
 
         if (result.getLocations() == null) return hash;
         for (Location location : result.getLocations()) {
-            hash = ((hash * 31) + hashPhysicalLocation(location.getPhysicalLocation()));
-            Set<LogicalLocation> logicalLocations = location.getLogicalLocations();
-            if (logicalLocations != null) {
-                for (LogicalLocation logicalLocation : logicalLocations) {
-                    hash = ((hash * 31) + hashLogicalLocation(logicalLocation));
+            PhysicalLocation physicalLocation = location.getPhysicalLocation();
+            if (physicalLocation != null) {
+                hash = ((hash * 31) + hashPhysicalLocation(physicalLocation));
+            } else {
+                Set<LogicalLocation> logicalLocations = location.getLogicalLocations();
+                if (logicalLocations != null) {
+                    for (LogicalLocation logicalLocation : logicalLocations) {
+                        hash = ((hash * 31) + hashLogicalLocation(logicalLocation));
+                    }
                 }
             }
         }

@@ -2,7 +2,6 @@ package com.jetbrains.qodana.sarif;
 
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation;
 import com.jetbrains.qodana.sarif.model.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -12,15 +11,32 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.jetbrains.qodana.sarif.baseline.BaselineCalculation.Options.DEFAULT;
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SuppressWarnings({"OptionalGetWithoutIsPresent", "SameParameterValue"})
 public class BaselineTest {
 
     private static final String QODANA_REPORT_JSON = "src/test/resources/testData/readWriteTest/qodanaReport.json";
     private static final String QODANA_REPORT_JSON_2 = "src/test/resources/testData/readWriteTest/qodanaReport2.json";
 
     private static final BaselineCalculation.Options INCLUDE_ABSENT = new BaselineCalculation.Options(true);
+
+    private static int problemsCount(SarifReport report) {
+        return report.getRuns().stream().mapToInt(it -> it.getResults().size()).sum();
+    }
+
+    private static SarifReport readReport() throws IOException {
+        return readReport(QODANA_REPORT_JSON);
+    }
+
+    private static SarifReport readReport(String path) throws IOException {
+        Path reportPath = Paths.get(path);
+        return SarifUtil.readReport(reportPath);
+    }
+
     @Test
     public void testSameReport() throws IOException {
         SarifReport report = readReport();
@@ -165,7 +181,6 @@ public class BaselineTest {
         assertEquals(Result.BaselineState.UNCHANGED, result4.getBaselineState());
     }
 
-
     @Test
     public void testDifferentToolName() throws IOException {
         SarifReport report = readReport();
@@ -217,6 +232,72 @@ public class BaselineTest {
         assertEquals(new ArrayList<String>(), withoutDescriptor);
     }
 
+    @Test
+    public void testDoNotUseLogicalLocationsIfProblemHasPhysical() {
+        SarifReport report = newReport();
+        SarifReport baseline = newReport();
+
+        Set<LogicalLocation> logicalLocations =
+                report.getRuns().get(0).getResults().get(0).getLocations().get(0).getLogicalLocations();
+        logicalLocations.stream().findFirst().get().withName("new name");
+
+        doTest(report, baseline, 1, 0, 0, INCLUDE_ABSENT);
+    }
+
+    @Test
+    public void testComparePhysicalEvenIfOneReportHasNotValue() {
+        SarifReport report = newReport();
+        SarifReport baseline = newReport();
+        report.getRuns().get(0).getResults().get(0).getLocations().get(0).withPhysicalLocation(null);
+
+        doTest(report, baseline, 0, 1, 1, INCLUDE_ABSENT);
+    }
+
+    @Test
+    public void testProblemHasNotPhysicalLocations() {
+        SarifReport report = newReport();
+        SarifReport baseline = newReport();
+        report.getRuns().get(0).getResults().get(0).getLocations().get(0).withPhysicalLocation(null);
+        baseline.getRuns().get(0).getResults().get(0).getLocations().get(0).withPhysicalLocation(null);
+
+        doTest(report, baseline, 1, 0, 0, INCLUDE_ABSENT);
+    }
+
+    @Test
+    public void testDoUseLogicalLocationsIfProblemHasNotPhysical() {
+        SarifReport report = newReport();
+        SarifReport baseline = newReport();
+        report.getRuns().get(0).getResults().get(0).getLocations().get(0).withPhysicalLocation(null);
+        baseline.getRuns().get(0).getResults().get(0).getLocations().get(0).withPhysicalLocation(null);
+
+        Set<LogicalLocation> logicalLocations =
+                report.getRuns().get(0).getResults().get(0).getLocations().get(0).getLogicalLocations();
+        logicalLocations.stream().findFirst().get().withName("new name");
+        doTest(report, baseline, 0, 1, 1, INCLUDE_ABSENT);
+    }
+
+    private SarifReport newReport() {
+        return new SarifReport()
+                .withRuns(
+                        singletonList(new Run()
+                                .withResults(singletonList(newResult()))
+                        )
+                );
+    }
+
+    private Result newResult() {
+        return new Result(new Message().withText("message"))
+                .withLocations(singletonList(
+                        new Location()
+                                .withPhysicalLocation(new PhysicalLocation()
+                                        .withArtifactLocation(new ArtifactLocation().withUri("path/file.txt"))
+                                )
+                                .withLogicalLocations(
+                                        singleton(new LogicalLocation().withName("name").withKind("module"))
+                                )
+                ));
+    }
+
     private void doTest(SarifReport report,
                         SarifReport baseline,
                         int expectedUnchanged,
@@ -261,18 +342,5 @@ public class BaselineTest {
                         int expectedNew
     ) {
         doTest(report, baseline, expectedUnchanged, expectedAbsent, expectedNew, DEFAULT);
-    }
-
-    private static int problemsCount(SarifReport report) {
-        return report.getRuns().stream().mapToInt(it -> it.getResults().size()).sum();
-    }
-
-    private static SarifReport readReport() throws IOException {
-        return readReport(QODANA_REPORT_JSON);
-    }
-
-    private static SarifReport readReport(String path) throws IOException {
-        Path reportPath = Paths.get(path);
-        return SarifUtil.readReport(reportPath);
     }
 }
