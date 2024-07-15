@@ -276,6 +276,16 @@ public class BaselineTest {
         doTest(report, baseline, 0, 1, 1, INCLUDE_ABSENT);
     }
 
+    @Test
+    public void testMarkdownInMessageDoNotAffectBaseline() {
+        SarifReport report = newReport();
+        SarifReport baseline = newReport();
+        report.getRuns().get(0).getResults().get(0).getMessage().withMarkdown("1");
+        baseline.getRuns().get(0).getResults().get(0).getMessage().withMarkdown("2");
+
+        doTest(report, baseline, 1, 0, 0, INCLUDE_ABSENT);
+    }
+
     private SarifReport newReport() {
         return new SarifReport()
                 .withRuns(

@@ -25,7 +25,7 @@ public class ResultKey {
         ResultKey key = (ResultKey) o;
         Result oResult = key.result;
 
-        if (!Objects.equals(result.getMessage(), oResult.getMessage()) ||
+        if (!equalsMessage(result.getMessage(), oResult.getMessage()) ||
                 !Objects.equals(result.getRuleId(), oResult.getRuleId()) ||
                 !Objects.equals(result.getLevel(), oResult.getLevel())
         ) {
@@ -47,6 +47,11 @@ public class ResultKey {
         }
 
         return true;
+    }
+
+    private boolean equalsMessage(Message message, Message oMessage) {
+        if (message == null || oMessage== null) return message == oMessage;
+        return message.getText().equals(oMessage.getText());
     }
 
     private boolean equalsLocation(Location location, Location oLocation) {
@@ -100,7 +105,7 @@ public class ResultKey {
     public int hashCode() {
         int hash = 1;
         hash = ((hash * 31) + ((result.getRuleId() == null) ? 0 : result.getRuleId().hashCode()));
-        hash = ((hash * 31) + ((result.getMessage() == null) ? 0 : result.getMessage().hashCode()));
+        hash = ((hash * 31) + ((result.getMessage() == null) ? 0 : hashMessage(result.getMessage())));
         hash = ((hash * 31) + ((result.getLevel() == null) ? 0 : result.getLevel().hashCode()));
 
         if (result.getLocations() == null) return hash;
@@ -118,6 +123,11 @@ public class ResultKey {
             }
         }
         return hash;
+    }
+
+    private int hashMessage(Message message) {
+        if (message == null) return 0;
+        return message.getText().hashCode();
     }
 
 
