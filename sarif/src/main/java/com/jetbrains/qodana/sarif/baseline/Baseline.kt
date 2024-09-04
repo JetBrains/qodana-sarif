@@ -65,7 +65,10 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
             .forEach { result ->
                 //compare with all equal indicators
                 val matchedResults = result.equalIndicators.flatMap(reportIndex::getOrEmpty).toSet()
-                val removed = undecidedFromReport.removeAll(matchedResults)
+                var removed = false
+                for (matchedResult in matchedResults) {
+                    removed = removed || undecidedFromReport.remove(matchedResult)
+                }
 
                 if (removed) {
                     //leads to eliminating problems with the same hash
