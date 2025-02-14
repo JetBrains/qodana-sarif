@@ -50,6 +50,7 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     val reportIndex = FingerprintIndex()
     val baselineCounter = Counter<ResultKey>()
 
+    // filling reportIndex with all results form report
     val undecidedFromReport = report.results.noNulls()
         .filterNot { it.baselineState == BaselineState.ABSENT }
         .onEach { result ->
@@ -58,10 +59,16 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
         }
         .toCollection(IdentitySet(report.results?.size ?: 0))
 
+    val filteredResults = baseline.results.noNulls()
+        .filterNot { it.baselineState == BaselineState.ABSENT }
+
+    // filling baselineCounter
+    filteredResults
+        .forEach { result -> baselineCounter.increment(ResultKey(result)) }
+
+    // removing from baseline report results matched by fingerprints with report
     val undecidedFromBaseline = buildList {
-        baseline.results.noNulls()
-            .filterNot { it.baselineState == BaselineState.ABSENT }
-            .onEach { result -> baselineCounter.increment(ResultKey(result)) }
+        filteredResults
             .forEach { result ->
                 //compare with all equal indicators
                 val matchedResults = result.equalIndicators.flatMap(reportIndex::getOrEmpty).toSet()
@@ -73,6 +80,8 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
                 if (removed) {
                     //leads to eliminating problems with the same hash
                     state.put(matchedResults.first(), BaselineState.UNCHANGED)
+                    remove(matchedResults.first())
+                    baselineCounter.decrement(ResultKey(matchedResults.first()))
                 } else {
                     if (!options.wasChecked.apply(result)) {
                         state.put(result, BaselineState.UNCHANGED)
@@ -83,7 +92,8 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
             }
     }
 
-
+    // at this point in undecidedFromReport problems not matched with baseline using fingerprints
+    // separating these problems on NEW and UNCHANGED using comparison from ResultKey
     undecidedFromReport.forEach { result ->
         val key = ResultKey(result)
         val inBaseline = baselineCounter[key]
@@ -95,6 +105,7 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
         }
     }
 
+    // adding to ABSENT problems from baseline not matched by fingerprints or ResultKey comparison
     undecidedFromBaseline
         .asSequence()
         .filter { baselineCounter.decrement(ResultKey(it)) >= 0 }
