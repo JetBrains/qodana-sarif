@@ -286,6 +286,30 @@ public class BaselineTest {
         doTest(report, baseline, 1, 0, 0, INCLUDE_ABSENT);
     }
 
+    @Test
+    public void testBaselineOnlyOneMatchingProblem() throws IOException {
+        SarifReport report = readReport("src/test/resources/testData/readWriteTest/qodanaReportTwoProblemsWithSameCode.json");
+        SarifReport baseline = readReport("src/test/resources/testData/readWriteTest/qodanaReportBaselineOneProblem.json");
+
+        doTest(report, baseline, 1, 0, 1);
+    }
+
+    @Test
+    public void testBaselineExtractedCodeMatchesSameProblem() throws IOException {
+        SarifReport report = readReport("src/test/resources/testData/readWriteTest/qodanaReportExtractedCode.json");
+        SarifReport baseline = readReport("src/test/resources/testData/readWriteTest/qodanaReportBaselineOneProblem.json");
+
+        doTest(report, baseline, 1, 0, 0);
+    }
+
+    @Test
+    public void testBaselineOnlyOneMatchingProblemTwoProblemTypes() throws IOException {
+        SarifReport report = readReport("src/test/resources/testData/readWriteTest/qodanaReportTwoTypesOfProblemsWithSameCode.json");
+        SarifReport baseline = readReport("src/test/resources/testData/readWriteTest/qodanaReportBaselineTwoProblems.json");
+
+        doTest(report, baseline, 2, 0, 2);
+    }
+
     private SarifReport newReport() {
         return new SarifReport()
                 .withRuns(
