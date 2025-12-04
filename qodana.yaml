@@ -1,12 +1,9 @@
 version: "1.0"
-linter: jetbrains/qodana-jvm:2024.1
 projectJDK: "1.8"
 profile:
   name: qodana.recommended
 include:
   - name: CheckDependencyLicenses
-raiseLicenseProblems: true
-enablePackageSearch: true
 exclude:
   - name: All
     paths:
