@@ -5,7 +5,7 @@ plugins {
 
 group = "org.jetbrains.qodana"
 val artifactName = "baseline-cli"
-val tcBuildVersion = System.getProperty("tcBuildVersion") ?: ""
+val tcBuildVersion : String? by project
 
 dependencies {
     implementation(projects.sarif)
