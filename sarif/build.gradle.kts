@@ -8,6 +8,9 @@ plugins {
     alias(libs.plugins.dokka)
 }
 
+val artifactName = "qodana-sarif"
+val tcBuildVersion: String? by project
+
 buildscript {
     dependencies {
         classpath(libs.dokkaBase)
@@ -58,14 +61,10 @@ java {
 
 publishing {
     publications {
-        create<MavenPublication>("sarif") {
-            val majorVersion: String by project
-            val minorVersion: String by project
-            val patch: String by project
-
+        create<MavenPublication>(artifactName) {
             groupId = project.group.toString()
-            artifactId = "qodana-sarif"
-            version = "$majorVersion.$minorVersion.$patch"
+            artifactId = artifactName
+            version = tcBuildVersion
 
             from(components["java"])
 
@@ -106,16 +105,25 @@ publishing {
     }
     repositories {
         maven {
-            name = "intellij-dependencies"
-            val deployUsername: String by project
-            val deployPassword: String by project
-
-            url = uri("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
+            name = "static-analysis"
+            val spaceUsername: String? by project
+            val spacePassword: String? by project
+            url = uri("https://packages.jetbrains.team/maven/p/sa/static-analysis")
             credentials {
-                username = deployUsername
-                password = deployPassword
+                username = spaceUsername
+                password = spacePassword
             }
         }
-        space(project)
+
+        maven {
+            name = "intellij-dependencies"
+            val spaceUsername: String? by project
+            val spacePassword: String? by project
+            url = uri("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
+            credentials {
+                username = spaceUsername
+                password = spacePassword
+            }
+        }
     }
 }

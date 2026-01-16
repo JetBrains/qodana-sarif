@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-group = "org.jetbrains.qodana"
 val artifactName = "baseline-cli"
 val tcBuildVersion : String? by project
 
@@ -28,8 +27,8 @@ tasks {
 
 publishing {
     publications {
-        create<MavenPublication>("Baseline-cli") {
-            groupId = group.toString()
+        create<MavenPublication>(artifactName) {
+            groupId = project.group.toString()
             artifactId = artifactName
             version = tcBuildVersion
 
@@ -39,7 +38,7 @@ publishing {
 
     repositories {
         maven {
-            name = "Space"
+            name = "static-analysis"
             val spaceUsername: String? by project
             val spacePassword: String? by project
             url = uri("https://packages.jetbrains.team/maven/p/sa/static-analysis")
