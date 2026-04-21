@@ -12,6 +12,7 @@ import static com.jetbrains.qodana.sarif.model.Result.BaselineState.*;
  */
 public class BaselineCalculation {
     public static final String EQUAL_INDICATOR = "equalIndicator";
+    public static final String EXTENDED_FINGERPRINT = "extendedFingerprint";
 
     private int newResults = 0;
     private int absentResults = 0;

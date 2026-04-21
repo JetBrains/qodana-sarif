@@ -26,10 +26,11 @@ internal class DiffState(private val options: Options) {
 
     val results = mutableListOf<Result>()
 
-    fun put(result: Result, state: BaselineState): Boolean {
+    fun put(result: Result, state: BaselineState, matchedBy: String? = null): Boolean {
         if (state == BaselineState.UNCHANGED && !options.includeUnchanged) return false
         if (state == BaselineState.ABSENT && !options.includeAbsent) return false
 
+        if (matchedBy != null) result.updateProperties { it["matchedBy"] = matchedBy }
         results.add(result.withBaselineState(if (options.fillBaselineState) state else null))
         when (state) {
             BaselineState.NEW -> new++
@@ -72,7 +73,7 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
 
                 if (removed) {
                     //leads to eliminating problems with the same hash
-                    state.put(matchedResults.first(), BaselineState.UNCHANGED)
+                    state.put(matchedResults.first(), BaselineState.UNCHANGED, "equalIndicator")
                 } else {
                     if (!options.wasChecked.apply(result)) {
                         state.put(result, BaselineState.UNCHANGED)
@@ -81,18 +82,24 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
                     }
                 }
             }
-    }
+    }.toMutableList()
 
 
     undecidedFromReport.forEach { result ->
         val key = ResultKey(result)
         val inBaseline = baselineCounter[key]
-        if (inBaseline <= 0) {
-            state.put(result, BaselineState.NEW)
-        } else {
+        if (inBaseline > 0) {
             baselineCounter.decrement(key)
-            state.put(result, BaselineState.UNCHANGED)
+            undecidedFromBaseline.indexOfFirst { ResultKey(it) == key }.let { if (it >= 0) undecidedFromBaseline.removeAt(it) }
+            undecidedFromReport.remove(result)
+            state.put(result, BaselineState.UNCHANGED, "resultKey")
         }
+    }
+
+    ExtendedFingerprintMatching.match(undecidedFromReport, undecidedFromBaseline, state)
+
+    undecidedFromReport.forEach { result ->
+        state.put(result, BaselineState.NEW)
     }
 
     undecidedFromBaseline
