@@ -17,8 +17,7 @@ class ExtendedFingerprintIntegrationTest {
         extendedFingerprints: Map<Int, String> = emptyMap(),
         snippet: String? = null,
         contextSnippet: String? = null,
-        startLine: Int? = null,
-        astShape: String? = null
+        startLine: Int? = null
     ): Result {
         val r = Result(Message().withText(message)).withRuleId(ruleId)
 
@@ -42,8 +41,6 @@ class ExtendedFingerprintIntegrationTest {
             physical.withContextRegion(Region().withSnippet(ArtifactContent().withText(contextSnippet)))
         }
         r.withLocations(listOf(Location().withPhysicalLocation(physical)))
-
-        if (astShape != null) r.updateProperties { it["astShape"] = astShape }
 
         return r
     }
@@ -72,14 +69,35 @@ class ExtendedFingerprintIntegrationTest {
     }
 
     @Test
-    fun `resultKey wins over extendedFingerprint`() {
+    fun `equalIndicator collisions preserve distinct report rows`() {
+        val r1 = result(equalIndicator = mapOf(2 to "H"), message = "M1")
+        val r2 = result(equalIndicator = mapOf(2 to "H"), message = "M2")
+        val r3 = result(equalIndicator = mapOf(2 to "H"), message = "M3")
+        val b1 = result(equalIndicator = mapOf(2 to "H"), message = "B1")
+        val b2 = result(equalIndicator = mapOf(2 to "H"), message = "B2")
+        val b3 = result(equalIndicator = mapOf(2 to "H"), message = "B3")
+
+        val rep = report(r1, r2, r3)
+        val calc = compare(rep, report(b1, b2, b3))
+
+        assertEquals(3, calc.unchangedResults)
+        assertEquals(0, calc.newResults)
+        assertEquals(0, calc.absentResults)
+
+        val emitted = rep.runs[0].results
+        assertEquals(setOf("M1", "M2", "M3"), emitted.map { it.message?.text }.toSet())
+        emitted.forEach { assertEquals("equalIndicator", it.matchedBy()) }
+    }
+
+    @Test
+    fun `extendedFingerprint wins over resultKey`() {
         val r = result(extendedFingerprints = mapOf(4 to "19b58d31"))
         val b = result(extendedFingerprints = mapOf(4 to "19b58d31"))
 
         val calc = compare(report(r), report(b))
 
         assertEquals(1, calc.unchangedResults)
-        assertEquals("resultKey", r.matchedBy())
+        assertEquals("extendedFingerprint/v4", r.matchedBy())
     }
 
     @Test
@@ -191,7 +209,7 @@ class ExtendedFingerprintIntegrationTest {
         )
         val r2 = result(
             equalIndicator = mapOf(2 to "new2"), extendedFingerprints = mapOf(2 to "32234361"),
-            message = "changed2", filePath = "pkg/completely/different/path.go"
+            message = "changed2", filePath = "pkg/completely/different/allocator_test.go"
         )
 
         val calc = compare(report(r1, r2), report(b))

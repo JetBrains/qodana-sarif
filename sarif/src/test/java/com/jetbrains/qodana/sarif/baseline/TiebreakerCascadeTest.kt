@@ -9,7 +9,6 @@ class TiebreakerCascadeTest {
     private fun result(
         snippet: String? = null,
         contextSnippet: String? = null,
-        astShape: String? = null,
         filePath: String? = null,
         startLine: Int? = null
     ): Result {
@@ -23,7 +22,6 @@ class TiebreakerCascadeTest {
             physical.withContextRegion(Region().withSnippet(ArtifactContent().withText(contextSnippet)))
         }
         r.withLocations(listOf(Location().withPhysicalLocation(physical)))
-        if (astShape != null) r.updateProperties { it["astShape"] = astShape }
         return r
     }
 
@@ -65,27 +63,27 @@ class TiebreakerCascadeTest {
     }
 
     @Test
-    fun `shape containment selects subsequence match`() {
+    fun `filename breaks tie before path filters`() {
         val res = resolve(
-            result(astShape = "IF(EQ(CALL,NULL),BLOCK(CALL))"),
-            result(astShape = "IF(EQ(CALL,NULL),BLOCK(CALL),ELSE)"),
-            result(astShape = "WHILE(GT(VAR,ZERO))")
+            result(filePath = "daemon/ipams/allocator_test.go"),
+            result(filePath = "pkg/completely/different/allocator_test.go"),
+            result(filePath = "pkg/something/other.go")
         )!!
-        assertEquals("shapeContainment", res.resolvedBy)
+        assertEquals("filename", res.resolvedBy)
     }
 
     @Test
-    fun `path similarity breaks tie`() {
+    fun `path similarity breaks tie when filenames are identical`() {
         val res = resolve(
             result(filePath = "daemon/ipams/allocator_test.go"),
             result(filePath = "daemon/ipams/allocator_test.go"),
-            result(filePath = "pkg/completely/different.go")
+            result(filePath = "pkg/completely/different/allocator_test.go")
         )!!
         assertEquals("pathSimilarity", res.resolvedBy)
     }
 
     @Test
-    fun `line delta breaks tie as last resort`() {
+    fun `line delta is the last resort`() {
         val res = resolve(
             result(startLine = 1224),
             result(startLine = 1226),
@@ -104,16 +102,5 @@ class TiebreakerCascadeTest {
     fun `null properties and locations do not crash`() {
         val bare = Result(Message().withText("msg"))
         assertNotNull(resolve(bare, bare, Result(Message().withText("msg"))))
-    }
-
-    @Test
-    fun `missing baseline signal skips to next filter`() {
-        // baseline has no snippet/context → snippet filters skip, shape containment resolves
-        val res = resolve(
-            result(astShape = "IF(EQ)"),
-            result(snippet = "x", astShape = "IF(EQ)"),
-            result(snippet = "y", astShape = "WHILE(GT)")
-        )!!
-        assertEquals("shapeContainment", res.resolvedBy)
     }
 }

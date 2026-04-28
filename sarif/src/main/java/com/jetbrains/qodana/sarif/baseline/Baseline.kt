@@ -16,6 +16,12 @@ private val Result.equalIndicators: Sequence<String>
         .map { (k, v) -> "$k:$v" }
         .sortedDescending() // higher versions should have higher priority
 
+private val Result.extendedIndicators: Sequence<String>
+    get() = extendedFingerprints?.getValues(BaselineCalculation.EXTENDED_FINGERPRINT)?.entries
+        .noNulls()
+        .map { (k, v) -> "${BaselineCalculation.EXTENDED_FINGERPRINT}/v$k:$v" }
+        .sortedDescending() // higher tiers should have higher priority
+
 internal class DiffState(private val options: Options) {
     var new = 0
         private set
@@ -49,68 +55,77 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     val reportDescriptors = DescriptorLookup(report)
     val baselineDescriptors = DescriptorLookup(baseline)
     val reportIndex = FingerprintIndex()
-    val baselineCounter = Counter<ResultKey>()
+    val extendedReportIndex = FingerprintIndex()
 
     val undecidedFromReport = report.results.noNulls()
         .filterNot { it.baselineState == BaselineState.ABSENT }
         .onEach { result ->
-            result.equalIndicators
-                .forEach { print -> reportIndex.add(print, result) }
+            result.equalIndicators.forEach { reportIndex.add(it, result) }
+            result.extendedIndicators.forEach { extendedReportIndex.add(it, result) }
         }
         .toCollection(IdentitySet(report.results?.size ?: 0))
 
-    val undecidedFromBaseline = buildList {
-        baseline.results.noNulls()
-            .filterNot { it.baselineState == BaselineState.ABSENT }
-            .onEach { result -> baselineCounter.increment(ResultKey(result)) }
-            .forEach { result ->
-                //compare with all equal indicators
-                val matchedResults = result.equalIndicators.flatMap(reportIndex::getOrEmpty).toSet()
-                var removed = false
-                for (matchedResult in matchedResults) {
-                    removed = removed || undecidedFromReport.remove(matchedResult)
-                }
-
-                if (removed) {
-                    //leads to eliminating problems with the same hash
-                    state.put(matchedResults.first(), BaselineState.UNCHANGED, "equalIndicator")
-                } else {
-                    if (!options.wasChecked.apply(result)) {
-                        state.put(result, BaselineState.UNCHANGED)
-                    } else {
-                        add(result)
-                    }
+    val undecidedFromBaseline = mutableListOf<Result>()
+    baseline.results.noNulls()
+        .filterNot { it.baselineState == BaselineState.ABSENT }
+        .forEach { result ->
+            //compare with all equal indicators
+            val matchedResults = result.equalIndicators.flatMap(reportIndex::getOrEmpty).toSet()
+            var matched: Result? = null
+            for (candidate in matchedResults) {
+                if (undecidedFromReport.remove(candidate)) {
+                    matched = candidate
+                    break
                 }
             }
-    }.toMutableList()
 
-
-    undecidedFromReport.forEach { result ->
-        val key = ResultKey(result)
-        val inBaseline = baselineCounter[key]
-        if (inBaseline > 0) {
-            baselineCounter.decrement(key)
-            undecidedFromBaseline.indexOfFirst { ResultKey(it) == key }.let { if (it >= 0) undecidedFromBaseline.removeAt(it) }
-            undecidedFromReport.remove(result)
-            state.put(result, BaselineState.UNCHANGED, "resultKey")
+            if (matched != null) {
+                //leads to eliminating problems with the same hash
+                state.put(matched, BaselineState.UNCHANGED, "equalIndicator")
+            } else {
+                if (!options.wasChecked.apply(result)) {
+                    state.put(result, BaselineState.UNCHANGED)
+                } else {
+                    undecidedFromBaseline.add(result)
+                }
+            }
         }
+
+    undecidedFromBaseline.removeAll { baselineResult ->
+        for (indicator in baselineResult.extendedIndicators) {
+            val candidates = extendedReportIndex.getOrEmpty(indicator).filter { it in undecidedFromReport }
+            if (candidates.isEmpty()) continue
+            val resolution = TiebreakerCascade.resolve(baselineResult, candidates) ?: continue
+            val matchedBy = indicator.substringBefore(':') +
+                (resolution.resolvedBy?.let { "+$it" } ?: "")
+            undecidedFromReport.remove(resolution.result)
+            state.put(resolution.result, BaselineState.UNCHANGED, matchedBy)
+            return@removeAll true
+        }
+        false
     }
 
-    ExtendedFingerprintMatching.match(undecidedFromReport, undecidedFromBaseline, state)
+    // ResultKey fallback for baselines/reports without extended fingerprint data.
+    val baselineByKey = HashMap<ResultKey, ArrayDeque<Result>>()
+    undecidedFromBaseline.forEach { baselineByKey.getOrPut(ResultKey(it)) { ArrayDeque() }.addLast(it) }
+
+    undecidedFromReport.forEach { result ->
+        val matched = baselineByKey[ResultKey(result)]?.removeFirstOrNull() ?: return@forEach
+        undecidedFromBaseline.remove(matched)
+        undecidedFromReport.remove(result)
+        state.put(result, BaselineState.UNCHANGED, "resultKey")
+    }
 
     undecidedFromReport.forEach { result ->
         state.put(result, BaselineState.NEW)
     }
 
-    undecidedFromBaseline
-        .asSequence()
-        .filter { baselineCounter.decrement(ResultKey(it)) >= 0 }
-        .forEach { result ->
-            val added = state.put(result, BaselineState.ABSENT)
-            if (added && reportDescriptors.findById(result.ruleId) == null) {
-                baselineDescriptors.findById(result.ruleId)?.addTo(report)
-            }
+    undecidedFromBaseline.forEach { result ->
+        val added = state.put(result, BaselineState.ABSENT)
+        if (added && reportDescriptors.findById(result.ruleId) == null) {
+            baselineDescriptors.findById(result.ruleId)?.addTo(report)
         }
+    }
 
     report.withResults(state.results)
 
