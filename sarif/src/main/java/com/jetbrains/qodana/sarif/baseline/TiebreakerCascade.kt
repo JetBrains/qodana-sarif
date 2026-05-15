@@ -12,7 +12,7 @@ private val Result.snippetText: String?
     get() = locations?.firstOrNull()?.physicalLocation?.region?.snippet?.text
 
 private val Result.astPath: String?
-    get() = properties?.get("normalizedAstPath") as? String
+    get() = properties?.get("astPath") as? String
 
 private val Result.startLine: Int?
     get() = locations?.firstOrNull()?.physicalLocation?.region?.startLine
