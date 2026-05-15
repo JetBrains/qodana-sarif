@@ -11,14 +11,14 @@ private val Result.contextSnippetText: String?
 private val Result.snippetText: String?
     get() = locations?.firstOrNull()?.physicalLocation?.region?.snippet?.text
 
-private val Result.filePath: String?
-    get() = locations?.firstOrNull()?.physicalLocation?.artifactLocation?.uri
-
 private val Result.astPath: String?
     get() = properties?.get("normalizedAstPath") as? String
 
 private val Result.startLine: Int?
     get() = locations?.firstOrNull()?.physicalLocation?.region?.startLine
+
+private val Result.startColumn: Int?
+    get() = locations?.firstOrNull()?.physicalLocation?.region?.startColumn
 
 internal object TiebreakerCascade {
     private const val SIMILARITY_GAP = 0.15
@@ -26,10 +26,9 @@ internal object TiebreakerCascade {
     private val FILTERS = listOf(
         "contextSnippet" to ::filterByContextSnippet,
         "snippet" to ::filterBySnippet,
-        "filename" to ::filterByFilename,
-        "pathSimilarity" to ::filterByPathSimilarity,
         "astPathSimilarity" to ::filterByAstPathSimilarity,
         "lineDelta" to ::filterByLineDelta,
+        "columnDelta" to ::filterByColumnDelta,
     )
 
     fun resolve(baselineResult: Result, candidates: List<Result>): TiebreakerResolution? {
@@ -41,7 +40,7 @@ internal object TiebreakerCascade {
             survivors = filter(baselineResult, survivors) ?: continue
             if (survivors.size == 1) return TiebreakerResolution(survivors[0], resolvedBy = name)
         }
-        return TiebreakerResolution(survivors[0], resolvedBy = null)
+        return TiebreakerResolution(survivors[0], resolvedBy = "fallback")
     }
 
     private fun filterByContextSnippet(baseline: Result, candidates: List<Result>): List<Result>? {
@@ -54,16 +53,6 @@ internal object TiebreakerCascade {
         return candidates.filter { it.snippetText == target }.ifEmpty { null }
     }
 
-    private fun filterByFilename(baseline: Result, candidates: List<Result>): List<Result>? {
-        val target = baseline.filePath?.substringAfterLast('/') ?: return null
-        return candidates.filter { it.filePath?.substringAfterLast('/') == target }.ifEmpty { null }
-    }
-
-    private fun filterByPathSimilarity(baseline: Result, candidates: List<Result>): List<Result>? {
-        val target = baseline.filePath ?: return null
-        return filterByBestScore(candidates) { it.filePath?.let { p -> PathSimilarity.similarity(target, p) } }
-    }
-
     private fun filterByAstPathSimilarity(baseline: Result, candidates: List<Result>): List<Result>? {
         val target = baseline.astPath ?: return null
         return filterByBestScore(candidates) { it.astPath?.let { p -> PathSimilarity.similarity(target, p) } }
@@ -73,6 +62,13 @@ internal object TiebreakerCascade {
         val target = baseline.startLine ?: return null
         return filterByBestScore(candidates, gap = 0.0) { c ->
             c.startLine?.let { -abs(it - target).toDouble() }
+        }
+    }
+
+    private fun filterByColumnDelta(baseline: Result, candidates: List<Result>): List<Result>? {
+        val target = baseline.startColumn ?: return null
+        return filterByBestScore(candidates, gap = 0.0) { c ->
+            c.startColumn?.let { -abs(it - target).toDouble() }
         }
     }
 

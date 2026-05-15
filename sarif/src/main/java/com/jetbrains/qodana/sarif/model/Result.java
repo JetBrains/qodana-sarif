@@ -99,13 +99,6 @@ public class Result implements PropertyOwner {
     @Expose
     private VersionedMap<String> fingerprints;
     /**
-     * A set of strings that provide extended identity information for baseline matching across refactorings.
-     */
-    @JsonAdapter(VersionedMap.VersionedMapTypeAdapter.class)
-    @SerializedName("extendedFingerprints")
-    @Expose
-    private VersionedMap<String> extendedFingerprints;
-    /**
      * An array of 'stack' objects relevant to the result.
      */
     @SerializedName("stacks")
@@ -468,25 +461,6 @@ public class Result implements PropertyOwner {
 
     public Result withFingerprints(VersionedMap<String> fingerprints) {
         this.fingerprints = fingerprints;
-        return this;
-    }
-
-    /**
-     * A set of strings that provide extended identity information for baseline matching across refactorings.
-     */
-    public VersionedMap<String> getExtendedFingerprints() {
-        return extendedFingerprints;
-    }
-
-    /**
-     * A set of strings that provide extended identity information for baseline matching across refactorings.
-     */
-    public void setExtendedFingerprints(VersionedMap<String> extendedFingerprints) {
-        this.extendedFingerprints = extendedFingerprints;
-    }
-
-    public Result withExtendedFingerprints(VersionedMap<String> extendedFingerprints) {
-        this.extendedFingerprints = extendedFingerprints;
         return this;
     }
 
@@ -871,10 +845,6 @@ public class Result implements PropertyOwner {
         sb.append('=');
         sb.append(((this.fingerprints == null) ? "<null>" : this.fingerprints));
         sb.append(',');
-        sb.append("extendedFingerprints");
-        sb.append('=');
-        sb.append(((this.extendedFingerprints == null) ? "<null>" : this.extendedFingerprints));
-        sb.append(',');
         sb.append("stacks");
         sb.append('=');
         sb.append(((this.stacks == null) ? "<null>" : this.stacks));
@@ -976,7 +946,6 @@ public class Result implements PropertyOwner {
         result = ((result * 31) + ((this.occurrenceCount == null) ? 0 : this.occurrenceCount.hashCode()));
         result = ((result * 31) + ((this.message == null) ? 0 : this.message.hashCode()));
         result = ((result * 31) + ((this.fingerprints == null) ? 0 : this.fingerprints.hashCode()));
-        result = ((result * 31) + ((this.extendedFingerprints == null) ? 0 : this.extendedFingerprints.hashCode()));
         result = ((result * 31) + ((this.codeFlows == null) ? 0 : this.codeFlows.hashCode()));
         result = ((result * 31) + ((this.guid == null) ? 0 : this.guid.hashCode()));
         result = ((result * 31) + ((this.partialFingerprints == null) ? 0 : this.partialFingerprints.hashCode()));
@@ -998,7 +967,7 @@ public class Result implements PropertyOwner {
         }
         Result rhs = ((Result) other);
         //noinspection ConstantValue,EqualsReplaceableByObjectsCall,StringEquality,NumberEquality
-        return ((((((((((((((((((((((((((((((((this.attachments == rhs.attachments) || ((this.attachments != null) && this.attachments.equals(rhs.attachments))) && ((this.correlationGuid == rhs.correlationGuid) || ((this.correlationGuid != null) && this.correlationGuid.equals(rhs.correlationGuid)))) && ((this.webRequest == rhs.webRequest) || ((this.webRequest != null) && this.webRequest.equals(rhs.webRequest)))) && ((this.graphTraversals == rhs.graphTraversals) || ((this.graphTraversals != null) && this.graphTraversals.equals(rhs.graphTraversals)))) && ((this.rule == rhs.rule) || ((this.rule != null) && this.rule.equals(rhs.rule)))) && ((this.analysisTarget == rhs.analysisTarget) || ((this.analysisTarget != null) && this.analysisTarget.equals(rhs.analysisTarget)))) && ((this.fixes == rhs.fixes) || ((this.fixes != null) && this.fixes.equals(rhs.fixes)))) && ((this.relatedLocations == rhs.relatedLocations) || ((this.relatedLocations != null) && this.relatedLocations.equals(rhs.relatedLocations)))) && ((this.graphs == rhs.graphs) || ((this.graphs != null) && this.graphs.equals(rhs.graphs)))) && ((this.provenance == rhs.provenance) || ((this.provenance != null) && this.provenance.equals(rhs.provenance)))) && ((this.rank == rhs.rank) || ((this.rank != null) && this.rank.equals(rhs.rank)))) && ((this.ruleId == rhs.ruleId) || ((this.ruleId != null) && this.ruleId.equals(rhs.ruleId)))) && ((this.taxa == rhs.taxa) || ((this.taxa != null) && this.taxa.equals(rhs.taxa)))) && ((this.ruleIndex == rhs.ruleIndex) || ((this.ruleIndex != null) && this.ruleIndex.equals(rhs.ruleIndex)))) && ((this.suppressions == rhs.suppressions) || ((this.suppressions != null) && this.suppressions.equals(rhs.suppressions)))) && ((this.level == rhs.level) || ((this.level != null) && this.level.equals(rhs.level)))) && ((this.hostedViewerUri == rhs.hostedViewerUri) || ((this.hostedViewerUri != null) && this.hostedViewerUri.equals(rhs.hostedViewerUri)))) && ((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind)))) && ((this.stacks == rhs.stacks) || ((this.stacks != null) && this.stacks.equals(rhs.stacks)))) && ((this.occurrenceCount == rhs.occurrenceCount) || ((this.occurrenceCount != null) && this.occurrenceCount.equals(rhs.occurrenceCount)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.fingerprints == rhs.fingerprints) || ((this.fingerprints != null) && this.fingerprints.equals(rhs.fingerprints)))) && ((this.extendedFingerprints == rhs.extendedFingerprints) || ((this.extendedFingerprints != null) && this.extendedFingerprints.equals(rhs.extendedFingerprints)))) && ((this.codeFlows == rhs.codeFlows) || ((this.codeFlows != null) && this.codeFlows.equals(rhs.codeFlows)))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.partialFingerprints == rhs.partialFingerprints) || ((this.partialFingerprints != null) && this.partialFingerprints.equals(rhs.partialFingerprints)))) && ((this.webResponse == rhs.webResponse) || ((this.webResponse != null) && this.webResponse.equals(rhs.webResponse)))) && ((this.locations == rhs.locations) || ((this.locations != null) && this.locations.equals(rhs.locations)))) && ((this.baselineState == rhs.baselineState) || ((this.baselineState != null) && this.baselineState.equals(rhs.baselineState)))) && ((this.workItemUris == rhs.workItemUris) || ((this.workItemUris != null) && this.workItemUris.equals(rhs.workItemUris)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
+        return (((((((((((((((((((((((((((((((this.attachments == rhs.attachments) || ((this.attachments != null) && this.attachments.equals(rhs.attachments))) && ((this.correlationGuid == rhs.correlationGuid) || ((this.correlationGuid != null) && this.correlationGuid.equals(rhs.correlationGuid)))) && ((this.webRequest == rhs.webRequest) || ((this.webRequest != null) && this.webRequest.equals(rhs.webRequest)))) && ((this.graphTraversals == rhs.graphTraversals) || ((this.graphTraversals != null) && this.graphTraversals.equals(rhs.graphTraversals)))) && ((this.rule == rhs.rule) || ((this.rule != null) && this.rule.equals(rhs.rule)))) && ((this.analysisTarget == rhs.analysisTarget) || ((this.analysisTarget != null) && this.analysisTarget.equals(rhs.analysisTarget)))) && ((this.fixes == rhs.fixes) || ((this.fixes != null) && this.fixes.equals(rhs.fixes)))) && ((this.relatedLocations == rhs.relatedLocations) || ((this.relatedLocations != null) && this.relatedLocations.equals(rhs.relatedLocations)))) && ((this.graphs == rhs.graphs) || ((this.graphs != null) && this.graphs.equals(rhs.graphs)))) && ((this.provenance == rhs.provenance) || ((this.provenance != null) && this.provenance.equals(rhs.provenance)))) && ((this.rank == rhs.rank) || ((this.rank != null) && this.rank.equals(rhs.rank)))) && ((this.ruleId == rhs.ruleId) || ((this.ruleId != null) && this.ruleId.equals(rhs.ruleId)))) && ((this.taxa == rhs.taxa) || ((this.taxa != null) && this.taxa.equals(rhs.taxa)))) && ((this.ruleIndex == rhs.ruleIndex) || ((this.ruleIndex != null) && this.ruleIndex.equals(rhs.ruleIndex)))) && ((this.suppressions == rhs.suppressions) || ((this.suppressions != null) && this.suppressions.equals(rhs.suppressions)))) && ((this.level == rhs.level) || ((this.level != null) && this.level.equals(rhs.level)))) && ((this.hostedViewerUri == rhs.hostedViewerUri) || ((this.hostedViewerUri != null) && this.hostedViewerUri.equals(rhs.hostedViewerUri)))) && ((this.kind == rhs.kind) || ((this.kind != null) && this.kind.equals(rhs.kind)))) && ((this.stacks == rhs.stacks) || ((this.stacks != null) && this.stacks.equals(rhs.stacks)))) && ((this.occurrenceCount == rhs.occurrenceCount) || ((this.occurrenceCount != null) && this.occurrenceCount.equals(rhs.occurrenceCount)))) && ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)))) && ((this.fingerprints == rhs.fingerprints) || ((this.fingerprints != null) && this.fingerprints.equals(rhs.fingerprints)))) && ((this.codeFlows == rhs.codeFlows) || ((this.codeFlows != null) && this.codeFlows.equals(rhs.codeFlows)))) && ((this.guid == rhs.guid) || ((this.guid != null) && this.guid.equals(rhs.guid)))) && ((this.partialFingerprints == rhs.partialFingerprints) || ((this.partialFingerprints != null) && this.partialFingerprints.equals(rhs.partialFingerprints)))) && ((this.webResponse == rhs.webResponse) || ((this.webResponse != null) && this.webResponse.equals(rhs.webResponse)))) && ((this.locations == rhs.locations) || ((this.locations != null) && this.locations.equals(rhs.locations)))) && ((this.baselineState == rhs.baselineState) || ((this.baselineState != null) && this.baselineState.equals(rhs.baselineState)))) && ((this.workItemUris == rhs.workItemUris) || ((this.workItemUris != null) && this.workItemUris.equals(rhs.workItemUris)))) && ((this.properties == rhs.properties) || ((this.properties != null) && this.properties.equals(rhs.properties))));
     }
 
 
