@@ -21,7 +21,7 @@ class TiebreakerCascadeTest {
         startColumn: Int? = null,
     ): Result {
         val r = Result(Message().withText("Empty slice declaration using a literal"))
-        if (astPath != null) r.updateProperties { it["normalizedAstPath"] = astPath }
+        if (astPath != null) r.updateProperties { it["astPath"] = astPath }
 
         val region = Region()
         if (snippet != null) region.withSnippet(ArtifactContent().withText(snippet))
