@@ -6,7 +6,7 @@ internal interface BaselineMatcher {
     fun findMatch(baseline: Result, candidates: Set<Result>): MatchResult?
 }
 
-internal data class MatchResult(val result: Result, val matchedBy: String)
+internal data class MatchResult(val result: Result, val matchedBy: String, val matchedWith: String? = null)
 
 /** Matches via content equality (ruleId + message + URI + snippet + charLength + level) using [ResultKey]. */
 internal class ResultKeyMatcher(reportResults: Iterable<Result>) : BaselineMatcher {
@@ -21,35 +21,24 @@ internal class ResultKeyMatcher(reportResults: Iterable<Result>) : BaselineMatch
     }
 }
 
-/**
- * Matches via a priority-ordered cascade of partialFingerprint keys. Handles both single-key phases
- * (e.g. `equalIndicator`) and the multi-key structural cascade (postFuncRef → funcStruct → coreProblem).
- *
- * [acceptTiebreaker] lets the caller reject specific (key, tiebreaker) combinations. When it returns
- * false, the cascade falls through to the next key (or to no match if this was the last one). Default
- * accepts everything.
- */
-internal class HashCascadeMatcher(
+/** Matches via a single partialFingerprint key. [acceptTiebreaker] lets the caller reject specific tiebreaker outcomes */
+internal class HashMatcher(
     reportResults: Iterable<Result>,
-    private val keys: List<String>,
-    private val acceptTiebreaker: (key: String, resolvedBy: String?) -> Boolean = { _, _ -> true },
+    private val key: String,
+    private val acceptTiebreaker: (resolvedBy: String?) -> Boolean = { true },
 ) : BaselineMatcher {
-    private val index: Map<String, List<Result>> = keys.associateWith { key ->
-        reportResults.filter { it.partialFingerprints?.getValues(key) != null }
-    }
+    private val index: List<Result> = reportResults.filter { it.partialFingerprints?.getValues(key) != null }
 
     override fun findMatch(baseline: Result, candidates: Set<Result>): MatchResult? {
-        for (key in keys) {
-            val pairs = index.getValue(key)
-                .filter { it in candidates }
-                .mapNotNull { c -> greatestCommonVersionMatch(baseline, c, key)?.let { v -> c to v } }
-            if (pairs.isEmpty()) continue
-            val resolution = TiebreakerCascade.resolve(baseline, pairs.map { it.first }) ?: continue
-            if (!acceptTiebreaker(key, resolution.resolvedBy)) continue
-            val version = pairs.first { it.first === resolution.result }.second
-            return MatchResult(resolution.result, "$key/v$version" + (resolution.resolvedBy?.let { "+$it" } ?: ""))
-        }
-        return null
+        val pairs = index
+            .filter { it in candidates }
+            .mapNotNull { c -> greatestCommonVersionMatch(baseline, c, key)?.let { v -> c to v } }
+        if (pairs.isEmpty()) return null
+        val resolution = TiebreakerCascade.resolve(baseline, pairs.map { it.first }) ?: return null
+        if (!acceptTiebreaker(resolution.resolvedBy)) return null
+        val version = pairs.first { it.first === resolution.result }.second
+        val baselineId = baseline.partialFingerprints?.getLastValue("equalIndicator")
+        return MatchResult(resolution.result, "$key/v$version" + (resolution.resolvedBy?.let { "+$it" } ?: ""),  baselineId ?: "")
     }
 }
 

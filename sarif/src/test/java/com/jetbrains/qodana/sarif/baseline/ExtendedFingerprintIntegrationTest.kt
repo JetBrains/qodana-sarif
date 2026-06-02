@@ -12,12 +12,12 @@ import java.util.Collections.singletonList
 /**
  * End-to-end tests for the baseline matching pipeline.
  *
- * The pipeline runs three matchers in batch-per-phase order:
- *   Phase 1: EqualIndicatorMatcher  — exact fingerprint match
- *   Phase 2: ResultKeyMatcher       — exact content match (ruleId + message + URI + snippet + ...)
- *   Phase 3: HashCascadeMatcher     — structural cascade (sameLocationAndShape → sameFuncAndShape → sameShape),
- *                                     with a policy that rejects `sameShape` matches resolved
- *                                     only by lineDelta or fallback.
+ * The pipeline runs matchers in batch-per-phase order:
+ *   Phase 1: HashMatcher(equalIndicator)         — exact fingerprint match
+ *   Phase 2: ResultKeyMatcher                    — exact content match (ruleId + message + URI + snippet + ...)
+ *   Phase 3: HashMatcher(sameLocationAndShape)
+ *   Phase 4: HashMatcher(sameFuncAndShape)
+ *   Phase 5: HashMatcher(sameShape)              — rejects matches resolved only by lineDelta or fallback.
  */
 class ExtendedFingerprintIntegrationTest {
 

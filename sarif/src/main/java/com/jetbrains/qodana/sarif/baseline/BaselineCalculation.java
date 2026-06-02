@@ -16,12 +16,6 @@ public class BaselineCalculation {
     public static final String SAME_FUNC_AND_SHAPE = "sameFuncAndShape";
     public static final String SAME_SHAPE = "sameShape";
 
-    /** Equality indicator keys in cascade priority order (most authoritative first). */
-    public static final List<String> CASCADE_HASHES = Collections.unmodifiableList(Arrays.asList(
-            SAME_LOCATION_AND_SHAPE,
-            SAME_FUNC_AND_SHAPE,
-            SAME_SHAPE
-    ));
     private int newResults = 0;
     private int absentResults = 0;
     private int unchangedResults = 0;

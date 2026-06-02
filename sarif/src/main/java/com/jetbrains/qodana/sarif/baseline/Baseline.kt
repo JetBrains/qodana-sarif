@@ -1,7 +1,8 @@
 package com.jetbrains.qodana.sarif.baseline
 
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.EQUAL_INDICATOR
-import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.CASCADE_HASHES
+import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SAME_FUNC_AND_SHAPE
+import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SAME_LOCATION_AND_SHAPE
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SAME_SHAPE
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.Options
 import com.jetbrains.qodana.sarif.model.Result
@@ -21,11 +22,12 @@ internal class DiffState(private val options: Options) {
 
     val results = mutableListOf<Result>()
 
-    fun put(result: Result, state: BaselineState, matchedBy: String? = null): Boolean {
+    fun put(result: Result, state: BaselineState, matchedBy: String? = null, matchedWith: String? = null): Boolean {
         if (state == BaselineState.UNCHANGED && !options.includeUnchanged) return false
         if (state == BaselineState.ABSENT && !options.includeAbsent) return false
 
         if (matchedBy != null) result.updateProperties { it["matchedBy"] = matchedBy }
+        if (matchedWith != null) result.updateProperties { it["matchedWith"] = matchedWith }
         results.add(result.withBaselineState(if (options.fillBaselineState) state else null))
         when (state) {
             BaselineState.NEW -> new++
@@ -50,11 +52,13 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     val undecidedFromReport = IdentitySet<Result>(reportResults.size).apply { addAll(reportResults) }
 
     val matchers: List<BaselineMatcher> = listOf(
-        HashCascadeMatcher(reportResults, listOf(EQUAL_INDICATOR)),
+        HashMatcher(reportResults, EQUAL_INDICATOR),
         ResultKeyMatcher(reportResults),
-        HashCascadeMatcher(reportResults, CASCADE_HASHES) { key, resolvedBy ->
+        HashMatcher(reportResults, SAME_LOCATION_AND_SHAPE),
+        HashMatcher(reportResults, SAME_FUNC_AND_SHAPE),
+        HashMatcher(reportResults, SAME_SHAPE) { resolvedBy ->
             // Refuse same ast shape only matches that only positional tiebreakers could resolve — high FP risk.
-            key != SAME_SHAPE || resolvedBy !in setOf("lineDelta", "fallback")
+            resolvedBy !in setOf("lineDelta", "fallback")
         }
     )
 
@@ -68,7 +72,7 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
             val match = matcher.findMatch(b, undecidedFromReport)
             if (match != null) {
                 undecidedFromReport.remove(match.result)
-                state.put(match.result, BaselineState.UNCHANGED, match.matchedBy)
+                state.put(match.result, BaselineState.UNCHANGED, match.matchedBy, match.matchedWith)
             } else {
                 remaining.add(b)
             }
