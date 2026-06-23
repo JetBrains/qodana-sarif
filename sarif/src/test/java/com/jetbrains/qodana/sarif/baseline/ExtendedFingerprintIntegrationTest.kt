@@ -12,12 +12,12 @@ import java.util.Collections.singletonList
 /**
  * End-to-end tests for the baseline matching pipeline.
  *
- * The pipeline runs matchers in batch-per-phase order:
+ * The pipeline iterates over report problems (the anchor) and ranks baseline candidates against
+ * each, running matchers in batch-per-phase order:
  *   Phase 1: HashMatcher(equalIndicator)         — exact fingerprint match
- *   Phase 2: ResultKeyMatcher                    — exact content match (ruleId + message + URI + snippet + ...)
+ *   Phase 2: ResultKeyMatcher                    — exact content match
  *   Phase 3: HashMatcher(sameLocationAndShape)
- *   Phase 4: HashMatcher(sameFuncAndShape)
- *   Phase 5: HashMatcher(sameShape)              — rejects matches resolved only by lineDelta or fallback.
+ *   Phase 4: HashMatcher(sameFuncAndShape)       — only across different files; skipped when funcName is absent.
  */
 class ExtendedFingerprintIntegrationTest {
 
@@ -134,18 +134,18 @@ class ExtendedFingerprintIntegrationTest {
 
     @Test
     fun `resultKey collisions are resolved by the tiebreaker chain`() {
-        // Same ResultKey on multiple report candidates (same message, URI, snippet, charLength)
-        // disambiguated by contextSnippet.
+        // Same ResultKey on multiple baseline candidates (same message, URI, snippet, charLength)
+        // disambiguated against the report anchor by contextSnippet.
         val ctx = "before\nproblem\nafter"
-        val b = result(filePath = "src/a.kt", contextSnippet = ctx)
-        val r1 = result(filePath = "src/a.kt", contextSnippet = ctx)
-        val r2 = result(filePath = "src/a.kt", contextSnippet = "different\n")
+        val r = result(filePath = "src/a.kt", contextSnippet = ctx)
+        val b1 = result(filePath = "src/a.kt", contextSnippet = ctx)
+        val b2 = result(filePath = "src/a.kt", contextSnippet = "different\n")
 
-        val calc = compare(report(r1, r2), report(b))
+        val calc = compare(report(r), report(b1, b2))
 
         assertEquals(1, calc.unchangedResults)
-        assertEquals(1, calc.newResults)
-        assertEquals("resultKey+contextSnippet", r1.matchedBy())
+        assertEquals(1, calc.absentResults)
+        assertEquals("resultKey+contextSnippetSimilarity", r.matchedBy())
     }
 
     @Test
@@ -191,145 +191,25 @@ class ExtendedFingerprintIntegrationTest {
     }
 
     @Test
-    fun `cascade falls through to sameShape when both higher tiers differ`() {
-        val r = result(
-            message = "refactored", filePath = "src/new.kt",
-            fingerprints = mapOf(
-                SAME_LOCATION_AND_SHAPE to mapOf(1 to "diffA"),
-                SAME_FUNC_AND_SHAPE to mapOf(1 to "diffA"),
-                SAME_SHAPE to mapOf(1 to "shape"),
-            ),
-        )
-        val b = result(
-            message = "original", filePath = "src/old.kt",
-            fingerprints = mapOf(
-                SAME_LOCATION_AND_SHAPE to mapOf(1 to "diffB"),
-                SAME_FUNC_AND_SHAPE to mapOf(1 to "diffB"),
-                SAME_SHAPE to mapOf(1 to "shape"),
-            ),
-        )
-
-        val calc = compare(report(r), report(b))
-
-        assertEquals(1, calc.unchangedResults)
-        assertEquals("sameShape/v1", r.matchedBy())
-    }
-
-    @Test
-    fun `sameShape match is REJECTED when only lineDelta could resolve the tie`() {
-        // Multiple report candidates share the same sameShape hash, no content-based filter
-        // can distinguish them, and the only discriminator is line proximity.
-        // Policy rejects this match → result is NEW, baseline is ABSENT.
-        val b = result(
-            message = "bm", filePath = "src/b.kt", startLine = 10,
-            fingerprints = mapOf(SAME_SHAPE to mapOf(1 to "h")),
-        )
-        val r1 = result(
-            message = "r1", filePath = "src/r1.kt", startLine = 12,
-            fingerprints = mapOf(SAME_SHAPE to mapOf(1 to "h")),
-        )
-        val r2 = result(
-            message = "r2", filePath = "src/r2.kt", startLine = 200,
-            fingerprints = mapOf(SAME_SHAPE to mapOf(1 to "h")),
-        )
-
-        val calc = compare(report(r1, r2), report(b))
-
-        assertEquals(0, calc.unchangedResults)
-        assertEquals(2, calc.newResults)
-        assertEquals(1, calc.absentResults)
-    }
-
-    @Test
-    fun `sameShape match is REJECTED when fallback is needed`() {
-        // Two candidates with same sameShape hash and no distinguishing signal at all
-        // → cascade reaches fallback. Policy rejects.
-        val b = result(
-            message = "bm", filePath = "src/b.kt",
-            fingerprints = mapOf(SAME_SHAPE to mapOf(1 to "h")),
-        )
-        val r1 = result(
-            message = "r1", filePath = "src/r1.kt",
-            fingerprints = mapOf(SAME_SHAPE to mapOf(1 to "h")),
-        )
-        val r2 = result(
-            message = "r2", filePath = "src/r2.kt",
-            fingerprints = mapOf(SAME_SHAPE to mapOf(1 to "h")),
-        )
-
-        val calc = compare(report(r1, r2), report(b))
-
-        assertEquals(0, calc.unchangedResults)
-        assertEquals(2, calc.newResults)
-    }
-
-    @Test
-    fun `sameShape match is ACCEPTED when contextSnippet resolves the tie`() {
-        val ctx = "before\nproblem\nafter"
-        val b = result(
-            message = "bm", filePath = "src/b.kt", contextSnippet = ctx,
-            fingerprints = mapOf(SAME_SHAPE to mapOf(1 to "h")),
-        )
-        val r1 = result(
-            message = "r1", filePath = "src/r1.kt", contextSnippet = ctx,
-            fingerprints = mapOf(SAME_SHAPE to mapOf(1 to "h")),
-        )
-        val r2 = result(
-            message = "r2", filePath = "src/r2.kt", contextSnippet = "different\n",
-            fingerprints = mapOf(SAME_SHAPE to mapOf(1 to "h")),
-        )
-
-        val calc = compare(report(r1, r2), report(b))
-
-        assertEquals(1, calc.unchangedResults)
-        assertEquals(1, calc.newResults)
-        assertEquals("sameShape/v1+contextSnippet", r1.matchedBy())
-    }
-
-    @Test
-    fun `sameShape match is ACCEPTED when columnDelta resolves the tie`() {
-        // columnDelta is NOT in the rejection set — only lineDelta and fallback are.
-        val b = result(
-            filePath = "src/b.kt", startLine = 10, startColumn = 5,
-            fingerprints = mapOf(SAME_SHAPE to mapOf(1 to "h")),
-        )
-        val r1 = result(
-            filePath = "src/r1.kt", startLine = 10, startColumn = 5,
-            fingerprints = mapOf(SAME_SHAPE to mapOf(1 to "h")),
-        )
-        val r2 = result(
-            filePath = "src/r2.kt", startLine = 10, startColumn = 80,
-            fingerprints = mapOf(SAME_SHAPE to mapOf(1 to "h")),
-        )
-
-        val calc = compare(report(r1, r2), report(b))
-
-        assertEquals(1, calc.unchangedResults)
-        assertEquals("sameShape/v1+columnDelta", r1.matchedBy())
-    }
-
-    @Test
     fun `policy does NOT apply to sameLocationAndShape with lineDelta tiebreaker`() {
-        // Same scenario as the rejected one, but on sameLocationAndShape (strongest hash).
-        // Policy targets only sameShape — this match is committed.
-        val b = result(
-            message = "bm", filePath = "src/b.kt", startLine = 10,
+        val r = result(
+            message = "rm", filePath = "src/r.kt", startLine = 10,
             fingerprints = mapOf(SAME_LOCATION_AND_SHAPE to mapOf(1 to "h")),
         )
-        val r1 = result(
-            message = "r1", filePath = "src/r1.kt", startLine = 12,
+        val b1 = result(
+            message = "b1", filePath = "src/b1.kt", startLine = 12,
             fingerprints = mapOf(SAME_LOCATION_AND_SHAPE to mapOf(1 to "h")),
         )
-        val r2 = result(
-            message = "r2", filePath = "src/r2.kt", startLine = 200,
+        val b2 = result(
+            message = "b2", filePath = "src/b2.kt", startLine = 200,
             fingerprints = mapOf(SAME_LOCATION_AND_SHAPE to mapOf(1 to "h")),
         )
 
-        val calc = compare(report(r1, r2), report(b))
+        val calc = compare(report(r), report(b1, b2))
 
         assertEquals(1, calc.unchangedResults)
-        assertEquals(1, calc.newResults)
-        assertEquals("sameLocationAndShape/v1+lineDelta", r1.matchedBy())
+        assertEquals(1, calc.absentResults)
+        assertEquals("sameLocationAndShape/v1+lineDelta", r.matchedBy())
     }
 
     @Test
@@ -345,8 +225,6 @@ class ExtendedFingerprintIntegrationTest {
 
     @Test
     fun `no fallback to lower version when higher common version disagrees`() {
-        // Both sides have v1 and v2. v2 is the highest common version; the v2 hashes differ,
-        // so there is no match (we do not silently fall back to v1).
         val r = result(
             filePath = "src/r.kt",
             fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "shared", 2 to "r")),
@@ -383,12 +261,6 @@ class ExtendedFingerprintIntegrationTest {
 
     @Test
     fun `stronger phase wins globally regardless of baseline iteration order`() {
-        // R1 has BOTH equalIndicator (matches B2) AND sameLocationAndShape (matches B1).
-        // Only R1 exists, so it can go to one baseline.
-        //
-        // Under batch-per-phase, Phase 1 (equalIndicator) runs across ALL baselines first.
-        // B2 takes R1 via equalIndicator before the cascade phase ever runs for B1.
-        // B1 then has nothing left to match.
         val b1 = result(
             message = "b1-cascade", filePath = "src/b1.kt",
             fingerprints = mapOf(SAME_LOCATION_AND_SHAPE to mapOf(1 to "loc")),
@@ -438,17 +310,17 @@ class ExtendedFingerprintIntegrationTest {
 
     @Test
     fun `each result is matched by the strongest available phase`() {
-        // 1) matched by equalIndicator
+        // matched by equalIndicator
         val r1 = result(message = "m1", filePath = "src/eq.kt",
             fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "eq1")))
         val b1 = result(message = "m1", filePath = "src/eq.kt",
             fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "eq1")))
 
-        // 2) matched by resultKey (content-stable, no fingerprints)
+        // matched by resultKey (content-stable, no fingerprints)
         val r2 = result(message = "m2", filePath = "src/rk.kt")
         val b2 = result(message = "m2", filePath = "src/rk.kt")
 
-        // 3) matched by sameLocationAndShape (cascade only — content has changed)
+        // matched by sameLocationAndShape (cascade only — content has changed)
         val r3 = result(message = "m3-new", filePath = "src/cs.kt",
             fingerprints = mapOf(SAME_LOCATION_AND_SHAPE to mapOf(1 to "loc")))
         val b3 = result(message = "m3-old", filePath = "src/cs.kt",
@@ -463,4 +335,76 @@ class ExtendedFingerprintIntegrationTest {
         assertEquals("resultKey", r2.matchedBy())
         assertEquals("sameLocationAndShape/v1", r3.matchedBy())
     }
+
+    @Test
+    fun `structural phases are skipped when funcName is unavailable`() {
+        val r = result(
+            message = "refactored", filePath = "src/new.kt",
+            fingerprints = mapOf(
+                SAME_FUNC_AND_SHAPE to mapOf(1 to "x"),
+                SAME_SHAPE to mapOf(1 to "x"),
+            ),
+        )
+        val b = result(
+            message = "original", filePath = "src/old.kt",
+            fingerprints = mapOf(
+                SAME_FUNC_AND_SHAPE to mapOf(1 to "x"),
+                SAME_SHAPE to mapOf(1 to "x"),
+            ),
+        )
+
+        val calc = compare(report(r), report(b))
+
+        assertEquals(0, calc.unchangedResults)
+        assertEquals(1, calc.newResults)
+        assertEquals(1, calc.absentResults)
+    }
+
+    @Test
+    fun `match quality is independent of baseline order`() {
+        fun bNear() = result(message = "bn", filePath = "src/file.kt", startLine = 11,
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "near"), SAME_LOCATION_AND_SHAPE to mapOf(1 to "h")))
+        fun bFar() = result(message = "bf", filePath = "src/file.kt", startLine = 400,
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "far"), SAME_LOCATION_AND_SHAPE to mapOf(1 to "h")))
+
+        for (baseline in listOf(arrayOf(bNear(), bFar()), arrayOf(bFar(), bNear()))) {
+            // The report carries only the structural hash, so it matches via the cascade, not equalIndicator.
+            val r = result(message = "rm", filePath = "src/file.kt", startLine = 10,
+                fingerprints = mapOf(SAME_LOCATION_AND_SHAPE to mapOf(1 to "h")))
+
+            val calc = compare(report(r), report(*baseline))
+
+            assertEquals(1, calc.unchangedResults)
+            assertEquals(1, calc.absentResults)
+            assertEquals("sameLocationAndShape/v1+lineDelta", r.matchedBy())
+            assertEquals("near", r.matchedWith())
+        }
+    }
+
+    @Test
+    fun `match quality is independent of report order`() {
+        fun rStrong() = result(message = "rs", filePath = "src/file.kt", startLine = 400,
+            contextSnippet = "a\nb\nPROBLEM\nc\nd",
+            fingerprints = mapOf(SAME_LOCATION_AND_SHAPE to mapOf(1 to "h")))
+        fun rWeak() = result(message = "rw", filePath = "src/file.kt", startLine = 11,
+            contextSnippet = "x\ny\nOTHER\nz\nw",
+            fingerprints = mapOf(SAME_LOCATION_AND_SHAPE to mapOf(1 to "h")))
+
+        for (reports in listOf(arrayOf(rWeak(), rStrong()), arrayOf(rStrong(), rWeak()))) {
+            val b = result(message = "bm", filePath = "src/file.kt", startLine = 10,
+                contextSnippet = "a\nb\nPROBLEM\nc\nd",
+                fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "beq"), SAME_LOCATION_AND_SHAPE to mapOf(1 to "h")))
+
+            val calc = compare(report(*reports), report(b))
+            val strong = reports.first { it.message.text == "rs" }
+            val weak = reports.first { it.message.text == "rw" }
+
+            assertEquals(1, calc.unchangedResults)
+            assertEquals(1, calc.newResults)
+            assertEquals("beq", strong.matchedWith())     // strong report took the baseline
+            assertNull(weak.matchedWith())                // weak report was left NEW, not matched
+        }
+    }
+
+    private fun Result.matchedWith(): String? = properties?.get("matchedWith") as? String
 }

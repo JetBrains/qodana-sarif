@@ -1,13 +1,12 @@
 package com.jetbrains.qodana.sarif.baseline
 
-internal object PathSimilarity {
+/** Order-preserving token-sequence similarity: `2·LCS / (|a| + |b|)`, in `[0, 1]`. */
+internal object SequenceSimilarity {
 
-    fun similarity(a: String, b: String): Double {
-        if (a == b) return 1.0
+    fun similarity(a: List<String>, b: List<String>): Double {
+        if (a.isEmpty() && b.isEmpty()) return 1.0
         if (a.isEmpty() || b.isEmpty()) return 0.0
-        val sa = a.split('/')
-        val sb = b.split('/')
-        return 2.0 * lcsLength(sa, sb) / (sa.size + sb.size)
+        return 2.0 * lcsLength(a, b) / (a.size + b.size)
     }
 
     private fun lcsLength(a: List<String>, b: List<String>): Int {

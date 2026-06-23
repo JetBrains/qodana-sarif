@@ -5,14 +5,45 @@ import kotlin.math.abs
 
 internal data class TiebreakerResolution(val result: Result, val resolvedBy: String?)
 
+/**
+ * An absolute, order-independent quality of a single (report, baseline) pair, used to rank candidates
+ * for global assignment. Components are the per-signal values in [TiebreakerCascade.FILTERS] order,
+ * compared lexicographically (higher is better).
+ */
+internal class MatchScore(@JvmField val components: DoubleArray) : Comparable<MatchScore> {
+    override fun compareTo(other: MatchScore): Int {
+        for (i in components.indices) {
+            val cmp = components[i].compareTo(other.components[i])
+            if (cmp != 0) return cmp
+        }
+        return 0
+    }
+}
+
 private val Result.contextSnippetText: String?
     get() = locations?.firstOrNull()?.physicalLocation?.contextRegion?.snippet?.text
+
+private val Result.contextRegionStartLine: Int?
+    get() = locations?.firstOrNull()?.physicalLocation?.contextRegion?.startLine
+
+private fun Result.contextSnippetLines(): List<String>? =
+    contextSnippetText?.split('\n')?.map(String::trim)
+
+private fun Result.problemLineIndex(lines: List<String>): Int? {
+    val contextStart = contextRegionStartLine ?: return null
+    val problemStart = startLine ?: return null
+    val problemSnippet = snippetText?.trim()
+    val index = problemStart - contextStart
+    if (index !in lines.indices) return null
+    if (!problemSnippet.isNullOrEmpty() && '\n' !in problemSnippet && !lines[index].contains(problemSnippet)) return null
+    return index
+}
 
 private val Result.snippetText: String?
     get() = locations?.firstOrNull()?.physicalLocation?.region?.snippet?.text
 
-private val Result.astPath: String?
-    get() = properties?.get("astPath") as? String
+private val Result.funcName: String?
+    get() = properties?.get("funcName") as? String
 
 private val Result.startLine: Int?
     get() = locations?.firstOrNull()?.physicalLocation?.region?.startLine
@@ -23,12 +54,19 @@ private val Result.startColumn: Int?
 internal object TiebreakerCascade {
     private const val SIMILARITY_GAP = 0.15
 
+    /**
+     * Share of the context-snippet score carried by the single flagged line; the rest is the
+     * surrounding context. Weighted high because the flagged line is the reliable signal — the
+     * surrounding lines are prone to incidental overlap.
+     */
+    private const val PROBLEM_LINE_WEIGHT = 0.8
+
     private val FILTERS = listOf(
-        "contextSnippet" to ::filterByContextSnippet,
+        "contextSnippetSimilarity" to ::filterByContextSnippetSimilarity,
         "snippet" to ::filterBySnippet,
-        "astPathSimilarity" to ::filterByAstPathSimilarity,
-        "lineDelta" to ::filterByLineDelta,
+        "funcName" to ::filterByFuncName,
         "columnDelta" to ::filterByColumnDelta,
+        "lineDelta" to ::filterByLineDelta,
     )
 
     fun resolve(baselineResult: Result, candidates: List<Result>): TiebreakerResolution? {
@@ -43,9 +81,54 @@ internal object TiebreakerCascade {
         return TiebreakerResolution(survivors[0], resolvedBy = "fallback")
     }
 
-    private fun filterByContextSnippet(baseline: Result, candidates: List<Result>): List<Result>? {
-        val target = baseline.contextSnippetText ?: return null
-        return candidates.filter { it.contextSnippetText == target }.ifEmpty { null }
+    /**
+     * Absolute quality of a single (report, baseline) pair. Component order mirrors [FILTERS] so the
+     * lexicographic comparison reproduces the cascade priority without depending on a candidate set.
+     */
+    fun score(a: Result, b: Result): MatchScore = MatchScore(
+        doubleArrayOf(
+            contextSnippetSimilarity(a, b),
+            eqScore(a.snippetText, b.snippetText),
+            eqScore(a.funcName, b.funcName),
+            closeness(a.startColumn, b.startColumn),
+            closeness(a.startLine, b.startLine),
+        )
+    )
+
+    private fun eqScore(x: String?, y: String?): Double = if (x != null && x == y) 1.0 else 0.0
+
+    /**
+     * Similarity of two context snippets compared line-by-line (LCS over trimmed lines).
+     * The flagged line itself carries [PROBLEM_LINE_WEIGHT] of the score, because a problem that moved
+     * keeps its own line far more reliably than its surroundings. The flagged line is located by [problemLineIndex];
+     */
+    private fun contextSnippetSimilarity(a: Result, b: Result): Double {
+        val aLines = a.contextSnippetLines() ?: return 0.0
+        val bLines = b.contextSnippetLines() ?: return 0.0
+        val snippetSim = SequenceSimilarity.similarity(aLines, bLines)
+
+        val ai = a.problemLineIndex(aLines) ?: return snippetSim
+        val bi = b.problemLineIndex(bLines) ?: return snippetSim
+        val problemLineSim = lineSimilarity(aLines[ai], bLines[bi])
+        return PROBLEM_LINE_WEIGHT * problemLineSim + (1 - PROBLEM_LINE_WEIGHT) * snippetSim
+    }
+
+    /**
+     * Character-level similarity of a single line (LCS over characters), so two renderings of the same
+     * statement score high even when they differ only by surrounding keywords/punctuation.
+     */
+    private fun lineSimilarity(a: String, b: String): Double {
+        if (a == b) return 1.0
+        if (a.isEmpty() || b.isEmpty()) return 0.0
+        return SequenceSimilarity.similarity(a.map(Char::toString), b.map(Char::toString))
+    }
+
+    private fun closeness(x: Int?, y: Int?): Double =
+        if (x != null && y != null) -abs(x - y).toDouble() else Double.NEGATIVE_INFINITY
+
+    private fun filterByContextSnippetSimilarity(baseline: Result, candidates: List<Result>): List<Result>? {
+        if (baseline.contextSnippetText == null) return null
+        return filterByBestScore(candidates) { c -> if (c.contextSnippetText != null) contextSnippetSimilarity(baseline, c) else null }
     }
 
     private fun filterBySnippet(baseline: Result, candidates: List<Result>): List<Result>? {
@@ -53,9 +136,9 @@ internal object TiebreakerCascade {
         return candidates.filter { it.snippetText == target }.ifEmpty { null }
     }
 
-    private fun filterByAstPathSimilarity(baseline: Result, candidates: List<Result>): List<Result>? {
-        val target = baseline.astPath ?: return null
-        return filterByBestScore(candidates) { it.astPath?.let { p -> PathSimilarity.similarity(target, p) } }
+    private fun filterByFuncName(baseline: Result, candidates: List<Result>): List<Result>? {
+        val target = baseline.funcName ?: return null
+        return candidates.filter { it.funcName == target }.ifEmpty { null }
     }
 
     private fun filterByLineDelta(baseline: Result, candidates: List<Result>): List<Result>? {
