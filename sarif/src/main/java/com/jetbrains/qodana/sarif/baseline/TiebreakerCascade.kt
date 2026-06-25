@@ -1,7 +1,9 @@
 package com.jetbrains.qodana.sarif.baseline
 
+import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.ENCLOSING_STATEMENT_INDICATOR
 import com.jetbrains.qodana.sarif.model.Result
 import kotlin.math.abs
+import kotlin.text.substringAfterLast
 
 internal data class TiebreakerResolution(val result: Result, val resolvedBy: String?)
 
@@ -42,8 +44,9 @@ private fun Result.problemLineIndex(lines: List<String>): Int? {
 private val Result.snippetText: String?
     get() = locations?.firstOrNull()?.physicalLocation?.region?.snippet?.text
 
-private val Result.funcName: String?
+private val Result.enclosingScopeName: String?
     get() = properties?.get("funcName") as? String
+    //get() = partialFingerprints?.getLastValue(ENCLOSING_SCOPE_INDICATOR)?.substringAfterLast('#')
 
 private val Result.startLine: Int?
     get() = locations?.firstOrNull()?.physicalLocation?.region?.startLine
@@ -64,7 +67,7 @@ internal object TiebreakerCascade {
     private val FILTERS = listOf(
         "contextSnippetSimilarity" to ::filterByContextSnippetSimilarity,
         "snippet" to ::filterBySnippet,
-        "funcName" to ::filterByFuncName,
+        "enclosingScopeName" to ::filterByEnclosingScopeName,
         "columnDelta" to ::filterByColumnDelta,
         "lineDelta" to ::filterByLineDelta,
     )
@@ -89,7 +92,7 @@ internal object TiebreakerCascade {
         doubleArrayOf(
             contextSnippetSimilarity(a, b),
             eqScore(a.snippetText, b.snippetText),
-            eqScore(a.funcName, b.funcName),
+            eqScore(a.enclosingScopeName, b.enclosingScopeName),
             closeness(a.startColumn, b.startColumn),
             closeness(a.startLine, b.startLine),
         )
@@ -136,9 +139,9 @@ internal object TiebreakerCascade {
         return candidates.filter { it.snippetText == target }.ifEmpty { null }
     }
 
-    private fun filterByFuncName(baseline: Result, candidates: List<Result>): List<Result>? {
-        val target = baseline.funcName ?: return null
-        return candidates.filter { it.funcName == target }.ifEmpty { null }
+    private fun filterByEnclosingScopeName(baseline: Result, candidates: List<Result>): List<Result>? {
+        val target = baseline.enclosingScopeName ?: return null
+        return candidates.filter { it.enclosingScopeName == target }.ifEmpty { null }
     }
 
     private fun filterByLineDelta(baseline: Result, candidates: List<Result>): List<Result>? {

@@ -3,7 +3,6 @@ package com.jetbrains.qodana.sarif.baseline
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.EQUAL_INDICATOR
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SAME_FUNC_AND_SHAPE
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SAME_LOCATION_AND_SHAPE
-import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SAME_SHAPE
 import com.jetbrains.qodana.sarif.model.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -21,7 +20,7 @@ import java.util.Collections.singletonList
  */
 class ExtendedFingerprintIntegrationTest {
 
-    private val includeAbsent = BaselineCalculation.Options(true)
+    private val includeAbsentAndMatchedBy = BaselineCalculation.Options(true, true)
 
     private fun result(
         ruleId: String = "RuleX",
@@ -64,7 +63,7 @@ class ExtendedFingerprintIntegrationTest {
         ))
 
     private fun compare(report: SarifReport, baseline: SarifReport) =
-        BaselineCalculation.compare(report, baseline, includeAbsent)
+        BaselineCalculation.compare(report, baseline, includeAbsentAndMatchedBy)
 
     private fun Result.matchedBy(): String? = properties?.get("matchedBy") as? String
 
@@ -340,17 +339,11 @@ class ExtendedFingerprintIntegrationTest {
     fun `structural phases are skipped when funcName is unavailable`() {
         val r = result(
             message = "refactored", filePath = "src/new.kt",
-            fingerprints = mapOf(
-                SAME_FUNC_AND_SHAPE to mapOf(1 to "x"),
-                SAME_SHAPE to mapOf(1 to "x"),
-            ),
+            fingerprints = mapOf(SAME_FUNC_AND_SHAPE to mapOf(1 to "x")),
         )
         val b = result(
             message = "original", filePath = "src/old.kt",
-            fingerprints = mapOf(
-                SAME_FUNC_AND_SHAPE to mapOf(1 to "x"),
-                SAME_SHAPE to mapOf(1 to "x"),
-            ),
+            fingerprints = mapOf(SAME_FUNC_AND_SHAPE to mapOf(1 to "x")),
         )
 
         val calc = compare(report(r), report(b))
