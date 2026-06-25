@@ -5,26 +5,34 @@ import com.jetbrains.qodana.sarif.model.Run;
 import com.jetbrains.qodana.sarif.model.Tool;
 
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 final class DescriptorLookup {
-    private final Map<String, DescriptorWithLocation> lookup;
-    private final Supplier<Stream<DescriptorWithLocation>> descriptors;
+    private final Run run;
+    private Map<String, DescriptorWithLocation> index;
 
     DescriptorLookup(Run run) {
-        this.lookup = new HashMap<>();
-        this.descriptors = () -> descriptors(run);
+        this.run = run;
     }
 
     DescriptorWithLocation findById(String ruleId) {
-        // don't cache not-found results because new descriptors might be added between calls (but not removed)
-        return lookup.computeIfAbsent(ruleId, id ->
-                descriptors.get()
-                        .filter(r -> Objects.equals(r.getDescriptor().getId(), id))
-                        .findFirst()
-                        .orElse(null)
-        );
+        // Build a one-time snapshot index so repeated hits are O(1) instead of re-scanning every rule.
+        // First-wins (putIfAbsent) reproduces the previous findFirst() semantics over the descriptor stream.
+        if (index == null) {
+            index = new HashMap<>();
+            descriptors(run).forEach(d -> index.putIfAbsent(d.getDescriptor().getId(), d));
+        }
+        DescriptorWithLocation found = index.get(ruleId);
+        if (found != null) return found;
+
+        // A miss re-scans live: new descriptors might be added between calls (but never removed), so a
+        // not-found result must not be cached as absent.
+        found = descriptors(run)
+                .filter(r -> Objects.equals(r.getDescriptor().getId(), ruleId))
+                .findFirst()
+                .orElse(null);
+        if (found != null) index.put(ruleId, found);
+        return found;
     }
 
     private Stream<DescriptorWithLocation> descriptors(Run run) {

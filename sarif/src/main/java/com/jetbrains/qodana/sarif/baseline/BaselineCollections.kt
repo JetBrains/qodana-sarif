@@ -26,6 +26,12 @@ internal class IdentitySet<T> private constructor(
     override fun add(element: T): Boolean = map.putIfAbsent(element, insertCounter++) == null
     override fun addAll(elements: Collection<T>): Boolean = elements.fold(false) { r, e -> add(e) || r }
 
+    /**
+     * Iteration view in identity (hash) order, without the insertion-order sort that [iterator] pays on
+     * every pass. Use it for index building and existence checks, where output order is irrelevant.
+     */
+    fun asUnordered(): Set<T> = map.keys
+
     override fun iterator(): MutableIterator<T> = object : MutableIterator<T> {
         private val underlying = map.entries.sortedBy(MutableMap.MutableEntry<T, Int>::value).iterator()
 

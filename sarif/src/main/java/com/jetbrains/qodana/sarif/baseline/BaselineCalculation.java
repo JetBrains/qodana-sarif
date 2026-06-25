@@ -15,10 +15,7 @@ public class BaselineCalculation {
     public static final String SHIFT_TOLERANT_INDICATOR = "shiftTolerantEqualIndicator";
     public static final String MOVE_AND_REFACTOR_TOLERANT_INDICATOR = "moveAndRefactorTolerantIndicator";
     public static final String EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR = "extractionAndRefactorTolerantIndicator";
-    public static final String ENCLOSING_STATEMENT_INDICATOR = "enclosingStatementIndicator";
-    //TODO: to remove
-    public static final String SAME_LOCATION_AND_SHAPE = "sameLocationAndShape";
-    public static final String SAME_FUNC_AND_SHAPE = "sameFuncAndShape";
+    public static final String ENCLOSING_SCOPE_INDICATOR = "enclosingScopeIndicator";
 
     private int newResults = 0;
     private int absentResults = 0;

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
  * Tests for [TiebreakerCascade] in isolation.
  *
  * Filter order:
- *   contextSnippetSimilarity → snippet → funcName → columnDelta → lineDelta.
+ *   contextSnippetSimilarity → snippet → enclosingScope → columnDelta → lineDelta.
  * If all filters tie or yield nothing, `resolvedBy` is "fallback".
  * If there is a single candidate from the start, `resolvedBy` is null.
  */
@@ -18,12 +18,16 @@ class TiebreakerCascadeTest {
         snippet: String? = null,
         contextSnippet: String? = null,
         contextStartLine: Int? = null,
-        funcName: String? = null,
+        enclosingScope: String? = null,
         startLine: Int? = null,
         startColumn: Int? = null,
     ): Result {
         val r = Result(Message().withText("Empty slice declaration using a literal"))
-        if (funcName != null) r.updateProperties { it["funcName"] = funcName }
+        if (enclosingScope != null) {
+            r.withPartialFingerprints(
+                VersionedMap<String>().apply { put(BaselineCalculation.ENCLOSING_SCOPE_INDICATOR, 1, enclosingScope) }
+            )
+        }
 
         val region = Region()
         if (snippet != null) region.withSnippet(ArtifactContent().withText(snippet))
@@ -40,7 +44,7 @@ class TiebreakerCascadeTest {
     }
 
     private fun resolve(baseline: Result, vararg candidates: Result) =
-        TiebreakerCascade.resolve(baseline, candidates.toList())
+        TiebreakerCascade.resolve(ResultFeatures(baseline), candidates.map(::ResultFeatures))
 
     @Test
     fun `empty candidate list returns null`() {
@@ -162,13 +166,13 @@ class TiebreakerCascadeTest {
     }
 
     @Test
-    fun `funcName breaks ties when content filters do not apply`() {
+    fun `enclosingScope breaks ties when content filters do not apply`() {
         val res = resolve(
-            result(funcName = "computeTotals"),
-            result(funcName = "computeTotals"),
-            result(funcName = "renderHeader"),
+            result(enclosingScope = "method#computeTotals"),
+            result(enclosingScope = "method#computeTotals"),
+            result(enclosingScope = "method#renderHeader"),
         )!!
-        assertEquals("funcName", res.resolvedBy)
+        assertEquals("enclosingScope", res.resolvedBy)
     }
 
     @Test

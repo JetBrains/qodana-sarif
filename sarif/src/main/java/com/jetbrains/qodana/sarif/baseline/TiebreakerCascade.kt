@@ -1,9 +1,9 @@
 package com.jetbrains.qodana.sarif.baseline
 
-import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.ENCLOSING_STATEMENT_INDICATOR
+import com.jetbrains.qodana.sarif.model.PhysicalLocation
 import com.jetbrains.qodana.sarif.model.Result
+import java.util.IdentityHashMap
 import kotlin.math.abs
-import kotlin.text.substringAfterLast
 
 internal data class TiebreakerResolution(val result: Result, val resolvedBy: String?)
 
@@ -22,37 +22,49 @@ internal class MatchScore(@JvmField val components: DoubleArray) : Comparable<Ma
     }
 }
 
-private val Result.contextSnippetText: String?
-    get() = locations?.firstOrNull()?.physicalLocation?.contextRegion?.snippet?.text
+/**
+ * The per-[Result] signals the cascade compares, parsed once. A result is typically scored against several
+ * candidates, so extracting its snippet/location here keeps that work out of the inner pairwise loop.
+ */
+internal class ResultFeatures(val result: Result) {
+    private val physicalLocation: PhysicalLocation? = result.locations?.firstOrNull()?.physicalLocation
 
-private val Result.contextRegionStartLine: Int?
-    get() = locations?.firstOrNull()?.physicalLocation?.contextRegion?.startLine
+    val contextSnippetText: String? = physicalLocation?.contextRegion?.snippet?.text
+    val snippetText: String? = physicalLocation?.region?.snippet?.text
+    val enclosingScopeName: String? =
+        result.partialFingerprints?.getLastValue(BaselineCalculation.ENCLOSING_SCOPE_INDICATOR)
+    val startLine: Int? = physicalLocation?.region?.startLine
+    val startColumn: Int? = physicalLocation?.region?.startColumn
+    private val contextStartLine: Int? = physicalLocation?.contextRegion?.startLine
 
-private fun Result.contextSnippetLines(): List<String>? =
-    contextSnippetText?.split('\n')?.map(String::trim)
+    /** Context snippet split into trimmed lines; computed once and reused across every comparison. */
+    val contextSnippetLines: List<String>? by lazy(LazyThreadSafetyMode.NONE) {
+        contextSnippetText?.split('\n')?.map(String::trim)
+    }
 
-private fun Result.problemLineIndex(lines: List<String>): Int? {
-    val contextStart = contextRegionStartLine ?: return null
-    val problemStart = startLine ?: return null
-    val problemSnippet = snippetText?.trim()
-    val index = problemStart - contextStart
-    if (index !in lines.indices) return null
-    if (!problemSnippet.isNullOrEmpty() && '\n' !in problemSnippet && !lines[index].contains(problemSnippet)) return null
-    return index
+    /** Index of the flagged line within [contextSnippetLines], or null when it cannot be located. */
+    val problemLineIndex: Int? by lazy(LazyThreadSafetyMode.NONE) {
+        val lines = contextSnippetLines ?: return@lazy null
+        val contextStart = contextStartLine ?: return@lazy null
+        val problemStart = startLine ?: return@lazy null
+        val index = problemStart - contextStart
+        if (index !in lines.indices) return@lazy null
+        val problemSnippet = snippetText?.trim()
+        if (!problemSnippet.isNullOrEmpty() && '\n' !in problemSnippet && !lines[index].contains(problemSnippet)) {
+            return@lazy null
+        }
+        index
+    }
+
+    private val contextSimilarityCache = IdentityHashMap<ResultFeatures, Double>()
+
+    /**
+     * Memoized context-snippet similarity of `(this, other)`. The same pair is scored once when ranking
+     * candidates and again when tiebreaking, and the underlying LCS is too costly to repeat per pass.
+     */
+    fun contextSnippetSimilarityTo(other: ResultFeatures, compute: () -> Double): Double =
+        contextSimilarityCache.getOrPut(other, compute)
 }
-
-private val Result.snippetText: String?
-    get() = locations?.firstOrNull()?.physicalLocation?.region?.snippet?.text
-
-private val Result.enclosingScopeName: String?
-    get() = properties?.get("funcName") as? String
-    //get() = partialFingerprints?.getLastValue(ENCLOSING_SCOPE_INDICATOR)?.substringAfterLast('#')
-
-private val Result.startLine: Int?
-    get() = locations?.firstOrNull()?.physicalLocation?.region?.startLine
-
-private val Result.startColumn: Int?
-    get() = locations?.firstOrNull()?.physicalLocation?.region?.startColumn
 
 internal object TiebreakerCascade {
     private const val SIMILARITY_GAP = 0.15
@@ -67,28 +79,30 @@ internal object TiebreakerCascade {
     private val FILTERS = listOf(
         "contextSnippetSimilarity" to ::filterByContextSnippetSimilarity,
         "snippet" to ::filterBySnippet,
-        "enclosingScopeName" to ::filterByEnclosingScopeName,
+        "enclosingScope" to ::filterByEnclosingScopeName,
         "columnDelta" to ::filterByColumnDelta,
         "lineDelta" to ::filterByLineDelta,
     )
 
-    fun resolve(baselineResult: Result, candidates: List<Result>): TiebreakerResolution? {
+    fun resolve(reportResultFeatures: ResultFeatures, candidates: List<ResultFeatures>): TiebreakerResolution? {
         if (candidates.isEmpty()) return null
-        if (candidates.size == 1) return TiebreakerResolution(candidates[0], resolvedBy = null)
+        if (candidates.size == 1) return TiebreakerResolution(candidates[0].result, resolvedBy = null)
 
         var survivors = candidates
         for ((name, filter) in FILTERS) {
-            survivors = filter(baselineResult, survivors) ?: continue
-            if (survivors.size == 1) return TiebreakerResolution(survivors[0], resolvedBy = name)
+            survivors = filter(reportResultFeatures, survivors) ?: continue
+            if (survivors.size == 1) return TiebreakerResolution(survivors[0].result, resolvedBy = name)
         }
-        return TiebreakerResolution(survivors[0], resolvedBy = "fallback")
+        return TiebreakerResolution(survivors[0].result, resolvedBy = "fallback")
     }
+
+    fun score(a: Result, b: Result): MatchScore = score(ResultFeatures(a), ResultFeatures(b))
 
     /**
      * Absolute quality of a single (report, baseline) pair. Component order mirrors [FILTERS] so the
      * lexicographic comparison reproduces the cascade priority without depending on a candidate set.
      */
-    fun score(a: Result, b: Result): MatchScore = MatchScore(
+    fun score(a: ResultFeatures, b: ResultFeatures): MatchScore = MatchScore(
         doubleArrayOf(
             contextSnippetSimilarity(a, b),
             eqScore(a.snippetText, b.snippetText),
@@ -103,15 +117,18 @@ internal object TiebreakerCascade {
     /**
      * Similarity of two context snippets compared line-by-line (LCS over trimmed lines).
      * The flagged line itself carries [PROBLEM_LINE_WEIGHT] of the score, because a problem that moved
-     * keeps its own line far more reliably than its surroundings. The flagged line is located by [problemLineIndex];
+     * keeps its own line far more reliably than its surroundings.
      */
-    private fun contextSnippetSimilarity(a: Result, b: Result): Double {
-        val aLines = a.contextSnippetLines() ?: return 0.0
-        val bLines = b.contextSnippetLines() ?: return 0.0
+    private fun contextSnippetSimilarity(a: ResultFeatures, b: ResultFeatures): Double =
+        a.contextSnippetSimilarityTo(b) { computeContextSnippetSimilarity(a, b) }
+
+    private fun computeContextSnippetSimilarity(a: ResultFeatures, b: ResultFeatures): Double {
+        val aLines = a.contextSnippetLines ?: return 0.0
+        val bLines = b.contextSnippetLines ?: return 0.0
         val snippetSim = SequenceSimilarity.similarity(aLines, bLines)
 
-        val ai = a.problemLineIndex(aLines) ?: return snippetSim
-        val bi = b.problemLineIndex(bLines) ?: return snippetSim
+        val ai = a.problemLineIndex ?: return snippetSim
+        val bi = b.problemLineIndex ?: return snippetSim
         val problemLineSim = lineSimilarity(aLines[ai], bLines[bi])
         return PROBLEM_LINE_WEIGHT * problemLineSim + (1 - PROBLEM_LINE_WEIGHT) * snippetSim
     }
@@ -123,46 +140,42 @@ internal object TiebreakerCascade {
     private fun lineSimilarity(a: String, b: String): Double {
         if (a == b) return 1.0
         if (a.isEmpty() || b.isEmpty()) return 0.0
-        return SequenceSimilarity.similarity(a.map(Char::toString), b.map(Char::toString))
+        return SequenceSimilarity.similarity(a, b)
     }
 
     private fun closeness(x: Int?, y: Int?): Double =
         if (x != null && y != null) -abs(x - y).toDouble() else Double.NEGATIVE_INFINITY
 
-    private fun filterByContextSnippetSimilarity(baseline: Result, candidates: List<Result>): List<Result>? {
-        if (baseline.contextSnippetText == null) return null
-        return filterByBestScore(candidates) { c -> if (c.contextSnippetText != null) contextSnippetSimilarity(baseline, c) else null }
+    private fun filterByContextSnippetSimilarity(reportResultFeatures: ResultFeatures, candidates: List<ResultFeatures>): List<ResultFeatures>? {
+        if (reportResultFeatures.contextSnippetText == null) return null
+        return filterByBestScore(candidates) { c -> if (c.contextSnippetText != null) contextSnippetSimilarity(reportResultFeatures, c) else null }
     }
 
-    private fun filterBySnippet(baseline: Result, candidates: List<Result>): List<Result>? {
-        val target = baseline.snippetText ?: return null
+    private fun filterBySnippet(reportResultFeatures: ResultFeatures, candidates: List<ResultFeatures>): List<ResultFeatures>? {
+        val target = reportResultFeatures.snippetText ?: return null
         return candidates.filter { it.snippetText == target }.ifEmpty { null }
     }
 
-    private fun filterByEnclosingScopeName(baseline: Result, candidates: List<Result>): List<Result>? {
-        val target = baseline.enclosingScopeName ?: return null
+    private fun filterByEnclosingScopeName(reportResultFeatures: ResultFeatures, candidates: List<ResultFeatures>): List<ResultFeatures>? {
+        val target = reportResultFeatures.enclosingScopeName ?: return null
         return candidates.filter { it.enclosingScopeName == target }.ifEmpty { null }
     }
 
-    private fun filterByLineDelta(baseline: Result, candidates: List<Result>): List<Result>? {
-        val target = baseline.startLine ?: return null
-        return filterByBestScore(candidates, gap = 0.0) { c ->
-            c.startLine?.let { -abs(it - target).toDouble() }
-        }
+    private fun filterByLineDelta(reportResultFeatures: ResultFeatures, candidates: List<ResultFeatures>): List<ResultFeatures>? {
+        val target = reportResultFeatures.startLine ?: return null
+        return filterByBestScore(candidates, gap = 0.0) { c -> c.startLine?.let { -abs(it - target).toDouble() } }
     }
 
-    private fun filterByColumnDelta(baseline: Result, candidates: List<Result>): List<Result>? {
-        val target = baseline.startColumn ?: return null
-        return filterByBestScore(candidates, gap = 0.0) { c ->
-            c.startColumn?.let { -abs(it - target).toDouble() }
-        }
+    private fun filterByColumnDelta(reportResultFeatures: ResultFeatures, candidates: List<ResultFeatures>): List<ResultFeatures>? {
+        val target = reportResultFeatures.startColumn ?: return null
+        return filterByBestScore(candidates, gap = 0.0) { c -> c.startColumn?.let { -abs(it - target).toDouble() } }
     }
 
     private inline fun filterByBestScore(
-        candidates: List<Result>,
+        candidates: List<ResultFeatures>,
         gap: Double = SIMILARITY_GAP,
-        score: (Result) -> Double?
-    ): List<Result>? {
+        score: (ResultFeatures) -> Double?
+    ): List<ResultFeatures>? {
         val scored = candidates.mapNotNull { c -> score(c)?.let { c to it } }
         if (scored.isEmpty()) return null
         val best = scored.maxOf { it.second }

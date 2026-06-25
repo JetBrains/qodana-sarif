@@ -1,8 +1,6 @@
 package com.jetbrains.qodana.sarif.baseline
 
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.EQUAL_INDICATOR
-import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SAME_FUNC_AND_SHAPE
-import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SAME_LOCATION_AND_SHAPE
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SHIFT_TOLERANT_INDICATOR
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.MOVE_AND_REFACTOR_TOLERANT_INDICATOR
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR
@@ -12,9 +10,17 @@ import com.jetbrains.qodana.sarif.model.Result.BaselineState
 import com.jetbrains.qodana.sarif.model.Run
 import java.util.IdentityHashMap
 
-/** Non-null results that are still in play (not already marked absent). */
+/** Non-null results that are not already marked absent. */
 private fun Run.undecidedResults(): List<Result> =
-    results.orEmpty().filterNotNull().filterNot { it.baselineState == BaselineState.ABSENT }
+    results.orEmpty().mapNotNull { result -> result?.takeIf { it.baselineState != BaselineState.ABSENT } }
+
+/** The matched baseline's equalIndicator, recorded on the report result as `matchedWith`. */
+private fun Result.equalIndicator(): String =
+    partialFingerprints?.getLastValue(EQUAL_INDICATOR) ?: ""
+
+/** New-analyzer reports carry at least one of these; their absence means a legacy baseline. */
+private fun Result.hasHash(key: String): Boolean =
+    partialFingerprints?.getLastValue(key)?.isNotEmpty() == true
 
 internal class DiffState(private val options: Options) {
     var new = 0
@@ -53,30 +59,31 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     val baselineResults = baseline.undecidedResults()
 
     // Baseline problems are the candidate pool
-    var undecidedFromBaseline = IdentitySet<Result>(baselineResults.size).apply { addAll(baselineResults) }
-
-    //TODO: to remove
-    undecidedFromBaseline.find { it.partialFingerprints?.getLastValue(SAME_LOCATION_AND_SHAPE)?.isNotEmpty() ?: false } ?: return applyBaselineOldAlg(report, baseline, options, state)
+    val undecidedFromBaseline = IdentitySet<Result>(baselineResults.size).apply { addAll(baselineResults) }
 
     // equalIndicator is a unique, collision-free key: no scoring or tiebreaking
-    matchEqualIndicatorPhase(HashMatcher(baselineResults, EQUAL_INDICATOR), undecidedFromReport, undecidedFromBaseline, state).let { (remainingFromReport, remainingFromBaseline) ->
-        undecidedFromReport = remainingFromReport
-        undecidedFromBaseline = remainingFromBaseline
-    }
+    undecidedFromReport = matchEqualIndicatorPhase(
+        HashMatcher(undecidedFromBaseline.asUnordered(), EQUAL_INDICATOR), undecidedFromReport, undecidedFromBaseline, state,
+    )
 
-    // The remaining keys can collide on a single result, so assign them globally by match quality
-    //TODO: update matchers
-    val matchers: List<BaselineMatcher> = listOf(
-        //HashMatcher(baselineResults, SHIFT_TOLERANT_INDICATOR),
-        //HashMatcher(baselineResults, MOVE_AND_REFACTOR_TOLERANT_INDICATOR),
-        //HashMatcher(baselineResults, EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR),
-        //ResultKeyMatcher(baselineResults),
-        ResultKeyMatcher(baselineResults),
-        HashMatcher(baselineResults, SAME_LOCATION_AND_SHAPE),
-        HashMatcher(baselineResults, SAME_FUNC_AND_SHAPE),
+    // shiftTolerantEqualIndicator is the analyzer-generated 1:1 equivalent of ResultKey content equality hash
+    val hasUseShiftTolerantHash = undecidedFromBaseline.asUnordered().any { it.hasHash(SHIFT_TOLERANT_INDICATOR) } ||
+        undecidedFromReport.any { it.hasHash(SHIFT_TOLERANT_INDICATOR) }
+
+    //TODO: to remove before the release
+    //--------------------------------------------------------------------//
+    if (!hasUseShiftTolerantHash) return applyBaselineOldAlg(report, baseline, options, state)
+    //--------------------------------------------------------------------//
+
+    // The remaining hashes can collide on a single result, so each phase indexes only the remaining baseline results
+    // and assigns them globally by match quality.
+    val matchers: List<(Set<Result>) -> BaselineMatcher> = listOf(
+        { remaining -> if (hasUseShiftTolerantHash) HashMatcher(remaining, SHIFT_TOLERANT_INDICATOR) else ResultKeyMatcher(remaining) },
+        { remaining -> HashMatcher(remaining, MOVE_AND_REFACTOR_TOLERANT_INDICATOR) },
+        { remaining -> HashMatcher(remaining, EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR) },
     )
     for (matcher in matchers) {
-        undecidedFromReport = matchPhase(matcher, undecidedFromReport, undecidedFromBaseline, state)
+        undecidedFromReport = matchPhase(matcher(undecidedFromBaseline.asUnordered()), undecidedFromReport, undecidedFromBaseline, state)
     }
 
     undecidedFromReport.forEach { state.put(it, BaselineState.NEW) }
@@ -93,32 +100,34 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     return state
 }
 
-/** Commits exact matches from a unique, collision-free key (equalIndicator) */
+/**
+ * Commits exact matches from a unique, collision-free key (equalIndicator). Matched baselines are removed from
+ * [undecidedFromBaseline] in place; the returned list is the reports that remain unmatched.
+ */
 private fun matchEqualIndicatorPhase(
     matcher: BaselineMatcher,
     undecidedFromReport: List<Result>,
     undecidedFromBaseline: IdentitySet<Result>,
     state: DiffState,
-): Pair<List<Result>, IdentitySet<Result>> {
+): List<Result> {
     val decidedFromReport = IdentitySet<Result>(undecidedFromReport.size)
-    for ((reportResult, baselineResult, matchedBy, matchedWith) in matcher.candidates(undecidedFromReport, undecidedFromBaseline)) {
+    for ((reportResult, baselineResult, matchedBy) in matcher.candidates(undecidedFromReport)) {
         if (reportResult in decidedFromReport || baselineResult !in undecidedFromBaseline) continue
-        state.put(reportResult, BaselineState.UNCHANGED, matchedBy, matchedWith)
+        state.put(reportResult, BaselineState.UNCHANGED, matchedBy, baselineResult.equalIndicator())
         decidedFromReport.add(reportResult)
         undecidedFromBaseline.remove(baselineResult)
     }
-    return (undecidedFromReport.filterNot { it in decidedFromReport } to undecidedFromBaseline)
+    return undecidedFromReport.filterNot { it in decidedFromReport }
 }
 
 /**
- * Resolves one matching phase by global greedy-best-first assignment, for keys that can collide on a
- * single result.
+ * Resolves one matching phase for keys that can collide on a single result.
  *
- * Instead of committing the first acceptable match per problem, this collects every candidate match,
- * scores each pairing, then commits them strongest-score-first.
+ * 1:1 pairs are commited directly. The rest are assigned by global greedy-best-first: every contested pairing is
+ * scored, then committed strongest-score-first so a weaker pair can never steal a baseline from a stronger one.
  *
- * Matched baselines are removed from [undecidedFromBaseline]; the returned list is the reports that
- * remain unmatched and flow to the next phase.
+ * Matched baselines are removed from [undecidedFromBaseline]; the returned list is the reports that remain
+ * unmatched and flow to the next phase.
  */
 private fun matchPhase(
     matcher: BaselineMatcher,
@@ -126,30 +135,56 @@ private fun matchPhase(
     undecidedFromBaseline: IdentitySet<Result>,
     state: DiffState,
 ): List<Result> {
-    val candidates = matcher.candidates(undecidedFromReport, undecidedFromBaseline)
+    val candidates = matcher.candidates(undecidedFromReport)
     if (candidates.isEmpty()) return undecidedFromReport
 
-    val competitors = IdentityHashMap<Result, MutableList<Result>>()
-    for ((report, baseline) in candidates) competitors.getOrPut(report) { ArrayList() }.add(baseline)
+    val baselinesByReport = IdentityHashMap<Result, MutableList<Result>>()
+    val reportsPerBaseline = IdentityHashMap<Result, Int>()
+    for ((reportResult, baselineResult) in candidates) {
+        baselinesByReport.getOrPut(reportResult) { ArrayList() }.add(baselineResult)
+        reportsPerBaseline.merge(baselineResult, 1, Int::plus)
+    }
 
     val decidedFromReport = IdentitySet<Result>(candidates.size)
-    val ranked = candidates
-        .map { it to TiebreakerCascade.score(it.reportResult, it.baselineResult) }
-        .sortedByDescending { it.second }
-    for ((candidate, _) in ranked) {
-        val (reportResult, baselineResult, matchedFingerprintHash, matchedWith) = candidate
-        if (reportResult in decidedFromReport || baselineResult !in undecidedFromBaseline) continue
-        val matchedBy = matchedFingerprintHash + tiebreakerSuffix(reportResult, baselineResult, competitors.getValue(reportResult))
-        state.put(reportResult, BaselineState.UNCHANGED, matchedBy, matchedWith)
-        decidedFromReport.add(reportResult)
-        undecidedFromBaseline.remove(baselineResult)
+    fun commit(candidate: MatchCandidate, matchedBySuffix: String) {
+        state.put(candidate.reportResult, BaselineState.UNCHANGED, candidate.matchedBy + matchedBySuffix, candidate.baselineResult.equalIndicator())
+        decidedFromReport.add(candidate.reportResult)
+        undecidedFromBaseline.remove(candidate.baselineResult)
+    }
+
+    val candidatesWithCollisions = ArrayList<MatchCandidate>(candidates.size)
+    for (c in candidates) {
+        if (baselinesByReport.getValue(c.reportResult).size == 1 && reportsPerBaseline.getValue(c.baselineResult) == 1) {
+            commit(c, "")
+        } else {
+            candidatesWithCollisions.add(c)
+        }
+    }
+
+    if (candidatesWithCollisions.isNotEmpty()) {
+        val featureCache = IdentityHashMap<Result, ResultFeatures>()
+        fun featuresOf(result: Result): ResultFeatures = featureCache.getOrPut(result) { ResultFeatures(result) }
+
+        candidatesWithCollisions
+            .map { it to TiebreakerCascade.score(featuresOf(it.reportResult), featuresOf(it.baselineResult)) }
+            .sortedByDescending { it.second }
+            .forEach { (candidate, _) ->
+                if (candidate.reportResult in decidedFromReport || candidate.baselineResult !in undecidedFromBaseline) return@forEach
+                val competitors = baselinesByReport.getValue(candidate.reportResult)
+                commit(candidate, tiebreakerSuffix(featuresOf(candidate.reportResult), candidate.baselineResult, competitors, ::featuresOf))
+            }
     }
 
     return undecidedFromReport.filterNot { it in decidedFromReport }
 }
 
-private fun tiebreakerSuffix(reportResult: Result, baselineResult: Result, competitors: List<Result>): String {
+private fun tiebreakerSuffix(
+    reportResultFeatures: ResultFeatures,
+    baselineResult: Result,
+    competitors: List<Result>,
+    featuresOf: (Result) -> ResultFeatures,
+): String {
     if (competitors.size <= 1) return ""
-    val resolution = TiebreakerCascade.resolve(reportResult, competitors)
+    val resolution = TiebreakerCascade.resolve(reportResultFeatures, competitors.map(featuresOf))
     return if (resolution?.result === baselineResult) "+${resolution.resolvedBy}" else ""
 }

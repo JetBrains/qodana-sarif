@@ -1,8 +1,10 @@
 package com.jetbrains.qodana.sarif
 
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation
+import com.jetbrains.qodana.sarif.baseline.ResultKey
 import com.jetbrains.qodana.sarif.model.Result.BaselineState
 import com.jetbrains.qodana.sarif.model.SarifReport
+import com.jetbrains.qodana.sarif.model.VersionedMap
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
@@ -19,12 +21,28 @@ class BaselineFingerprintTest {
     private fun readReport(fingerprintVersion: String) =
         read("src/test/resources/testData/fingerprinting/after.sarif_$fingerprintVersion.json")
 
+    /**
+     * Stamps every result with a content-stable shiftTolerantEqualIndicator (the analyzer's 1:1 equivalent
+     * of [ResultKey]). EqualIndicator matching runs first, so the stamp only affects results equalIndicator did not match.
+     */
+    private fun forceNewAlg(vararg reports: SarifReport) {
+        for (report in reports) {
+            report.runs.orEmpty().forEach { run ->
+                run.results.orEmpty().filterNotNull().forEach { r ->
+                    val fp = r.partialFingerprints ?: VersionedMap<String>().also { r.partialFingerprints = it }
+                    fp.put(BaselineCalculation.SHIFT_TOLERANT_INDICATOR, 1, ResultKey(r).hashCode().toString())
+                }
+            }
+        }
+    }
+
     private fun test(
         report: SarifReport,
         baseline: SarifReport,
         expect: Map<BaselineState, Int>,
     ) {
-        val res = BaselineCalculation.compare(report, baseline, BaselineCalculation.Options(true))
+        forceNewAlg(report, baseline)
+        val res = BaselineCalculation.compare(report, baseline, BaselineCalculation.Options(true, false))
 
         val byState = report.runs.orEmpty().asSequence()
             .flatMap { it.results.orEmpty() }
