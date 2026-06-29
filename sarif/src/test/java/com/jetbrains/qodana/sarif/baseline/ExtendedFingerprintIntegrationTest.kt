@@ -88,6 +88,7 @@ class ExtendedFingerprintIntegrationTest {
             message = "same", filePath = "src/a.kt",
             fingerprints = mapOf(
                 EQUAL_INDICATOR to mapOf(2 to "fp"),
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s"),
                 MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc"),
             ),
         )
@@ -95,6 +96,7 @@ class ExtendedFingerprintIntegrationTest {
             message = "same", filePath = "src/a.kt",
             fingerprints = mapOf(
                 EQUAL_INDICATOR to mapOf(2 to "fp"),
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s"),
                 MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc"),
             ),
         )
@@ -106,50 +108,61 @@ class ExtendedFingerprintIntegrationTest {
     }
 
     @Test
-    fun `resultKey matches identical content when shiftTolerant is absent`() {
-        val r = result(message = "same", filePath = "src/a.kt")
+    fun `shiftTolerant matches identical content`() {
+        val r = result(message = "same", filePath = "src/a.kt",
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
         val b = result(message = "same", filePath = "src/a.kt",
-            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc")))
+            fingerprints = mapOf(
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s"),
+                MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc"),
+            ))
 
         val calc = compare(report(r), report(b))
 
         assertEquals(1, calc.unchangedResults)
-        assertEquals("resultKey", r.matchedBy())
+        assertEquals("shiftTolerantEqualIndicator/v1", r.matchedBy())
     }
 
     @Test
-    fun `resultKey wins over hash cascade for content-stable results`() {
+    fun `shiftTolerant wins over hash cascade for content-stable results`() {
         val r = result(
             message = "same", filePath = "src/a.kt",
-            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc")),
+            fingerprints = mapOf(
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s"),
+                MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc"),
+            ),
         )
         val b = result(
             message = "same", filePath = "src/a.kt",
-            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc")),
+            fingerprints = mapOf(
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s"),
+                MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc"),
+            ),
         )
 
         val calc = compare(report(r), report(b))
 
         assertEquals(1, calc.unchangedResults)
-        assertEquals("resultKey", r.matchedBy())
+        assertEquals("shiftTolerantEqualIndicator/v1", r.matchedBy())
     }
 
     @Test
-    fun `resultKey collisions are resolved by the tiebreaker chain`() {
-        // Same ResultKey on multiple baseline candidates (same message, URI, snippet, charLength)
-        // disambiguated against the report anchor by contextSnippet.
+    fun `shiftTolerant collisions are resolved by the tiebreaker chain`() {
+        // Same shiftTolerant hash on multiple baseline candidates disambiguated against the report anchor
+        // by contextSnippet.
         val ctx = "before\nproblem\nafter"
-        val r = result(filePath = "src/a.kt", contextSnippet = ctx)
+        val r = result(filePath = "src/a.kt", contextSnippet = ctx,
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
         val b1 = result(filePath = "src/a.kt", contextSnippet = ctx,
-            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc")))
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
         val b2 = result(filePath = "src/a.kt", contextSnippet = "different\n",
-            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc")))
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
 
         val calc = compare(report(r), report(b1, b2))
 
         assertEquals(1, calc.unchangedResults)
         assertEquals(1, calc.absentResults)
-        assertEquals("resultKey+contextSnippetSimilarity", r.matchedBy())
+        assertEquals("shiftTolerantEqualIndicator/v1+contextSnippetSimilarity", r.matchedBy())
     }
 
     @Test
@@ -158,11 +171,17 @@ class ExtendedFingerprintIntegrationTest {
         // moveAndRefactorTolerantIndicator hashes agree → cascade rescues.
         val r = result(
             message = "refactored", filePath = "src/new.kt",
-            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc")),
+            fingerprints = mapOf(
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr"),
+                MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc"),
+            ),
         )
         val b = result(
             message = "original", filePath = "src/old.kt",
-            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc")),
+            fingerprints = mapOf(
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb"),
+                MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc"),
+            ),
         )
 
         val calc = compare(report(r), report(b))
@@ -176,6 +195,7 @@ class ExtendedFingerprintIntegrationTest {
         val r = result(
             message = "refactored", filePath = "src/new.kt",
             fingerprints = mapOf(
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr"),
                 MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "diffA"),
                 EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "match"),
             ),
@@ -183,6 +203,7 @@ class ExtendedFingerprintIntegrationTest {
         val b = result(
             message = "original", filePath = "src/old.kt",
             fingerprints = mapOf(
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb"),
                 MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "diffB"),
                 EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "match"),
             ),
@@ -198,15 +219,24 @@ class ExtendedFingerprintIntegrationTest {
     fun `policy does NOT apply to moveAndRefactor with lineDelta tiebreaker`() {
         val r = result(
             message = "rm", filePath = "src/r.kt", startLine = 10,
-            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")),
+            fingerprints = mapOf(
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr"),
+                MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h"),
+            ),
         )
         val b1 = result(
             message = "b1", filePath = "src/b1.kt", startLine = 12,
-            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")),
+            fingerprints = mapOf(
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb1"),
+                MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h"),
+            ),
         )
         val b2 = result(
             message = "b2", filePath = "src/b2.kt", startLine = 200,
-            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")),
+            fingerprints = mapOf(
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb2"),
+                MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h"),
+            ),
         )
 
         val calc = compare(report(r), report(b1, b2))
@@ -235,6 +265,7 @@ class ExtendedFingerprintIntegrationTest {
             filePath = "src/r.kt",
             fingerprints = mapOf(
                 EQUAL_INDICATOR to mapOf(1 to "shared", 2 to "r"),
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr"),
                 MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "mr"),
             ),
         )
@@ -242,6 +273,7 @@ class ExtendedFingerprintIntegrationTest {
             filePath = "src/b.kt",
             fingerprints = mapOf(
                 EQUAL_INDICATOR to mapOf(1 to "shared", 2 to "b"),
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb"),
                 MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "mb"),
             ),
         )
@@ -260,6 +292,7 @@ class ExtendedFingerprintIntegrationTest {
             filePath = "src/r.kt",
             fingerprints = mapOf(
                 EQUAL_INDICATOR to mapOf(1 to "shared", 2 to "r_only"),
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr"),
                 MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "mr"),
             ),
         )
@@ -267,6 +300,7 @@ class ExtendedFingerprintIntegrationTest {
             filePath = "src/b.kt",
             fingerprints = mapOf(
                 EQUAL_INDICATOR to mapOf(1 to "shared"),
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb"),
                 MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "mb"),
             ),
         )
@@ -281,16 +315,23 @@ class ExtendedFingerprintIntegrationTest {
     fun `stronger phase wins globally regardless of baseline iteration order`() {
         val b1 = result(
             message = "b1-cascade", filePath = "src/b1.kt",
-            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc")),
+            fingerprints = mapOf(
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb1"),
+                MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc"),
+            ),
         )
         val b2 = result(
             message = "b2-eq", filePath = "src/b2.kt",
-            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "eq")),
+            fingerprints = mapOf(
+                EQUAL_INDICATOR to mapOf(2 to "eq"),
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb2"),
+            ),
         )
         val r1 = result(
             message = "r1-both", filePath = "src/r1.kt",
             fingerprints = mapOf(
                 EQUAL_INDICATOR to mapOf(2 to "eq"),
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr1"),
                 MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc"),
             ),
         )
@@ -330,19 +371,21 @@ class ExtendedFingerprintIntegrationTest {
     fun `each result is matched by the strongest available phase`() {
         // matched by equalIndicator
         val r1 = result(message = "m1", filePath = "src/eq.kt",
-            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "eq1")))
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "eq1"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s1")))
         val b1 = result(message = "m1", filePath = "src/eq.kt",
-            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "eq1")))
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "eq1"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s1")))
 
-        // matched by resultKey (content-stable, no content hash)
-        val r2 = result(message = "m2", filePath = "src/rk.kt")
-        val b2 = result(message = "m2", filePath = "src/rk.kt")
+        // matched by shiftTolerantEqualIndicator (content-stable, no equalIndicator)
+        val r2 = result(message = "m2", filePath = "src/rk.kt",
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s2")))
+        val b2 = result(message = "m2", filePath = "src/rk.kt",
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s2")))
 
         // matched by moveAndRefactorTolerantIndicator (cascade only — content has changed)
         val r3 = result(message = "m3-new", filePath = "src/cs.kt",
-            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc")))
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s3r"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc")))
         val b3 = result(message = "m3-old", filePath = "src/cs.kt",
-            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc")))
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s3b"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc")))
 
         val calc = compare(report(r1, r2, r3), report(b1, b2, b3))
 
@@ -350,21 +393,21 @@ class ExtendedFingerprintIntegrationTest {
         assertEquals(0, calc.newResults)
         assertEquals(0, calc.absentResults)
         assertEquals("equalIndicator/v2", r1.matchedBy())
-        assertEquals("resultKey", r2.matchedBy())
+        assertEquals("shiftTolerantEqualIndicator/v1", r2.matchedBy())
         assertEquals("moveAndRefactorTolerantIndicator/v1", r3.matchedBy())
     }
 
     @Test
     fun `match quality is independent of baseline order`() {
         fun bNear() = result(message = "bn", filePath = "src/file.kt", startLine = 11,
-            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "near"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "near"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sbn"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
         fun bFar() = result(message = "bf", filePath = "src/file.kt", startLine = 400,
-            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "far"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "far"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sbf"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
 
         for (baseline in listOf(arrayOf(bNear(), bFar()), arrayOf(bFar(), bNear()))) {
-            // The report carries only the structural hash, so it matches via the cascade, not equalIndicator.
+            // The report carries no equalIndicator/shiftTolerant match, so it matches via the cascade.
             val r = result(message = "rm", filePath = "src/file.kt", startLine = 10,
-                fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+                fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
 
             val calc = compare(report(r), report(*baseline))
 
@@ -379,15 +422,15 @@ class ExtendedFingerprintIntegrationTest {
     fun `match quality is independent of report order`() {
         fun rStrong() = result(message = "rs", filePath = "src/file.kt", startLine = 400,
             contextSnippet = "a\nb\nPROBLEM\nc\nd",
-            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "ss"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
         fun rWeak() = result(message = "rw", filePath = "src/file.kt", startLine = 11,
             contextSnippet = "x\ny\nOTHER\nz\nw",
-            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sw"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
 
         for (reports in listOf(arrayOf(rWeak(), rStrong()), arrayOf(rStrong(), rWeak()))) {
             val b = result(message = "bm", filePath = "src/file.kt", startLine = 10,
                 contextSnippet = "a\nb\nPROBLEM\nc\nd",
-                fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "beq"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+                fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "beq"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
 
             val calc = compare(report(*reports), report(b))
             val strong = reports.first { it.message.text == "rs" }
@@ -398,5 +441,74 @@ class ExtendedFingerprintIntegrationTest {
             assertEquals("beq", strong.matchedWith())     // strong report took the baseline
             assertNull(weak.matchedWith())                // weak report was left NEW, not matched
         }
+    }
+
+    @Test
+    fun `matchedBy is written only when includeMatchedBy is enabled`() {
+        fun matchUnder(includeMatchedBy: Boolean): Result {
+            val r = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+            val b = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+            BaselineCalculation.compare(report(r), report(b), BaselineCalculation.Options(true, includeMatchedBy))
+            return r
+        }
+
+        assertEquals("equalIndicator/v2", matchUnder(includeMatchedBy = true).matchedBy())
+        assertNull(matchUnder(includeMatchedBy = false).matchedBy())
+    }
+
+    @Test
+    fun `matchedWith is recorded regardless of includeMatchedBy`() {
+        fun matchUnder(includeMatchedBy: Boolean): Result {
+            val r = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+            val b = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+            BaselineCalculation.compare(report(r), report(b), BaselineCalculation.Options(true, includeMatchedBy))
+            return r
+        }
+
+        assertEquals("fp", matchUnder(includeMatchedBy = true).matchedWith())
+        assertEquals("fp", matchUnder(includeMatchedBy = false).matchedWith())
+    }
+
+    @Test
+    fun `includeMatchedBy is outcome-neutral and stamps every matched result across phases`() {
+        // One match per phase: equalIndicator, shiftTolerant and the move cascade.
+        fun reportResults() = listOf(
+            result(message = "m1", filePath = "src/eq.kt",
+                fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "eq1"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s1"))),
+            result(message = "m2", filePath = "src/st.kt",
+                fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s2"))),
+            result(message = "m3-new", filePath = "src/cs.kt",
+                fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s3r"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc"))),
+        )
+        fun baselineResults() = listOf(
+            result(message = "m1", filePath = "src/eq.kt",
+                fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "eq1"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s1"))),
+            result(message = "m2", filePath = "src/st.kt",
+                fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s2"))),
+            result(message = "m3-old", filePath = "src/cs.kt",
+                fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s3b"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc"))),
+        )
+
+        // compare mutates results in place, so build fresh inputs for each run.
+        fun run(includeMatchedBy: Boolean): List<Result> {
+            val reports = reportResults()
+            val calc = BaselineCalculation.compare(
+                report(*reports.toTypedArray()), report(*baselineResults().toTypedArray()),
+                BaselineCalculation.Options(true, includeMatchedBy),
+            )
+            // Outcome must be identical no matter how the flag is set.
+            assertEquals(3, calc.unchangedResults)
+            assertEquals(0, calc.newResults)
+            assertEquals(0, calc.absentResults)
+            return reports
+        }
+
+        // Flag on: every matched result is stamped with its phase.
+        assertEquals(
+            listOf("equalIndicator/v2", "shiftTolerantEqualIndicator/v1", "moveAndRefactorTolerantIndicator/v1"),
+            run(includeMatchedBy = true).map { it.matchedBy() },
+        )
+        // Flag off: matching is unchanged, but no matchedBy is written.
+        assertTrue(run(includeMatchedBy = false).all { it.matchedBy() == null })
     }
 }

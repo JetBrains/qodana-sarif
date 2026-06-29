@@ -36,8 +36,8 @@ internal class DiffState(private val options: Options) {
         if (state == BaselineState.UNCHANGED && !options.includeUnchanged) return false
         if (state == BaselineState.ABSENT && !options.includeAbsent) return false
 
-        if (matchedBy != null) result.updateProperties { it["matchedBy"] = matchedBy }
-        if (options.includeMatchedBy && matchedWith != null) result.updateProperties { it["matchedWith"] = matchedWith }
+        if (options.includeMatchedBy && matchedBy != null) result.updateProperties { it["matchedBy"] = matchedBy }
+        if (matchedWith != null) result.updateProperties { it["matchedWith"] = matchedWith }
         results.add(result.withBaselineState(if (options.fillBaselineState) state else null))
         when (state) {
             BaselineState.NEW -> new++
@@ -61,19 +61,19 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     // Baseline problems are the candidate pool
     val undecidedFromBaseline = IdentitySet<Result>(baselineResults.size).apply { addAll(baselineResults) }
 
-    // equalIndicator is a unique, collision-free key: no scoring or tiebreaking
-    undecidedFromReport = matchEqualIndicatorPhase(
-        HashMatcher(undecidedFromBaseline.asUnordered(), EQUAL_INDICATOR), undecidedFromReport, undecidedFromBaseline, state,
-    )
-
     // shiftTolerantEqualIndicator is the analyzer-generated 1:1 equivalent of ResultKey content equality hash
-    val hasUseShiftTolerantHash = undecidedFromBaseline.asUnordered().any { it.hasHash(SHIFT_TOLERANT_INDICATOR) } ||
-        undecidedFromReport.any { it.hasHash(SHIFT_TOLERANT_INDICATOR) }
+    val hasUseShiftTolerantHash = undecidedFromBaseline.asUnordered().any { it.hasHash(SHIFT_TOLERANT_INDICATOR) }
+            || undecidedFromReport.any { it.hasHash(SHIFT_TOLERANT_INDICATOR) }
 
     //TODO: to remove before the release
     //--------------------------------------------------------------------//
     if (!hasUseShiftTolerantHash) return applyBaselineOldAlg(report, baseline, options, state)
     //--------------------------------------------------------------------//
+
+    // equalIndicator is a unique, collision-free key: no scoring or tiebreaking
+    undecidedFromReport = matchEqualIndicatorPhase(
+        HashMatcher(undecidedFromBaseline.asUnordered(), EQUAL_INDICATOR), undecidedFromReport, undecidedFromBaseline, state,
+    )
 
     // The remaining hashes can collide on a single result, so each phase indexes only the remaining baseline results
     // and assigns them globally by match quality.
