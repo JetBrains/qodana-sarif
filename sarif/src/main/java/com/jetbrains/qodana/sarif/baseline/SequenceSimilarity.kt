@@ -4,16 +4,9 @@ package com.jetbrains.qodana.sarif.baseline
 internal object SequenceSimilarity {
 
     fun similarity(a: List<String>, b: List<String>): Double {
-        if (a.isEmpty() && b.isEmpty()) return 1.0
+        if (a.isEmpty() && b.isEmpty() || a == b) return 1.0
         if (a.isEmpty() || b.isEmpty()) return 0.0
         return 2.0 * lcsLength(a, b) / (a.size + b.size)
-    }
-
-    /** Char-level variant; avoids materializing a list of single-character strings just to diff a line. */
-    fun similarity(a: CharSequence, b: CharSequence): Double {
-        if (a.isEmpty() && b.isEmpty()) return 1.0
-        if (a.isEmpty() || b.isEmpty()) return 0.0
-        return 2.0 * lcsLength(a, b) / (a.length + b.length)
     }
 
     private fun lcsLength(a: List<String>, b: List<String>): Int {
@@ -28,20 +21,5 @@ internal object SequenceSimilarity {
             }
         }
         return dp[short.size]
-    }
-
-    private fun lcsLength(a: CharSequence, b: CharSequence): Int {
-        val (short, long) = if (a.length <= b.length) a to b else b to a
-        val dp = IntArray(short.length + 1)
-        for (i in long.indices) {
-            val longChar = long[i]
-            var prevDiag = 0
-            for (j in short.indices) {
-                val temp = dp[j + 1]
-                dp[j + 1] = if (longChar == short[j]) prevDiag + 1 else maxOf(dp[j], dp[j + 1])
-                prevDiag = temp
-            }
-        }
-        return dp[short.length]
     }
 }

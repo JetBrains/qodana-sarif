@@ -43,8 +43,21 @@ class TiebreakerCascadeTest {
         return r
     }
 
-    private fun resolve(baseline: Result, vararg candidates: Result) =
-        TiebreakerCascade.resolve(ResultFeatures(baseline), candidates.map(::ResultFeatures))
+    private data class Resolution(val result: Result, val resolvedBy: String?)
+
+    /**
+     * Ranks [candidates] against [baseline] by [TiebreakerCascade.score]
+     * and names the signal that separated the winner from the runner-up.
+     */
+    private fun resolve(baseline: Result, vararg candidates: Result): Resolution? {
+        if (candidates.isEmpty()) return null
+        val baselineFeatures = ResultFeatures(baseline)
+        val ranked = candidates
+            .map { it to TiebreakerCascade.score(baselineFeatures, ResultFeatures(it)) }
+            .sortedByDescending { it.second }
+        val runnerUp = ranked.getOrNull(1)?.second
+        return Resolution(ranked[0].first, ranked[0].second.decidingSignalAgainst(runnerUp))
+    }
 
     @Test
     fun `empty candidate list returns null`() {

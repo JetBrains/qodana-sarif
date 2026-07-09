@@ -247,6 +247,32 @@ class ExtendedFingerprintIntegrationTest {
     }
 
     @Test
+    fun `a report whose best candidate was stolen still gets the signal that won its remaining match`() {
+        val ctx = "a\nb\nPROBLEM\nc\nd"
+        val r1 = result(message = "r1", filePath = "src/f.kt", contextSnippet = ctx, startLine = 50,
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr1"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+        val r2 = result(message = "r2", filePath = "src/f.kt", startLine = 48,
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr2"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+
+        val b1 = result(message = "b1", filePath = "src/f.kt", contextSnippet = ctx, startLine = 50,
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "eqb1"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb1"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+        val b2 = result(message = "b2", filePath = "src/f.kt", startLine = 40,
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "eqb2"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb2"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+        val b3 = result(message = "b3", filePath = "src/f.kt", startLine = 100,
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "eqb3"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb3"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+
+        val calc = compare(report(r1, r2), report(b1, b2, b3))
+
+        assertEquals(2, calc.unchangedResults)
+        assertEquals(1, calc.absentResults)
+        assertEquals(0, calc.newResults)
+        assertEquals("moveAndRefactorTolerantIndicator/v1+contextSnippetSimilarity", r1.matchedBy())
+        assertEquals("moveAndRefactorTolerantIndicator/v1+lineDelta", r2.matchedBy())
+        assertEquals("eqb1", r1.matchedWith())
+        assertEquals("eqb2", r2.matchedWith())
+    }
+
+    @Test
     fun `matches at the greatest common fingerprint version`() {
         val r = result(fingerprints = mapOf(
             EQUAL_INDICATOR to mapOf(1 to "v1", 2 to "v2"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))

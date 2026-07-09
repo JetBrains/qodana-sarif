@@ -18,7 +18,7 @@ private fun Run.undecidedResults(): List<Result> =
 private fun Result.equalIndicator(): String =
     partialFingerprints?.getLastValue(EQUAL_INDICATOR) ?: ""
 
-/** New-analyzer reports carry at least one of these; their absence means a legacy baseline. */
+/** The presence of these hashes identifies a new-analyzer report, whereas their absence signifies a legacy baseline. */
 private fun Result.hasHash(key: String): Boolean =
     partialFingerprints?.getLastValue(key)?.isNotEmpty() == true
 
@@ -47,6 +47,8 @@ internal class DiffState(private val options: Options) {
         }
         return true
     }
+
+    fun isMatchedByIncluded(): Boolean = options.includeMatchedBy
 }
 
 /** CAUTION: This mutates results in report and baseline **/
@@ -65,10 +67,7 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     val hasUseShiftTolerantHash = undecidedFromBaseline.asUnordered().any { it.hasHash(SHIFT_TOLERANT_INDICATOR) }
             || undecidedFromReport.any { it.hasHash(SHIFT_TOLERANT_INDICATOR) }
 
-    //TODO: to remove before the release
-    //--------------------------------------------------------------------//
     if (!hasUseShiftTolerantHash) return applyBaselineOldAlg(report, baseline, options, state)
-    //--------------------------------------------------------------------//
 
     // equalIndicator is a unique, collision-free key: no scoring or tiebreaking
     undecidedFromReport = matchEqualIndicatorPhase(
@@ -78,7 +77,7 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     // The remaining hashes can collide on a single result, so each phase indexes only the remaining baseline results
     // and assigns them globally by match quality.
     val matchers: List<(Set<Result>) -> BaselineMatcher> = listOf(
-        { remaining -> if (hasUseShiftTolerantHash) HashMatcher(remaining, SHIFT_TOLERANT_INDICATOR) else ResultKeyMatcher(remaining) },
+        { remaining -> HashMatcher(remaining, SHIFT_TOLERANT_INDICATOR) },
         { remaining -> HashMatcher(remaining, MOVE_AND_REFACTOR_TOLERANT_INDICATOR) },
         { remaining -> HashMatcher(remaining, EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR) },
     )
@@ -165,26 +164,43 @@ private fun matchPhase(
         val featureCache = IdentityHashMap<Result, ResultFeatures>()
         fun featuresOf(result: Result): ResultFeatures = featureCache.getOrPut(result) { ResultFeatures(result) }
 
+        // Score every collated edge exactly once; the same scores drive the greedy order and the label.
+        val scoreByReportBaseline = IdentityHashMap<Result, IdentityHashMap<Result, MatchScore>>()
         candidatesWithCollisions
-            .map { it to TiebreakerCascade.score(featuresOf(it.reportResult), featuresOf(it.baselineResult)) }
+            .map { candidate ->
+                val score = TiebreakerCascade.score(featuresOf(candidate.reportResult), featuresOf(candidate.baselineResult))
+                scoreByReportBaseline.getOrPut(candidate.reportResult) { IdentityHashMap() }[candidate.baselineResult] = score
+                candidate to score
+            }
             .sortedByDescending { it.second }
-            .forEach { (candidate, _) ->
+            .forEach { (candidate, score) ->
                 if (candidate.reportResult in decidedFromReport || candidate.baselineResult !in undecidedFromBaseline) return@forEach
-                val competitors = baselinesByReport.getValue(candidate.reportResult)
-                commit(candidate, tiebreakerSuffix(featuresOf(candidate.reportResult), candidate.baselineResult, competitors, ::featuresOf))
+                val suffix = if (state.isMatchedByIncluded()) {
+                    tiebreakerSuffix(candidate, score, baselinesByReport, undecidedFromBaseline, scoreByReportBaseline)
+                } else {
+                    ""
+                }
+                commit(candidate, suffix)
             }
     }
 
     return undecidedFromReport.filterNot { it in decidedFromReport }
 }
 
+/**
+ * The signal that won the committed pair against the strongest remaining rival.
+ * Since matches commit strongest-first, this is always a decisive win (or `""` if no rivals remain).
+ */
 private fun tiebreakerSuffix(
-    reportResultFeatures: ResultFeatures,
-    baselineResult: Result,
-    competitors: List<Result>,
-    featuresOf: (Result) -> ResultFeatures,
+    candidate: MatchCandidate,
+    committedScore: MatchScore,
+    baselinesByReport: IdentityHashMap<Result, MutableList<Result>>,
+    undecidedFromBaseline: IdentitySet<Result>,
+    scoreByReportBaseline: IdentityHashMap<Result, IdentityHashMap<Result, MatchScore>>,
 ): String {
-    if (competitors.size <= 1) return ""
-    val resolution = TiebreakerCascade.resolve(reportResultFeatures, competitors.map(featuresOf))
-    return if (resolution?.result === baselineResult) "+${resolution.resolvedBy}" else ""
+    val scores = scoreByReportBaseline.getValue(candidate.reportResult)
+    val rivalScore = baselinesByReport.getValue(candidate.reportResult)
+        .filter { it !== candidate.baselineResult && it in undecidedFromBaseline }
+        .maxOfOrNull { scores.getValue(it) }
+    return committedScore.decidingSignalAgainst(rivalScore)?.let { "+$it" } ?: ""
 }
