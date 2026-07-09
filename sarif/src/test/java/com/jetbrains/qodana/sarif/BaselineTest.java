@@ -31,6 +31,7 @@ public class BaselineTest {
 
     /** Stamps every result with a content-stable {@code shiftTolerantEqualIndicator} (the analyzer's 1:1 equivalent of {@link ResultKey}).*/
     private static void forceNewAlg(SarifReport... reports) {
+        int equalIndicatorSeq = 0;
         for (SarifReport report : reports) {
             if (report.getRuns() == null) continue;
             for (Run run : report.getRuns()) {
@@ -43,6 +44,7 @@ public class BaselineTest {
                         r.setPartialFingerprints(fp);
                     }
                     fp.put(BaselineCalculation.SHIFT_TOLERANT_INDICATOR, 1, Integer.toString(new ResultKey(r).hashCode()));
+                    fp.put(BaselineCalculation.EQUAL_INDICATOR, 1, "auto-eq-" + (equalIndicatorSeq++));
                 }
             }
         }

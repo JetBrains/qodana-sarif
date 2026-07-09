@@ -15,14 +15,16 @@ import java.util.Collections.singletonList
  * The pipeline iterates over report problems (the anchor) and ranks baseline candidates against
  * each, running matchers in batch-per-phase order:
  *   Phase 1: HashMatcher(equalIndicator)                       — exact, collision-free fingerprint match
- *   Phase 2: HashMatcher(shiftTolerantEqualIndicator)          — content equality; falls back to
- *            or ResultKeyMatcher                                  ResultKey when neither side carries the hash
+ *   Phase 2: HashMatcher(shiftTolerantEqualIndicator)          — content equality
  *   Phase 3: HashMatcher(moveAndRefactorTolerantIndicator)
  *   Phase 4: HashMatcher(extractionAndRefactorTolerantIndicator)  — only across different files; skipped when funcName is absent.
  */
 class ExtendedFingerprintIntegrationTest {
 
     private val includeAbsentAndMatchedBy = BaselineCalculation.Options(true, true)
+
+    /** Every result gets a unique equalIndicator id (as in real reports); bumped per [result] call. */
+    private var autoEqualIndicator = 0
 
     private fun result(
         ruleId: String = "RuleX",
@@ -36,13 +38,14 @@ class ExtendedFingerprintIntegrationTest {
     ): Result {
         val r = Result(Message().withText(message)).withRuleId(ruleId)
 
-        if (fingerprints.isNotEmpty()) {
-            val vm = VersionedMap<String>()
-            for ((key, versions) in fingerprints) {
-                for ((v, hash) in versions) vm.put(key, v, hash)
-            }
-            r.withPartialFingerprints(vm)
+        val vm = VersionedMap<String>()
+        for ((key, versions) in fingerprints) {
+            for ((v, hash) in versions) vm.put(key, v, hash)
         }
+        // Every result needs a unique equalIndicator v1 (the pool id, as in real reports)
+        // Fill a fresh one, when a test didn't set v1 itself
+        if (vm.get(EQUAL_INDICATOR, 1) == null) vm.put(EQUAL_INDICATOR, 1, "auto-eq-${autoEqualIndicator++}")
+        r.withPartialFingerprints(vm)
 
         val region = Region()
         if (snippet != null) region.withSnippet(ArtifactContent().withText(snippet))

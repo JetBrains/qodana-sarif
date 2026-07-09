@@ -1,14 +1,13 @@
 package com.jetbrains.qodana.sarif.baseline
 
 import com.jetbrains.qodana.sarif.model.Result
-import java.util.IdentityHashMap
 
 /**
  * Produces every admissible (reportResult, baselineResult) candidate pairing for one matching phase.
  * Each matcher is built over only the remaining baseline results for its phase.
  */
 internal interface BaselineMatcher {
-    fun candidates(undecidedFromReport: List<Result>): List<MatchCandidate>
+    fun candidates(undecidedFromReport: Collection<Result>): List<MatchCandidate>
 }
 
 internal data class MatchCandidate(
@@ -17,12 +16,13 @@ internal data class MatchCandidate(
     val matchedBy: String,
 )
 
-/** Matches via content equality using [ResultKey]. */
+/** Matches via content equality using [ResultKey]. Kept for reuse (e.g. a ResultKey fallback phase later). */
+@Suppress("unused")
 internal class ResultKeyMatcher(baselineResults: Iterable<Result>) : BaselineMatcher {
     private val index: Map<ResultKey, List<Result>> =
         baselineResults.groupByTo(HashMap()) { ResultKey(it) }
 
-    override fun candidates(undecidedFromReport: List<Result>): List<MatchCandidate> =
+    override fun candidates(undecidedFromReport: Collection<Result>): List<MatchCandidate> =
         undecidedFromReport.flatMap { reportResult ->
             index[ResultKey(reportResult)].orEmpty()
                 .map { baselineResult -> MatchCandidate(reportResult, baselineResult, "resultKey") }
@@ -36,19 +36,17 @@ internal class HashMatcher(
 ) : BaselineMatcher {
     // version -> (value -> baselines). Nested to avoid allocating a Pair key per fingerprint entry and lookup.
     private val byVersionValue = HashMap<Int, HashMap<String, MutableList<Result>>>()
-    private val versionsByBaseline = IdentityHashMap<Result, Set<Int>>()
 
     init {
         for (baselineResult in baselineResults) {
             val fingerprints = baselineResult.partialFingerprints?.getValues(fingerprintKey) ?: continue
-            versionsByBaseline[baselineResult] = fingerprints.keys.toSet()
             for ((fpVersion, fpValue) in fingerprints) {
                 byVersionValue.getOrPut(fpVersion) { HashMap() }.getOrPut(fpValue) { ArrayList() }.add(baselineResult)
             }
         }
     }
 
-    override fun candidates(undecidedFromReport: List<Result>): List<MatchCandidate> {
+    override fun candidates(undecidedFromReport: Collection<Result>): List<MatchCandidate> {
         if (byVersionValue.isEmpty()) return emptyList()
         val candidates = ArrayList<MatchCandidate>()
         for (reportResult in undecidedFromReport) {
@@ -57,8 +55,10 @@ internal class HashMatcher(
             for ((fpVersion, fpValue) in fingerprints) {
                 val matchingBaselines = byVersionValue[fpVersion]?.get(fpValue) ?: continue
                 for (baselineResult in matchingBaselines) {
-                    // Emit only at the greatest version the two share
-                    if (fpVersion == maxSharedVersion(reportVersions, versionsByBaseline.getValue(baselineResult))) {
+                    val baselineVersions = baselineResult.partialFingerprints?.getValues(fingerprintKey)?.keys ?: continue
+                     // Restricts candidate generation to the greatest shared hash version
+                     // If two items share multiple versions, only the latest mutual match is emitted—all older versions are ignored
+                    if (fpVersion == maxSharedVersion(reportVersions, baselineVersions)) {
                         candidates.add(MatchCandidate(reportResult, baselineResult, "$fingerprintKey/v$fpVersion"))
                     }
                 }
