@@ -161,8 +161,7 @@ private fun matchPhase(
     }
 
     if (candidatesWithCollisions.isNotEmpty()) {
-        val featureCache = IdentityHashMap<Result, ResultFeatures>()
-        fun featuresOf(result: Result): ResultFeatures = featureCache.getOrPut(result) { ResultFeatures(result) }
+        val featuresOf = ResultFeatures.Cache()
 
         // Score every collated edge exactly once; the same scores drive the greedy order and the label.
         val scoreByReportBaseline = IdentityHashMap<Result, IdentityHashMap<Result, MatchScore>>()

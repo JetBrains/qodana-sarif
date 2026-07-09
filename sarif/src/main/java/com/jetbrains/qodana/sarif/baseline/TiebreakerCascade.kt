@@ -99,6 +99,12 @@ internal class ResultFeatures(val result: Result) {
      */
     fun contextSnippetSimilarityTo(other: ResultFeatures, compute: () -> Double): Double =
         contextSimilarityCache.getOrPut(other, compute)
+
+    /** Builds at most one [ResultFeatures] per [Result] (by identity), so each result is parsed once. */
+    class Cache : (Result) -> ResultFeatures {
+        private val byResult = IdentityHashMap<Result, ResultFeatures>()
+        override fun invoke(result: Result): ResultFeatures = byResult.getOrPut(result) { ResultFeatures(result) }
+    }
 }
 
 internal object TiebreakerCascade {
