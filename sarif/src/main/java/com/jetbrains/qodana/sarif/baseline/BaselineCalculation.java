@@ -16,6 +16,7 @@ public class BaselineCalculation {
     public static final String MOVE_AND_REFACTOR_TOLERANT_INDICATOR = "moveAndRefactorTolerantIndicator";
     public static final String EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR = "extractionAndRefactorTolerantIndicator";
     public static final String ENCLOSING_SCOPE_INDICATOR = "enclosingScopeIndicator";
+    public static final String INCLUDE_MATCHED_BY_PROPERTY = "qodana.baseline.matchedBy";
 
     private int newResults = 0;
     private int absentResults = 0;
@@ -103,7 +104,6 @@ public class BaselineCalculation {
 
     public static class Options {
         final boolean includeAbsent;
-        final boolean includeMatchedBy;
         final boolean includeUnchanged;
         final boolean fillBaselineState;
 
@@ -125,31 +125,24 @@ public class BaselineCalculation {
 
         public Options() {
             includeAbsent = false;
-            includeMatchedBy = false;
             includeUnchanged = true;
             fillBaselineState = true;
             wasChecked = ALL_CHECKED;
         }
 
-        public Options(boolean includeAbsent,  boolean includeMatchedBy) {
-            this(includeAbsent, includeMatchedBy, true, true);
+        public Options(boolean includeAbsent) {
+            this(includeAbsent, true, true);
         }
 
-        public Options(boolean includeAbsent, boolean includeMatchedBy, boolean includeUnchanged, boolean fillBaselineState) {
-            this.includeAbsent = includeAbsent;
-            this.includeMatchedBy = includeMatchedBy;
-            this.includeUnchanged = includeUnchanged;
-            this.fillBaselineState = fillBaselineState;
-            wasChecked = ALL_CHECKED;
+        public Options(boolean includeAbsent, boolean includeUnchanged, boolean fillBaselineState) {
+            this(includeAbsent, includeUnchanged, fillBaselineState, ALL_CHECKED);
         }
 
         public Options(boolean includeAbsent,
-                       boolean includeMatchedBy,
                        boolean includeUnchanged,
                        boolean fillBaselineState,
                        Function<Result, Boolean> wasChecked) {
             this.includeAbsent = includeAbsent;
-            this.includeMatchedBy = includeMatchedBy;
             this.includeUnchanged = includeUnchanged;
             this.fillBaselineState = fillBaselineState;
             this.wasChecked = wasChecked;
@@ -157,10 +150,6 @@ public class BaselineCalculation {
 
         public boolean isIncludeAbsent() {
             return includeAbsent;
-        }
-
-        public boolean isIncludeMatchedBy() {
-            return includeMatchedBy;
         }
 
         public boolean isIncludeUnchanged() {

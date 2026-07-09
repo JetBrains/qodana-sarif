@@ -5,7 +5,9 @@ import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.EXTRACTION_AND_RE
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.MOVE_AND_REFACTOR_TOLERANT_INDICATOR
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SHIFT_TOLERANT_INDICATOR
 import com.jetbrains.qodana.sarif.model.*
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.Collections.singletonList
 
@@ -21,10 +23,22 @@ import java.util.Collections.singletonList
  */
 class ExtendedFingerprintIntegrationTest {
 
-    private val includeAbsentAndMatchedBy = BaselineCalculation.Options(true, true)
+    private val options = BaselineCalculation.Options(true)
 
     /** Every result gets a unique equalIndicator id (as in real reports); bumped per [result] call. */
     private var autoEqualIndicator = 0
+
+    // matchedBy is a JVM-property debug switch; these tests assert it, so enable it per test and clear afterwards.
+    @BeforeEach
+    fun enableMatchedBy() = setMatchedByEnabled(true)
+
+    @AfterEach
+    fun clearMatchedBy() = setMatchedByEnabled(false)
+
+    private fun setMatchedByEnabled(enabled: Boolean) {
+        if (enabled) System.setProperty(BaselineCalculation.INCLUDE_MATCHED_BY_PROPERTY, "true")
+        else System.clearProperty(BaselineCalculation.INCLUDE_MATCHED_BY_PROPERTY)
+    }
 
     private fun result(
         ruleId: String = "RuleX",
@@ -68,7 +82,7 @@ class ExtendedFingerprintIntegrationTest {
         ))
 
     private fun compare(report: SarifReport, baseline: SarifReport) =
-        BaselineCalculation.compare(report, baseline, includeAbsentAndMatchedBy)
+        BaselineCalculation.compare(report, baseline, options)
 
     private fun Result.matchedBy(): String? = properties?.get("matchedBy") as? String
     private fun Result.matchedWith(): String? = properties?.get("matchedWith") as? String
@@ -477,7 +491,8 @@ class ExtendedFingerprintIntegrationTest {
         fun matchUnder(includeMatchedBy: Boolean): Result {
             val r = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
             val b = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
-            BaselineCalculation.compare(report(r), report(b), BaselineCalculation.Options(true, includeMatchedBy))
+            setMatchedByEnabled(includeMatchedBy)
+            compare(report(r), report(b))
             return r
         }
 
@@ -490,7 +505,8 @@ class ExtendedFingerprintIntegrationTest {
         fun matchUnder(includeMatchedBy: Boolean): Result {
             val r = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
             val b = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
-            BaselineCalculation.compare(report(r), report(b), BaselineCalculation.Options(true, includeMatchedBy))
+            setMatchedByEnabled(includeMatchedBy)
+            compare(report(r), report(b))
             return r
         }
 
@@ -521,10 +537,8 @@ class ExtendedFingerprintIntegrationTest {
         // compare mutates results in place, so build fresh inputs for each run.
         fun run(includeMatchedBy: Boolean): List<Result> {
             val reports = reportResults()
-            val calc = BaselineCalculation.compare(
-                report(*reports.toTypedArray()), report(*baselineResults().toTypedArray()),
-                BaselineCalculation.Options(true, includeMatchedBy),
-            )
+            setMatchedByEnabled(includeMatchedBy)
+            val calc = compare(report(*reports.toTypedArray()), report(*baselineResults().toTypedArray()))
             // Outcome must be identical no matter how the flag is set.
             assertEquals(3, calc.unchangedResults)
             assertEquals(0, calc.newResults)

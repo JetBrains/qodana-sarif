@@ -130,7 +130,8 @@ internal object BaselineCli {
             errPrinter("Error reading baseline report: ${e.message}")
             return ERROR_EXIT
         }
-        BaselineCalculation.compare(sarifReport, baseline, BaselineCalculation.Options(includeAbsent, includeMatchedBy))
+        if (includeMatchedBy) System.setProperty(BaselineCalculation.INCLUDE_MATCHED_BY_PROPERTY, "true")
+        BaselineCalculation.compare(sarifReport, baseline, BaselineCalculation.Options(includeAbsent, true, true))
         val results = sarifReport.runs.first().results
         printer.printResultsWithBaselineState(results, includeAbsent)
         val invocation = processResultCount(results, true, thresholds, cliPrinter, errPrinter)

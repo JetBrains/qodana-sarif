@@ -41,11 +41,13 @@ internal class DiffState(
 
     val results = mutableListOf<Result>()
 
+    private val includeMatchedBy = System.getProperty(BaselineCalculation.INCLUDE_MATCHED_BY_PROPERTY) == "true"
+
     fun put(result: Result, state: BaselineState, matchedBy: String? = null, matchedWith: String? = null): Boolean {
         if (state == BaselineState.UNCHANGED && !options.includeUnchanged) return false
         if (state == BaselineState.ABSENT && !options.includeAbsent) return false
 
-        if (options.includeMatchedBy && matchedBy != null) result.updateProperties { it["matchedBy"] = matchedBy }
+        if (includeMatchedBy && matchedBy != null) result.updateProperties { it["matchedBy"] = matchedBy }
         if (matchedWith != null) result.updateProperties { it["matchedWith"] = matchedWith }
         results.add(result.withBaselineState(if (options.fillBaselineState) state else null))
         when (state) {
@@ -57,7 +59,7 @@ internal class DiffState(
         return true
     }
 
-    fun isMatchedByIncluded(): Boolean = options.includeMatchedBy
+    fun isMatchedByIncluded(): Boolean = includeMatchedBy
 
     /** Records an UNCHANGED match and consumes both endpoints (by their equalIndicator id) from the candidate pools. */
     fun commit(reportResult: Result, baselineResult: Result, matchedBy: String) {
