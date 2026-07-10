@@ -1,6 +1,7 @@
 package com.jetbrains.qodana.sarif;
 
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation;
+import com.jetbrains.qodana.sarif.baseline.ResultKey;
 import com.jetbrains.qodana.sarif.model.*;
 import org.junit.jupiter.api.Test;
 
@@ -22,10 +23,31 @@ public class BaselineTest {
     private static final String QODANA_REPORT_JSON = "src/test/resources/testData/readWriteTest/qodanaReport.json";
     private static final String QODANA_REPORT_JSON_2 = "src/test/resources/testData/readWriteTest/qodanaReport2.json";
 
-    private static final BaselineCalculation.Options INCLUDE_ABSENT = new BaselineCalculation.Options(true);
+    private static final BaselineCalculation.Options INCLUDE_ABSENT = new BaselineCalculation.Options(true, false);
 
     private static int problemsCount(SarifReport report) {
         return report.getRuns().stream().mapToInt(it -> it.getResults().size()).sum();
+    }
+
+    /** Stamps every result with a content-stable {@code shiftTolerantEqualIndicator} (the analyzer's 1:1 equivalent of {@link ResultKey}).*/
+    private static void forceNewAlg(SarifReport... reports) {
+        int equalIndicatorSeq = 0;
+        for (SarifReport report : reports) {
+            if (report.getRuns() == null) continue;
+            for (Run run : report.getRuns()) {
+                if (run.getResults() == null) continue;
+                for (Result r : run.getResults()) {
+                    if (r == null) continue;
+                    VersionedMap<String> fp = r.getPartialFingerprints();
+                    if (fp == null) {
+                        fp = new VersionedMap<>();
+                        r.setPartialFingerprints(fp);
+                    }
+                    fp.put(BaselineCalculation.SHIFT_TOLERANT_INDICATOR, 1, Integer.toString(new ResultKey(r).hashCode()));
+                    fp.put(BaselineCalculation.EQUAL_INDICATOR, 1, "auto-eq-" + (equalIndicatorSeq++));
+                }
+            }
+        }
     }
 
     private static SarifReport readReport() throws IOException {
@@ -50,7 +72,7 @@ public class BaselineTest {
         SarifReport report = readReport();
         SarifReport baseline = readReport();
 
-        doTest(report, baseline, problemsCount(report), 0, 0, new BaselineCalculation.Options(false, true, false));
+        doTest(report, baseline, problemsCount(report), 0, 0, new BaselineCalculation.Options(false, false, true, false));
     }
 
     @Test
@@ -58,7 +80,7 @@ public class BaselineTest {
         SarifReport report = readReport();
         SarifReport baseline = readReport();
 
-        doTest(report, baseline, 0, 0, 0, new BaselineCalculation.Options(false, false, false));
+        doTest(report, baseline, 0, 0, 0, new BaselineCalculation.Options(false, false, false, false));
     }
 
     @Test
@@ -87,6 +109,7 @@ public class BaselineTest {
         Result newResult = new Result(new Message().withText("new result"));
         baseline.getRuns().get(0).getResults().add(newResult);
 
+        forceNewAlg(report, baseline);
         BaselineCalculation.compare(report, baseline, INCLUDE_ABSENT);
 
         SarifReport newReport = readReport();
@@ -128,7 +151,7 @@ public class BaselineTest {
         Result newResult = new Result(new Message().withText("new result"));
         report.getRuns().get(0).getResults().add(newResult);
 
-        doTest(report, baseline, 0, 0, 1, new BaselineCalculation.Options(false, false, true));
+        doTest(report, baseline, 0, 0, 1, new BaselineCalculation.Options(false, false, false, true));
         assertEquals(Result.BaselineState.NEW, newResult.getBaselineState());
         assertEquals(1, report.getRuns().get(0).getResults().size());
     }
@@ -315,6 +338,7 @@ public class BaselineTest {
                         int expectedNew,
                         BaselineCalculation.Options options
     ) {
+        forceNewAlg(report, baseline);
         BaselineCalculation calculation = BaselineCalculation.compare(report, baseline, options);
         assertAll(
                 () -> assertEquals(expectedUnchanged, calculation.getUnchangedResults(), "Unchanged:"),

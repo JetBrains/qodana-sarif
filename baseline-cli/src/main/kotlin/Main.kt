@@ -13,7 +13,10 @@ const val ERROR_EXIT = 1
 class BaselineCommand : CliktCommand() {
     private val sarifReport: String by option("-r", help = "Sarif report path").required()
     private val baselineReport: String? by option("-b", help = "Baseline report path")
-    private val baselineIncludeAbsent: Boolean by option("-i", help = "Baseline include absent status").flag()
+    private val baselineIncludeAbsent: Boolean by option("-i", help = "Report includes absent status").flag()
+    private val baselineIncludeMatchedBy: Boolean by option(
+        "-p", help = "Report includes the equalIndicator/v2 hash of the matched baseline problem"
+    ).flag()
 
     private fun threshold(severity: Severity): NullableOption<Int, Int> {
         val lc = severity.name.lowercase()
@@ -43,7 +46,12 @@ class BaselineCommand : CliktCommand() {
             info = failThresholdInfo
         )
         val ret = process(
-            BaselineOptions(sarifReport, baselineReport, thresholds, baselineIncludeAbsent),
+            BaselineOptions(
+                sarifReport,
+                baselineReport,
+                thresholds,
+                baselineIncludeAbsent,
+                baselineIncludeMatchedBy),
             ::println,
             System.err::println
         )
@@ -56,6 +64,7 @@ internal data class BaselineOptions(
     val baselinePath: String? = null,
     val thresholds: SeverityThresholds? = null,
     val includeAbsent: Boolean = false,
+    val includeMatchedBy: Boolean = false,
 )
 
 fun main(args: Array<String>) = BaselineCommand().main(args)

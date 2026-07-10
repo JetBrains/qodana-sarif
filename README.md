@@ -19,6 +19,18 @@ work with them.
 - **Flexible Result Analysis**: The `com.jetbrains.qodana.sarif.model.Result` object provides several properties which
   can be used to filter and analyze the issues in the report.
 
+## Development Setup
+
+This project uses [Git LFS](https://git-lfs.github.com/) to store SARIF files in test resources. Make sure Git LFS is installed and initialized before cloning, otherwise tests will fail due to missing test data.
+
+```bash
+# Install Git LFS (if not already installed)
+git lfs install
+
+# If you've already cloned without LFS, pull the LFS files
+git lfs pull
+```
+
 ## Usage
 
 ### Adding to your project

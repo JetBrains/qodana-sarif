@@ -36,6 +36,7 @@ internal object BaselineCli {
                 Paths.get(options.baselinePath),
                 options.thresholds,
                 options.includeAbsent,
+                options.includeMatchedBy,
                 printer,
                 cliPrinter,
                 errPrinter
@@ -59,10 +60,7 @@ internal object BaselineCli {
         cliPrinter: (String) -> Unit,
         errPrinter: (String) -> Unit
     ): Invocation {
-        val size = results.orEmpty()
-            .asSequence()
-            .filter(baselineFilter(hasBaseline))
-            .count()
+        val size = results.orEmpty().count(baselineFilter(hasBaseline))
 
         if (size > 0) {
             errPrinter("Found $size new problems according to the checks applied")
@@ -82,7 +80,7 @@ internal object BaselineCli {
                 failedThresholds.joinTo(buffer = this, separator = "\n - ", prefix = "\n - " )
             }
             errPrinter(msg)
-            return Invocation().apply {
+            Invocation().apply {
                 exitCode = THRESHOLD_EXIT
                 exitCodeDescription = msg
                 executionSuccessful = true
@@ -112,6 +110,7 @@ internal object BaselineCli {
         baselinePath: Path,
         thresholds: SeverityThresholds?,
         includeAbsent: Boolean,
+        includeMatchedBy: Boolean,
         printer: CommandLineResultsPrinter,
         cliPrinter: (String) -> Unit,
         errPrinter: (String) -> Unit
@@ -128,7 +127,8 @@ internal object BaselineCli {
             errPrinter("Error reading baseline report: ${e.message}")
             return ERROR_EXIT
         }
-        BaselineCalculation.compare(sarifReport, baseline, BaselineCalculation.Options(includeAbsent))
+
+        BaselineCalculation.compare(sarifReport, baseline, BaselineCalculation.Options(includeAbsent, includeMatchedBy))
         val results = sarifReport.runs.first().results
         printer.printResultsWithBaselineState(results, includeAbsent)
         val invocation = processResultCount(results, true, thresholds, cliPrinter, errPrinter)
