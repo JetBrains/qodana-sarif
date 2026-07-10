@@ -60,10 +60,7 @@ internal object BaselineCli {
         cliPrinter: (String) -> Unit,
         errPrinter: (String) -> Unit
     ): Invocation {
-        val size = results.orEmpty()
-            .asSequence()
-            .filter(baselineFilter(hasBaseline))
-            .count()
+        val size = results.orEmpty().count(baselineFilter(hasBaseline))
 
         if (size > 0) {
             errPrinter("Found $size new problems according to the checks applied")
@@ -83,7 +80,7 @@ internal object BaselineCli {
                 failedThresholds.joinTo(buffer = this, separator = "\n - ", prefix = "\n - " )
             }
             errPrinter(msg)
-            return Invocation().apply {
+            Invocation().apply {
                 exitCode = THRESHOLD_EXIT
                 exitCodeDescription = msg
                 executionSuccessful = true

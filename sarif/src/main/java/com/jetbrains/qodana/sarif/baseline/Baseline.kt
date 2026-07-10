@@ -18,7 +18,7 @@ private fun Run.undecidedResults(): List<Result> =
 private fun Result.equalIndicator(): String =
     partialFingerprints?.getLastValue(EQUAL_INDICATOR) ?: ""
 
-private fun Result.equalIndicatorV1(): String {
+private fun Result.uniqueResultIndicator(): String {
     val fingerprints = partialFingerprints ?: return ""
     return fingerprints.get(EQUAL_INDICATOR, 1) ?: fingerprints.getLastValue(EQUAL_INDICATOR) ?: ""
 }
@@ -64,8 +64,8 @@ internal class DiffState(
     /** Records an UNCHANGED match and consumes both endpoints (by their equalIndicator id) from the candidate pools. */
     fun commit(reportResult: Result, baselineResult: Result, matchedBy: String) {
         put(reportResult, BaselineState.UNCHANGED, matchedBy, baselineResult.equalIndicator())
-        undecidedFromReport.remove(reportResult.equalIndicatorV1())
-        undecidedFromBaseline.remove(baselineResult.equalIndicatorV1())
+        undecidedFromReport.remove(reportResult.uniqueResultIndicator())
+        undecidedFromBaseline.remove(baselineResult.uniqueResultIndicator())
     }
 }
 
@@ -86,8 +86,8 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     // The candidate pools are keyed by the unique equalIndicator id (=hash)
     val state = DiffState(
         options,
-        reportResults.associateByTo(LinkedHashMap()) { it.equalIndicatorV1() },
-        baselineResults.associateByTo(LinkedHashMap()) { it.equalIndicatorV1() },
+        reportResults.associateByTo(LinkedHashMap()) { it.uniqueResultIndicator() },
+        baselineResults.associateByTo(LinkedHashMap()) { it.uniqueResultIndicator() },
     )
 
     // equalIndicator is a unique, collision-free key: no scoring or tiebreaking. The remaining hashes can collide
@@ -117,7 +117,7 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
 private fun matchEqualIndicatorPhase(state: DiffState) {
     val matcher = HashMatcher(state.undecidedFromBaseline.values, EQUAL_INDICATOR)
     for ((reportResult, baselineResult, matchedBy) in matcher.candidates(state.undecidedFromReport.values)) {
-        if (reportResult.equalIndicatorV1() in state.undecidedFromReport && baselineResult.equalIndicatorV1() in state.undecidedFromBaseline) {
+        if (reportResult.uniqueResultIndicator() in state.undecidedFromReport && baselineResult.uniqueResultIndicator() in state.undecidedFromBaseline) {
             state.commit(reportResult, baselineResult, matchedBy)
         }
     }
@@ -164,7 +164,7 @@ private fun matchPhase(fingerprintKey: String, state: DiffState) {
         }
         .sortedByDescending { it.second }
         .forEach { (candidate, score) ->
-            if (candidate.reportResult.equalIndicatorV1() !in state.undecidedFromReport || candidate.baselineResult.equalIndicatorV1() !in state.undecidedFromBaseline) return@forEach
+            if (candidate.reportResult.uniqueResultIndicator() !in state.undecidedFromReport || candidate.baselineResult.uniqueResultIndicator() !in state.undecidedFromBaseline) return@forEach
             val suffix = if (state.isMatchedByIncluded()) {
                 tiebreakerSuffix(candidate, score, baselinesByReport, scoreByReportBaseline, state)
             } else {
@@ -187,7 +187,7 @@ private fun tiebreakerSuffix(
 ): String {
     val scores = scoreByReportBaseline.getValue(candidate.reportResult)
     val rivalScore = baselinesByReport.getValue(candidate.reportResult)
-        .filter { it !== candidate.baselineResult && it.equalIndicatorV1() in state.undecidedFromBaseline }
+        .filter { it !== candidate.baselineResult && it.uniqueResultIndicator() in state.undecidedFromBaseline }
         .maxOfOrNull { scores.getValue(it) }
     return committedScore.decidingSignalAgainst(rivalScore)?.let { "+$it" } ?: ""
 }
