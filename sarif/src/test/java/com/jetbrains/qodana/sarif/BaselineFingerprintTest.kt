@@ -42,7 +42,7 @@ class BaselineFingerprintTest {
         expect: Map<BaselineState, Int>,
     ) {
         forceNewAlg(report, baseline)
-        val res = BaselineCalculation.compare(report, baseline, BaselineCalculation.Options(true))
+        val res = BaselineCalculation.compare(report, baseline, BaselineCalculation.Options(true, false))
 
         val byState = report.runs.orEmpty().asSequence()
             .flatMap { it.results.orEmpty() }

@@ -23,7 +23,7 @@ public class BaselineTest {
     private static final String QODANA_REPORT_JSON = "src/test/resources/testData/readWriteTest/qodanaReport.json";
     private static final String QODANA_REPORT_JSON_2 = "src/test/resources/testData/readWriteTest/qodanaReport2.json";
 
-    private static final BaselineCalculation.Options INCLUDE_ABSENT = new BaselineCalculation.Options(true);
+    private static final BaselineCalculation.Options INCLUDE_ABSENT = new BaselineCalculation.Options(true, false);
 
     private static int problemsCount(SarifReport report) {
         return report.getRuns().stream().mapToInt(it -> it.getResults().size()).sum();
@@ -72,7 +72,7 @@ public class BaselineTest {
         SarifReport report = readReport();
         SarifReport baseline = readReport();
 
-        doTest(report, baseline, problemsCount(report), 0, 0, new BaselineCalculation.Options(false, true, false));
+        doTest(report, baseline, problemsCount(report), 0, 0, new BaselineCalculation.Options(false, false, true, false));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class BaselineTest {
         SarifReport report = readReport();
         SarifReport baseline = readReport();
 
-        doTest(report, baseline, 0, 0, 0, new BaselineCalculation.Options(false, false, false));
+        doTest(report, baseline, 0, 0, 0, new BaselineCalculation.Options(false, false, false, false));
     }
 
     @Test
@@ -151,7 +151,7 @@ public class BaselineTest {
         Result newResult = new Result(new Message().withText("new result"));
         report.getRuns().get(0).getResults().add(newResult);
 
-        doTest(report, baseline, 0, 0, 1, new BaselineCalculation.Options(false, false, true));
+        doTest(report, baseline, 0, 0, 1, new BaselineCalculation.Options(false, false, false, true));
         assertEquals(Result.BaselineState.NEW, newResult.getBaselineState());
         assertEquals(1, report.getRuns().get(0).getResults().size());
     }
