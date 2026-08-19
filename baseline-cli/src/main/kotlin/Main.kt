@@ -14,8 +14,8 @@ class BaselineCommand : CliktCommand() {
     private val sarifReport: String by option("-r", help = "Sarif report path").required()
     private val baselineReport: String? by option("-b", help = "Baseline report path")
     private val baselineIncludeAbsent: Boolean by option("-i", help = "Report includes absent status").flag()
-    private val baselineIncludeMatchedBy: Boolean by option(
-        "-p", help = "Report includes the equalIndicator/v2 hash of the matched baseline problem"
+    private val baselineIncludeMatchedMethod: Boolean by option(
+        "-p", help = "Report includes matchedMethod: the fingerprint family and tiebreaker that produced each match"
     ).flag()
 
     private fun threshold(severity: Severity): NullableOption<Int, Int> {
@@ -51,7 +51,7 @@ class BaselineCommand : CliktCommand() {
                 baselineReport,
                 thresholds,
                 baselineIncludeAbsent,
-                baselineIncludeMatchedBy),
+                baselineIncludeMatchedMethod),
             ::println,
             System.err::println
         )
@@ -64,7 +64,7 @@ internal data class BaselineOptions(
     val baselinePath: String? = null,
     val thresholds: SeverityThresholds? = null,
     val includeAbsent: Boolean = false,
-    val includeMatchedBy: Boolean = false,
+    val includeMatchedMethod: Boolean = false,
 )
 
 fun main(args: Array<String>) = BaselineCommand().main(args)

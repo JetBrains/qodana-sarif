@@ -105,7 +105,7 @@ public class BaselineCalculation {
         final boolean includeAbsent;
         final boolean includeUnchanged;
         final boolean fillBaselineState;
-        final boolean includeMatchedBy;
+        final boolean includeMatchedMethod;
 
         /**
          * Provides information about incremental build.
@@ -128,16 +128,16 @@ public class BaselineCalculation {
             includeUnchanged = true;
             fillBaselineState = true;
             wasChecked = ALL_CHECKED;
-            includeMatchedBy = false;
+            includeMatchedMethod = false;
         }
 
-        public Options(boolean includeAbsent, boolean includeMatchedBy) {
-            this(includeAbsent, includeMatchedBy, true, true);
+        public Options(boolean includeAbsent, boolean includeMatchedMethod) {
+            this(includeAbsent, includeMatchedMethod, true, true);
         }
 
-        public Options(boolean includeAbsent, boolean includeMatchedBy, boolean includeUnchanged, boolean fillBaselineState) {
+        public Options(boolean includeAbsent, boolean includeMatchedMethod, boolean includeUnchanged, boolean fillBaselineState) {
             this.includeAbsent = includeAbsent;
-            this.includeMatchedBy = includeMatchedBy;
+            this.includeMatchedMethod = includeMatchedMethod;
             this.includeUnchanged = includeUnchanged;
             this.fillBaselineState = fillBaselineState;
             this.wasChecked = ALL_CHECKED;
@@ -151,7 +151,7 @@ public class BaselineCalculation {
             this.includeUnchanged = includeUnchanged;
             this.fillBaselineState = fillBaselineState;
             this.wasChecked = wasChecked;
-            this.includeMatchedBy = false;
+            this.includeMatchedMethod = false;
         }
 
         public boolean isIncludeAbsent() {
@@ -166,8 +166,8 @@ public class BaselineCalculation {
             return fillBaselineState;
         }
 
-        public boolean isIncludeMatchedBy() {
-            return includeMatchedBy;
+        public boolean isIncludeMatchedMethod() {
+            return includeMatchedMethod;
         }
     }
 }

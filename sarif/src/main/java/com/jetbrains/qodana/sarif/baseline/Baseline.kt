@@ -14,10 +14,10 @@ import java.util.IdentityHashMap
 private fun Run.undecidedResults(): List<Result> =
     results.orEmpty().mapNotNull { result -> result?.takeIf { it.baselineState != BaselineState.ABSENT } }
 
-/** The matched baseline's equalIndicator (latest version), recorded on the report result as `matchedWith`. */
-private fun Result.equalIndicator(): String =
-    partialFingerprints?.getLastValue(EQUAL_INDICATOR) ?: ""
-
+/**
+ * The result's unique id: equalIndicator/v1. Used as the candidate-pool key, and recorded on a matched report result as
+ * `matchedBaselineResult` (the id of the baseline problem it matched).
+ */
 private fun Result.uniqueResultIndicator(): String {
     val fingerprints = partialFingerprints ?: return ""
     return fingerprints.get(EQUAL_INDICATOR, 1) ?: fingerprints.getLastValue(EQUAL_INDICATOR) ?: ""
@@ -41,12 +41,12 @@ internal class DiffState(
 
     val results = mutableListOf<Result>()
 
-    fun put(result: Result, state: BaselineState, matchedBy: String? = null, matchedWith: String? = null): Boolean {
+    fun put(result: Result, state: BaselineState, matchedMethod: String? = null, matchedBaselineResult: String? = null): Boolean {
         if (state == BaselineState.UNCHANGED && !options.includeUnchanged) return false
         if (state == BaselineState.ABSENT && !options.includeAbsent) return false
 
-        if (options.includeMatchedBy && matchedBy != null) result.updateProperties { it["matchedBy"] = matchedBy }
-        if (matchedWith != null) result.updateProperties { it["matchedWith"] = matchedWith }
+        if (options.includeMatchedMethod && matchedMethod != null) result.updateProperties { it["matchedMethod"] = matchedMethod }
+        if (matchedBaselineResult != null) result.updateProperties { it["matchedBaselineResult"] = matchedBaselineResult }
         results.add(result.withBaselineState(if (options.fillBaselineState) state else null))
         when (state) {
             BaselineState.NEW -> new++
@@ -57,11 +57,11 @@ internal class DiffState(
         return true
     }
 
-    fun isMatchedByIncluded(): Boolean = options.includeMatchedBy
+    fun isMatchedMethodIncluded(): Boolean = options.includeMatchedMethod
 
     /** Records an UNCHANGED match and consumes both endpoints (by their equalIndicator id) from the candidate pools. */
-    fun commit(reportResult: Result, baselineResult: Result, matchedBy: String) {
-        put(reportResult, BaselineState.UNCHANGED, matchedBy, baselineResult.equalIndicator())
+    fun commit(reportResult: Result, baselineResult: Result, matchedMethod: String) {
+        put(reportResult, BaselineState.UNCHANGED, matchedMethod, baselineResult.uniqueResultIndicator())
         undecidedFromReport.remove(reportResult.uniqueResultIndicator())
         undecidedFromBaseline.remove(baselineResult.uniqueResultIndicator())
     }
@@ -114,9 +114,9 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
  */
 private fun matchEqualIndicatorPhase(state: DiffState) {
     val matcher = HashMatcher(state.undecidedFromBaseline.values, EQUAL_INDICATOR)
-    for ((reportResult, baselineResult, matchedBy) in matcher.candidates(state.undecidedFromReport.values)) {
+    for ((reportResult, baselineResult, matchedMethod) in matcher.candidates(state.undecidedFromReport.values)) {
         if (reportResult.uniqueResultIndicator() in state.undecidedFromReport && baselineResult.uniqueResultIndicator() in state.undecidedFromBaseline) {
-            state.commit(reportResult, baselineResult, matchedBy)
+            state.commit(reportResult, baselineResult, matchedMethod)
         }
     }
 }
@@ -143,7 +143,7 @@ private fun matchPhase(fingerprintKey: String, state: DiffState) {
     val candidatesWithCollisions = ArrayList<MatchCandidate>(candidates.size)
     for (c in candidates) {
         if (baselinesByReport.getValue(c.reportResult).size == 1 && reportsPerBaseline.getValue(c.baselineResult) == 1) {
-            state.commit(c.reportResult, c.baselineResult, c.matchedBy)
+            state.commit(c.reportResult, c.baselineResult, c.matchedMethod)
         } else {
             candidatesWithCollisions.add(c)
         }
@@ -163,12 +163,12 @@ private fun matchPhase(fingerprintKey: String, state: DiffState) {
         .sortedByDescending { it.second }
         .forEach { (candidate, score) ->
             if (candidate.reportResult.uniqueResultIndicator() !in state.undecidedFromReport || candidate.baselineResult.uniqueResultIndicator() !in state.undecidedFromBaseline) return@forEach
-            val suffix = if (state.isMatchedByIncluded()) {
+            val suffix = if (state.isMatchedMethodIncluded()) {
                 tiebreakerSuffix(candidate, score, baselinesByReport, scoreByReportBaseline, state)
             } else {
                 ""
             }
-            state.commit(candidate.reportResult, candidate.baselineResult, candidate.matchedBy + suffix)
+            state.commit(candidate.reportResult, candidate.baselineResult, candidate.matchedMethod + suffix)
         }
 }
 
