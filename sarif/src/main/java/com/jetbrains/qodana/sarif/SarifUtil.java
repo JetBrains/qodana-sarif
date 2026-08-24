@@ -82,7 +82,9 @@ public class SarifUtil {
     }
 
     public static void writeReport(Writer writer, SarifReport report) {
-        Gson gson = createGson();
+        Gson gson = createGsonBuilder()
+                .registerTypeAdapterFactory(new SortedResultsTypeAdapterFactory())
+                .create();
         gson.toJson(report, writer);
     }
 
