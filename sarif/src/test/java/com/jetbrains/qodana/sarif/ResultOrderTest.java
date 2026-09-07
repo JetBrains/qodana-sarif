@@ -616,7 +616,7 @@ public class ResultOrderTest {
         /** Guards the tests below from passing vacuously: this fixture really does contain indistinguishable results. */
         @Test
         void theFixtureReallyHasResultsNoKeyCanSeparate() throws IOException {
-            List<Result> sorted = ResultOrder.sorted(readResults(QODANA_REPORT_JSON));
+            List<Result> sorted = ResultOrder.sorted(readResults());
             int indistinguishable = 0;
             for (int i = 1; i < sorted.size(); i++) {
                 if (ResultOrder.CANONICAL.compare(sorted.get(i - 1), sorted.get(i)) == 0) indistinguishable++;
@@ -627,7 +627,7 @@ public class ResultOrderTest {
 
         @Test
         void whatCanBeOrderedIsOrdered() throws IOException {
-            List<Result> input = readResults(QODANA_REPORT_JSON);
+            List<Result> input = readResults();
             Collections.shuffle(input, new Random(3));
 
             List<Result> sorted = ResultOrder.sorted(input);
@@ -640,7 +640,7 @@ public class ResultOrderTest {
 
         @Test
         void whatCannotBeOrderedKeepsTheOrderItCameIn() throws IOException {
-            List<Result> input = readResults(QODANA_REPORT_JSON);
+            List<Result> input = readResults();
             Collections.shuffle(input, new Random(5));
             IdentityHashMap<Result, Integer> incoming = new IdentityHashMap<>();
             for (int i = 0; i < input.size(); i++) incoming.put(input.get(i), i);
@@ -658,7 +658,7 @@ public class ResultOrderTest {
 
         @Test
         void noResultIsLostOrDuplicated() throws IOException {
-            List<Result> input = readResults(QODANA_REPORT_JSON);
+            List<Result> input = readResults();
 
             List<Result> sorted = ResultOrder.sorted(input);
 
@@ -679,7 +679,7 @@ public class ResultOrderTest {
 
         @Test
         void sortingIsIdempotentEvenWhenNothingCanBeOrdered() throws IOException {
-            List<Result> input = readResults(QODANA_REPORT_JSON);
+            List<Result> input = readResults();
             Collections.shuffle(input, new Random(9));
 
             List<Result> once = ResultOrder.sorted(input);
@@ -688,7 +688,7 @@ public class ResultOrderTest {
             assertEquals(labels(once), labels(twice));
         }
 
-        private List<Result> readResults(String ignoredPath) throws IOException {
+        private List<Result> readResults() throws IOException {
             return new ArrayList<>(results(readReportUnstamped()));
         }
     }
