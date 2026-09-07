@@ -25,8 +25,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -41,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * The report is written in a content-derived order, so that a diff of two consecutive reports shows the problems that
  * actually changed and nothing else.
  * <p>
- * The order key is {@code uri}, {@code startLine}, {@code charOffset}, {@code ruleId}, {@code equalIndicator/v1}.
+ * The order key is {@code uri}, {@code charOffset}, {@code ruleId}, {@code equalIndicator/v1}.
  * Every result below is labeled through its message, labels play no part in the order, so asserting on them shows
  * which result landed where without the assertion depending on the thing under test.
  */
@@ -62,24 +64,25 @@ public class ResultOrderTest {
                     labeled("b", "b.java", 1, 1));
         }
 
+        /** The offset runs from the start of the file, so it orders a file's problems across lines as well. */
         @Test
-        void startLineDecidesWithinAFile() {
+        void charOffsetDecidesWithinAFile() {
             assertOrder(Arrays.asList("l2", "l10", "l100"),
-                    labeled("l100", "a.java", 100, 1),
-                    labeled("l2", "a.java", 2, 1),
-                    labeled("l10", "a.java", 10, 1));
+                    labeled("l100", "a.java", 100, 3000),
+                    labeled("l2", "a.java", 2, 40),
+                    labeled("l10", "a.java", 10, 300));
         }
 
         @Test
-        void startLineIsComparedNumericallyNotAsText() {
-            // "10" < "9" as text; 9 < 10 as numbers. The latter is what the order must use.
-            assertOrder(Arrays.asList("nine", "ten"),
-                    labeled("ten", "a.java", 10, 200),
-                    labeled("nine", "a.java", 9, 100));
+        void charOffsetIsComparedNumericallyNotAsText() {
+            // "1000" < "999" as text; 999 < 1000 as numbers. The latter is what the order must use.
+            assertOrder(Arrays.asList("nineNineNine", "thousand"),
+                    labeled("thousand", "a.java", 40, 1000),
+                    labeled("nineNineNine", "a.java", 39, 999));
         }
 
         @Test
-        void charOffsetDecidesWithinALine() {
+        void severalProblemsOnOneLineAreOrderedByOffset() {
             assertOrder(Arrays.asList("first", "second", "third"),
                     labeled("third", "a.java", 7, 300),
                     labeled("first", "a.java", 7, 100),
@@ -107,13 +110,6 @@ public class ResultOrderTest {
             assertOrder(Arrays.asList("earlyFile", "lateFile"),
                     indicator(labeled("lateFile", "z.java", 1, 1).withRuleId("AAA"), "aaa"),
                     indicator(labeled("earlyFile", "a.java", 9999, 9999).withRuleId("ZZZ"), "zzz"));
-        }
-
-        @Test
-        void startLineBeatsCharOffset() {
-            assertOrder(Arrays.asList("lowLine", "highLine"),
-                    labeled("highLine", "a.java", 20, 1),
-                    labeled("lowLine", "a.java", 10, 9999));
         }
 
         @Test
@@ -184,14 +180,7 @@ public class ResultOrderTest {
                     new Location().withPhysicalLocation(new PhysicalLocation()
                             .withArtifactLocation(new ArtifactLocation().withUri("a.java")))));
 
-            assertOrder(Arrays.asList("noRegion", "line1"), labeled("line1", "a.java", 1, 1), noRegion);
-        }
-
-        @Test
-        void missingStartLineSortsBeforeAnyStartLine() {
-            assertOrder(Arrays.asList("noLine", "line1"),
-                    labeled("line1", "a.java", 1, 50),
-                    labeled("noLine", "a.java", null, 9999));
+            assertOrder(Arrays.asList("noRegion", "offset1"), labeled("offset1", "a.java", 1, 1), noRegion);
         }
 
         @Test
@@ -339,8 +328,10 @@ public class ResultOrderTest {
             for (int i = 0; i < results.size(); i++) {
                 if (i % 3 != 0) kept.add(results.get(i));
             }
-            kept.add(labeled("addedOne", "aaa.java", 1, 1).withRuleId("AddedRule"));
-            kept.add(labeled("addedTwo", "zzz.java", 1, 1).withRuleId("AddedRule"));
+            // Unique indicators, as every real result has: the matcher pools candidates by equalIndicator, so two
+            // results sharing one (here, sharing its absence) would collide and the survivor would depend on order.
+            kept.add(indicator(labeled("addedOne", "aaa.java", 1, 1).withRuleId("AddedRule"), "addedOne"));
+            kept.add(indicator(labeled("addedTwo", "zzz.java", 1, 1).withRuleId("AddedRule"), "addedTwo"));
             report.getRuns().get(0).setResults(kept);
 
             SarifReport baseline = readReport();
@@ -617,6 +608,157 @@ public class ResultOrderTest {
     }
 
     // ------------------------------------------------------------------------------------------------------
+    // Not every report has every key. Order by the ones that are there; leave the rest as they came.
+    // ------------------------------------------------------------------------------------------------------
+
+    @Nested
+    class ReportsMissingOrderKeys {
+        /** Guards the tests below from passing vacuously: this fixture really does contain indistinguishable results. */
+        @Test
+        void theFixtureReallyHasResultsNoKeyCanSeparate() throws IOException {
+            List<Result> sorted = ResultOrder.sorted(readResults(QODANA_REPORT_JSON));
+            int indistinguishable = 0;
+            for (int i = 1; i < sorted.size(); i++) {
+                if (ResultOrder.CANONICAL.compare(sorted.get(i - 1), sorted.get(i)) == 0) indistinguishable++;
+            }
+            assertTrue(indistinguishable > 0, "fixture no longer exercises the fallback");
+            assertEquals(0, sorted.stream().filter(r -> r.getPartialFingerprints() != null).count());
+        }
+
+        @Test
+        void whatCanBeOrderedIsOrdered() throws IOException {
+            List<Result> input = readResults(QODANA_REPORT_JSON);
+            Collections.shuffle(input, new Random(3));
+
+            List<Result> sorted = ResultOrder.sorted(input);
+
+            for (int i = 1; i < sorted.size(); i++) {
+                assertTrue(ResultOrder.CANONICAL.compare(sorted.get(i - 1), sorted.get(i)) <= 0,
+                        "result " + i + " is out of order");
+            }
+        }
+
+        @Test
+        void whatCannotBeOrderedKeepsTheOrderItCameIn() throws IOException {
+            List<Result> input = readResults(QODANA_REPORT_JSON);
+            Collections.shuffle(input, new Random(5));
+            IdentityHashMap<Result, Integer> incoming = new IdentityHashMap<>();
+            for (int i = 0; i < input.size(); i++) incoming.put(input.get(i), i);
+
+            List<Result> sorted = ResultOrder.sorted(input);
+
+            for (int i = 1; i < sorted.size(); i++) {
+                Result previous = sorted.get(i - 1), current = sorted.get(i);
+                if (ResultOrder.CANONICAL.compare(previous, current) == 0) {
+                    assertTrue(incoming.get(previous) < incoming.get(current),
+                            "two indistinguishable results were swapped at " + i);
+                }
+            }
+        }
+
+        @Test
+        void noResultIsLostOrDuplicated() throws IOException {
+            List<Result> input = readResults(QODANA_REPORT_JSON);
+
+            List<Result> sorted = ResultOrder.sorted(input);
+
+            assertEquals(input.size(), sorted.size());
+            IdentityHashMap<Result, Boolean> seen = new IdentityHashMap<>();
+            for (Result result : sorted) seen.put(result, Boolean.TRUE);
+            assertEquals(input.size(), seen.size(), "a result was duplicated");
+            for (Result result : input) assertTrue(seen.containsKey(result), "a result went missing");
+        }
+
+        @Test
+        void writingIsStableEvenWhenNothingCanBeOrdered() throws IOException {
+            String once = write(readReportUnstamped());
+            String twice = write(SarifUtil.readReport(new StringReader(once), true));
+
+            assertEquals(once, twice);
+        }
+
+        @Test
+        void sortingIsIdempotentEvenWhenNothingCanBeOrdered() throws IOException {
+            List<Result> input = readResults(QODANA_REPORT_JSON);
+            Collections.shuffle(input, new Random(9));
+
+            List<Result> once = ResultOrder.sorted(input);
+            List<Result> twice = ResultOrder.sorted(once);
+
+            assertEquals(labels(once), labels(twice));
+        }
+
+        private List<Result> readResults(String ignoredPath) throws IOException {
+            return new ArrayList<>(results(readReportUnstamped()));
+        }
+    }
+
+    // ------------------------------------------------------------------------------------------------------
+    // A report may carry nothing at all: no runs, no results, or no keys whatsoever.
+    // ------------------------------------------------------------------------------------------------------
+
+    @Nested
+    class EmptyReports {
+        @Test
+        void reportWithoutRunsIsWrittenAndReadBack() throws IOException {
+            String written = write(new SarifReport());
+
+            assertEquals("{}", written);
+            assertNull(SarifUtil.readReport(new StringReader(written), true).getRuns());
+        }
+
+        @Test
+        void reportWithAnEmptyRunsListKeepsIt() throws IOException {
+            String written = write(new SarifReport().withRuns(new ArrayList<>()));
+
+            assertEquals("{\n  \"runs\": []\n}", written);
+            assertTrue(SarifUtil.readReport(new StringReader(written), true).getRuns().isEmpty());
+        }
+
+        @Test
+        void runWithoutResultsIsWrittenWithoutAResultsKey() throws IOException {
+            String written = write(reportOf(emptyRun()));
+
+            assertFalse(written.contains("\"results\""), written);
+        }
+
+        @Test
+        void emptyReportHelperRoundTripsWithAnEmptyResultsArray() throws IOException {
+            String written = write(SarifUtil.emptyReport("Qodana"));
+
+            assertTrue(written.contains("\"results\": []"), written);
+            assertTrue(results(SarifUtil.readReport(new StringReader(written), true)).isEmpty());
+        }
+
+        @Test
+        void writingAnEmptyReportIsStable() throws IOException {
+            String once = write(SarifUtil.emptyReport("Qodana"));
+            String twice = write(SarifUtil.readReport(new StringReader(once), true));
+
+            assertEquals(once, twice);
+        }
+
+        @Test
+        void comparingTwoEmptyReportsAgainstEachOtherStillWrites() throws IOException {
+            SarifReport report = SarifUtil.emptyReport("Qodana");
+            BaselineCalculation.compare(report, SarifUtil.emptyReport("Qodana"));
+
+            assertTrue(write(report).contains("\"results\": []"));
+        }
+
+        @Test
+        void anEmptyRunAlongsideAPopulatedOneDoesNotDisturbIt() throws IOException {
+            Run populated = emptyRun();
+            populated.setResults(new ArrayList<>(Arrays.asList(
+                    labeled("z", "z.java", 1, 900), labeled("a", "a.java", 1, 100))));
+
+            String written = write(new SarifReport().withRuns(Arrays.asList(emptyRun(), populated)));
+
+            assertLabelOrder(written, "a", "z");
+        }
+    }
+
+    // ------------------------------------------------------------------------------------------------------
     // Helpers.
     // ------------------------------------------------------------------------------------------------------
 
@@ -709,8 +851,31 @@ public class ResultOrderTest {
         return run.getResults();
     }
 
+    /**
+     * The fixture predates fingerprints, so every result is stamped with one derived from its own content — the same
+     * inputs a current analyzer hashes into {@code equalIndicator/v1}. Content-derived rather than positional, or the
+     * stamp itself would decide the order and the determinism tests would prove nothing.
+     * <p>
+     * {@link ReportsMissingOrderKeys} reads the same file unstamped, to cover reports that carry no fingerprints.
+     */
     private static SarifReport readReport() throws IOException {
+        SarifReport report = readReportUnstamped();
+        for (Result result : results(report)) {
+            result.setPartialFingerprints(fingerprints(BaselineCalculation.EQUAL_INDICATOR, 1, contentHash(result)));
+        }
+        return report;
+    }
+
+    private static SarifReport readReportUnstamped() throws IOException {
         return SarifUtil.readReport(Paths.get(QODANA_REPORT_JSON));
+    }
+
+    private static String contentHash(Result result) {
+        PhysicalLocation location = result.getLocations().get(0).getPhysicalLocation();
+        Region region = location.getRegion();
+        return "eq-" + Objects.hash(result.getRuleId(), location.getArtifactLocation().getUri(),
+                region == null ? null : region.getStartLine(), region == null ? null : region.getCharOffset(),
+                labelOf(result));
     }
 
     private static String write(SarifReport report) throws IOException {

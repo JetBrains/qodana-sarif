@@ -14,9 +14,9 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Sorts a {@code results} array by {@code uri}, {@code startLine}, {@code charOffset}, {@code ruleId} and
- * {@code equalIndicator/v1}, so that the same code always gives the same report and adding one problem adds one
- * block to the diff instead of shuffling the whole file.
+ * Sorts a {@code results} array by {@code uri}, {@code charOffset}, {@code ruleId} and {@code equalIndicator/v1},
+ * so that the same code always gives the same report and adding one problem adds one block to the diff instead of
+ * shuffling the whole file.
  */
 public final class ResultOrder {
     private static final Comparator<String> TEXT = Comparator.nullsFirst(Comparator.naturalOrder());
@@ -25,7 +25,6 @@ public final class ResultOrder {
     /** Content-derived order over results. Tolerates {@code null} results, which sort last */
     public static final Comparator<Result> CANONICAL = Comparator.nullsLast(
             Comparator.comparing(ResultOrder::uri, TEXT)
-                    .thenComparing(ResultOrder::startLine, NUMBER)
                     .thenComparing(ResultOrder::charOffset, NUMBER)
                     .thenComparing(Result::getRuleId, TEXT)
                     .thenComparing(ResultOrder::equalIndicator, TEXT));
@@ -53,19 +52,10 @@ public final class ResultOrder {
         return artifact == null ? null : artifact.getUri();
     }
 
-    private static Integer startLine(Result result) {
-        Region region = primaryRegion(result);
-        return region == null ? null : region.getStartLine();
-    }
-
     private static Integer charOffset(Result result) {
-        Region region = primaryRegion(result);
-        return region == null ? null : region.getCharOffset();
-    }
-
-    private static Region primaryRegion(Result result) {
         PhysicalLocation location = primaryLocation(result);
-        return location == null ? null : location.getRegion();
+        Region region = location == null ? null : location.getRegion();
+        return region == null ? null : region.getCharOffset();
     }
 
     private static String equalIndicator(Result result) {
