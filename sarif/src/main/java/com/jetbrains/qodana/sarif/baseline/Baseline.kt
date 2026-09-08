@@ -16,7 +16,7 @@ private fun Run.undecidedResults(): List<Result> =
 
 /**
  * The result's unique id: equalIndicator/v1. Used as the candidate-pool key, and recorded on a matched report result as
- * `matchedBaselineResult` (the id of the baseline problem it matched).
+ * `matchedBaselineFingerprint` (the fingerprint of the baseline problem it matched).
  */
 private fun Result.uniqueResultIndicator(): String {
     val fingerprints = partialFingerprints ?: return ""
@@ -25,9 +25,9 @@ private fun Result.uniqueResultIndicator(): String {
 
 /**
  * The cloud-assigned id of a baseline problem, if the baseline came from Cloud. Recorded on a matched report result as
- * `matchedCloudBaselineResultId`.
+ * `matchedBaselineCloudId`.
  */
-private fun Result.cloudBaselineResultId(): Any? = properties?.get("cloudBaselineResultId")
+private fun Result.baselineCloudId(): Any? = properties?.get("baselineCloudId")
 
 /** The presence of these hashes identifies a new-analyzer report, whereas their absence signifies a legacy baseline. */
 private fun Result.hasHash(key: String): Boolean =
@@ -51,16 +51,18 @@ internal class DiffState(
         result: Result,
         state: BaselineState,
         matchedMethod: String? = null,
-        matchedBaselineResult: String? = null,
-        matchedCloudBaselineResultId: Any? = null,
+        baselineFingerprint: String? = null,
+        baselineCloudId: Any? = null,
     ): Boolean {
         if (state == BaselineState.UNCHANGED && !options.includeUnchanged) return false
         if (state == BaselineState.ABSENT && !options.includeAbsent) return false
 
         if (options.includeMatchedMethod && matchedMethod != null) result.updateProperties { it["matchedMethod"] = matchedMethod }
-        if (matchedBaselineResult != null) result.updateProperties { it["matchedBaselineResult"] = matchedBaselineResult }
-        if (matchedCloudBaselineResultId != null) {
-            result.updateProperties { it["matchedCloudBaselineResultId"] = matchedCloudBaselineResultId }
+        if (baselineFingerprint != null) {
+            result.updateProperties { it["matchedBaselineFingerprint"] = baselineFingerprint }
+        }
+        if (baselineCloudId != null) {
+            result.updateProperties { it["matchedBaselineCloudId"] = baselineCloudId }
         }
         results.add(result.withBaselineState(if (options.fillBaselineState) state else null))
         when (state) {
@@ -81,7 +83,7 @@ internal class DiffState(
             BaselineState.UNCHANGED,
             matchedMethod,
             baselineResult.uniqueResultIndicator(),
-            baselineResult.cloudBaselineResultId(),
+            baselineResult.baselineCloudId(),
         )
         undecidedFromReport.remove(reportResult.uniqueResultIndicator())
         undecidedFromBaseline.remove(baselineResult.uniqueResultIndicator())
