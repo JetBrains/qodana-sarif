@@ -75,6 +75,11 @@ class ExtendedFingerprintIntegrationTest {
 
     private fun Result.matchedMethod(): String? = properties?.get("matchedMethod") as? String
     private fun Result.matchedBaselineResult(): String? = properties?.get("matchedBaselineResult") as? String
+    private fun Result.matchedCloudBaselineResultId(): Any? = properties?.get("matchedCloudBaselineResultId")
+    private fun Result.cloudBaselineResultId(): Any? = properties?.get("cloudBaselineResultId")
+
+    /** Attaches the cloud-assigned id that a baseline problem carries in a cloud-backed baseline. */
+    private fun Result.withCloudId(id: Any): Result = withUpdatedProperties { it["cloudBaselineResultId"] = id }
 
     @Test
     fun `equalIndicator matches when fingerprints are identical`() {
@@ -277,6 +282,95 @@ class ExtendedFingerprintIntegrationTest {
         assertEquals("moveAndRefactorTolerantIndicator/v1+lineDelta", r2.matchedMethod())
         assertEquals("eqb1", r1.matchedBaselineResult())
         assertEquals("eqb2", r2.matchedBaselineResult())
+    }
+
+    /**
+     * In a cloud-backed baseline *every* baseline problem carries `cloudBaselineResultId`, so the three output
+     * states must be distinguishable by these two properties alone:
+     *   UNCHANGED — matchedCloudBaselineResultId = the matched baseline's cloud id; no cloud id of its own
+     *   ABSENT    — keeps its own cloudBaselineResultId; never gets a matchedCloudBaselineResultId
+     *   NEW       — neither property
+     */
+    @Test
+    fun `a cloud baseline stamps matchedCloudBaselineResultId on unchanged problems only`() {
+        val rMatched = result(message = "kept", filePath = "src/kept.kt",
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eq-m"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "st-m")))
+        val rNew = result(message = "new", filePath = "src/new.kt",
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eq-new"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "st-new")))
+
+        val bMatched = result(message = "kept", filePath = "src/kept.kt",
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eq-m"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "st-m")))
+            .withCloudId("cloud-kept")
+        val bGone = result(message = "gone", filePath = "src/gone.kt",
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eq-gone"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "st-gone")))
+            .withCloudId("cloud-gone")
+
+        val calc = compare(report(rMatched, rNew), report(bMatched, bGone))
+
+        assertEquals(1, calc.unchangedResults)
+        assertEquals(1, calc.newResults)
+        assertEquals(1, calc.absentResults)
+
+        // UNCHANGED: carries the matched baseline's cloud id, and no cloud id of its own (report problems have none).
+        assertEquals("cloud-kept", rMatched.matchedCloudBaselineResultId())
+        assertNull(rMatched.cloudBaselineResultId())
+        // The pre-existing id is unaffected and still the equalIndicator/v1 one.
+        assertEquals("eq-m", rMatched.matchedBaselineResult())
+
+        // ABSENT: keeps its own cloud id, but is never stamped as somebody's match.
+        assertEquals("cloud-gone", bGone.cloudBaselineResultId())
+        assertNull(bGone.matchedCloudBaselineResultId())
+
+        // NEW: neither property.
+        assertNull(rNew.matchedCloudBaselineResultId())
+        assertNull(rNew.cloudBaselineResultId())
+    }
+
+    @Test
+    fun `a baseline that is not from the cloud produces no matchedCloudBaselineResultId`() {
+        val r = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "fpv1"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+        val b = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "fpv1"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+
+        val calc = compare(report(r), report(b))
+
+        assertEquals(1, calc.unchangedResults)
+        assertEquals("fpv1", r.matchedBaselineResult())
+        assertNull(r.matchedCloudBaselineResultId())
+    }
+
+    @Test
+    fun `each report result gets the cloud id of the baseline it actually matched`() {
+        val ctx = "a\nb\nPROBLEM\nc\nd"
+        val r1 = result(message = "r1", filePath = "src/f.kt", contextSnippet = ctx, startLine = 50,
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr1"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+        val r2 = result(message = "r2", filePath = "src/f.kt", startLine = 48,
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr2"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+
+        val b1 = result(message = "b1", filePath = "src/f.kt", contextSnippet = ctx, startLine = 50,
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eqb1"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb1"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+            .withCloudId("cloud-b1")
+        val b2 = result(message = "b2", filePath = "src/f.kt", startLine = 40,
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eqb2"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb2"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+            .withCloudId("cloud-b2")
+        val b3 = result(message = "b3", filePath = "src/f.kt", startLine = 100,
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eqb3"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb3"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+            .withCloudId("cloud-b3")
+
+        val calc = compare(report(r1, r2), report(b1, b2, b3))
+
+        assertEquals(2, calc.unchangedResults)
+        assertEquals(1, calc.absentResults)
+        // The cloud id follows the pairing the tiebreaker chose, not the candidate order.
+        assertEquals("eqb1", r1.matchedBaselineResult())
+        assertEquals("eqb2", r2.matchedBaselineResult())
+        assertEquals("cloud-b1", r1.matchedCloudBaselineResultId())
+        assertEquals("cloud-b2", r2.matchedCloudBaselineResultId())
+        // The report problems are matches, not cloud problems, so they carry no cloud id of their own.
+        assertNull(r1.cloudBaselineResultId())
+        assertNull(r2.cloudBaselineResultId())
+        // The unmatched baseline is carried over as ABSENT: it keeps its own cloud id, but is never stamped as a match.
+        assertEquals("cloud-b3", b3.cloudBaselineResultId())
+        assertNull(b3.matchedCloudBaselineResultId())
     }
 
     @Test

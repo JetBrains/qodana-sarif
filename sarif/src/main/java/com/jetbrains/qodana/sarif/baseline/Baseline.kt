@@ -23,6 +23,12 @@ private fun Result.uniqueResultIndicator(): String {
     return fingerprints.get(EQUAL_INDICATOR, 1) ?: fingerprints.getLastValue(EQUAL_INDICATOR) ?: ""
 }
 
+/**
+ * The cloud-assigned id of a baseline problem, if the baseline came from Cloud. Recorded on a matched report result as
+ * `matchedCloudBaselineResultId`.
+ */
+private fun Result.cloudBaselineResultId(): Any? = properties?.get("cloudBaselineResultId")
+
 /** The presence of these hashes identifies a new-analyzer report, whereas their absence signifies a legacy baseline. */
 private fun Result.hasHash(key: String): Boolean =
     partialFingerprints?.getLastValue(key)?.isNotEmpty() == true
@@ -41,12 +47,21 @@ internal class DiffState(
 
     val results = mutableListOf<Result>()
 
-    fun put(result: Result, state: BaselineState, matchedMethod: String? = null, matchedBaselineResult: String? = null): Boolean {
+    fun put(
+        result: Result,
+        state: BaselineState,
+        matchedMethod: String? = null,
+        matchedBaselineResult: String? = null,
+        matchedCloudBaselineResultId: Any? = null,
+    ): Boolean {
         if (state == BaselineState.UNCHANGED && !options.includeUnchanged) return false
         if (state == BaselineState.ABSENT && !options.includeAbsent) return false
 
         if (options.includeMatchedMethod && matchedMethod != null) result.updateProperties { it["matchedMethod"] = matchedMethod }
         if (matchedBaselineResult != null) result.updateProperties { it["matchedBaselineResult"] = matchedBaselineResult }
+        if (matchedCloudBaselineResultId != null) {
+            result.updateProperties { it["matchedCloudBaselineResultId"] = matchedCloudBaselineResultId }
+        }
         results.add(result.withBaselineState(if (options.fillBaselineState) state else null))
         when (state) {
             BaselineState.NEW -> new++
@@ -61,7 +76,13 @@ internal class DiffState(
 
     /** Records an UNCHANGED match and consumes both endpoints (by their equalIndicator id) from the candidate pools. */
     fun commit(reportResult: Result, baselineResult: Result, matchedMethod: String) {
-        put(reportResult, BaselineState.UNCHANGED, matchedMethod, baselineResult.uniqueResultIndicator())
+        put(
+            reportResult,
+            BaselineState.UNCHANGED,
+            matchedMethod,
+            baselineResult.uniqueResultIndicator(),
+            baselineResult.cloudBaselineResultId(),
+        )
         undecidedFromReport.remove(reportResult.uniqueResultIndicator())
         undecidedFromBaseline.remove(baselineResult.uniqueResultIndicator())
     }
