@@ -36,7 +36,7 @@ internal object BaselineCli {
                 Paths.get(options.baselinePath),
                 options.thresholds,
                 options.includeAbsent,
-                options.includeMatchedBy,
+                options.includeMatchedMethod,
                 printer,
                 cliPrinter,
                 errPrinter
@@ -110,7 +110,7 @@ internal object BaselineCli {
         baselinePath: Path,
         thresholds: SeverityThresholds?,
         includeAbsent: Boolean,
-        includeMatchedBy: Boolean,
+        includeMatchedMethod: Boolean,
         printer: CommandLineResultsPrinter,
         cliPrinter: (String) -> Unit,
         errPrinter: (String) -> Unit
@@ -128,7 +128,7 @@ internal object BaselineCli {
             return ERROR_EXIT
         }
 
-        BaselineCalculation.compare(sarifReport, baseline, BaselineCalculation.Options(includeAbsent, includeMatchedBy))
+        BaselineCalculation.compare(sarifReport, baseline, BaselineCalculation.Options(includeAbsent, includeMatchedMethod))
         val results = sarifReport.runs.first().results
         printer.printResultsWithBaselineState(results, includeAbsent)
         val invocation = processResultCount(results, true, thresholds, cliPrinter, errPrinter)
