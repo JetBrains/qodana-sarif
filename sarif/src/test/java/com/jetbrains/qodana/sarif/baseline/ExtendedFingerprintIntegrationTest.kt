@@ -75,11 +75,10 @@ class ExtendedFingerprintIntegrationTest {
 
     private fun Result.matchedMethod(): String? = properties?.get("matchedMethod") as? String
     private fun Result.matchedBaselineFingerprint(): String? = properties?.get("matchedBaselineFingerprint") as? String
-    private fun Result.matchedBaselineCloudId(): Any? = properties?.get("matchedBaselineCloudId")
-    private fun Result.baselineCloudId(): Any? = properties?.get("baselineCloudId")
+    private fun Result.cloudId(): Any? = properties?.get("cloudId")
 
     /** Attaches the cloud-assigned id that a baseline problem carries in a cloud-backed baseline. */
-    private fun Result.withCloudId(id: Any): Result = withUpdatedProperties { it["baselineCloudId"] = id }
+    private fun Result.withCloudId(id: Any): Result = withUpdatedProperties { it["cloudId"] = id }
 
     @Test
     fun `equalIndicator matches when fingerprints are identical`() {
@@ -285,14 +284,14 @@ class ExtendedFingerprintIntegrationTest {
     }
 
     /**
-     * In a cloud-backed baseline *every* baseline problem carries `baselineCloudId`, so the three output
-     * states must be distinguishable by these two properties alone:
-     *   UNCHANGED — matchedBaselineCloudId = the matched baseline's cloud id; no cloud id of its own
-     *   ABSENT    — keeps its own baselineCloudId; never gets a matchedBaselineCloudId
-     *   NEW       — neither property
+     * In a cloud-backed baseline *every* baseline problem carries `cloudId`, and the match inherits that same
+     * key, so the id travels with the problem instead of being match metadata:
+     *   UNCHANGED — inherits the matched baseline's cloudId
+     *   ABSENT    — keeps its own cloudId
+     *   NEW       — has no cloudId at all
      */
     @Test
-    fun `a cloud baseline stamps matchedBaselineCloudId on unchanged problems only`() {
+    fun `a cloud baseline gives matched problems a cloudId and leaves new problems without one`() {
         val rMatched = result(message = "kept", filePath = "src/kept.kt",
             fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eq-m"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "st-m")))
         val rNew = result(message = "new", filePath = "src/new.kt",
@@ -311,23 +310,25 @@ class ExtendedFingerprintIntegrationTest {
         assertEquals(1, calc.newResults)
         assertEquals(1, calc.absentResults)
 
-        // UNCHANGED: carries the matched baseline's cloud id, and no cloud id of its own (report problems have none).
-        assertEquals("cloud-kept", rMatched.matchedBaselineCloudId())
-        assertNull(rMatched.baselineCloudId())
-        // The pre-existing id is unaffected and still the equalIndicator/v1 one.
+        // UNCHANGED: inherits the matched baseline's cloud id under the very same key.
+        assertEquals("cloud-kept", rMatched.cloudId())
+        // The fingerprint of the matched baseline problem is recorded separately and is unaffected.
         assertEquals("eq-m", rMatched.matchedBaselineFingerprint())
 
-        // ABSENT: keeps its own cloud id, but is never stamped as somebody's match.
-        assertEquals("cloud-gone", bGone.baselineCloudId())
-        assertNull(bGone.matchedBaselineCloudId())
+        // ABSENT: keeps its own cloud id.
+        assertEquals("cloud-gone", bGone.cloudId())
 
-        // NEW: neither property.
-        assertNull(rNew.matchedBaselineCloudId())
-        assertNull(rNew.baselineCloudId())
+        // NEW: no cloud id at all.
+        assertNull(rNew.cloudId())
+
+        // The two id-carrying states are distinguished by baselineState, not by the property.
+        assertEquals(Result.BaselineState.UNCHANGED, rMatched.baselineState)
+        assertEquals(Result.BaselineState.ABSENT, bGone.baselineState)
+        assertEquals(Result.BaselineState.NEW, rNew.baselineState)
     }
 
     @Test
-    fun `a baseline that is not from the cloud produces no matchedBaselineCloudId`() {
+    fun `a baseline that is not from the cloud produces no cloudId`() {
         val r = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "fpv1"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
         val b = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "fpv1"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
 
@@ -335,7 +336,7 @@ class ExtendedFingerprintIntegrationTest {
 
         assertEquals(1, calc.unchangedResults)
         assertEquals("fpv1", r.matchedBaselineFingerprint())
-        assertNull(r.matchedBaselineCloudId())
+        assertNull(r.cloudId())
     }
 
     @Test
@@ -363,14 +364,10 @@ class ExtendedFingerprintIntegrationTest {
         // The cloud id follows the pairing the tiebreaker chose, not the candidate order.
         assertEquals("eqb1", r1.matchedBaselineFingerprint())
         assertEquals("eqb2", r2.matchedBaselineFingerprint())
-        assertEquals("cloud-b1", r1.matchedBaselineCloudId())
-        assertEquals("cloud-b2", r2.matchedBaselineCloudId())
-        // The report problems are matches, not cloud problems, so they carry no cloud id of their own.
-        assertNull(r1.baselineCloudId())
-        assertNull(r2.baselineCloudId())
-        // The unmatched baseline is carried over as ABSENT: it keeps its own cloud id, but is never stamped as a match.
-        assertEquals("cloud-b3", b3.baselineCloudId())
-        assertNull(b3.matchedBaselineCloudId())
+        assertEquals("cloud-b1", r1.cloudId())
+        assertEquals("cloud-b2", r2.cloudId())
+        // The unmatched baseline is carried over as ABSENT with its own cloud id intact, not another problem's.
+        assertEquals("cloud-b3", b3.cloudId())
     }
 
     @Test

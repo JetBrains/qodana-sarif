@@ -24,10 +24,11 @@ private fun Result.uniqueResultIndicator(): String {
 }
 
 /**
- * The cloud-assigned id of a baseline problem, if the baseline came from Cloud. Recorded on a matched report result as
- * `matchedBaselineCloudId`.
+ * The cloud-assigned id of a baseline problem, present when the baseline came from Cloud. Copied onto the report result that
+ * matched it under the same `cloudId` key, so the id travels with the problem across runs rather than being
+ * match metadata: any result carrying one is the same Cloud problem.
  */
-private fun Result.baselineCloudId(): Any? = properties?.get("baselineCloudId")
+private fun Result.cloudId(): Any? = properties?.get("cloudId")
 
 /** The presence of these hashes identifies a new-analyzer report, whereas their absence signifies a legacy baseline. */
 private fun Result.hasHash(key: String): Boolean =
@@ -52,17 +53,15 @@ internal class DiffState(
         state: BaselineState,
         matchedMethod: String? = null,
         baselineFingerprint: String? = null,
-        baselineCloudId: Any? = null,
+        cloudId: Any? = null,
     ): Boolean {
         if (state == BaselineState.UNCHANGED && !options.includeUnchanged) return false
         if (state == BaselineState.ABSENT && !options.includeAbsent) return false
 
         if (options.includeMatchedMethod && matchedMethod != null) result.updateProperties { it["matchedMethod"] = matchedMethod }
+        if (cloudId != null) result.updateProperties { it["cloudId"] = cloudId }
         if (baselineFingerprint != null) {
             result.updateProperties { it["matchedBaselineFingerprint"] = baselineFingerprint }
-        }
-        if (baselineCloudId != null) {
-            result.updateProperties { it["matchedBaselineCloudId"] = baselineCloudId }
         }
         results.add(result.withBaselineState(if (options.fillBaselineState) state else null))
         when (state) {
@@ -83,7 +82,7 @@ internal class DiffState(
             BaselineState.UNCHANGED,
             matchedMethod,
             baselineResult.uniqueResultIndicator(),
-            baselineResult.baselineCloudId(),
+            baselineResult.cloudId(),
         )
         undecidedFromReport.remove(reportResult.uniqueResultIndicator())
         undecidedFromBaseline.remove(baselineResult.uniqueResultIndicator())
