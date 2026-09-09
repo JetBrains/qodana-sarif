@@ -21,10 +21,10 @@ import java.util.Collections.singletonList
  */
 class ExtendedFingerprintIntegrationTest {
 
-    // matchedBy is a debug-only switch; these tests assert it, so it defaults on and is toggled per comparison.
-    private var includeMatchedBy = true
+    // matchedMethod is a debug-only switch; these tests assert it, so it defaults on and is toggled per comparison.
+    private var includeMatchedMethod = true
 
-    private val options get() = BaselineCalculation.Options(true, includeMatchedBy)
+    private val options get() = BaselineCalculation.Options(true, includeMatchedMethod)
 
     /** Every result gets a unique equalIndicator id (as in real reports); bumped per [result] call. */
     private var autoEqualIndicator = 0
@@ -73,19 +73,24 @@ class ExtendedFingerprintIntegrationTest {
     private fun compare(report: SarifReport, baseline: SarifReport) =
         BaselineCalculation.compare(report, baseline, options)
 
-    private fun Result.matchedBy(): String? = properties?.get("matchedBy") as? String
-    private fun Result.matchedWith(): String? = properties?.get("matchedWith") as? String
+    private fun Result.matchedMethod(): String? = properties?.get("matchedMethod") as? String
+    private fun Result.matchedBaselineFingerprint(): String? = properties?.get("matchedBaselineFingerprint") as? String
+    private fun Result.cloudId(): Any? = properties?.get("cloudId")
+
+    /** Attaches the cloud-assigned id that a baseline problem carries in a cloud-backed baseline. */
+    private fun Result.withCloudId(id: Any): Result = withUpdatedProperties { it["cloudId"] = id }
 
     @Test
     fun `equalIndicator matches when fingerprints are identical`() {
-        val r = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
-        val b = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+        val r = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "fpv1", 2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+        val b = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "fpv1", 2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
 
         val calc = compare(report(r), report(b))
 
         assertEquals(1, calc.unchangedResults)
-        assertEquals("equalIndicator/v2", r.matchedBy())
-        assertEquals("fp", r.matchedWith())
+        // Matched at v2, but the recorded id is the unique v1 one.
+        assertEquals("equalIndicator/v2", r.matchedMethod())
+        assertEquals("fpv1", r.matchedBaselineFingerprint())
     }
 
     @Test
@@ -110,7 +115,7 @@ class ExtendedFingerprintIntegrationTest {
         val calc = compare(report(r), report(b))
 
         assertEquals(1, calc.unchangedResults)
-        assertEquals("equalIndicator/v2", r.matchedBy())
+        assertEquals("equalIndicator/v2", r.matchedMethod())
     }
 
     @Test
@@ -126,7 +131,7 @@ class ExtendedFingerprintIntegrationTest {
         val calc = compare(report(r), report(b))
 
         assertEquals(1, calc.unchangedResults)
-        assertEquals("shiftTolerantEqualIndicator/v1", r.matchedBy())
+        assertEquals("shiftTolerantEqualIndicator/v1", r.matchedMethod())
     }
 
     @Test
@@ -149,7 +154,7 @@ class ExtendedFingerprintIntegrationTest {
         val calc = compare(report(r), report(b))
 
         assertEquals(1, calc.unchangedResults)
-        assertEquals("shiftTolerantEqualIndicator/v1", r.matchedBy())
+        assertEquals("shiftTolerantEqualIndicator/v1", r.matchedMethod())
     }
 
     @Test
@@ -168,7 +173,7 @@ class ExtendedFingerprintIntegrationTest {
 
         assertEquals(1, calc.unchangedResults)
         assertEquals(1, calc.absentResults)
-        assertEquals("shiftTolerantEqualIndicator/v1+contextSnippetSimilarity", r.matchedBy())
+        assertEquals("shiftTolerantEqualIndicator/v1+contextSnippetSimilarity", r.matchedMethod())
     }
 
     @Test
@@ -193,7 +198,7 @@ class ExtendedFingerprintIntegrationTest {
         val calc = compare(report(r), report(b))
 
         assertEquals(1, calc.unchangedResults)
-        assertEquals("moveAndRefactorTolerantIndicator/v1", r.matchedBy())
+        assertEquals("moveAndRefactorTolerantIndicator/v1", r.matchedMethod())
     }
 
     @Test
@@ -218,7 +223,7 @@ class ExtendedFingerprintIntegrationTest {
         val calc = compare(report(r), report(b))
 
         assertEquals(1, calc.unchangedResults)
-        assertEquals("extractionAndRefactorTolerantIndicator/v1", r.matchedBy())
+        assertEquals("extractionAndRefactorTolerantIndicator/v1", r.matchedMethod())
     }
 
     @Test
@@ -249,7 +254,7 @@ class ExtendedFingerprintIntegrationTest {
 
         assertEquals(1, calc.unchangedResults)
         assertEquals(1, calc.absentResults)
-        assertEquals("moveAndRefactorTolerantIndicator/v1+lineDelta", r.matchedBy())
+        assertEquals("moveAndRefactorTolerantIndicator/v1+lineDelta", r.matchedMethod())
     }
 
     @Test
@@ -261,21 +266,108 @@ class ExtendedFingerprintIntegrationTest {
             fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr2"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
 
         val b1 = result(message = "b1", filePath = "src/f.kt", contextSnippet = ctx, startLine = 50,
-            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "eqb1"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb1"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eqb1"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb1"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
         val b2 = result(message = "b2", filePath = "src/f.kt", startLine = 40,
-            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "eqb2"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb2"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eqb2"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb2"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
         val b3 = result(message = "b3", filePath = "src/f.kt", startLine = 100,
-            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "eqb3"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb3"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eqb3"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb3"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
 
         val calc = compare(report(r1, r2), report(b1, b2, b3))
 
         assertEquals(2, calc.unchangedResults)
         assertEquals(1, calc.absentResults)
         assertEquals(0, calc.newResults)
-        assertEquals("moveAndRefactorTolerantIndicator/v1+contextSnippetSimilarity", r1.matchedBy())
-        assertEquals("moveAndRefactorTolerantIndicator/v1+lineDelta", r2.matchedBy())
-        assertEquals("eqb1", r1.matchedWith())
-        assertEquals("eqb2", r2.matchedWith())
+        assertEquals("moveAndRefactorTolerantIndicator/v1+contextSnippetSimilarity", r1.matchedMethod())
+        assertEquals("moveAndRefactorTolerantIndicator/v1+lineDelta", r2.matchedMethod())
+        assertEquals("eqb1", r1.matchedBaselineFingerprint())
+        assertEquals("eqb2", r2.matchedBaselineFingerprint())
+    }
+
+    /**
+     * In a cloud-backed baseline *every* baseline problem carries `cloudId`, and the match inherits that same
+     * key, so the id travels with the problem instead of being match metadata:
+     *   UNCHANGED — inherits the matched baseline's cloudId
+     *   ABSENT    — keeps its own cloudId
+     *   NEW       — has no cloudId at all
+     */
+    @Test
+    fun `a cloud baseline gives matched problems a cloudId and leaves new problems without one`() {
+        val rMatched = result(message = "kept", filePath = "src/kept.kt",
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eq-m"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "st-m")))
+        val rNew = result(message = "new", filePath = "src/new.kt",
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eq-new"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "st-new")))
+
+        val bMatched = result(message = "kept", filePath = "src/kept.kt",
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eq-m"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "st-m")))
+            .withCloudId("cloud-kept")
+        val bGone = result(message = "gone", filePath = "src/gone.kt",
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eq-gone"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "st-gone")))
+            .withCloudId("cloud-gone")
+
+        val calc = compare(report(rMatched, rNew), report(bMatched, bGone))
+
+        assertEquals(1, calc.unchangedResults)
+        assertEquals(1, calc.newResults)
+        assertEquals(1, calc.absentResults)
+
+        // UNCHANGED: inherits the matched baseline's cloud id under the very same key.
+        assertEquals("cloud-kept", rMatched.cloudId())
+        // The fingerprint of the matched baseline problem is recorded separately and is unaffected.
+        assertEquals("eq-m", rMatched.matchedBaselineFingerprint())
+
+        // ABSENT: keeps its own cloud id.
+        assertEquals("cloud-gone", bGone.cloudId())
+
+        // NEW: no cloud id at all.
+        assertNull(rNew.cloudId())
+
+        // The two id-carrying states are distinguished by baselineState, not by the property.
+        assertEquals(Result.BaselineState.UNCHANGED, rMatched.baselineState)
+        assertEquals(Result.BaselineState.ABSENT, bGone.baselineState)
+        assertEquals(Result.BaselineState.NEW, rNew.baselineState)
+    }
+
+    @Test
+    fun `a baseline that is not from the cloud produces no cloudId`() {
+        val r = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "fpv1"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+        val b = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "fpv1"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+
+        val calc = compare(report(r), report(b))
+
+        assertEquals(1, calc.unchangedResults)
+        assertEquals("fpv1", r.matchedBaselineFingerprint())
+        assertNull(r.cloudId())
+    }
+
+    @Test
+    fun `each report result gets the cloud id of the baseline it actually matched`() {
+        val ctx = "a\nb\nPROBLEM\nc\nd"
+        val r1 = result(message = "r1", filePath = "src/f.kt", contextSnippet = ctx, startLine = 50,
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr1"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+        val r2 = result(message = "r2", filePath = "src/f.kt", startLine = 48,
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr2"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+
+        val b1 = result(message = "b1", filePath = "src/f.kt", contextSnippet = ctx, startLine = 50,
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eqb1"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb1"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+            .withCloudId("cloud-b1")
+        val b2 = result(message = "b2", filePath = "src/f.kt", startLine = 40,
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eqb2"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb2"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+            .withCloudId("cloud-b2")
+        val b3 = result(message = "b3", filePath = "src/f.kt", startLine = 100,
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "eqb3"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb3"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+            .withCloudId("cloud-b3")
+
+        val calc = compare(report(r1, r2), report(b1, b2, b3))
+
+        assertEquals(2, calc.unchangedResults)
+        assertEquals(1, calc.absentResults)
+        // The cloud id follows the pairing the tiebreaker chose, not the candidate order.
+        assertEquals("eqb1", r1.matchedBaselineFingerprint())
+        assertEquals("eqb2", r2.matchedBaselineFingerprint())
+        assertEquals("cloud-b1", r1.cloudId())
+        assertEquals("cloud-b2", r2.cloudId())
+        // The unmatched baseline is carried over as ABSENT with its own cloud id intact, not another problem's.
+        assertEquals("cloud-b3", b3.cloudId())
     }
 
     @Test
@@ -288,7 +380,7 @@ class ExtendedFingerprintIntegrationTest {
         val calc = compare(report(r), report(b))
 
         assertEquals(1, calc.unchangedResults)
-        assertEquals("equalIndicator/v2", r.matchedBy())
+        assertEquals("equalIndicator/v2", r.matchedMethod())
     }
 
     @Test
@@ -340,7 +432,7 @@ class ExtendedFingerprintIntegrationTest {
         val calc = compare(report(r), report(b))
 
         assertEquals(1, calc.unchangedResults)
-        assertEquals("equalIndicator/v1", r.matchedBy())
+        assertEquals("equalIndicator/v1", r.matchedMethod())
     }
 
     @Test
@@ -372,7 +464,7 @@ class ExtendedFingerprintIntegrationTest {
 
         assertEquals(1, calc.unchangedResults)
         assertEquals(1, calc.absentResults)
-        assertEquals("equalIndicator/v2", r1.matchedBy())
+        assertEquals("equalIndicator/v2", r1.matchedMethod())
     }
 
     @Test
@@ -424,17 +516,17 @@ class ExtendedFingerprintIntegrationTest {
         assertEquals(3, calc.unchangedResults)
         assertEquals(0, calc.newResults)
         assertEquals(0, calc.absentResults)
-        assertEquals("equalIndicator/v2", r1.matchedBy())
-        assertEquals("shiftTolerantEqualIndicator/v1", r2.matchedBy())
-        assertEquals("moveAndRefactorTolerantIndicator/v1", r3.matchedBy())
+        assertEquals("equalIndicator/v2", r1.matchedMethod())
+        assertEquals("shiftTolerantEqualIndicator/v1", r2.matchedMethod())
+        assertEquals("moveAndRefactorTolerantIndicator/v1", r3.matchedMethod())
     }
 
     @Test
     fun `match quality is independent of baseline order`() {
         fun bNear() = result(message = "bn", filePath = "src/file.kt", startLine = 11,
-            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "near"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sbn"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "near"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sbn"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
         fun bFar() = result(message = "bf", filePath = "src/file.kt", startLine = 400,
-            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "far"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sbf"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+            fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "far"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sbf"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
 
         for (baseline in listOf(arrayOf(bNear(), bFar()), arrayOf(bFar(), bNear()))) {
             // The report carries no equalIndicator/shiftTolerant match, so it matches via the cascade.
@@ -445,8 +537,8 @@ class ExtendedFingerprintIntegrationTest {
 
             assertEquals(1, calc.unchangedResults)
             assertEquals(1, calc.absentResults)
-            assertEquals("moveAndRefactorTolerantIndicator/v1+lineDelta", r.matchedBy())
-            assertEquals("near", r.matchedWith())
+            assertEquals("moveAndRefactorTolerantIndicator/v1+lineDelta", r.matchedMethod())
+            assertEquals("near", r.matchedBaselineFingerprint())
         }
     }
 
@@ -462,7 +554,7 @@ class ExtendedFingerprintIntegrationTest {
         for (reports in listOf(arrayOf(rWeak(), rStrong()), arrayOf(rStrong(), rWeak()))) {
             val b = result(message = "bm", filePath = "src/file.kt", startLine = 10,
                 contextSnippet = "a\nb\nPROBLEM\nc\nd",
-                fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "beq"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+                fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "beq"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
 
             val calc = compare(report(*reports), report(b))
             val strong = reports.first { it.message.text == "rs" }
@@ -470,41 +562,41 @@ class ExtendedFingerprintIntegrationTest {
 
             assertEquals(1, calc.unchangedResults)
             assertEquals(1, calc.newResults)
-            assertEquals("beq", strong.matchedWith())     // strong report took the baseline
-            assertNull(weak.matchedWith())                // weak report was left NEW, not matched
+            assertEquals("beq", strong.matchedBaselineFingerprint())     // strong report took the baseline
+            assertNull(weak.matchedBaselineFingerprint())                // weak report was left NEW, not matched
         }
     }
 
     @Test
-    fun `matchedBy is written only when includeMatchedBy is enabled`() {
-        fun matchUnder(includeMatchedBy: Boolean): Result {
+    fun `matchedMethod is written only when includeMatchedMethod is enabled`() {
+        fun matchUnder(includeMatchedMethod: Boolean): Result {
             val r = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
             val b = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
-            this.includeMatchedBy = includeMatchedBy
+            this.includeMatchedMethod = includeMatchedMethod
             compare(report(r), report(b))
             return r
         }
 
-        assertEquals("equalIndicator/v2", matchUnder(includeMatchedBy = true).matchedBy())
-        assertNull(matchUnder(includeMatchedBy = false).matchedBy())
+        assertEquals("equalIndicator/v2", matchUnder(includeMatchedMethod = true).matchedMethod())
+        assertNull(matchUnder(includeMatchedMethod = false).matchedMethod())
     }
 
     @Test
-    fun `matchedWith is recorded regardless of includeMatchedBy`() {
-        fun matchUnder(includeMatchedBy: Boolean): Result {
-            val r = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
-            val b = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
-            this.includeMatchedBy = includeMatchedBy
+    fun `matchedBaselineFingerprint is recorded regardless of includeMatchedMethod`() {
+        fun matchUnder(includeMatchedMethod: Boolean): Result {
+            val r = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "fpv1", 2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+            val b = result(fingerprints = mapOf(EQUAL_INDICATOR to mapOf(1 to "fpv1", 2 to "fp"), SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+            this.includeMatchedMethod = includeMatchedMethod
             compare(report(r), report(b))
             return r
         }
 
-        assertEquals("fp", matchUnder(includeMatchedBy = true).matchedWith())
-        assertEquals("fp", matchUnder(includeMatchedBy = false).matchedWith())
+        assertEquals("fpv1", matchUnder(includeMatchedMethod = true).matchedBaselineFingerprint())
+        assertEquals("fpv1", matchUnder(includeMatchedMethod = false).matchedBaselineFingerprint())
     }
 
     @Test
-    fun `includeMatchedBy is outcome-neutral and stamps every matched result across phases`() {
+    fun `includeMatchedMethod is outcome-neutral and stamps every matched result across phases`() {
         // One match per phase: equalIndicator, shiftTolerant and the move cascade.
         fun reportResults() = listOf(
             result(message = "m1", filePath = "src/eq.kt",
@@ -524,9 +616,9 @@ class ExtendedFingerprintIntegrationTest {
         )
 
         // compare mutates results in place, so build fresh inputs for each run.
-        fun run(includeMatchedBy: Boolean): List<Result> {
+        fun run(includeMatchedMethod: Boolean): List<Result> {
             val reports = reportResults()
-            this.includeMatchedBy = includeMatchedBy
+            this.includeMatchedMethod = includeMatchedMethod
             val calc = compare(report(*reports.toTypedArray()), report(*baselineResults().toTypedArray()))
             // Outcome must be identical no matter how the flag is set.
             assertEquals(3, calc.unchangedResults)
@@ -538,9 +630,9 @@ class ExtendedFingerprintIntegrationTest {
         // Flag on: every matched result is stamped with its phase.
         assertEquals(
             listOf("equalIndicator/v2", "shiftTolerantEqualIndicator/v1", "moveAndRefactorTolerantIndicator/v1"),
-            run(includeMatchedBy = true).map { it.matchedBy() },
+            run(includeMatchedMethod = true).map { it.matchedMethod() },
         )
-        // Flag off: matching is unchanged, but no matchedBy is written.
-        assertTrue(run(includeMatchedBy = false).all { it.matchedBy() == null })
+        // Flag off: matching is unchanged, but no matchedMethod is written.
+        assertTrue(run(includeMatchedMethod = false).all { it.matchedMethod() == null })
     }
 }

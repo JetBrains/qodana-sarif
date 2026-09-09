@@ -13,7 +13,7 @@ internal interface BaselineMatcher {
 internal data class MatchCandidate(
     val reportResult: Result,
     val baselineResult: Result,
-    val matchedBy: String,
+    val matchedMethod: String,
 )
 
 /** Matches via content equality using [ResultKey]. Kept for reuse (e.g. a ResultKey fallback phase later). */
