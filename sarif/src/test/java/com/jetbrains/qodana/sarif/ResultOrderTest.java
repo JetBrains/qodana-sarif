@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -36,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -87,6 +88,14 @@ public class ResultOrderTest {
                     labeled("third", "a.java", 7, 300),
                     labeled("first", "a.java", 7, 100),
                     labeled("second", "a.java", 7, 200));
+        }
+
+        /** {@code startLine} is redundant with the offset and deliberately not part of the key. */
+        @Test
+        void startLineDoesNotAffectTheOrder() {
+            assertOrder(Arrays.asList("lateLine", "earlyLine"),
+                    labeled("earlyLine", "a.java", 1, 900),
+                    labeled("lateLine", "a.java", 900, 1));
         }
 
         @Test
@@ -261,32 +270,32 @@ public class ResultOrderTest {
     class Determinism {
         @Test
         void orderIsIndependentOfTheOrderResultsWereProducedIn() throws IOException {
-            String expected = write(readReport());
+            String expected = sortAndWrite(readReport());
 
             SarifReport shuffled = readReport();
             Collections.shuffle(results(shuffled), new Random(42));
 
-            assertEquals(expected, write(shuffled));
+            assertEquals(expected, sortAndWrite(shuffled));
         }
 
         @Test
         void everyShuffleOfARealReportSerializesIdentically() throws IOException {
-            String expected = write(readReport());
+            String expected = sortAndWrite(readReport());
             for (int seed = 0; seed < 20; seed++) {
                 SarifReport shuffled = readReport();
                 Collections.shuffle(results(shuffled), new Random(seed));
-                assertEquals(expected, write(shuffled), "seed " + seed);
+                assertEquals(expected, sortAndWrite(shuffled), "seed " + seed);
             }
         }
 
         @Test
         void reversingTheInputDoesNotChangeTheOutput() throws IOException {
-            String expected = write(readReport());
+            String expected = sortAndWrite(readReport());
 
             SarifReport reversed = readReport();
             Collections.reverse(results(reversed));
 
-            assertEquals(expected, write(reversed));
+            assertEquals(expected, sortAndWrite(reversed));
         }
 
         @Test
@@ -300,7 +309,7 @@ public class ResultOrderTest {
             Collections.shuffle(results(shuffledBaseline), new Random(2));
             BaselineCalculation.compare(shuffledReport, shuffledBaseline);
 
-            assertEquals(write(report), write(shuffledReport));
+            assertEquals(sortAndWrite(report), sortAndWrite(shuffledReport));
         }
 
         /**
@@ -310,9 +319,9 @@ public class ResultOrderTest {
          */
         @Test
         void orderIsIndependentOfHowAMixedBaselineMatched() throws IOException {
-            String expected = write(comparedAgainstBaseline(0));
+            String expected = sortAndWrite(comparedAgainstBaseline(0));
             for (int seed = 1; seed <= 5; seed++) {
-                assertEquals(expected, write(comparedAgainstBaseline(seed)), "seed " + seed);
+                assertEquals(expected, sortAndWrite(comparedAgainstBaseline(seed)), "seed " + seed);
             }
         }
 
@@ -416,141 +425,182 @@ public class ResultOrderTest {
     // ------------------------------------------------------------------------------------------------------
 
     @Nested
-    class Serialization {
+    class Sorting {
         @Test
-        void runResultsAreOrdered() throws IOException {
+        void writingDoesNotReorderTheReport() throws IOException {
             Run run = emptyRun();
             run.setResults(new ArrayList<>(Arrays.asList(
-                    labeled("z", "z.java", 1, 1), labeled("a", "a.java", 1, 1))));
+                    labeled("z", "z.java", 1, 900), labeled("a", "a.java", 1, 100))));
 
-            assertLabelOrder(write(reportOf(run)), "a", "z");
+            // The writer serializes what it is given; ordering is the caller's decision.
+            assertLabelOrder(write(reportOf(run)), "z", "a");
         }
 
         @Test
-        void eachRunIsOrderedIndependently() throws IOException {
+        void sortOrdersTheResultsOfEveryRun() throws IOException {
             Run first = emptyRun();
             first.setResults(new ArrayList<>(Arrays.asList(
-                    labeled("run1z", "z.java", 1, 1), labeled("run1a", "a.java", 1, 1))));
+                    labeled("run1z", "z.java", 1, 900), labeled("run1a", "a.java", 1, 100))));
             Run second = emptyRun();
             second.setResults(new ArrayList<>(Arrays.asList(
-                    labeled("run2z", "z.java", 1, 1), labeled("run2a", "a.java", 1, 1))));
+                    labeled("run2z", "z.java", 1, 900), labeled("run2a", "a.java", 1, 100))));
+            SarifReport report = new SarifReport().withRuns(Arrays.asList(first, second));
 
-            assertLabelOrder(write(new SarifReport().withRuns(Arrays.asList(first, second))),
-                    "run1a", "run1z", "run2a", "run2z");
+            SarifUtil.sortResults(report);
+
+            assertLabelOrder(write(report), "run1a", "run1z", "run2a", "run2z");
         }
 
         @Test
-        void inlineExternalPropertiesResultsAreOrdered() throws IOException {
+        void sortOrdersInlineExternalProperties() throws IOException {
             ExternalProperties external = new ExternalProperties();
             external.setResults(new ArrayList<>(Arrays.asList(
-                    labeled("z", "z.java", 1, 1), labeled("a", "a.java", 1, 1))));
+                    labeled("z", "z.java", 1, 900), labeled("a", "a.java", 1, 100))));
             SarifReport report = reportOf(emptyRun())
                     .withInlineExternalProperties(new LinkedHashSet<>(Collections.singletonList(external)));
+
+            SarifUtil.sortResults(report);
 
             assertLabelOrder(write(report), "a", "z");
         }
 
-        /** The linter stashes these in {@code run.properties}, where they are typed as plain {@link Object}. */
+        /**
+         * The property bag is untyped, so which of its values are results — and which of those are deliberately in
+         * some other order — is knowledge only its owner has. Sorting leaves it alone; the owner sorts what it wants.
+         */
         @Test
-        void propertyBagResultsAreOrdered() throws IOException {
+        void sortLeavesPropertyBagsAlone() throws IOException {
             Run run = emptyRun();
             run.setProperties(new PropertyBag());
             Assertions.assertNotNull(run.getProperties());
-            run.getProperties().put("qodana.sanity.results", new ArrayList<>(Arrays.asList(
-                    labeled("sanityZ", "z.java", 1, 1), labeled("sanityA", "a.java", 1, 1))));
             run.getProperties().put("qodana.promo.results", new ArrayList<>(Arrays.asList(
-                    labeled("promoZ", "z.java", 1, 1), labeled("promoA", "a.java", 1, 1))));
-
-            String written = write(reportOf(run));
-
-            assertTrue(written.indexOf("sanityA") < written.indexOf("sanityZ"), written);
-            assertTrue(written.indexOf("promoA") < written.indexOf("promoZ"), written);
-        }
-
-        @Test
-        void propertyBagListsThatAreNotResultsAreLeftAlone() throws IOException {
-            Run run = emptyRun();
-            run.setProperties(new PropertyBag());
-            Assertions.assertNotNull(run.getProperties());
+                    labeled("promoZ", "z.java", 1, 900), labeled("promoA", "a.java", 1, 100))));
             run.getProperties().put("qodana.something", new ArrayList<>(Arrays.asList("zebra", "apple")));
             run.getProperties().getTags().addAll(Arrays.asList("zTag", "aTag"));
+            SarifReport report = reportOf(run);
 
-            String written = write(reportOf(run));
+            SarifUtil.sortResults(report);
+            String written = write(report);
 
+            assertTrue(written.indexOf("promoZ") < written.indexOf("promoA"), written);
             assertTrue(written.indexOf("zebra") < written.indexOf("apple"), written);
             assertTrue(written.indexOf("zTag") < written.indexOf("aTag"), written);
         }
 
+        /** ...and the owner can, in one line, because the ordering itself is available on its own. */
         @Test
-        void nullResultsStayNullAndEmptyStaysEmpty() throws IOException {
-            Run nullResults = emptyRun();
-            assertFalse(write(reportOf(nullResults)).contains("\"results\""));
+        void anOwnerCanSortAPropertyBagListItself() throws IOException {
+            Run run = emptyRun();
+            run.setProperties(new PropertyBag());
+            List<Result> promo = Arrays.asList(
+                    labeled("promoZ", "z.java", 1, 900), labeled("promoA", "a.java", 1, 100));
 
-            Run emptyResults = emptyRun();
-            emptyResults.setResults(new ArrayList<>());
-            assertTrue(write(reportOf(emptyResults)).contains("\"results\": []"));
+            Assertions.assertNotNull(run.getProperties());
+            run.getProperties().put("qodana.promo.results", ResultOrder.sorted(promo));
+
+            String written = write(reportOf(run));
+            assertTrue(written.indexOf("promoA") < written.indexOf("promoZ"), written);
+        }
+
+        /** The no-comparator overload is the way to ask for the canonical order; a null one is a mistake, not a wish. */
+        @Test
+        void aNullComparatorIsRejected() {
+            Run run = emptyRun();
+            run.setResults(new ArrayList<>(Arrays.asList(
+                    labeled("z", "z.java", 1, 900), labeled("a", "a.java", 1, 100))));
+            SarifReport report = reportOf(run);
+
+            assertThrows(NullPointerException.class, () -> SarifUtil.sortResults(report, null));
+            assertEquals(Arrays.asList("z", "a"), labels(run.getResults()), "nothing should have been reordered");
         }
 
         @Test
-        void anImmutableResultsListCanBeWritten() throws IOException {
+        void sortAcceptsAnyComparatorTheCallerSupplies() {
+            Comparator<Result> byLabelDescending = Comparator.comparing(ResultOrderTest::labelOf).reversed();
             Run run = emptyRun();
-            run.setResults(Collections.singletonList(labeled("only", "a.java", 1, 1)));
+            run.setResults(new ArrayList<>(Arrays.asList(
+                    labeled("a", "a.java", 1, 100), labeled("z", "z.java", 1, 900))));
+            SarifReport report = reportOf(run);
 
-            assertLabelOrder(write(reportOf(run)), "only");
+            SarifUtil.sortResults(report, byLabelDescending);
+
+            assertEquals(Arrays.asList("z", "a"), labels(results(report)));
+        }
+
+        @Test
+        void sortHandlesAReportWithNothingToSort() {
+            SarifUtil.sortResults(null);
+            SarifUtil.sortResults(new SarifReport());
+            SarifUtil.sortResults(new SarifReport().withRuns(new ArrayList<>()));
+            SarifUtil.sortResults(reportOf(emptyRun()));
+
+            assertNull(reportOf(emptyRun()).getRuns().get(0).getResults());
+        }
+
+        @Test
+        void sortKeepsNullResultsNullAndEmptyEmpty() {
+            Run nullResults = emptyRun();
+            Run emptyResults = emptyRun();
+            emptyResults.setResults(new ArrayList<>());
+
+            SarifUtil.sortResults(new SarifReport().withRuns(Arrays.asList(nullResults, emptyResults)));
+
+            assertNull(nullResults.getResults());
+            assertTrue(emptyResults.getResults().isEmpty());
+        }
+
+        @Test
+        void sortedLeavesTheGivenCollectionAlone() {
+            Result a = labeled("a", "a.java", 1, 100);
+            Result z = labeled("z", "z.java", 1, 900);
+            List<Result> input = new ArrayList<>(Arrays.asList(z, a));
+
+            List<Result> sorted = ResultOrder.sorted(input);
+
+            assertNotSame(input, sorted);
+            assertEquals(Arrays.asList("z", "a"), labels(input));
+            assertEquals(Arrays.asList("a", "z"), labels(sorted));
+        }
+
+        @Test
+        void anImmutableResultsListCanBeSorted() {
+            Run run = emptyRun();
+            run.setResults(Collections.singletonList(labeled("only", "a.java", 1, 100)));
+
+            SarifUtil.sortResults(reportOf(run));
+
+            assertEquals(Collections.singletonList("only"), labels(results(reportOf(run))));
         }
 
         @Test
         void aResultsListStartingWithNullIsOrderedAndKeepsItsNulls() throws IOException {
             Run run = emptyRun();
             run.setResults(new ArrayList<>(Arrays.asList(
-                    null, labeled("z", "z.java", 1, 1), labeled("a", "a.java", 1, 1))));
+                    null, labeled("z", "z.java", 1, 900), labeled("a", "a.java", 1, 100))));
+            SarifReport report = reportOf(run);
 
-            String written = write(reportOf(run));
+            SarifUtil.sortResults(report);
+            String written = write(report);
 
-            // Ordering the array must neither skip the leading null nor drop it from the output.
             assertLabelOrder(written, "a", "z");
             assertEquals(Arrays.asList("a", "z", null),
                     labels(results(SarifUtil.readReport(new StringReader(written), true))));
         }
 
         @Test
-        void writingDoesNotReorderOrReplaceTheCallersList() throws IOException {
-            SarifReport report = readReport();
-            List<Result> results = results(report);
-            List<Result> asProduced = new ArrayList<>(results);
-
-            write(report);
-
-            assertSame(results, results(report));
-            assertEquals(asProduced, results);
-        }
-
-        @Test
         void readingDoesNotReorder() throws IOException {
             Run run = emptyRun();
             run.setResults(new ArrayList<>(Arrays.asList(
-                    labeled("z", "z.java", 1, 1), labeled("a", "a.java", 1, 1))));
-            // Written output is [a(a.java), z(z.java)]. Swapping the two uris leaves the file order untouched but
-            // makes it contradict the canonical order, so a reader that sorted would hand back [z, a] instead.
-            String outOfOrder = write(reportOf(run)).replace("a.java", "TMP").replace("z.java", "a.java")
-                    .replace("TMP", "z.java");
+                    labeled("z", "z.java", 1, 900), labeled("a", "a.java", 1, 100))));
 
-            SarifReport reparsed = SarifUtil.readReport(new StringReader(outOfOrder), true);
+            SarifReport reparsed = SarifUtil.readReport(new StringReader(write(reportOf(run))), true);
 
-            assertEquals(Arrays.asList("a", "z"), labels(results(reparsed)));
-        }
-
-        @Test
-        void writeThenReadThenWriteIsStable() throws IOException {
-            String once = write(readReport());
-            String twice = write(SarifUtil.readReport(new StringReader(once), true));
-
-            assertEquals(once, twice);
+            assertEquals(Arrays.asList("z", "a"), labels(results(reparsed)));
         }
     }
 
     // ------------------------------------------------------------------------------------------------------
-    // The behaviour this exists for: a small change to the code is a small change to the report.
+    // The behaviour this order exists for: a small change to the code is a small change to the report.
     // ------------------------------------------------------------------------------------------------------
 
     @Nested
@@ -558,14 +608,14 @@ public class ResultOrderTest {
         @Test
         void addedProblemIsTheOnlyChangeInTheFile() throws IOException {
             SarifReport before = readReport();
-            String writtenBefore = write(before);
+            String writtenBefore = sortAndWrite(before);
 
             SarifReport after = readReport();
             List<Result> results = results(after);
             results.add(labeled("added", uriOfMedianProblem(results), 1, 1));
             Collections.shuffle(results, new Random(7));
 
-            assertOneContiguousBlockDiffers(writtenBefore, write(after));
+            assertOneContiguousBlockDiffers(writtenBefore, sortAndWrite(after));
         }
 
         @Test
@@ -573,37 +623,37 @@ public class ResultOrderTest {
             SarifReport before = readReport();
             List<Result> results = results(before);
             Result doomed = ResultOrder.sorted(results).get(results.size() / 2);
-            String writtenBefore = write(before);
+            String writtenBefore = sortAndWrite(before);
 
             SarifReport after = readReport();
             List<Result> remaining = results(after);
-            remaining.removeIf(r -> r.equals(doomed));
+            remaining.removeIf(result -> result.equals(doomed));
             Collections.shuffle(remaining, new Random(11));
 
-            assertOneContiguousBlockDiffers(write(after), writtenBefore);
+            assertOneContiguousBlockDiffers(sortAndWrite(after), writtenBefore);
         }
 
         /**
-         * Inserting lines above a problem shifts its {@code startLine} and {@code charOffset} but must not move it
-         * within the array — that is the property the location keys exist for.
+         * Inserting lines above a problem shifts its offset but must not move it within the array — that is the
+         * property the location keys exist for.
          */
         @Test
         void shiftingAWholeFileKeepsEveryResultInItsSlot() throws IOException {
             SarifReport report = readReport();
             List<Result> before = ResultOrder.sorted(results(report));
-            String busiest = uriOfMedianProblem(results(report));
+            String shifted = uriOfMedianProblem(results(report));
 
             for (Result result : results(report)) {
-                Region region = result.getLocations().get(0).getPhysicalLocation().getRegion();
-                if (busiest.equals(result.getLocations().get(0).getPhysicalLocation()
-                        .getArtifactLocation().getUri())) {
-                    if (region.getStartLine() != null) region.setStartLine(region.getStartLine() + 5);
-                    if (region.getCharOffset() != null) region.setCharOffset(region.getCharOffset() + 180);
-                }
+                PhysicalLocation location = result.getLocations().get(0).getPhysicalLocation();
+                if (!shifted.equals(location.getArtifactLocation().getUri())) continue;
+                Region region = location.getRegion();
+                if (region == null) continue;
+                if (region.getStartLine() != null) region.setStartLine(region.getStartLine() + 5);
+                if (region.getCharOffset() != null) region.setCharOffset(region.getCharOffset() + 180);
             }
-            List<Result> after = ResultOrder.sorted(results(report));
 
-            assertEquals(labels(before), labels(after), "the shifted file's problems changed places");
+            assertEquals(labels(before), labels(ResultOrder.sorted(results(report))),
+                    "the shifted file's problems changed places");
         }
     }
 
@@ -752,7 +802,7 @@ public class ResultOrderTest {
             populated.setResults(new ArrayList<>(Arrays.asList(
                     labeled("z", "z.java", 1, 900), labeled("a", "a.java", 1, 100))));
 
-            String written = write(new SarifReport().withRuns(Arrays.asList(emptyRun(), populated)));
+            String written = sortAndWrite(new SarifReport().withRuns(Arrays.asList(emptyRun(), populated)));
 
             assertLabelOrder(written, "a", "z");
         }
@@ -876,6 +926,12 @@ public class ResultOrderTest {
         return "eq-" + Objects.hash(result.getRuleId(), location.getArtifactLocation().getUri(),
                 region == null ? null : region.getStartLine(), region == null ? null : region.getCharOffset(),
                 labelOf(result));
+    }
+
+    /** Sorting and writing are separate steps; the tests below always want both. */
+    private static String sortAndWrite(SarifReport report) throws IOException {
+        SarifUtil.sortResults(report);
+        return write(report);
     }
 
     private static String write(SarifReport report) throws IOException {

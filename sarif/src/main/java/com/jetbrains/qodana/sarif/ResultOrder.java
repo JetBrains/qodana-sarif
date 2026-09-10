@@ -14,15 +14,18 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Sorts a {@code results} array by {@code uri}, {@code charOffset}, {@code ruleId} and {@code equalIndicator/v1},
- * so that the same code always gives the same report and adding one problem adds one block to the diff instead of
- * shuffling the whole file.
+ * The order that makes two analyses of the same code serialize identically
+ * — {@code uri}, {@code charOffset}, {@code ruleId}, {@code equalIndicator/v1}.
  */
 public final class ResultOrder {
     private static final Comparator<String> TEXT = Comparator.nullsFirst(Comparator.naturalOrder());
     private static final Comparator<Integer> NUMBER = Comparator.nullsFirst(Comparator.naturalOrder());
 
-    /** Content-derived order over results. Tolerates {@code null} results, which sort last */
+    /**
+     * Content-derived order over results: {@code uri}, then {@code charOffset}, then {@code ruleId}, then
+     * {@code equalIndicator/v1}. A missing value sorts before any present one, and a {@code null} result sorts last.
+     * Results that no key can separate compare equal, so a stable sort leaves them in the order they came.
+     */
     public static final Comparator<Result> CANONICAL = Comparator.nullsLast(
             Comparator.comparing(ResultOrder::uri, TEXT)
                     .thenComparing(ResultOrder::charOffset, NUMBER)
@@ -32,7 +35,7 @@ public final class ResultOrder {
     private ResultOrder() {
     }
 
-    /** @return a new list holding {@code results} in {@link #CANONICAL} order */
+    /** @return a new list holding {@code results} in {@link #CANONICAL} order, or {@code null} for {@code null} input. */
     public static List<Result> sorted(Collection<Result> results) {
         if (results == null) return null;
         List<Result> sorted = new ArrayList<>(results);
