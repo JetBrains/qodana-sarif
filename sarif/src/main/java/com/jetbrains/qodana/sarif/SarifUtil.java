@@ -3,6 +3,7 @@ package com.jetbrains.qodana.sarif;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.jetbrains.qodana.sarif.model.ExternalProperties;
 import com.jetbrains.qodana.sarif.model.PropertyBag;
 import com.jetbrains.qodana.sarif.model.Result;
 import com.jetbrains.qodana.sarif.model.Run;
@@ -81,6 +82,41 @@ public class SarifUtil {
         return new SarifReport().withRuns(Collections.singletonList(run));
     }
 
+    /** Orders every results array in {@code report} by {@link ResultOrder#CANONICAL}. */
+    public static void sortResults(SarifReport report) {
+        sortResults(report, ResultOrder.CANONICAL);
+    }
+
+    /**
+     * Orders every results array in {@code report} — the results of each run and of each inline external property
+     * file — by {@code order}, which must not be {@code null}; use {@link #sortResults(SarifReport)} for the
+     * canonical one. Writing never reorders anything, so call this first if the order matters.
+     */
+    public static void sortResults(SarifReport report, Comparator<Result> order) {
+        Objects.requireNonNull(order, "order");
+        if (report == null) return;
+        if (report.getRuns() != null) {
+            for (Run run : report.getRuns()) {
+                if (run == null) continue;
+                run.setResults(sorted(run.getResults(), order));
+            }
+        }
+        if (report.getInlineExternalProperties() != null) {
+            for (ExternalProperties external : report.getInlineExternalProperties()) {
+                if (external == null) continue;
+                external.setResults(sorted(external.getResults(), order));
+            }
+        }
+    }
+
+    private static List<Result> sorted(Collection<Result> results, Comparator<Result> order) {
+        if (results == null) return null;
+        List<Result> sorted = new ArrayList<>(results);
+        sorted.sort(order);
+        return sorted;
+    }
+
+    /** Writes {@code report} exactly as it stands; see {@link #sortResults} to order it first. */
     public static void writeReport(Writer writer, SarifReport report) {
         Gson gson = createGson();
         gson.toJson(report, writer);
