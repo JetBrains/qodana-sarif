@@ -35,10 +35,29 @@ internal class IdentitySet<T> private constructor(
     }
 }
 
+/** * A count of results per key, carrying the cloud ids among the counted results. */
 internal class Counter<T> {
     private val underlying: MutableMap<T, Int> = mutableMapOf()
+    private val cloudIdsMap: MutableMap<T, MutableList<Any>> = mutableMapOf()
 
     operator fun get(key: T) = underlying.getOrDefault(key, 0)
     fun increment(key: T) = underlying.compute(key) { _, o -> (o ?: 0).inc() }!!
     fun decrement(key: T) = underlying.compute(key) { _, o -> (o ?: 0).dec() }!!
+
+    /** Registers [cloudId]. A null id registers nothing. */
+    fun addCloudId(key: T, cloudId: Any?) {
+        if (cloudId != null) cloudIdsMap.getOrPut(key) { mutableListOf() }.add(cloudId)
+    }
+
+    /**
+     * Consumes one count of [key] and returns the cloud id that comes with it, if any.
+     *
+     * Ids are handed out from the end: a caller that keeps counting down over the registered results consumes them in
+     * order, so it is the last ones that the count runs out on, and only their ids are free.
+     */
+    fun getCloudId(key: T): Any? {
+        val stillCounted = decrement(key)
+        val listOfCloudIds = cloudIdsMap[key] ?: return null
+        return if (listOfCloudIds.size > stillCounted) listOfCloudIds.removeAt(listOfCloudIds.lastIndex) else null
+    }
 }
