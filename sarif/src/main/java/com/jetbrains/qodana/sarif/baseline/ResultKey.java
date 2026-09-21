@@ -146,7 +146,7 @@ public class ResultKey {
     public int hashLogicalLocation(LogicalLocation location) {
         if (location == null) return 0;
         int hash = 1;
-        hash = ((hash * 31) + ((location.getName() == null) ? 0 : location.getName().hashCode()));
+        hash = ((hash * 31) + ((location.getFullyQualifiedName() == null) ? 0 : location.getFullyQualifiedName().hashCode()));
         hash = ((hash * 31) + ((location.getKind() == null) ? 0 : location.getKind().hashCode()));
         return hash;
     }
