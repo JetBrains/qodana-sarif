@@ -45,7 +45,7 @@ internal class Counter<T> {
     fun decrement(key: T) = underlying.compute(key) { _, o -> (o ?: 0).dec() }!!
 
     /** Registers [cloudId]. A null id registers nothing. */
-    fun addCloudId(key: T, cloudId: Any?) {
+    fun pushCloudId(key: T, cloudId: Any?) {
         if (cloudId != null) cloudIdsMap.getOrPut(key) { mutableListOf() }.add(cloudId)
     }
 
@@ -55,7 +55,7 @@ internal class Counter<T> {
      * Ids are handed out from the end: a caller that keeps counting down over the registered results consumes them in
      * order, so it is the last ones that the count runs out on, and only their ids are free.
      */
-    fun getCloudId(key: T): Any? {
+    fun popCloudId(key: T): Any? {
         val stillCounted = decrement(key)
         val listOfCloudIds = cloudIdsMap[key] ?: return null
         return if (listOfCloudIds.size > stillCounted) listOfCloudIds.removeAt(listOfCloudIds.lastIndex) else null

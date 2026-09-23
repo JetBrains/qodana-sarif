@@ -50,7 +50,7 @@ internal fun applyBaselineOldAlg(report: Run, baseline: Run, options: Options, s
                     if (!options.wasChecked.apply(result)) {
                         state.put(result, BaselineState.UNCHANGED)
                     } else {
-                        baselineCounter.addCloudId(ResultKey(result), result.cloudId())
+                        baselineCounter.pushCloudId(ResultKey(result), result.cloudId())
                         add(result)
                     }
                 }
@@ -64,7 +64,7 @@ internal fun applyBaselineOldAlg(report: Run, baseline: Run, options: Options, s
         if (inBaseline <= 0) {
             state.put(result, BaselineState.NEW)
         } else {
-            state.put(result, BaselineState.UNCHANGED, cloudId = baselineCounter.getCloudId(key))
+            state.put(result, BaselineState.UNCHANGED, cloudId = baselineCounter.popCloudId(key))
         }
     }
 
