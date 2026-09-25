@@ -295,7 +295,7 @@ public class BaselineTest {
 
         Set<LogicalLocation> logicalLocations =
                 report.getRuns().get(0).getResults().get(0).getLocations().get(0).getLogicalLocations();
-        logicalLocations.stream().findFirst().get().withName("new name");
+        logicalLocations.stream().findFirst().get().withFullyQualifiedName("new name");
         doTest(report, baseline, 0, 1, 1, INCLUDE_ABSENT);
     }
 
@@ -326,7 +326,7 @@ public class BaselineTest {
                                         .withArtifactLocation(new ArtifactLocation().withUri("path/file.txt"))
                                 )
                                 .withLogicalLocations(
-                                        singleton(new LogicalLocation().withName("name").withKind("module"))
+                                        singleton(new LogicalLocation().withFullyQualifiedName("name").withKind("module"))
                                 )
                 ));
     }

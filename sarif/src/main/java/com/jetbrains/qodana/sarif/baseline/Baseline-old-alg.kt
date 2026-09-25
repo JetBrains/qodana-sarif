@@ -45,11 +45,12 @@ internal fun applyBaselineOldAlg(report: Run, baseline: Run, options: Options, s
 
                 if (removed) {
                     //leads to eliminating problems with the same hash
-                    state.put(matchedResults.first(), BaselineState.UNCHANGED)
+                    state.put(matchedResults.first(), BaselineState.UNCHANGED, cloudId = result.cloudId())
                 } else {
                     if (!options.wasChecked.apply(result)) {
                         state.put(result, BaselineState.UNCHANGED)
                     } else {
+                        baselineCounter.pushCloudId(ResultKey(result), result.cloudId())
                         add(result)
                     }
                 }
@@ -63,8 +64,7 @@ internal fun applyBaselineOldAlg(report: Run, baseline: Run, options: Options, s
         if (inBaseline <= 0) {
             state.put(result, BaselineState.NEW)
         } else {
-            baselineCounter.decrement(key)
-            state.put(result, BaselineState.UNCHANGED)
+            state.put(result, BaselineState.UNCHANGED, cloudId = baselineCounter.popCloudId(key))
         }
     }
 

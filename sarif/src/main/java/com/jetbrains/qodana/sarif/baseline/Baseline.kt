@@ -28,7 +28,7 @@ private fun Result.uniqueResultIndicator(): String {
  * matched it under the same `cloudId` key, so the id travels with the problem across runs rather than being
  * match metadata: any result carrying one is the same Cloud problem.
  */
-private fun Result.cloudId(): Any? = properties?.get("cloudId")
+internal fun Result.cloudId(): Any? = properties?.get("cloudId")
 
 /** The presence of these hashes identifies a new-analyzer report, whereas their absence signifies a legacy baseline. */
 private fun Result.hasHash(key: String): Boolean =
