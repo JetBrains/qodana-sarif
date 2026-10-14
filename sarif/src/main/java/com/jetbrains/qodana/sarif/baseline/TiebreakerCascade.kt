@@ -5,24 +5,26 @@ import com.jetbrains.qodana.sarif.model.Result
 import java.util.IdentityHashMap
 import kotlin.math.abs
 
-/** Collision Resolver Signals */
-private val SIGNALS = arrayOf(
-    "contextSnippetSimilarity",
-    "snippet",
-    "enclosingScope",
-    "columnDelta",
-    "lineDelta",
-)
-
 private const val PRECISION = 1e-9
-/** Index of the context-similarity signal in [SIGNALS]  */
-private const val CONTEXT_INDEX = 0
 private const val SIMILARITY_THRESHOLD = 0.15
+
+/**
+ * Collision resolver signals, in priority order. Every entry but [FALLBACK] is one [MatchScore] component (by ordinal);
+ * [FALLBACK] names a tie no signal breaks. Being last, it lets phases trust "up to signal X" via enum order.
+ */
+internal enum class Signal(val label: String, val tolerance: Double = PRECISION) {
+    CONTEXT_SNIPPET_SIMILARITY("contextSnippetSimilarity", SIMILARITY_THRESHOLD),
+    SNIPPET("snippet"),
+    ENCLOSING_SCOPE("enclosingScope"),
+    COLUMN_DELTA("columnDelta"),
+    LINE_DELTA("lineDelta"),
+    FALLBACK("fallback"),
+}
 
 /**
  * An absolute, order-independent quality of a single (report, baseline) pair, used both to rank candidates
  * for global assignment and to name the signal that decided a contest. Components are the per-signal values
- * in [SIGNALS] order, compared lexicographically (higher is better).
+ * in [Signal] order, compared lexicographically (higher is better).
  */
 internal class MatchScore(@JvmField val components: DoubleArray) : Comparable<MatchScore> {
 
@@ -38,17 +40,16 @@ internal class MatchScore(@JvmField val components: DoubleArray) : Comparable<Ma
     }
 
     /**
-     * The highest-priority signal where this score strictly beats [rival] (exceeding tolerance).
-     * Returns `null` if no rival exists, or `"fallback"` if no signal decisively breaks the tie.
+     * The highest-priority signal where this score strictly beats [rival] (exceeding its tolerance).
+     * Returns `null` if no rival exists, or [Signal.FALLBACK] if no signal decisively breaks the tie.
      */
-    fun decidingSignalAgainst(rival: MatchScore?): String? {
+    fun decidingSignalAgainst(rival: MatchScore?): Signal? {
         if (rival == null) return null
         for (i in components.indices) {
-            val tolerance = if (i == CONTEXT_INDEX) SIMILARITY_THRESHOLD else PRECISION
-            val diff = components[i] - rival.components[i]
-            if (diff > tolerance) return SIGNALS[i]
+            val signal = Signal.entries[i]
+            if (components[i] - rival.components[i] > signal.tolerance) return signal
         }
-        return "fallback"
+        return Signal.FALLBACK
     }
 }
 
@@ -117,7 +118,7 @@ internal object TiebreakerCascade {
     fun score(a: Result, b: Result): MatchScore = score(ResultFeatures(a), ResultFeatures(b))
 
     /**
-     * Absolute quality of a single (report, baseline) pair. Component order mirrors [SIGNALS] so the
+     * Absolute quality of a single (report, baseline) pair. Component order mirrors [Signal] so the
      * lexicographic comparison reproduces the tiebreaker priority without depending on a candidate set.
      */
     fun score(a: ResultFeatures, b: ResultFeatures): MatchScore = MatchScore(

@@ -4,6 +4,7 @@ import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.EQUAL_INDICATOR
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SHIFT_TOLERANT_INDICATOR
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.MOVE_AND_REFACTOR_TOLERANT_INDICATOR
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR
+import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SCOPE_AND_SHAPE_TOLERANT_INDICATOR
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.Options
 import com.jetbrains.qodana.sarif.model.Result
 import com.jetbrains.qodana.sarif.model.Result.BaselineState
@@ -113,8 +114,13 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     // equalIndicator is a unique, collision-free key: no scoring or tiebreaking. The remaining hashes can collide
     // on a single result, so each later phase assigns its still-undecided results globally by match quality.
     matchEqualIndicatorPhase(state)
-    for (fingerprintKey in listOf(SHIFT_TOLERANT_INDICATOR, MOVE_AND_REFACTOR_TOLERANT_INDICATOR, EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR)) {
-        matchPhase(fingerprintKey, state)
+    for ((fingerprintKey, weakestTrustedSignal) in listOf(
+        SHIFT_TOLERANT_INDICATOR to Signal.FALLBACK,
+        MOVE_AND_REFACTOR_TOLERANT_INDICATOR to Signal.FALLBACK,
+        EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR to Signal.FALLBACK,
+        SCOPE_AND_SHAPE_TOLERANT_INDICATOR to Signal.ENCLOSING_SCOPE,
+    )) {
+        matchPhase(fingerprintKey, state, weakestTrustedSignal)
     }
 
     state.undecidedFromReport.values.forEach { state.put(it, BaselineState.NEW) }
@@ -149,8 +155,11 @@ private fun matchEqualIndicatorPhase(state: DiffState) {
  * 1:1 pairs are committed directly. The rest are assigned by global greedy-best-first: every contested pairing is
  * scored, then committed strongest-score-first so a weaker pair can never steal a baseline from a stronger one.
  * Matched endpoints are removed from [state]'s pools in place, so the leftovers flow to the next phase.
+ *
+ * A contested pair is committed only if the signal that beats its strongest remaining rival is no weaker than
+ * [weakestTrustedSignal]; otherwise it is left undecided. [Signal.FALLBACK] trusts every outcome, incl. a full tie.
  */
-private fun matchPhase(fingerprintKey: String, state: DiffState) {
+private fun matchPhase(fingerprintKey: String, state: DiffState, weakestTrustedSignal: Signal = Signal.FALLBACK) {
     val matcher = HashMatcher(state.undecidedFromBaseline.values, fingerprintKey)
     val candidates = matcher.candidates(state.undecidedFromReport.values)
     if (candidates.isEmpty()) return
@@ -173,6 +182,7 @@ private fun matchPhase(fingerprintKey: String, state: DiffState) {
     if (candidatesWithCollisions.isEmpty()) return
 
     val featuresOf = ResultFeatures.Cache()
+    val restricted = weakestTrustedSignal < Signal.FALLBACK
 
     // Score every collided edge exactly once; the same scores drive the greedy order and the label.
     val scoreByReportBaseline = IdentityHashMap<Result, IdentityHashMap<Result, MatchScore>>()
@@ -185,29 +195,29 @@ private fun matchPhase(fingerprintKey: String, state: DiffState) {
         .sortedByDescending { it.second }
         .forEach { (candidate, score) ->
             if (candidate.reportResult.uniqueResultIndicator() !in state.undecidedFromReport || candidate.baselineResult.uniqueResultIndicator() !in state.undecidedFromBaseline) return@forEach
-            val suffix = if (state.isMatchedMethodIncluded()) {
-                tiebreakerSuffix(candidate, score, baselinesByReport, scoreByReportBaseline, state)
+            val decidedBy = if (state.isMatchedMethodIncluded() || restricted) {
+                score.decidingSignalAgainst(strongestRivalScore(candidate, baselinesByReport, scoreByReportBaseline, state))
             } else {
-                ""
+                null
             }
+            if (decidedBy != null && decidedBy > weakestTrustedSignal) return@forEach
+            val suffix = if (decidedBy != null && state.isMatchedMethodIncluded()) "+${decidedBy.label}" else ""
             state.commit(candidate.reportResult, candidate.baselineResult, candidate.matchedMethod + suffix)
         }
 }
 
 /**
- * The signal that won the committed pair against the strongest remaining rival.
- * Since matches commit strongest-first, this is always a decisive win (or `""` if no rivals remain).
+ * Score of the strongest baseline still competing with [candidate] for its report, or `null` if none remains.
+ * Since matches commit strongest-first, the committed pair never loses to it.
  */
-private fun tiebreakerSuffix(
+private fun strongestRivalScore(
     candidate: MatchCandidate,
-    committedScore: MatchScore,
     baselinesByReport: IdentityHashMap<Result, MutableList<Result>>,
     scoreByReportBaseline: IdentityHashMap<Result, IdentityHashMap<Result, MatchScore>>,
     state: DiffState,
-): String {
+): MatchScore? {
     val scores = scoreByReportBaseline.getValue(candidate.reportResult)
-    val rivalScore = baselinesByReport.getValue(candidate.reportResult)
+    return baselinesByReport.getValue(candidate.reportResult)
         .filter { it !== candidate.baselineResult && it.uniqueResultIndicator() in state.undecidedFromBaseline }
         .maxOfOrNull { scores.getValue(it) }
-    return committedScore.decidingSignalAgainst(rivalScore)?.let { "+$it" } ?: ""
 }
