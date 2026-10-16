@@ -222,9 +222,9 @@ class TiebreakerCascadeTest {
 
     @Test
     fun `score ranks a content match above mere line proximity`() {
-        val baseline = result(contextSnippet = "a\nb\nPROBLEM\nc\nd", startLine = 100)
-        val contentMatch = result(contextSnippet = "a\nb\nPROBLEM\nc\nd", startLine = 900) // far line, same context
-        val lineMatch = result(contextSnippet = "x\ny\nOTHER\nz\nw", startLine = 101)      // close line, other context
+        val baseline = ResultFeatures(result(contextSnippet = "a\nb\nPROBLEM\nc\nd", startLine = 100))
+        val contentMatch = ResultFeatures(result(contextSnippet = "a\nb\nPROBLEM\nc\nd", startLine = 900)) // far line, same context
+        val lineMatch = ResultFeatures(result(contextSnippet = "x\ny\nOTHER\nz\nw", startLine = 101))      // close line, other context
 
         assertTrue(
             TiebreakerCascade.score(baseline, contentMatch) > TiebreakerCascade.score(baseline, lineMatch),

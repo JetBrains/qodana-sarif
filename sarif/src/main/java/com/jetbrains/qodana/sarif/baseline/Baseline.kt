@@ -114,13 +114,14 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     // equalIndicator is a unique, collision-free key: no scoring or tiebreaking. The remaining hashes can collide
     // on a single result, so each later phase assigns its still-undecided results globally by match quality.
     matchEqualIndicatorPhase(state)
-    for ((fingerprintKey, weakestTrustedSignal) in listOf(
-        SHIFT_TOLERANT_INDICATOR to Signal.FALLBACK,
-        MOVE_AND_REFACTOR_TOLERANT_INDICATOR to Signal.FALLBACK,
-        EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR to Signal.FALLBACK,
-        SCOPE_AND_SHAPE_TOLERANT_INDICATOR to Signal.ENCLOSING_SCOPE,
+    // Every key below can pair unrelated results, so a pair must clear its phase's similarity floor.
+    for ((fingerprintKey, weakestTrustedSignal, similarityFloor) in listOf(
+        Triple(SHIFT_TOLERANT_INDICATOR, Signal.FALLBACK, NO_SIMILARITY_FLOOR),
+        Triple(MOVE_AND_REFACTOR_TOLERANT_INDICATOR, Signal.FALLBACK, SIMILARITY_FLOOR),
+        Triple(EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR, Signal.FALLBACK, SIMILARITY_FLOOR),
+        Triple(SCOPE_AND_SHAPE_TOLERANT_INDICATOR, Signal.ENCLOSING_SCOPE, SIMILARITY_FLOOR),
     )) {
-        matchPhase(fingerprintKey, state, weakestTrustedSignal)
+        matchPhase(fingerprintKey, state, weakestTrustedSignal, similarityFloor)
     }
 
     state.undecidedFromReport.values.forEach { state.put(it, BaselineState.NEW) }
@@ -156,10 +157,17 @@ private fun matchEqualIndicatorPhase(state: DiffState) {
  * scored, then committed strongest-score-first so a weaker pair can never steal a baseline from a stronger one.
  * Matched endpoints are removed from [state]'s pools in place, so the leftovers flow to the next phase.
  *
+ * Every pair is committed only if its own context-snippet similarity reaches [similarityFloor].
+ *
  * A contested pair is committed only if the signal that beats its strongest remaining rival is no weaker than
  * [weakestTrustedSignal]; otherwise it is left undecided. [Signal.FALLBACK] trusts every outcome, incl. a full tie.
  */
-private fun matchPhase(fingerprintKey: String, state: DiffState, weakestTrustedSignal: Signal = Signal.FALLBACK) {
+private fun matchPhase(
+    fingerprintKey: String,
+    state: DiffState,
+    weakestTrustedSignal: Signal,
+    similarityFloor: Double,
+) {
     val matcher = HashMatcher(state.undecidedFromBaseline.values, fingerprintKey)
     val candidates = matcher.candidates(state.undecidedFromReport.values)
     if (candidates.isEmpty()) return
@@ -171,17 +179,17 @@ private fun matchPhase(fingerprintKey: String, state: DiffState, weakestTrustedS
         reportsPerBaseline.merge(baselineResult, 1, Int::plus)
     }
 
+    val featuresOf = ResultFeatures.Cache()
     val candidatesWithCollisions = ArrayList<MatchCandidate>(candidates.size)
     for (c in candidates) {
-        if (baselinesByReport.getValue(c.reportResult).size == 1 && reportsPerBaseline.getValue(c.baselineResult) == 1) {
-            state.commit(c.reportResult, c.baselineResult, c.matchedMethod)
-        } else {
+        if (baselinesByReport.getValue(c.reportResult).size != 1 || reportsPerBaseline.getValue(c.baselineResult) != 1) {
             candidatesWithCollisions.add(c)
+        } else if (featuresOf(c.reportResult).meetsSimilarityFloor(featuresOf(c.baselineResult), similarityFloor)) {
+            state.commit(c.reportResult, c.baselineResult, c.matchedMethod)
         }
     }
     if (candidatesWithCollisions.isEmpty()) return
 
-    val featuresOf = ResultFeatures.Cache()
     val restricted = weakestTrustedSignal < Signal.FALLBACK
 
     // Score every collided edge exactly once; the same scores drive the greedy order and the label.
@@ -195,8 +203,10 @@ private fun matchPhase(fingerprintKey: String, state: DiffState, weakestTrustedS
         .sortedByDescending { it.second }
         .forEach { (candidate, score) ->
             if (candidate.reportResult.uniqueResultIndicator() !in state.undecidedFromReport || candidate.baselineResult.uniqueResultIndicator() !in state.undecidedFromBaseline) return@forEach
+            if (!featuresOf(candidate.reportResult).meetsSimilarityFloor(featuresOf(candidate.baselineResult), similarityFloor)) return@forEach
             val decidedBy = if (state.isMatchedMethodIncluded() || restricted) {
-                score.decidingSignalAgainst(strongestRivalScore(candidate, baselinesByReport, scoreByReportBaseline, state))
+                val rival = strongestRivalScore(candidate, baselinesByReport, scoreByReportBaseline, state)
+                score.decidingSignalAgainst(rival, restricted)
             } else {
                 null
             }
@@ -205,6 +215,15 @@ private fun matchPhase(fingerprintKey: String, state: DiffState, weakestTrustedS
             state.commit(candidate.reportResult, candidate.baselineResult, candidate.matchedMethod + suffix)
         }
 }
+
+/**
+ * Whether the pair's own context-snippet similarity reaches [floor], so the pair may be committed. Passes when the
+ * phase applies no floor, or when a side has no context snippet: an unknown similarity is not a low one.
+ */
+private fun ResultFeatures.meetsSimilarityFloor(baseline: ResultFeatures, floor: Double): Boolean =
+    floor <= NO_SIMILARITY_FLOOR ||
+            contextSnippetLines == null || baseline.contextSnippetLines == null ||
+            TiebreakerCascade.contextSnippetSimilarity(this, baseline) >= floor
 
 /**
  * Score of the strongest baseline still competing with [candidate] for its report, or `null` if none remains.
