@@ -7,18 +7,34 @@ import kotlin.math.abs
 
 private const val PRECISION = 1e-9
 private const val SIMILARITY_THRESHOLD = 0.15
+private const val RESTRICTED_SIMILARITY_THRESHOLD = 0.1
+
+/** Absolute context-snippet similarity a pair must reach to be committed. */
+internal const val SIMILARITY_FLOOR = 0.45
+
+/** No floor: a pair is committed on the hash alone. */
+internal const val NO_SIMILARITY_FLOOR = 0.0
 
 /**
  * Collision resolver signals, in priority order. Every entry but [FALLBACK] is one [MatchScore] component (by ordinal);
  * [FALLBACK] names a tie no signal breaks. Being last, it lets phases trust "up to signal X" via enum order.
+ *
+ * [restrictedTolerance] applies in phases that do not trust the whole cascade: they skip contests that later signals
+ * would decide, so a signal there may need a smaller margin to count as decisive.
  */
-internal enum class Signal(val label: String, val tolerance: Double = PRECISION) {
-    CONTEXT_SNIPPET_SIMILARITY("contextSnippetSimilarity", SIMILARITY_THRESHOLD),
+internal enum class Signal(
+    val label: String,
+    private val tolerance: Double = PRECISION,
+    private val restrictedTolerance: Double = tolerance,
+) {
+    CONTEXT_SNIPPET_SIMILARITY("contextSnippetSimilarity", SIMILARITY_THRESHOLD, RESTRICTED_SIMILARITY_THRESHOLD),
     SNIPPET("snippet"),
     ENCLOSING_SCOPE("enclosingScope"),
     COLUMN_DELTA("columnDelta"),
     LINE_DELTA("lineDelta"),
-    FALLBACK("fallback"),
+    FALLBACK("fallback");
+
+    fun tolerance(restricted: Boolean): Double = if (restricted) restrictedTolerance else tolerance
 }
 
 /**
@@ -42,12 +58,13 @@ internal class MatchScore(@JvmField val components: DoubleArray) : Comparable<Ma
     /**
      * The highest-priority signal where this score strictly beats [rival] (exceeding its tolerance).
      * Returns `null` if no rival exists, or [Signal.FALLBACK] if no signal decisively breaks the tie.
+     * [restricted] selects each signal's tolerance for a phase that does not trust the whole cascade.
      */
-    fun decidingSignalAgainst(rival: MatchScore?): Signal? {
+    fun decidingSignalAgainst(rival: MatchScore?, restricted: Boolean = false): Signal? {
         if (rival == null) return null
         for (i in components.indices) {
             val signal = Signal.entries[i]
-            if (components[i] - rival.components[i] > signal.tolerance) return signal
+            if (components[i] - rival.components[i] > signal.tolerance(restricted)) return signal
         }
         return Signal.FALLBACK
     }
@@ -62,7 +79,7 @@ internal class ResultFeatures(val result: Result) {
     private val contextStartLine: Int? = physicalLocation?.contextRegion?.startLine
     private val contextSimilarityCache = IdentityHashMap<ResultFeatures, Double>()
 
-    val contextSnippetText: String? = physicalLocation?.contextRegion?.snippet?.text
+    private val contextSnippetText: String? = physicalLocation?.contextRegion?.snippet?.text
     val snippetText: String? = physicalLocation?.region?.snippet?.text
     val enclosingScopeName: String? =
         result.partialFingerprints?.getLastValue(BaselineCalculation.ENCLOSING_SCOPE_INDICATOR)
@@ -115,8 +132,6 @@ internal object TiebreakerCascade {
      */
     private const val PROBLEM_LINE_WEIGHT = 0.8
 
-    fun score(a: Result, b: Result): MatchScore = score(ResultFeatures(a), ResultFeatures(b))
-
     /**
      * Absolute quality of a single (report, baseline) pair. Component order mirrors [Signal] so the
      * lexicographic comparison reproduces the tiebreaker priority without depending on a candidate set.
@@ -134,7 +149,7 @@ internal object TiebreakerCascade {
     private fun eqScore(x: String?, y: String?): Double = if (x != null && x == y) 1.0 else 0.0
 
     /** Similarity of two context snippets compared line-by-line (LCS over trimmed lines) */
-    private fun contextSnippetSimilarity(a: ResultFeatures, b: ResultFeatures): Double =
+    fun contextSnippetSimilarity(a: ResultFeatures, b: ResultFeatures): Double =
         a.contextSnippetSimilarityTo(b) { computeContextSnippetSimilarity(a, b) }
 
     private fun computeContextSnippetSimilarity(a: ResultFeatures, b: ResultFeatures): Double {
