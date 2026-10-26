@@ -1,5 +1,5 @@
 version: "1.0"
-projectJDK: "1.8"
+projectJDK: "17"
 profile:
   name: qodana.recommended
 include:
