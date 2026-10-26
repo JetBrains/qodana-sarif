@@ -17,6 +17,16 @@ public class BaselineCalculation {
     public static final String EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR = "extractionAndRefactorTolerantIndicator";
     public static final String ENCLOSING_SCOPE_INDICATOR = "enclosingScopeIndicator";
 
+    /** Run-level property of a baseline file: set to {@link #CLOUD} by the linter when the file came from Qodana Cloud. */
+    public static final String BASELINE_ORIGIN = "baselineOrigin";
+    /**
+     * Run-level property of a report: the baseline that was applied to it, {@link #CLOUD} or {@link #LOCAL}; absent when
+     * none was. Deliberately not {@link #BASELINE_ORIGIN}, so a report reused as the next baseline is a local one.
+     */
+    public static final String BASELINE_SOURCE = "baselineSource";
+    public static final String CLOUD = "CLOUD";
+    public static final String LOCAL = "LOCAL";
+
     private int newResults = 0;
     private int absentResults = 0;
     private int unchangedResults = 0;
@@ -80,6 +90,7 @@ public class BaselineCalculation {
     }
 
     private void applyBaseline(Run run, Run baseline) {
+        setBaselineSource(run, baseline);
         DiffState state = BaselineKt.applyBaseline(run, baseline, options);
         unchangedResults += state.getUnchanged();
         newResults += state.getNew();
@@ -91,6 +102,15 @@ public class BaselineCalculation {
             result.setBaselineState(NEW);
             newResults++;
         }
+    }
+
+    private static void setBaselineSource(Run run, Run baseline) {
+        PropertyBag baselineProperties = baseline.getProperties();
+        Object origin = baselineProperties != null ? baselineProperties.get(BASELINE_ORIGIN) : null;
+
+        PropertyBag properties = run.getProperties() != null ? run.getProperties() : new PropertyBag();
+        properties.put(BASELINE_SOURCE, CLOUD.equals(origin) ? CLOUD : LOCAL);
+        run.setProperties(properties);
     }
 
     private String getToolName(Run run) {
