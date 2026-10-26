@@ -8,12 +8,12 @@ plugins {
 group = "com.jetbrains.qodana"
 
 kotlin {
-    jvmToolchain(8)
+    jvmToolchain(17)
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
