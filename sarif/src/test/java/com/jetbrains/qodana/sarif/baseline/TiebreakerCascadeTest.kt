@@ -56,7 +56,7 @@ class TiebreakerCascadeTest {
             .map { it to TiebreakerCascade.score(baselineFeatures, ResultFeatures(it)) }
             .sortedByDescending { it.second }
         val runnerUp = ranked.getOrNull(1)?.second
-        return Resolution(ranked[0].first, ranked[0].second.decidingSignalAgainst(runnerUp)?.label)
+        return Resolution(ranked[0].first, ranked[0].second.decidingSignalAgainst(runnerUp))
     }
 
     @Test
