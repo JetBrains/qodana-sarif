@@ -10,8 +10,8 @@ private val SIGNALS = arrayOf(
     "contextSnippetSimilarity",
     "snippet",
     "enclosingScope",
-    "columnDelta",
     "lineDelta",
+    "columnDelta",
 )
 
 private const val PRECISION = 1e-9
@@ -129,8 +129,8 @@ internal object TiebreakerCascade {
             contextSnippetSimilarity(a, b),
             eqScore(a.snippetText, b.snippetText),
             eqScore(a.enclosingScopeName, b.enclosingScopeName),
-            closeness(a.startColumn, b.startColumn),
             closeness(a.startLine, b.startLine),
+            closeness(a.startColumn, b.startColumn),
         )
     )
 
