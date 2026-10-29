@@ -29,11 +29,13 @@ jobs:
           lfs: 'true'
       - uses: actions/setup-java@v5
         with:
-          java-version: '17'
-          distribution: 'adopt'
+          java-version: |
+            8
+            17
+          distribution: 'temurin'
           cache: 'gradle'
       - name: Run tests
-        run: ./gradlew test
+        run: ./gradlew test -Porg.gradle.java.installations.fromEnv=JAVA_HOME_8_X64
 
   docs:
     if: github.ref == 'refs/heads/main'
@@ -45,11 +47,14 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5
         with:
-          java-version: '17'
-          distribution: 'adopt'
+          # JDK 8 for the build's toolchain (buildSrc + conventions), JDK 17 (last) runs Gradle
+          java-version: |
+            8
+            17
+          distribution: 'temurin'
           cache: 'gradle'
       - name: Run Dokka
-        run: ./gradlew dokkaHtml
+        run: ./gradlew dokkaHtml -Porg.gradle.java.installations.fromEnv=JAVA_HOME_8_X64
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
