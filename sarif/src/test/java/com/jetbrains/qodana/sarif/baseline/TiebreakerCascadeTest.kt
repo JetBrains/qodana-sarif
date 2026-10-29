@@ -117,15 +117,15 @@ class TiebreakerCascadeTest {
     }
 
     @Test
-    fun `columnDelta runs before lineDelta when both could discriminate`() {
-        // Candidate with the closest column wins even though another candidate is on a closer line.
+    fun `lineDelta runs before columnDelta when both could discriminate`() {
+        // Candidate with the closest line wins even though another candidate is with a closer column.
         val res = resolve(
             result(startLine = 100, startColumn = 10),
-            result(startLine = 130, startColumn = 10),  // far line, exact column
-            result(startLine = 101, startColumn = 80),  // close line, far column
+            result(startLine = 100, startColumn = 80), // far column, exact line
+            result(startLine = 130, startColumn = 11),  // close column, far line
         )!!
-        assertEquals("columnDelta", res.resolvedBy)
-        assertEquals(130, res.result.locations.first().physicalLocation.region.startLine)
+        assertEquals("lineDelta", res.resolvedBy)
+        assertEquals(100, res.result.locations.first().physicalLocation.region.startLine)
     }
 
     @Test
