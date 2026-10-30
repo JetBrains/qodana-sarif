@@ -4,11 +4,18 @@ import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.EQUAL_INDICATOR
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SHIFT_TOLERANT_INDICATOR
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.MOVE_AND_REFACTOR_TOLERANT_INDICATOR
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR
+import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SCOPE_AND_SHAPE_TOLERANT_INDICATOR
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.Options
 import com.jetbrains.qodana.sarif.model.Result
 import com.jetbrains.qodana.sarif.model.Result.BaselineState
 import com.jetbrains.qodana.sarif.model.Run
 import java.util.IdentityHashMap
+
+/**
+ * Absolute context-snippet similarity a pair must reach to be committed in a phase whose key can pair unrelated
+ * results.
+ */
+private const val SIMILARITY_FLOOR = 0.45
 
 /** Non-null results that are not already marked absent. */
 private fun Run.undecidedResults(): List<Result> =
@@ -113,8 +120,16 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     // equalIndicator is a unique, collision-free key: no scoring or tiebreaking. The remaining hashes can collide
     // on a single result, so each later phase assigns its still-undecided results globally by match quality.
     matchEqualIndicatorPhase(state)
-    for (fingerprintKey in listOf(SHIFT_TOLERANT_INDICATOR, MOVE_AND_REFACTOR_TOLERANT_INDICATOR, EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR)) {
-        matchPhase(fingerprintKey, state)
+    // shiftTolerant demands identical content, so it trusts the hash alone. Every key after it can pair unrelated
+    // results, so a pair must clear the similarity floor.
+    val featuresOf = ResultFeatures.Cache()
+    for ((fingerprintKey, similarityFloor) in listOf(
+        SHIFT_TOLERANT_INDICATOR to null,
+        MOVE_AND_REFACTOR_TOLERANT_INDICATOR to SIMILARITY_FLOOR,
+        EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR to SIMILARITY_FLOOR,
+        SCOPE_AND_SHAPE_TOLERANT_INDICATOR to SIMILARITY_FLOOR,
+    )) {
+        matchPhase(fingerprintKey, state, featuresOf, similarityFloor)
     }
 
     state.undecidedFromReport.values.forEach { state.put(it, BaselineState.NEW) }
@@ -146,13 +161,23 @@ private fun matchEqualIndicatorPhase(state: DiffState) {
 /**
  * Resolves one matching phase for a key that can collide on a single result.
  *
- * 1:1 pairs are committed directly. The rest are assigned by global greedy-best-first: every contested pairing is
- * scored, then committed strongest-score-first so a weaker pair can never steal a baseline from a stronger one.
- * Matched endpoints are removed from [state]'s pools in place, so the leftovers flow to the next phase.
+ * A pair whose own context-snippet similarity is below [similarityFloor] (`null` for no floor) is dropped first, so
+ * it can neither be committed nor make its endpoints look contested. Of the pairs that remain, those sharing no
+ * endpoint with another are committed directly. The rest are assigned by global greedy-best-first: every contested
+ * pairing is scored, then committed strongest-score-first so a weaker pair can never steal a baseline from a
+ * stronger one. Matched endpoints are removed from [state]'s pools in place, so the leftovers flow to the next phase.
  */
-private fun matchPhase(fingerprintKey: String, state: DiffState) {
+private fun matchPhase(
+    fingerprintKey: String,
+    state: DiffState,
+    featuresOf: ResultFeatures.Cache,
+    similarityFloor: Double?,
+) {
     val matcher = HashMatcher(state.undecidedFromBaseline.values, fingerprintKey)
-    val candidates = matcher.candidates(state.undecidedFromReport.values)
+    val allCandidates = matcher.candidates(state.undecidedFromReport.values)
+    val candidates = if (similarityFloor == null) allCandidates else allCandidates.filter {
+        featuresOf(it.reportResult).meetsSimilarityFloor(featuresOf(it.baselineResult), similarityFloor)
+    }
     if (candidates.isEmpty()) return
 
     val baselinesByReport = IdentityHashMap<Result, MutableList<Result>>()
@@ -164,15 +189,13 @@ private fun matchPhase(fingerprintKey: String, state: DiffState) {
 
     val candidatesWithCollisions = ArrayList<MatchCandidate>(candidates.size)
     for (c in candidates) {
-        if (baselinesByReport.getValue(c.reportResult).size == 1 && reportsPerBaseline.getValue(c.baselineResult) == 1) {
-            state.commit(c.reportResult, c.baselineResult, c.matchedMethod)
-        } else {
+        if (baselinesByReport.getValue(c.reportResult).size != 1 || reportsPerBaseline.getValue(c.baselineResult) != 1) {
             candidatesWithCollisions.add(c)
+        } else {
+            state.commit(c.reportResult, c.baselineResult, c.matchedMethod)
         }
     }
     if (candidatesWithCollisions.isEmpty()) return
-
-    val featuresOf = ResultFeatures.Cache()
 
     // Score every collided edge exactly once; the same scores drive the greedy order and the label.
     val scoreByReportBaseline = IdentityHashMap<Result, IdentityHashMap<Result, MatchScore>>()
@@ -193,6 +216,15 @@ private fun matchPhase(fingerprintKey: String, state: DiffState) {
             state.commit(candidate.reportResult, candidate.baselineResult, candidate.matchedMethod + suffix)
         }
 }
+
+/**
+ * Whether the pair's own context-snippet similarity reaches [floor], so the pair may be committed. Passes when a side
+ * has no (or only a blank) context snippet: an unknown similarity is not a low one. Consequently, a producer that
+ * never emits `contextRegion` gets no floor at all and relies on its hashes alone.
+ */
+private fun ResultFeatures.meetsSimilarityFloor(baseline: ResultFeatures, floor: Double): Boolean =
+    contextSnippetLines == null || baseline.contextSnippetLines == null ||
+            TiebreakerCascade.contextSnippetSimilarity(this, baseline) >= floor - PRECISION
 
 /**
  * The signal that won the committed pair against the strongest remaining rival.

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
  * Tests for [TiebreakerCascade] in isolation.
  *
  * Filter order:
- *   contextSnippetSimilarity → snippet → enclosingScope → columnDelta → lineDelta.
+ *   contextSnippetSimilarity → snippet → enclosingScope → lineDelta → columnDelta.
  * If all filters tie or yield nothing, `resolvedBy` is "fallback".
  * If there is a single candidate from the start, `resolvedBy` is null.
  */
@@ -117,15 +117,15 @@ class TiebreakerCascadeTest {
     }
 
     @Test
-    fun `columnDelta runs before lineDelta when both could discriminate`() {
-        // Candidate with the closest column wins even though another candidate is on a closer line.
+    fun `lineDelta runs before columnDelta when both could discriminate`() {
+        // Candidate with the closest line wins even though another candidate is with a closer column.
         val res = resolve(
             result(startLine = 100, startColumn = 10),
-            result(startLine = 130, startColumn = 10),  // far line, exact column
-            result(startLine = 101, startColumn = 80),  // close line, far column
+            result(startLine = 100, startColumn = 80), // far column, exact line
+            result(startLine = 130, startColumn = 11),  // close column, far line
         )!!
-        assertEquals("columnDelta", res.resolvedBy)
-        assertEquals(130, res.result.locations.first().physicalLocation.region.startLine)
+        assertEquals("lineDelta", res.resolvedBy)
+        assertEquals(100, res.result.locations.first().physicalLocation.region.startLine)
     }
 
     @Test
@@ -222,9 +222,9 @@ class TiebreakerCascadeTest {
 
     @Test
     fun `score ranks a content match above mere line proximity`() {
-        val baseline = result(contextSnippet = "a\nb\nPROBLEM\nc\nd", startLine = 100)
-        val contentMatch = result(contextSnippet = "a\nb\nPROBLEM\nc\nd", startLine = 900) // far line, same context
-        val lineMatch = result(contextSnippet = "x\ny\nOTHER\nz\nw", startLine = 101)      // close line, other context
+        val baseline = ResultFeatures(result(contextSnippet = "a\nb\nPROBLEM\nc\nd", startLine = 100))
+        val contentMatch = ResultFeatures(result(contextSnippet = "a\nb\nPROBLEM\nc\nd", startLine = 900)) // far line, same context
+        val lineMatch = ResultFeatures(result(contextSnippet = "x\ny\nOTHER\nz\nw", startLine = 101))      // close line, other context
 
         assertTrue(
             TiebreakerCascade.score(baseline, contentMatch) > TiebreakerCascade.score(baseline, lineMatch),

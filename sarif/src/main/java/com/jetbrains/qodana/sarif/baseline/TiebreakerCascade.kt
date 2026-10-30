@@ -10,14 +10,16 @@ private val SIGNALS = arrayOf(
     "contextSnippetSimilarity",
     "snippet",
     "enclosingScope",
-    "columnDelta",
     "lineDelta",
+    "columnDelta",
 )
 
-private const val PRECISION = 1e-9
+/** Tolerance for comparing computed similarities, which carry floating-point noise (e.g. `1 - 0.8` is not `0.2`). */
+internal const val PRECISION = 1e-9
 /** Index of the context-similarity signal in [SIGNALS]  */
 private const val CONTEXT_INDEX = 0
-private const val SIMILARITY_THRESHOLD = 0.15
+/** How far a pair's context similarity must exceed its rival's for context to be named the deciding signal. */
+private const val DECISIVE_CONTEXT_MARGIN = 0.15
 
 /**
  * An absolute, order-independent quality of a single (report, baseline) pair, used both to rank candidates
@@ -44,7 +46,7 @@ internal class MatchScore(@JvmField val components: DoubleArray) : Comparable<Ma
     fun decidingSignalAgainst(rival: MatchScore?): String? {
         if (rival == null) return null
         for (i in components.indices) {
-            val tolerance = if (i == CONTEXT_INDEX) SIMILARITY_THRESHOLD else PRECISION
+            val tolerance = if (i == CONTEXT_INDEX) DECISIVE_CONTEXT_MARGIN else PRECISION
             val diff = components[i] - rival.components[i]
             if (diff > tolerance) return SIGNALS[i]
         }
@@ -61,7 +63,8 @@ internal class ResultFeatures(val result: Result) {
     private val contextStartLine: Int? = physicalLocation?.contextRegion?.startLine
     private val contextSimilarityCache = IdentityHashMap<ResultFeatures, Double>()
 
-    val contextSnippetText: String? = physicalLocation?.contextRegion?.snippet?.text
+    /** A blank context snippet carries no more information than a missing one, so it is treated as missing. */
+    private val contextSnippetText: String? = physicalLocation?.contextRegion?.snippet?.text?.takeUnless(String::isBlank)
     val snippetText: String? = physicalLocation?.region?.snippet?.text
     val enclosingScopeName: String? =
         result.partialFingerprints?.getLastValue(BaselineCalculation.ENCLOSING_SCOPE_INDICATOR)
@@ -114,8 +117,6 @@ internal object TiebreakerCascade {
      */
     private const val PROBLEM_LINE_WEIGHT = 0.8
 
-    fun score(a: Result, b: Result): MatchScore = score(ResultFeatures(a), ResultFeatures(b))
-
     /**
      * Absolute quality of a single (report, baseline) pair. Component order mirrors [SIGNALS] so the
      * lexicographic comparison reproduces the tiebreaker priority without depending on a candidate set.
@@ -125,15 +126,15 @@ internal object TiebreakerCascade {
             contextSnippetSimilarity(a, b),
             eqScore(a.snippetText, b.snippetText),
             eqScore(a.enclosingScopeName, b.enclosingScopeName),
-            closeness(a.startColumn, b.startColumn),
             closeness(a.startLine, b.startLine),
+            closeness(a.startColumn, b.startColumn),
         )
     )
 
     private fun eqScore(x: String?, y: String?): Double = if (x != null && x == y) 1.0 else 0.0
 
     /** Similarity of two context snippets compared line-by-line (LCS over trimmed lines) */
-    private fun contextSnippetSimilarity(a: ResultFeatures, b: ResultFeatures): Double =
+    fun contextSnippetSimilarity(a: ResultFeatures, b: ResultFeatures): Double =
         a.contextSnippetSimilarityTo(b) { computeContextSnippetSimilarity(a, b) }
 
     private fun computeContextSnippetSimilarity(a: ResultFeatures, b: ResultFeatures): Double {
