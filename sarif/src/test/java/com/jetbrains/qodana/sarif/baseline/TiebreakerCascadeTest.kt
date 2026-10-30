@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
  * Tests for [TiebreakerCascade] in isolation.
  *
  * Filter order:
- *   contextSnippetSimilarity → snippet → enclosingScope → columnDelta → lineDelta.
+ *   contextSnippetSimilarity → snippet → enclosingScope → lineDelta → columnDelta.
  * If all filters tie or yield nothing, `resolvedBy` is "fallback".
  * If there is a single candidate from the start, `resolvedBy` is null.
  */
