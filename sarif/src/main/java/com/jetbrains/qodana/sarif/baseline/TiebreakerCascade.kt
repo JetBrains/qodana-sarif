@@ -14,16 +14,12 @@ private val SIGNALS = arrayOf(
     "columnDelta",
 )
 
-private const val PRECISION = 1e-9
+/** Tolerance for comparing computed similarities, which carry floating-point noise (e.g. `1 - 0.8` is not `0.2`). */
+internal const val PRECISION = 1e-9
 /** Index of the context-similarity signal in [SIGNALS]  */
 private const val CONTEXT_INDEX = 0
-private const val SIMILARITY_THRESHOLD = 0.15
-
-/** Absolute context-snippet similarity a pair must reach to be committed. */
-internal const val SIMILARITY_FLOOR = 0.45
-
-/** No floor: a pair is committed on the hash alone. */
-internal const val NO_SIMILARITY_FLOOR = 0.0
+/** How far a pair's context similarity must exceed its rival's for context to be named the deciding signal. */
+private const val DECISIVE_CONTEXT_MARGIN = 0.15
 
 /**
  * An absolute, order-independent quality of a single (report, baseline) pair, used both to rank candidates
@@ -50,7 +46,7 @@ internal class MatchScore(@JvmField val components: DoubleArray) : Comparable<Ma
     fun decidingSignalAgainst(rival: MatchScore?): String? {
         if (rival == null) return null
         for (i in components.indices) {
-            val tolerance = if (i == CONTEXT_INDEX) SIMILARITY_THRESHOLD else PRECISION
+            val tolerance = if (i == CONTEXT_INDEX) DECISIVE_CONTEXT_MARGIN else PRECISION
             val diff = components[i] - rival.components[i]
             if (diff > tolerance) return SIGNALS[i]
         }
@@ -67,7 +63,8 @@ internal class ResultFeatures(val result: Result) {
     private val contextStartLine: Int? = physicalLocation?.contextRegion?.startLine
     private val contextSimilarityCache = IdentityHashMap<ResultFeatures, Double>()
 
-    private val contextSnippetText: String? = physicalLocation?.contextRegion?.snippet?.text
+    /** A blank context snippet carries no more information than a missing one, so it is treated as missing. */
+    private val contextSnippetText: String? = physicalLocation?.contextRegion?.snippet?.text?.takeUnless(String::isBlank)
     val snippetText: String? = physicalLocation?.region?.snippet?.text
     val enclosingScopeName: String? =
         result.partialFingerprints?.getLastValue(BaselineCalculation.ENCLOSING_SCOPE_INDICATOR)

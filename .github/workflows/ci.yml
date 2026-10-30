@@ -24,18 +24,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           lfs: 'true'
+      - id: jdk8
+        uses: actions/setup-java@v5
+        with:
+          java-version: '8'
+          distribution: 'temurin'
       - uses: actions/setup-java@v5
         with:
-          java-version: |
-            8
-            17
+          java-version: '17'
           distribution: 'temurin'
           cache: 'gradle'
       - name: Run tests
-        run: ./gradlew test -Porg.gradle.java.installations.fromEnv=JAVA_HOME_8_X64
+        run: ./gradlew test -Porg.gradle.java.installations.paths=${{ steps.jdk8.outputs.path }}
 
   docs:
     if: github.ref == 'refs/heads/main'
@@ -45,16 +48,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - id: jdk8
+        uses: actions/setup-java@v5
+        with:
+          java-version: '8'
+          distribution: 'temurin'
       - uses: actions/setup-java@v5
         with:
-          # JDK 8 for the build's toolchain (buildSrc + conventions), JDK 17 (last) runs Gradle
-          java-version: |
-            8
-            17
+          java-version: '17'
           distribution: 'temurin'
           cache: 'gradle'
       - name: Run Dokka
-        run: ./gradlew dokkaHtml -Porg.gradle.java.installations.fromEnv=JAVA_HOME_8_X64
+        run: ./gradlew dokkaHtml -Porg.gradle.java.installations.paths=${{ steps.jdk8.outputs.path }}
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

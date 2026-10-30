@@ -3,10 +3,15 @@ package com.jetbrains.qodana.sarif.baseline
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.EQUAL_INDICATOR
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.MOVE_AND_REFACTOR_TOLERANT_INDICATOR
+import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SCOPE_AND_SHAPE_TOLERANT_INDICATOR
 import com.jetbrains.qodana.sarif.baseline.BaselineCalculation.SHIFT_TOLERANT_INDICATOR
 import com.jetbrains.qodana.sarif.model.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.NullSource
+import org.junit.jupiter.params.provider.ValueSource
 import java.util.Collections.singletonList
 
 /**
@@ -18,6 +23,8 @@ import java.util.Collections.singletonList
  *   Phase 2: HashMatcher(shiftTolerantEqualIndicator)          — content equality
  *   Phase 3: HashMatcher(moveAndRefactorTolerantIndicator)
  *   Phase 4: HashMatcher(extractionAndRefactorTolerantIndicator)  — only across different files; skipped when funcName is absent.
+ *   Phase 5: HashMatcher(scopeAndShapeTolerantIndicator)       — broadest key, tried last.
+ * Phases 3-5 commit a pair only if its context-snippet similarity reaches the similarity floor.
  */
 class ExtendedFingerprintIntegrationTest {
 
@@ -36,6 +43,7 @@ class ExtendedFingerprintIntegrationTest {
         fingerprints: Map<String, Map<Int, String>> = emptyMap(),
         snippet: String? = null,
         contextSnippet: String? = null,
+        contextStartLine: Int? = null,
         startLine: Int? = null,
         startColumn: Int? = null,
     ): Result {
@@ -57,7 +65,9 @@ class ExtendedFingerprintIntegrationTest {
         val physical = PhysicalLocation().withRegion(region)
             .withArtifactLocation(ArtifactLocation().withUri(filePath))
         if (contextSnippet != null) {
-            physical.withContextRegion(Region().withSnippet(ArtifactContent().withText(contextSnippet)))
+            val contextRegion = Region().withSnippet(ArtifactContent().withText(contextSnippet))
+            if (contextStartLine != null) contextRegion.withStartLine(contextStartLine)
+            physical.withContextRegion(contextRegion)
         }
         r.withLocations(listOf(Location().withPhysicalLocation(physical)))
 
@@ -634,5 +644,231 @@ class ExtendedFingerprintIntegrationTest {
         )
         // Flag off: matching is unchanged, but no matchedMethod is written.
         assertTrue(run(includeMatchedMethod = false).all { it.matchedMethod() == null })
+    }
+
+    // --- similarity floor ---
+
+    /** Ten context lines: the first [keep] are shared across calls, the rest are unique to [tag]. */
+    private fun context(tag: String, keep: Int): String =
+        (0 until 10).joinToString("\n") { if (it < keep) "line$it" else "$tag$it" }
+
+    /** Asserts the pair's context-snippet similarity, which the floor tests below are built around. */
+    private fun assertSimilarity(expected: Double, a: Result, b: Result) =
+        assertEquals(expected, TiebreakerCascade.contextSnippetSimilarity(ResultFeatures(a), ResultFeatures(b)), PRECISION)
+
+    private fun moveResult(message: String, contextSnippet: String?, shift: String) = result(
+        message = message, filePath = "src/f.kt", contextSnippet = contextSnippet,
+        fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to shift), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")),
+    )
+
+    @Test
+    fun `a collision-free moveAndRefactor pair below the similarity floor is not matched`() {
+        val r = moveResult("r", context("r", keep = 10), "sr")
+        val b = moveResult("b", context("b", keep = 4), "sb")
+        assertSimilarity(0.4, r, b)
+
+        val calc = compare(report(r), report(b))
+
+        assertEquals(0, calc.unchangedResults)
+        assertEquals(1, calc.newResults)
+        assertEquals(1, calc.absentResults)
+    }
+
+    @Test
+    fun `shiftTolerant applies no similarity floor`() {
+        val r = result(contextSnippet = context("r", keep = 0), fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+        val b = result(contextSnippet = context("b", keep = 0), fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+        assertSimilarity(0.0, r, b)
+
+        val calc = compare(report(r), report(b))
+
+        assertEquals(1, calc.unchangedResults)
+        assertEquals("shiftTolerantEqualIndicator/v1", r.matchedMethod())
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = ["", "  \n\t\n"])
+    fun `a missing or blank context snippet is an unknown similarity and passes the floor`(unknown: String?) {
+        val r = moveResult("r", context("r", keep = 10), "sr")
+        val b = moveResult("b", unknown, "sb")
+
+        val calc = compare(report(r), report(b))
+
+        assertEquals(1, calc.unchangedResults)
+        assertEquals("moveAndRefactorTolerantIndicator/v1", r.matchedMethod())
+    }
+
+    @Test
+    fun `a baseline without a context snippet is matched when the only scored rival fails the floor`() {
+        // Intentional: the known-low pair is rejected, the unknown pair is not, even though it ranks below.
+        val r = moveResult("r", context("r", keep = 10), "sr")
+        val known = moveResult("known", context("k", keep = 4), "sk")
+        val unknown = moveResult("unknown", null, "su")
+        assertSimilarity(0.4, r, known)
+
+        val calc = compare(report(r), report(known, unknown))
+
+        assertEquals(1, calc.unchangedResults)
+        assertEquals(1, calc.absentResults)
+        assertEquals(unknown.partialFingerprints.get(EQUAL_INDICATOR, 1), r.matchedBaselineFingerprint())
+    }
+
+    @Test
+    fun `a rival that fails the floor does not contest the match or shape its label`() {
+        val r = moveResult("r", context("r", keep = 10), "sr")
+        val eligible = moveResult("eligible", context("e", keep = 5), "se")
+        val ineligible = moveResult("ineligible", context("i", keep = 4), "si")
+        assertSimilarity(0.5, r, eligible)
+        assertSimilarity(0.4, r, ineligible) // below the floor, yet within the decisive margin of the eligible pair
+
+        val calc = compare(report(r), report(eligible, ineligible))
+
+        assertEquals(1, calc.unchangedResults)
+        assertEquals(1, calc.absentResults)
+        assertEquals(eligible.partialFingerprints.get(EQUAL_INDICATOR, 1), r.matchedBaselineFingerprint())
+        assertEquals("moveAndRefactorTolerantIndicator/v1", r.matchedMethod())
+    }
+
+    @Test
+    fun `a contested report whose every candidate fails the floor stays NEW`() {
+        val r = moveResult("r", context("r", keep = 10), "sr")
+        val b1 = moveResult("b1", context("x", keep = 4), "s1")
+        val b2 = moveResult("b2", context("y", keep = 3), "s2")
+        assertSimilarity(0.4, r, b1)
+        assertSimilarity(0.3, r, b2)
+
+        val calc = compare(report(r), report(b1, b2))
+
+        assertEquals(0, calc.unchangedResults)
+        assertEquals(1, calc.newResults)
+        assertEquals(2, calc.absentResults)
+    }
+
+    @Test
+    fun `a report rejected by the floor in one phase is matched by a later phase`() {
+        val r = result(message = "r", filePath = "src/f.kt", contextSnippet = context("r", keep = 10),
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h"),
+                EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "x")))
+        val lowMove = result(message = "low", filePath = "src/f.kt", contextSnippet = context("l", keep = 4),
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sl"), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")))
+        val extraction = result(message = "ext", filePath = "src/g.kt", contextSnippet = context("e", keep = 6),
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "se"), EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "x")))
+        assertSimilarity(0.4, r, lowMove)
+        assertSimilarity(0.6, r, extraction)
+
+        val calc = compare(report(r), report(lowMove, extraction))
+
+        assertEquals(1, calc.unchangedResults)
+        assertEquals(1, calc.absentResults)
+        assertEquals("extractionAndRefactorTolerantIndicator/v1", r.matchedMethod())
+        assertEquals(extraction.partialFingerprints.get(EQUAL_INDICATOR, 1), r.matchedBaselineFingerprint())
+    }
+
+    @Test
+    fun `cascade falls through to scopeAndShape when every earlier hash differs`() {
+        val r = result(message = "refactored", filePath = "src/new.kt",
+            fingerprints = mapOf(
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr"),
+                MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "mA"),
+                EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "eA"),
+                SCOPE_AND_SHAPE_TOLERANT_INDICATOR to mapOf(1 to "shape"),
+            ))
+        val b = result(message = "original", filePath = "src/old.kt",
+            fingerprints = mapOf(
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sb"),
+                MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "mB"),
+                EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "eB"),
+                SCOPE_AND_SHAPE_TOLERANT_INDICATOR to mapOf(1 to "shape"),
+            ))
+
+        val calc = compare(report(r), report(b))
+
+        assertEquals(1, calc.unchangedResults)
+        assertEquals("scopeAndShapeTolerantIndicator/v1", r.matchedMethod())
+    }
+
+    @Test
+    fun `scopeAndShape runs after extractionAndRefactor`() {
+        val r = result(message = "r", filePath = "src/new.kt",
+            fingerprints = mapOf(
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "sr"),
+                EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "x"),
+                SCOPE_AND_SHAPE_TOLERANT_INDICATOR to mapOf(1 to "shape"),
+            ))
+        // Listed first so that baseline order would favour it if phase order did not.
+        val byShape = result(message = "shape", filePath = "src/a.kt",
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s1"), SCOPE_AND_SHAPE_TOLERANT_INDICATOR to mapOf(1 to "shape")))
+        val byExtraction = result(message = "ext", filePath = "src/b.kt",
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s2"), EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "x")))
+
+        val calc = compare(report(r), report(byShape, byExtraction))
+
+        assertEquals(1, calc.unchangedResults)
+        assertEquals(1, calc.absentResults)
+        assertEquals("extractionAndRefactorTolerantIndicator/v1", r.matchedMethod())
+        assertEquals(byExtraction.partialFingerprints.get(EQUAL_INDICATOR, 1), r.matchedBaselineFingerprint())
+    }
+
+    @Test
+    fun `scopeAndShape applies the similarity floor`() {
+        fun shapeResult(message: String, contextSnippet: String, shift: String) = result(
+            message = message, filePath = "src/f.kt", contextSnippet = contextSnippet,
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to shift), SCOPE_AND_SHAPE_TOLERANT_INDICATOR to mapOf(1 to "shape")),
+        )
+        val r = shapeResult("r", context("r", keep = 10), "sr")
+        val b = shapeResult("b", context("b", keep = 4), "sb")
+        assertSimilarity(0.4, r, b)
+
+        val calc = compare(report(r), report(b))
+
+        assertEquals(0, calc.unchangedResults)
+        assertEquals(1, calc.newResults)
+        assertEquals(1, calc.absentResults)
+    }
+
+    /**
+     * Identical context, but the problem sits on a different line, so the weighted path applies: problem-line
+     * similarity is 2·[sharedTokens]/32 and context similarity 1.0. With 5 shared tokens, 0.8·0.3125 + 0.2·1.0 = 0.45
+     * exactly, which evaluates to 0.44999999999999996 and must still pass; with 4 it is 0.4 and must be rejected.
+     */
+    @ParameterizedTest
+    @CsvSource("5, 0.45, true", "4, 0.4, false")
+    fun `the floor on the weighted path accepts a pair exactly on it and rejects one below`(
+        sharedTokens: Int, expectedSimilarity: Double, matched: Boolean,
+    ) {
+        val shared = (0 until sharedTokens).joinToString(" ") { "c$it" }
+        val ctx = "$shared " + (sharedTokens until 16).joinToString(" ") { "a$it" } + "\n" +
+                "$shared " + (sharedTokens until 16).joinToString(" ") { "b$it" }
+        fun onLine(message: String, line: Int, shift: String) = result(
+            message = message, filePath = "src/f.kt", contextSnippet = ctx, contextStartLine = 1, startLine = line,
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to shift), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")),
+        )
+        val r = onLine("r", line = 1, shift = "sr")
+        val b = onLine("b", line = 2, shift = "sb")
+        assertSimilarity(expectedSimilarity, r, b)
+
+        val calc = compare(report(r), report(b))
+
+        assertEquals(if (matched) 1 else 0, calc.unchangedResults)
+        assertEquals(if (matched) 0 else 1, calc.newResults)
+    }
+
+    @Test
+    fun `a rewritten problem line is rejected even when its surrounding context is unchanged`() {
+        // Whole-snippet overlap alone would be 0.8; the problem line shares no token, so 0.8·0 + 0.2·0.8 = 0.16.
+        fun withProblem(message: String, problem: String, shift: String) = result(
+            message = message, filePath = "src/f.kt", contextSnippet = "a\nb\n$problem\nc\nd", contextStartLine = 10, startLine = 12,
+            fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to shift), MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "h")),
+        )
+        val r = withProblem("r", "val total = items.sum()", "sr")
+        val b = withProblem("b", "return cache[key]", "sb")
+        assertSimilarity(0.16, r, b)
+
+        val calc = compare(report(r), report(b))
+
+        assertEquals(0, calc.unchangedResults)
+        assertEquals(1, calc.newResults)
+        assertEquals(1, calc.absentResults)
     }
 }
