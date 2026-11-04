@@ -17,6 +17,9 @@ import java.util.IdentityHashMap
  */
 private const val SIMILARITY_FLOOR = 0.45
 
+/** Report:baseline ratio from which a pool counts as unbalanced, and its pairs need evidence to be committed. */
+private const val UNBALANCED_POOL_RATIO = 4
+
 /** Non-null results that are not already marked absent. */
 private fun Run.undecidedResults(): List<Result> =
     results.orEmpty().mapNotNull { result -> result?.takeIf { it.baselineState != BaselineState.ABSENT } }
@@ -82,6 +85,11 @@ internal class DiffState(
 
     fun isMatchedMethodIncluded(): Boolean = options.includeMatchedMethod
 
+    /** Whether neither endpoint has been taken yet, so the pair is still the matcher's to make. */
+    fun isUnclaimed(candidate: MatchCandidate): Boolean =
+        candidate.reportResult.uniqueResultIndicator() in undecidedFromReport &&
+                candidate.baselineResult.uniqueResultIndicator() in undecidedFromBaseline
+
     /** Records an UNCHANGED match and consumes both endpoints (by their equalIndicator id) from the candidate pools. */
     fun commit(reportResult: Result, baselineResult: Result, matchedMethod: String) {
         put(
@@ -120,8 +128,8 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     // equalIndicator is a unique, collision-free key: no scoring or tiebreaking. The remaining hashes can collide
     // on a single result, so each later phase assigns its still-undecided results globally by match quality.
     matchEqualIndicatorPhase(state)
-    // shiftTolerant demands identical content, so it trusts the hash alone. Every key after it can pair unrelated
-    // results, so a pair must clear the similarity floor.
+    // shiftTolerant means identical content, so it trusts the hash alone. Every key after it can pair unrelated
+    // results, so its pairs must clear a floor.
     val featuresOf = ResultFeatures.Cache()
     for ((fingerprintKey, similarityFloor) in listOf(
         SHIFT_TOLERANT_INDICATOR to null,
@@ -151,9 +159,9 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
  */
 private fun matchEqualIndicatorPhase(state: DiffState) {
     val matcher = HashMatcher(state.undecidedFromBaseline.values, EQUAL_INDICATOR)
-    for ((reportResult, baselineResult, matchedMethod) in matcher.candidates(state.undecidedFromReport.values)) {
-        if (reportResult.uniqueResultIndicator() in state.undecidedFromReport && baselineResult.uniqueResultIndicator() in state.undecidedFromBaseline) {
-            state.commit(reportResult, baselineResult, matchedMethod)
+    for (candidate in matcher.candidates(state.undecidedFromReport.values)) {
+        if (state.isUnclaimed(candidate)) {
+            state.commit(candidate.reportResult, candidate.baselineResult, candidate.matchedMethod)
         }
     }
 }
@@ -161,11 +169,13 @@ private fun matchEqualIndicatorPhase(state: DiffState) {
 /**
  * Resolves one matching phase for a key that can collide on a single result.
  *
- * A pair whose own context-snippet similarity is below [similarityFloor] (`null` for no floor) is dropped first, so
- * it can neither be committed nor make its endpoints look contested. Of the pairs that remain, those sharing no
- * endpoint with another are committed directly. The rest are assigned by global greedy-best-first: every contested
- * pairing is scored, then committed strongest-score-first so a weaker pair can never steal a baseline from a
- * stronger one. Matched endpoints are removed from [state]'s pools in place, so the leftovers flow to the next phase.
+ * A pair below [similarityFloor] (`null` for no floor) is dropped first, so it can neither be committed nor make
+ * its endpoints look contested. Of the rest, those sharing no endpoint are committed directly; the others are
+ * assigned greedily, strongest score first, so a weaker pair cannot steal a baseline from a stronger one.
+ *
+ * A floor-bearing key is also one that can pair unrelated results, so there - and only there - a pair out of an
+ * unbalanced pool (see [isPoolUnbalanced]) needs evidence (see [isRealEvidence]). Matched endpoints leave [state]'s
+ * pools in place, so the leftovers flow to the next phase.
  */
 private fun matchPhase(
     fingerprintKey: String,
@@ -187,12 +197,14 @@ private fun matchPhase(
         reportsPerBaseline.merge(baselineResult, 1, Int::plus)
     }
 
+    val isLabelled = state.isMatchedMethodIncluded()
+
     val candidatesWithCollisions = ArrayList<MatchCandidate>(candidates.size)
     for (c in candidates) {
-        if (baselinesByReport.getValue(c.reportResult).size != 1 || reportsPerBaseline.getValue(c.baselineResult) != 1) {
-            candidatesWithCollisions.add(c)
-        } else {
+        if (baselinesByReport.getValue(c.reportResult).size == 1 && reportsPerBaseline.getValue(c.baselineResult) == 1) {
             state.commit(c.reportResult, c.baselineResult, c.matchedMethod)
+        } else {
+            candidatesWithCollisions.add(c)
         }
     }
     if (candidatesWithCollisions.isEmpty()) return
@@ -207,39 +219,74 @@ private fun matchPhase(
         }
         .sortedByDescending { it.second }
         .forEach { (candidate, score) ->
-            if (candidate.reportResult.uniqueResultIndicator() !in state.undecidedFromReport || candidate.baselineResult.uniqueResultIndicator() !in state.undecidedFromBaseline) return@forEach
-            val suffix = if (state.isMatchedMethodIncluded()) {
-                tiebreakerSuffix(candidate, score, baselinesByReport, scoreByReportBaseline, state)
+            if (!state.isUnclaimed(candidate)) return@forEach
+
+            val isUnbalanced = similarityFloor != null &&
+                    isPoolUnbalanced(candidate, baselinesByReport, reportsPerBaseline)
+
+            val decidingSignal = if (isUnbalanced || isLabelled) {
+                score.decidingSignalAgainst(
+                    strongestRivalScore(candidate, baselinesByReport, scoreByReportBaseline, state)
+                )
             } else {
-                ""
+                null
             }
+            if (isUnbalanced && !isRealEvidence(decidingSignal, featuresOf(candidate.reportResult))) return@forEach
+            val suffix = if (isLabelled && decidingSignal != null) "+${decidingSignal.label}" else ""
             state.commit(candidate.reportResult, candidate.baselineResult, candidate.matchedMethod + suffix)
         }
 }
 
 /**
- * Whether the pair's own context-snippet similarity reaches [floor], so the pair may be committed. Passes when a side
- * has no (or only a blank) context snippet: an unknown similarity is not a low one. Consequently, a producer that
- * never emits `contextRegion` gets no floor at all and relies on its hashes alone.
+ * The score of the strongest baseline the pair's report result still competes for, other than the one it takes.
+ *
+ * Only this side is asked, so a pool where every report result wants the one baseline yields no rival and commits
+ * nothing. Asking the report side too was measured and bought nothing: a rival there lets a positional signal name
+ * a winner in every clone family, which is what [isRealEvidence] exists to prevent.
+ */
+private fun strongestRivalScore(
+    candidate: MatchCandidate,
+    baselinesByReport: IdentityHashMap<Result, MutableList<Result>>,
+    scoreByReportBaseline: IdentityHashMap<Result, IdentityHashMap<Result, MatchScore>>,
+    state: DiffState,
+): MatchScore? {
+    // Any pair touching a collided endpoint is collided too, hence scored: the lookups below cannot miss.
+    var strongest: MatchScore? = null
+    val scoresForReport = scoreByReportBaseline.getValue(candidate.reportResult)
+    for (baseline in baselinesByReport.getValue(candidate.reportResult)) {
+        if (baseline === candidate.baselineResult || baseline.uniqueResultIndicator() !in state.undecidedFromBaseline) continue
+        val score = scoresForReport.getValue(baseline)
+        if (strongest == null || score > strongest) strongest = score
+    }
+    return strongest
+}
+
+/**
+ * Whether the pair's context-snippet similarity reaches [floor]. Passes when a side has no (or a blank) snippet:
+ * an unknown similarity is not a low one, so a producer without `contextRegion` gets no floor at all.
  */
 private fun ResultFeatures.meetsSimilarityFloor(baseline: ResultFeatures, floor: Double): Boolean =
     contextSnippetLines == null || baseline.contextSnippetLines == null ||
             TiebreakerCascade.contextSnippetSimilarity(this, baseline) >= floor - PRECISION
 
 /**
- * The signal that won the committed pair against the strongest remaining rival.
- * Since matches commit strongest-first, this is always a decisive win (or `""` if no rivals remain).
+ * Whether far more report results compete for the baseline this pair takes than its report result has baselines to
+ * choose from. Both counts are this pair's own contention, after earlier phases and the floor took what they took.
+ *
+ * Balanced means two revisions of the same code, whose problems mostly do correspond. Unbalanced means a clone
+ * family - fixture trees, generated files - where most report results have no counterpart and all fit equally well.
  */
-private fun tiebreakerSuffix(
+private fun isPoolUnbalanced(
     candidate: MatchCandidate,
-    committedScore: MatchScore,
     baselinesByReport: IdentityHashMap<Result, MutableList<Result>>,
-    scoreByReportBaseline: IdentityHashMap<Result, IdentityHashMap<Result, MatchScore>>,
-    state: DiffState,
-): String {
-    val scores = scoreByReportBaseline.getValue(candidate.reportResult)
-    val rivalScore = baselinesByReport.getValue(candidate.reportResult)
-        .filter { it !== candidate.baselineResult && it.uniqueResultIndicator() in state.undecidedFromBaseline }
-        .maxOfOrNull { scores.getValue(it) }
-    return committedScore.decidingSignalAgainst(rivalScore)?.let { "+$it" } ?: ""
-}
+    reportsPerBaseline: IdentityHashMap<Result, Int>,
+): Boolean =
+    reportsPerBaseline.getValue(candidate.baselineResult) >
+            baselinesByReport.getValue(candidate.reportResult).size * UNBALANCED_POOL_RATIO
+
+/**
+ * Whether [decidingSignal] names a real difference: an [Signal.isIdentity] one, except [Signal.SNIPPET] on a bare
+ * identifier. `null` (no rival) and [Signal.FALLBACK] (nothing told them apart) are not evidence.
+ */
+private fun isRealEvidence(decidingSignal: Signal?, reportFeatures: ResultFeatures): Boolean =
+    decidingSignal?.isIdentity == true && (decidingSignal != Signal.SNIPPET || reportFeatures.hasSpecificSnippet)

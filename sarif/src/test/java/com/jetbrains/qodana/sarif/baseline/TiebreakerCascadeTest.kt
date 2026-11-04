@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
  * Tests for [TiebreakerCascade] in isolation.
  *
  * Filter order:
- *   contextSnippetSimilarity → snippet → enclosingScope → lineDelta → columnDelta.
+ *   contextSnippetSimilarity → snippet → enclosingScope → pathProximity → lineDelta → columnDelta.
  * If all filters tie or yield nothing, `resolvedBy` is "fallback".
  * If there is a single candidate from the start, `resolvedBy` is null.
  */
@@ -21,6 +21,7 @@ class TiebreakerCascadeTest {
         enclosingScope: String? = null,
         startLine: Int? = null,
         startColumn: Int? = null,
+        filePath: String? = null,
     ): Result {
         val r = Result(Message().withText("Empty slice declaration using a literal"))
         if (enclosingScope != null) {
@@ -34,6 +35,7 @@ class TiebreakerCascadeTest {
         if (startLine != null) region.withStartLine(startLine)
         if (startColumn != null) region.withStartColumn(startColumn)
         val physical = PhysicalLocation().withRegion(region)
+        if (filePath != null) physical.withArtifactLocation(ArtifactLocation().withUri(filePath))
         if (contextSnippet != null) {
             val contextRegion = Region().withSnippet(ArtifactContent().withText(contextSnippet))
             if (contextStartLine != null) contextRegion.withStartLine(contextStartLine)
@@ -56,7 +58,7 @@ class TiebreakerCascadeTest {
             .map { it to TiebreakerCascade.score(baselineFeatures, ResultFeatures(it)) }
             .sortedByDescending { it.second }
         val runnerUp = ranked.getOrNull(1)?.second
-        return Resolution(ranked[0].first, ranked[0].second.decidingSignalAgainst(runnerUp))
+        return Resolution(ranked[0].first, ranked[0].second.decidingSignalAgainst(runnerUp)?.label)
     }
 
     @Test
@@ -189,6 +191,40 @@ class TiebreakerCascadeTest {
     }
 
     @Test
+    fun `pathProximity prefers the path that matches deeper from the file name`() {
+        // The same file name in three parallel trees: the one sharing the whole path wins.
+        val res = resolve(
+            result(filePath = "test/e2e/app-dir/page.tsx"),
+            result(filePath = "test/e2e/app-dir/page.tsx"),
+            result(filePath = "test/production/app-dir/page.tsx"),
+        )!!
+        assertEquals("pathProximity", res.resolvedBy)
+    }
+
+    @Test
+    fun `pathProximity runs before lineDelta`() {
+        // Same file but a far line beats a near line in a sibling directory.
+        val res = resolve(
+            result(filePath = "src/a/f.kt", startLine = 100),
+            result(filePath = "src/a/f.kt", startLine = 400),
+            result(filePath = "src/b/f.kt", startLine = 101),
+        )!!
+        assertEquals("pathProximity", res.resolvedBy)
+        assertEquals(400, res.result.locations.first().physicalLocation.region.startLine)
+    }
+
+    @Test
+    fun `a different file name is no closer than an unrelated path`() {
+        // Proximity is counted from the file name, so both candidates tie at zero and lineDelta decides.
+        val res = resolve(
+            result(filePath = "src/a/f.kt", startLine = 100),
+            result(filePath = "src/a/g.kt", startLine = 101),
+            result(filePath = "lib/x/h.kt", startLine = 400),
+        )!!
+        assertEquals("lineDelta", res.resolvedBy)
+    }
+
+    @Test
     fun `columnDelta tolerates a uniform column shift`() {
         val res = resolve(
             result(startLine = 37, startColumn = 31),
@@ -237,6 +273,16 @@ class TiebreakerCascadeTest {
         val bare = Result(Message().withText("msg"))
         val res = resolve(bare, bare, Result(Message().withText("msg")))
         assertNotNull(res)
+    }
+
+    @Test
+    fun `a score has one component per signal, in signal order`() {
+        // decidingSignalAgainst reads Signal.entries by component index, so adding a signal without a component
+        // (or the reverse) would silently shift every label. FALLBACK names no component, so it sits one past.
+        val components = TiebreakerCascade.score(ResultFeatures(result()), ResultFeatures(result())).components
+
+        assertEquals(Signal.FALLBACK.ordinal, components.size)
+        assertEquals(Signal.entries.size - 1, components.size)
     }
 
     @Test

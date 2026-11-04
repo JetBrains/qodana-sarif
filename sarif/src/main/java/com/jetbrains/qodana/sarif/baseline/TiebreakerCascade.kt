@@ -5,26 +5,33 @@ import com.jetbrains.qodana.sarif.model.Result
 import java.util.IdentityHashMap
 import kotlin.math.abs
 
-/** Collision Resolver Signals */
-private val SIGNALS = arrayOf(
-    "contextSnippetSimilarity",
-    "snippet",
-    "enclosingScope",
-    "lineDelta",
-    "columnDelta",
-)
+/**
+ * Collision resolver signals, in priority order; [MatchScore] components follow it, except [FALLBACK], the label
+ * for a pair no signal separates from its rival.
+ *
+ * [isIdentity] marks the signals that say which problem a result is; the rest say only where in its file it sits.
+ * Its file counts as identity - a clone in another tree is another problem - its line and column do not. Only
+ * identity separates clones: every clone is at some plausible line, so position always names a winner, real or not.
+ */
+internal enum class Signal(val label: String, val isIdentity: Boolean) {
+    CONTEXT("contextSnippetSimilarity", true),
+    SNIPPET("snippet", true),
+    ENCLOSING_SCOPE("enclosingScope", true),
+    PATH_PROXIMITY("pathProximity", true),
+    LINE_DELTA("lineDelta", false),
+    COLUMN_DELTA("columnDelta", false),
+    FALLBACK("fallback", false),
+}
 
 /** Tolerance for comparing computed similarities, which carry floating-point noise (e.g. `1 - 0.8` is not `0.2`). */
 internal const val PRECISION = 1e-9
-/** Index of the context-similarity signal in [SIGNALS]  */
-private const val CONTEXT_INDEX = 0
 /** How far a pair's context similarity must exceed its rival's for context to be named the deciding signal. */
 private const val DECISIVE_CONTEXT_MARGIN = 0.15
 
 /**
  * An absolute, order-independent quality of a single (report, baseline) pair, used both to rank candidates
  * for global assignment and to name the signal that decided a contest. Components are the per-signal values
- * in [SIGNALS] order, compared lexicographically (higher is better).
+ * in [Signal] order, compared lexicographically (higher is better).
  */
 internal class MatchScore(@JvmField val components: DoubleArray) : Comparable<MatchScore> {
 
@@ -41,16 +48,16 @@ internal class MatchScore(@JvmField val components: DoubleArray) : Comparable<Ma
 
     /**
      * The highest-priority signal where this score strictly beats [rival] (exceeding tolerance).
-     * Returns `null` if no rival exists, or `"fallback"` if no signal decisively breaks the tie.
+     * Returns `null` if no rival exists, or [Signal.FALLBACK] if no signal decisively breaks the tie.
      */
-    fun decidingSignalAgainst(rival: MatchScore?): String? {
+    fun decidingSignalAgainst(rival: MatchScore?): Signal? {
         if (rival == null) return null
         for (i in components.indices) {
-            val tolerance = if (i == CONTEXT_INDEX) DECISIVE_CONTEXT_MARGIN else PRECISION
+            val tolerance = if (i == Signal.CONTEXT.ordinal) DECISIVE_CONTEXT_MARGIN else PRECISION
             val diff = components[i] - rival.components[i]
-            if (diff > tolerance) return SIGNALS[i]
+            if (diff > tolerance) return Signal.entries[i]
         }
-        return "fallback"
+        return Signal.FALLBACK
     }
 }
 
@@ -70,6 +77,20 @@ internal class ResultFeatures(val result: Result) {
         result.partialFingerprints?.getLastValue(BaselineCalculation.ENCLOSING_SCOPE_INDICATOR)
     val startLine: Int? = physicalLocation?.region?.startLine
     val startColumn: Int? = physicalLocation?.region?.startColumn
+
+    /** Path segments, file name first, so two paths compare from the end. Split once: a result is scored many times. */
+    val reversedPathSegments: Array<String> =
+        physicalLocation?.artifactLocation?.uri
+            ?.split('/')?.filter(String::isNotEmpty)?.asReversed()?.toTypedArray()
+            ?: emptyArray()
+
+    /**
+     * Whether [snippetText] is worth anything as evidence. A single token is a bare identifier (`map`, `import`);
+     * hundreds of unrelated problems carry the same one, so agreeing on it says close to nothing.
+     */
+    val hasSpecificSnippet: Boolean by lazy(LazyThreadSafetyMode.NONE) {
+        snippetText?.let { tokenizeLine(it).size > 1 } ?: false
+    }
 
     /** Context snippet split into trimmed lines; computed once and reused across every comparison. */
     val contextSnippetLines: List<String>? by lazy(LazyThreadSafetyMode.NONE) {
@@ -118,7 +139,7 @@ internal object TiebreakerCascade {
     private const val PROBLEM_LINE_WEIGHT = 0.8
 
     /**
-     * Absolute quality of a single (report, baseline) pair. Component order mirrors [SIGNALS] so the
+     * Absolute quality of a single (report, baseline) pair. Component order mirrors [Signal] so the
      * lexicographic comparison reproduces the tiebreaker priority without depending on a candidate set.
      */
     fun score(a: ResultFeatures, b: ResultFeatures): MatchScore = MatchScore(
@@ -126,12 +147,26 @@ internal object TiebreakerCascade {
             contextSnippetSimilarity(a, b),
             eqScore(a.snippetText, b.snippetText),
             eqScore(a.enclosingScopeName, b.enclosingScopeName),
+            pathProximity(a, b),
             closeness(a.startLine, b.startLine),
             closeness(a.startColumn, b.startColumn),
         )
     )
 
     private fun eqScore(x: String?, y: String?): Double = if (x != null && x == y) 1.0 else 0.0
+
+    /**
+     * Share of the deeper path that both end with: `1.0` same file, `0.0` different file name. Normalized, so the
+     * component stays comparable across results of different path depth, which the global ranking depends on.
+     */
+    private fun pathProximity(a: ResultFeatures, b: ResultFeatures): Double {
+        val aSegments = a.reversedPathSegments
+        val bSegments = b.reversedPathSegments
+        if (aSegments.isEmpty() || bSegments.isEmpty()) return 0.0
+        var shared = 0
+        while (shared < aSegments.size && shared < bSegments.size && aSegments[shared] == bSegments[shared]) shared++
+        return shared.toDouble() / maxOf(aSegments.size, bSegments.size)
+    }
 
     /** Similarity of two context snippets compared line-by-line (LCS over trimmed lines) */
     fun contextSnippetSimilarity(a: ResultFeatures, b: ResultFeatures): Double =
