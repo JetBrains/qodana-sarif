@@ -17,6 +17,12 @@ import java.util.IdentityHashMap
  */
 private const val SIMILARITY_FLOOR = 0.45
 
+/**
+ * The floor for [SHIFT_TOLERANT_INDICATOR], whose hash already covers the problem snippet. Agreeing on it while
+ * the surrounding context disagrees means a clone, not the same problem moved, so this key can demand far more.
+ */
+private const val SHIFT_TOLERANT_SIMILARITY_FLOOR = 0.75
+
 /** Report:baseline ratio from which a pool counts as unbalanced, and its pairs need evidence to be committed. */
 private const val UNBALANCED_POOL_RATIO = 4
 
@@ -128,11 +134,10 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     // equalIndicator is a unique, collision-free key: no scoring or tiebreaking. The remaining hashes can collide
     // on a single result, so each later phase assigns its still-undecided results globally by match quality.
     matchEqualIndicatorPhase(state)
-    // shiftTolerant means identical content, so it trusts the hash alone. Every key after it can pair unrelated
-    // results, so its pairs must clear a floor.
+    // Every key here can pair unrelated results, so its pairs must clear a floor.
     val featuresOf = ResultFeatures.Cache()
     for ((fingerprintKey, similarityFloor) in listOf(
-        SHIFT_TOLERANT_INDICATOR to null,
+        SHIFT_TOLERANT_INDICATOR to SHIFT_TOLERANT_SIMILARITY_FLOOR,
         MOVE_AND_REFACTOR_TOLERANT_INDICATOR to SIMILARITY_FLOOR,
         EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR to SIMILARITY_FLOOR,
         SCOPE_AND_SHAPE_TOLERANT_INDICATOR to SIMILARITY_FLOOR,
@@ -167,25 +172,23 @@ private fun matchEqualIndicatorPhase(state: DiffState) {
 }
 
 /**
- * Resolves one matching phase for a key that can collide on a single result.
+ * Resolves one matching phase for a key that can collide on a single result and can pair unrelated ones.
  *
- * A pair below [similarityFloor] (`null` for no floor) is dropped first, so it can neither be committed nor make
- * its endpoints look contested. Of the rest, those sharing no endpoint are committed directly; the others are
- * assigned greedily, strongest score first, so a weaker pair cannot steal a baseline from a stronger one.
+ * A pair below [similarityFloor] is dropped first, so it can neither be committed nor make its endpoints look
+ * contested. Of the rest, those sharing no endpoint are committed directly; the others are assigned greedily,
+ * strongest score first, so a weaker pair cannot steal a baseline from a stronger one.
  *
- * A floor-bearing key is also one that can pair unrelated results, so there - and only there - a pair out of an
- * unbalanced pool (see [isPoolUnbalanced]) needs evidence (see [isRealEvidence]). Matched endpoints leave [state]'s
- * pools in place, so the leftovers flow to the next phase.
+ * A pair out of an unbalanced pool (see [isPoolUnbalanced]) additionally needs evidence (see [isRealEvidence]).
+ * Matched endpoints leave [state]'s pools in place, so the leftovers flow to the next phase.
  */
 private fun matchPhase(
     fingerprintKey: String,
     state: DiffState,
     featuresOf: ResultFeatures.Cache,
-    similarityFloor: Double?,
+    similarityFloor: Double,
 ) {
     val matcher = HashMatcher(state.undecidedFromBaseline.values, fingerprintKey)
-    val allCandidates = matcher.candidates(state.undecidedFromReport.values)
-    val candidates = if (similarityFloor == null) allCandidates else allCandidates.filter {
+    val candidates = matcher.candidates(state.undecidedFromReport.values).filter {
         featuresOf(it.reportResult).meetsSimilarityFloor(featuresOf(it.baselineResult), similarityFloor)
     }
     if (candidates.isEmpty()) return
@@ -221,8 +224,7 @@ private fun matchPhase(
         .forEach { (candidate, score) ->
             if (!state.isUnclaimed(candidate)) return@forEach
 
-            val isUnbalanced = similarityFloor != null &&
-                    isPoolUnbalanced(candidate, baselinesByReport, reportsPerBaseline)
+            val isUnbalanced = isPoolUnbalanced(candidate, baselinesByReport, reportsPerBaseline)
 
             val decidingSignal = if (isUnbalanced || isLabelled) {
                 score.decidingSignalAgainst(

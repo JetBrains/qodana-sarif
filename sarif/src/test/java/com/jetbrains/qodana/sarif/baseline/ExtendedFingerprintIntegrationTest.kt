@@ -172,13 +172,15 @@ class ExtendedFingerprintIntegrationTest {
     fun `shiftTolerant collisions are resolved by the tiebreaker chain`() {
         // Same shiftTolerant hash on multiple baseline candidates disambiguated against the report anchor
         // by contextSnippet.
-        val ctx = "before\nproblem\nafter"
-        val r = result(filePath = "src/a.kt", contextSnippet = ctx,
+        // Both baselines clear the floor, so the floor cannot be what picks the winner - the cascade is.
+        val r = result(filePath = "src/a.kt", contextSnippet = context("r", keep = 10),
             fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
-        val b1 = result(filePath = "src/a.kt", contextSnippet = ctx,
+        val b1 = result(filePath = "src/a.kt", contextSnippet = context("r", keep = 10),
             fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
-        val b2 = result(filePath = "src/a.kt", contextSnippet = "different\n",
+        val b2 = result(filePath = "src/a.kt", contextSnippet = context("b", keep = 8),
             fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+        assertSimilarity(1.0, r, b1)
+        assertSimilarity(0.8, r, b2)
 
         val calc = compare(report(r), report(b1, b2))
 
@@ -676,10 +678,25 @@ class ExtendedFingerprintIntegrationTest {
     }
 
     @Test
-    fun `shiftTolerant applies no similarity floor`() {
-        val r = result(contextSnippet = context("r", keep = 0), fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
-        val b = result(contextSnippet = context("b", keep = 0), fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
-        assertSimilarity(0.0, r, b)
+    fun `shiftTolerant applies a stricter similarity floor than the other keys`() {
+        // Its hash already covers the problem snippet, so agreeing on it while the context disagrees means a
+        // clone. 0.7 would clear every other key's floor; here it does not.
+        val r = result(contextSnippet = context("r", keep = 10), fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+        val b = result(contextSnippet = context("b", keep = 7), fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+        assertSimilarity(0.7, r, b)
+
+        val calc = compare(report(r), report(b))
+
+        assertEquals(0, calc.unchangedResults)
+        assertEquals(1, calc.newResults)
+        assertEquals(1, calc.absentResults)
+    }
+
+    @Test
+    fun `shiftTolerant commits a pair that clears its floor`() {
+        val r = result(contextSnippet = context("r", keep = 10), fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+        val b = result(contextSnippet = context("b", keep = 8), fingerprints = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s")))
+        assertSimilarity(0.8, r, b)
 
         val calc = compare(report(r), report(b))
 
@@ -1003,18 +1020,18 @@ class ExtendedFingerprintIntegrationTest {
     }
 
     @Test
-    fun `an unbalanced pool on an exact-content key still commits`() {
-        // shiftTolerant means byte-identical content: which of the nine inherits the baseline is arbitrary, but
-        // that one of them does is not, and refusing would report a false new alongside a false absent.
+    fun `an unbalanced pool on an exact-content key is refused like any other`() {
+        // shiftTolerant carries no exemption: nothing separates the nine, so naming a winner would be a guess.
+        // The cost is a false new alongside a false absent; measured on the next.js benchmark it is worth paying.
         val sameContent = mapOf(SHIFT_TOLERANT_INDICATOR to mapOf(1 to "same"))
         val reports = (1..9).map { result(message = "r$it", fingerprints = sameContent) }
         val target = result(message = "b1", fingerprints = sameContent)
 
         val calc = compare(report(*reports.toTypedArray()), report(target))
 
-        assertEquals(1, calc.unchangedResults)
-        assertEquals(8, calc.newResults)
-        assertEquals(0, calc.absentResults)
+        assertEquals(0, calc.unchangedResults)
+        assertEquals(9, calc.newResults)
+        assertEquals(1, calc.absentResults)
     }
 
     @Test
