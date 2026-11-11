@@ -4,7 +4,7 @@ By participating in this project, you agree to abide our [Code of conduct](.gith
 
 ## Set Up Your Machine
 
-`qodana-sarif` is a Java library. To set up your development environment you just need JDK installed on your machine and an IDE.
+`qodana-sarif` is a Java library. To set up your development environment you just need JDK 17 or newer installed on your machine and an IDE.
 
 Consider using IntelliJ IDEA:
 
