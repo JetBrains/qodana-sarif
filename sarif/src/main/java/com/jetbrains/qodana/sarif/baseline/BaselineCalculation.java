@@ -15,6 +15,7 @@ public class BaselineCalculation {
     public static final String SHIFT_TOLERANT_INDICATOR = "shiftTolerantEqualIndicator";
     public static final String MOVE_AND_REFACTOR_TOLERANT_INDICATOR = "moveAndRefactorTolerantIndicator";
     public static final String EXTRACTION_AND_REFACTOR_TOLERANT_INDICATOR = "extractionAndRefactorTolerantIndicator";
+    public static final String SCOPE_AND_SHAPE_TOLERANT_INDICATOR = "scopeAndShapeTolerantIndicator";
     public static final String ENCLOSING_SCOPE_INDICATOR = "enclosingScopeIndicator";
 
     private int newResults = 0;
