@@ -146,6 +146,25 @@ class ExtendedFingerprintIntegrationTest {
     }
 
     @Test
+    fun `falls back to the legacy algorithm when only one side carries shiftTolerant`() {
+        fun withShiftTolerant() = result(message = "same", filePath = "src/a.kt",
+            fingerprints = mapOf(
+                SHIFT_TOLERANT_INDICATOR to mapOf(1 to "s"),
+                MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc"),
+            ))
+        fun withoutShiftTolerant() = result(message = "same", filePath = "src/a.kt",
+            fingerprints = mapOf(MOVE_AND_REFACTOR_TOLERANT_INDICATOR to mapOf(1 to "loc")))
+
+        // The legacy algorithm matches on content equality and, unlike the new one, never records a matchedMethod
+        for ((r, b) in listOf(withShiftTolerant() to withoutShiftTolerant(), withoutShiftTolerant() to withShiftTolerant())) {
+            val calc = compare(report(r), report(b))
+
+            assertEquals(1, calc.unchangedResults)
+            assertNull(r.matchedMethod())
+        }
+    }
+
+    @Test
     fun `shiftTolerant wins over hash cascade for content-stable results`() {
         val r = result(
             message = "same", filePath = "src/a.kt",

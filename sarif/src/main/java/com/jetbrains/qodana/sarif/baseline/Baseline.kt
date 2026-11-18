@@ -118,9 +118,10 @@ internal fun applyBaseline(report: Run, baseline: Run, options: Options): DiffSt
     val reportResults = report.undecidedResults()
     val baselineResults = baseline.undecidedResults()
 
-    // shiftTolerantEqualIndicator is the analyzer-generated 1:1 equivalent of ResultKey content equality hash
+    // shiftTolerantEqualIndicator is the analyzer-generated 1:1 equivalent of ResultKey content equality hash.
+    // The new algorithm needs it on both sides: if either one lacks it, fall back to the legacy algorithm.
     val hasUseShiftTolerantHash = baselineResults.any { it.hasHash(SHIFT_TOLERANT_INDICATOR) }
-            || reportResults.any { it.hasHash(SHIFT_TOLERANT_INDICATOR) }
+            && reportResults.any { it.hasHash(SHIFT_TOLERANT_INDICATOR) }
 
     if (!hasUseShiftTolerantHash) return applyBaselineOldAlg(report, baseline, options, DiffState(options))
 
